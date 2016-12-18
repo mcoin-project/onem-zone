@@ -1,0 +1,34 @@
+.img-container {
+    position: relative;
+    max-width: 75%;
+}
+
+.img-container img {
+    width: 100%;
+}
+
+.img-container .sms-input {
+    position: absolute;
+    top: 78%;
+    left: 10%;
+    width: 80%;
+}
+
+.img-container .sms-response {
+    position: absolute;
+    top: 12%;
+    min-height: 65%;
+    left: 10%;
+    width: 80%;
+    background-color: #e0e0e0;
+}
+
+.img-container .sms-response .sms-mt {
+    overflow: auto;   
+    text-align: left;
+}
+
+.img-container .sms-response .sms-mo {
+    overflow: auto;
+    text-align: right;
+}
