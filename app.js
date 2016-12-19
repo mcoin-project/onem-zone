@@ -10,6 +10,9 @@ var multer = require('multer');
 var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
+var _ = require('underscore');
+var NodeCache = require("node-cache");
+var index = new NodeCache();
 
 var app = express();
 
@@ -34,29 +37,118 @@ app.use('/api', routesApi);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-var index = JSON.parse(fs.readFileSync('./app_api/json/index.json', 'utf8'));
-console.log("index.content.length:"+index.content.length);
+index = JSON.parse(fs.readFileSync('./app_api/json/index.json', 'utf8'));
+
+console.log("index.content.length:" + index.content.length);
+
+var flowStep = 0;
+var savedContext = index.content[flowStep];
+var firstTime = true;
+
+function getMenuResponse(input, menu) {
+
+    var response = '';
+
+    _.each(menu, function(option) {
+        response = response + option.description + '\n';
+    });
+
+    return response;
+}
+
+function serviceSwitch(input) {
+
+    var fileName = './app_api/json/';
+    var response = '';
+
+    switch (input) {
+        case '#onem':
+        case '#':
+            fileName = fileName + 'index.json';
+            break;
+        default:
+            fileName = fileName + input.slice(1) + '.json';
+            break;
+    }
+
+    console.log("reading: "+fileName);
+
+    try {
+        index = JSON.parse(fs.readFileSync(fileName, 'utf8'));
+        console.log("index.content.length:" + index.content.length);
+        savedContext = index.content[0];
+    } catch (err) {
+		response = "error, service not found";
+    }
+
+}
+
+function processRequest(input, context) {
+
+    var response = '';
+
+    switch (context.type) {
+        case 'menu':
+            var menuContent = context.content;
+            response = getMenuResponse(input, menuContent);
+            console.log("switched menu context");
+            break;
+        default:
+            break;
+    }
+
+    return response;
+
+}
 
 app.get('/api/getResponse', function(req, res) {
 
-	var response = '';
-	
-	if (typeof index.content[0].header !== 'undefined') {
-		response = response + index.content[0].header + '\n';
-	}
+    var moText = req.query.moText.trim().toLowerCase();
+    var response = '';
+    var header = '';
 
-	switch (index.content[0].type) {
-		case 'menu':
-			var menuContent = index.content[0].content;
-			for (var i=0; i<menuContent.length; i++) {
-				response = response + menuContent[i].description + '\n';
-			}
-			break;
-		default:
-			break;
-	}
+    if (moText.length === 0) return res.json({ mtText: '' });
 
-    res.json({ mtText: response });
+    if (firstTime) {
+        moText = "#index";
+        firstTime = false;
+    }
+
+    // check MO request
+
+    switch (true) {
+        case (moText[0] == '#'):
+            console.log("service switch");
+            serviceSwitch(moText);
+            break;
+        case (moText[0] >= 'a' && moText[0] <= 'z'):
+        case (moText[0] >= '1' && moText[0] <= '9'):
+            console.log("menu option");
+            break;
+        case (moText === 'menu'):
+
+			break;
+        default:
+            console.log("other");
+            break;
+    }
+
+    console.log("before");
+    console.log(savedContext);
+
+
+    if (typeof savedContext.header !== 'undefined') {
+        header = savedContext.header + '\n';
+    }
+
+    response = processRequest(moText, savedContext);
+
+    console.log("after");
+    console.log(savedContext);
+
+    var finalResponse = header + response;
+
+    res.json({ mtText: finalResponse });
 });
 
 
@@ -64,7 +156,7 @@ app.get('/', function(req, res, next) {
     res.sendFile('/public/views/index.html', { root: __dirname });
 });
 
-app.get('*', function (req, res) {
+app.get('*', function(req, res) {
     res.sendFile('/public/views/index.html', { root: __dirname });
 });
 
