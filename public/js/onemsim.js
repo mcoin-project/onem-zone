@@ -87,15 +87,33 @@ ONEmSimModule.config(['$httpProvider',
     }
 ]);
 
-'use strict';
-
 ONEmSimModule.controller('mainController', [
     '$scope',
     '$http',
     'toastr',
     function($scope, $http, toastr) {
 
-        $scope.welcome = "hello world";
+        $scope.results = [];
+        $scope.responsesCount = 0;
+
+        $scope.smsInput = function() {
+            var inputObj = {
+                type: "mo",
+                value: $scope.smsText
+            };
+            $scope.results.push(inputObj);
+            $scope.smsText = '';
+
+            $scope.responsesCount++;
+            var response = "response " + $scope.responsesCount;
+
+            var outputObj = {
+                type: "mt",
+                value: response
+            };
+
+            $scope.results.push(outputObj);
+        };
 
     }
 ]);

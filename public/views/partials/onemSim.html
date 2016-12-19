@@ -4,107 +4,21 @@
             <img ng-src="{{'/images/iPhone6.png'}}" alt="" />
             <div class="sms-response">
                 <div class="sms-response-pos">
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last</span>
-                    </div>
-                    <div class="sms-mt">
-                        <span>{{welcome}} last</span>
-                    </div>
-                    <div class="sms-mo">
-                        <span>response last lots of text goes here to make this a very long message blah blah</span>
+                    <div ng-repeat="obj in results">
+                        <div ng-if="obj.type == 'mt'" class="sms-mt">
+                            <span>{{obj.value}}</span>
+                        </div>
+                        <div ng-if="obj.type == 'mo'" class="sms-mo">
+                            <span>{{obj.value}}</span>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="sms-input">
-                <label for="sms"></label>
-                <input type="text" placeho lder="iMessage" class="form-control" id="sms">
+                <form ng-submit="smsInput()">
+                    <label for="sms"></label>
+                    <input ng-model="smsText" type="text" placeholder="iMessage" class="form-control" id="sms">
+                </form>
             </div>
         </div>
     </div>
