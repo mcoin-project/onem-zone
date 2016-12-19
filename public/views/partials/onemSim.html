@@ -3,7 +3,7 @@
         <div class="center-block img-container">
             <img ng-src="{{'/images/iPhone6.png'}}" alt="" />
             <div class="sms-response">
-                <div class="sms-response-pos">
+                <div scroll-bottom="results" class="sms-response-pos">
                     <div ng-repeat="obj in results">
                         <div ng-if="obj.type == 'mt'" class="sms-mt">
                             <span>{{obj.value}}</span>
