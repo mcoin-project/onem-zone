@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "ref": "viewPost.json",
+        "type": "menu",
+        "menuRef": "postMenu.json",
+        "header": "%post title%",
+        "description": "%post body%",
+        "content": [{
+            "ref": "sendMessage.json",
+            "type": "linkStatic",
+            "shortcut": "send",
+            "description": "Send Message"
+        }, {
+            "ref": "addComment.json",
+            "type": "linkStatic",
+            "shortcut": "Comments",
+            "description": "Comments(%n)"
+        }, {
+            "ref": "postOptions.json",
+            "type": "linkStatic",
+            "shortcut": "options",
+            "description": "Post options"
+        }]
+    }, {
+        "type": "end",
+        "ref": "index.json"
+    }]
+}
