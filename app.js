@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
 var request = require('request');
+var fs = require('fs');
 
 var app = express();
 
@@ -33,8 +34,29 @@ app.use('/api', routesApi);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+var index = JSON.parse(fs.readFileSync('./app_api/json/index.json', 'utf8'));
+console.log("index.content.length:"+index.content.length);
+
 app.get('/api/getResponse', function(req, res) {
-    res.json({ mtText: "response" });
+
+	var response = '';
+	
+	if (typeof index.content[0].header !== 'undefined') {
+		response = response + index.content[0].header + '\n';
+	}
+
+	switch (index.content[0].type) {
+		case 'menu':
+			var menuContent = index.content[0].content;
+			for (var i=0; i<menuContent.length; i++) {
+				response = response + menuContent[i].description + '\n';
+			}
+			break;
+		default:
+			break;
+	}
+
+    res.json({ mtText: response });
 });
 
 

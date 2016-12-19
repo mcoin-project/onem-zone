@@ -41,18 +41,20 @@
 
 .img-container .sms-response-pos .sms-mt {
     position: relative;
-    width: 80%;
+    width: 100%;
     height: auto;
     border-radius: 25px;
     display: block;
     float: left;
     padding: 10px;
+    text-align: left;
+    white-space: pre;
 }
 
 .img-container .sms-response-pos .sms-mo {
     position: relative;
     display: block;
-    width: 80%;
+    width: 100%;
     height: auto;
     border-radius: 25px;
     float: right;
