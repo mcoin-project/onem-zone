@@ -33,6 +33,11 @@ app.use('/api', routesApi);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/api/getResponse', function(req, res) {
+    res.json({ mtText: "response" });
+});
+
+
 app.get('/', function(req, res, next) {
     res.sendFile('/public/views/index.html', { root: __dirname });
 });

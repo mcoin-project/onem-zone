@@ -87,6 +87,23 @@ ONEmSimModule.config(['$httpProvider',
     }
 ]);
 
+ONEmSimModule.factory('SmsHandler', [
+    '$resource',
+    function($resource) {
+        return $resource('/api', {}, {
+            getResponse: {
+                method: 'GET',
+                params: {},
+                url: 'api/getResponse',
+                params: {
+                    moText: '@moText'
+                },
+                isArray: false
+            }
+        });
+    }
+]);
+
 ONEmSimModule.directive('scrollBottom', function() {
     return {
         scope: {
@@ -106,7 +123,8 @@ ONEmSimModule.controller('mainController', [
     '$scope',
     '$http',
     'toastr',
-    function($scope, $http, toastr) {
+    'SmsHandler',
+    function($scope, $http, toastr, SmsHandler) {
 
         $scope.results = [];
         $scope.responsesCount = 0;
@@ -117,18 +135,17 @@ ONEmSimModule.controller('mainController', [
                 value: $scope.smsText
             };
             $scope.results.push(inputObj);
+
+            var response = SmsHandler.getResponse({ moText: $scope.smsText }, function() {
+                var outputObj = {
+                    type: "mt",
+                    value: response.mtText
+                };
+
+                $scope.results.push(outputObj);
+
+            });
             $scope.smsText = '';
-
-            $scope.responsesCount++;
-            var response = "response " + $scope.responsesCount;
-
-            var outputObj = {
-                type: "mt",
-                value: response
-            };
-
-            $scope.results.push(outputObj);
         };
-
     }
 ]);
