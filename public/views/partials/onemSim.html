@@ -6,10 +6,18 @@
                 <div scroll-bottom="results" class="sms-response-pos">
                     <div ng-repeat="obj in results">
                         <div ng-if="obj.type == 'mt'" class="sms-mt">
-                            <span>{{obj.value}}</span>
+                            <div class="sms-placeholder">
+                                <div class="sms-mt-container">
+                                    <span>{{obj.value}}</span>
+                                </div>
+                            </div>
                         </div>
                         <div ng-if="obj.type == 'mo'" class="sms-mo">
-                            <span>{{obj.value}}</span>
+                            <div class="sms-placeholder">
+                                <div class="sms-mo-container">
+                                    <span>{{obj.value}}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
