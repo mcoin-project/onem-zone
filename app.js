@@ -14,6 +14,9 @@ var _ = require('underscore');
 var NodeCache = require("node-cache");
 var index = new NodeCache();
 
+var menuOptions = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+var menuFooter = '<send option>';
+
 var app = express();
 
 // Bring in the routes for the API (delete the default routes)
@@ -49,9 +52,12 @@ function getMenuResponse(input, menu) {
 
     var response = '';
 
-    _.each(menu, function(option) {
-        response = response + option.description + '\n';
-    });
+    for (var i=0; i< menu.length; i++) {
+        response = response + menuOptions[i] + ' ' + menu[i].description + '\n';
+    }
+
+    // make footer for menu
+    response = response + menuFooter;
 
     return response;
 }
