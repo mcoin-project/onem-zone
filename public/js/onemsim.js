@@ -112,7 +112,10 @@ ONEmSimModule.directive('scrollBottom', function() {
         link: function(scope, element) {
             scope.$watchCollection('scrollBottom', function(newValue) {
                 if (newValue) {
-                    $(element).scrollTop($(element)[0].scrollHeight);
+                    //      $(element).scrollTop($(element)[0].scrollHeight);
+
+                    var scrollHeight = $(element)[0].scrollHeight;
+                    $(element).animate({scrollTop: scrollHeight}, 300);
                 }
             });
         }
