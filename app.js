@@ -73,7 +73,7 @@ function serviceSwitch(context, input) {
     switch (input) {
         case '#onem':
         case '#':
-            fileName = 'index.json';
+            fileName = 'onem.json';
             break;
         default:
             fileName = input.slice(1) + '.json';
@@ -137,12 +137,12 @@ app.get('/api/getResponse', function(req, res) {
 
         if (typeof index !== 'undefined') {
             session.onemContext = {
-                fileName: 'index.json',
+                fileName: 'onem.json',
                 savedContext: JSON.parse(JSON.stringify(index.content[0]))
             };
             console.log("storing context");
         }
-        moText = "#index";
+        moText = "#onem";
     }
 
     // check MO request

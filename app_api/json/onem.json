@@ -1,0 +1,33 @@
+{
+    "content": [{
+        "ref": "onem.json",
+        "type": "menu",
+        "menuRef": "onem.json",
+        "shortcut": "onem",
+        "header": "** ONEm menu **",
+        "content": [{
+            "ref": "myaccount.json",
+            "type": "linkStatic",
+            "description": "My account"
+        }, {
+            "ref": "sendsms.json",
+            "type": "linkStatic",
+            "description": "Send free SMS to friends"
+        }, {
+            "ref": "createxgroup.json",
+            "type": "linkStatic",
+            "description": "Create free SMS group chats (xGroup)"
+        }, {
+            "ref": "index.json",
+            "type": "linkStatic",
+            "description": "Free Services"
+        }, {
+            "ref": "howtouse.json",
+            "type": "linkStatic",
+            "description": "How to use"
+        }]
+    }, {
+        "type": "end",
+        "ref": "index.json"
+    }]
+}

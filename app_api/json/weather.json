@@ -3,7 +3,7 @@
         "ref": "weather.json",
         "menuRef": "weather.json",
         "type": "menu",
-       	"header": "#weather menu",
+       	"header": "** Weather London, GB menu **",
         "shortcut": "menu",
         "content": [{
             "ref": "details.json",
