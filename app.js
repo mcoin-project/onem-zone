@@ -5,6 +5,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var methodOverride = require('method-override');
 var session = require('express-session');
+var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
@@ -12,9 +13,8 @@ var request = require('request');
 var fs = require('fs');
 var _ = require('underscore');
 var NodeCache = require("node-cache");
-var index = new NodeCache();
 
-var menuOptions = ['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = '<send option>';
 
 var app = express();
@@ -35,24 +35,25 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer());
 
+app.use(cookieParser());
+
+app.use(session({
+    secret: '0nems1m',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 24 * 360000 }  // 24 hours
+}));
+
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-index = JSON.parse(fs.readFileSync('./app_api/json/index.json', 'utf8'));
-
-console.log("index.content.length:" + index.content.length);
-
-var flowStep = 0;
-var savedContext = index.content[flowStep];
-var firstTime = true;
-
 function getMenuResponse(input, menu) {
 
     var response = '';
 
-    for (var i=0; i< menu.length; i++) {
+    for (var i = 0; i < menu.length; i++) {
         response = response + menuOptions[i] + ' ' + menu[i].description + '\n';
     }
 
@@ -62,30 +63,41 @@ function getMenuResponse(input, menu) {
     return response;
 }
 
-function serviceSwitch(input) {
+function serviceSwitch(context, input) {
 
-    var fileName = './app_api/json/';
+    var root = './app_api/json/';
+    var fileName = '';
+    var fullPath = '';
     var response = '';
 
     switch (input) {
         case '#onem':
         case '#':
-            fileName = fileName + 'index.json';
+            fileName = 'index.json';
             break;
         default:
-            fileName = fileName + input.slice(1) + '.json';
+            fileName = input.slice(1) + '.json';
             break;
     }
 
-    console.log("reading: "+fileName);
+    fullPath = root + fileName;
+
+    console.log("reading: " + fileName);
 
     try {
-        index = JSON.parse(fs.readFileSync(fileName, 'utf8'));
+        var index = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
         console.log("index.content.length:" + index.content.length);
-        savedContext = index.content[0];
+        if (typeof index !== 'undefined') {
+            // context = index.content[0];
+            context = JSON.parse(JSON.stringify(index.content[0]));
+            console.log("context");
+            console.log(context);
+        }
     } catch (err) {
-		response = "error, service not found";
+        response = "error, service not found";
     }
+
+    return context;
 
 }
 
@@ -112,12 +124,25 @@ app.get('/api/getResponse', function(req, res) {
     var moText = req.query.moText.trim().toLowerCase();
     var response = '';
     var header = '';
+    var session = req.session;
+
+    console.log(session);
 
     if (moText.length === 0) return res.json({ mtText: '' });
 
-    if (firstTime) {
+    if (typeof session.onemContext === 'undefined') {  // must be first time, or expired
+
+        var index = JSON.parse(fs.readFileSync('./app_api/json/index.json', 'utf8'));
+        console.log("index.content.length:" + index.content.length);
+
+        if (typeof index !== 'undefined') {
+            session.onemContext = {
+                fileName: 'index.json',
+                savedContext: JSON.parse(JSON.stringify(index.content[0]))
+            };
+            console.log("storing context");
+        }
         moText = "#index";
-        firstTime = false;
     }
 
     // check MO request
@@ -125,38 +150,36 @@ app.get('/api/getResponse', function(req, res) {
     switch (true) {
         case (moText[0] == '#'):
             console.log("service switch");
-            serviceSwitch(moText);
+            session.onemContext.savedContext = serviceSwitch(session.onemContext.savedContext, moText);
             break;
         case (moText[0] >= 'a' && moText[0] <= 'z'):
         case (moText[0] >= '1' && moText[0] <= '9'):
             console.log("menu option");
             break;
         case (moText === 'menu'):
-
-			break;
+            break;
         default:
             console.log("other");
             break;
     }
 
     console.log("before");
-    console.log(savedContext);
+    console.log(session.onemContext.savedContext);
 
 
-    if (typeof savedContext.header !== 'undefined') {
-        header = savedContext.header + '\n';
+    if (typeof session.onemContext.savedContext.header !== 'undefined') {
+        header = session.onemContext.savedContext.header + '\n';
     }
 
-    response = processRequest(moText, savedContext);
+    response = processRequest(moText, session.onemContext.savedContext);
 
     console.log("after");
-    console.log(savedContext);
+    console.log(session.onemContext.savedContext);
 
     var finalResponse = header + response;
 
     res.json({ mtText: finalResponse });
 });
-
 
 app.get('/', function(req, res, next) {
     res.sendFile('/public/views/index.html', { root: __dirname });
