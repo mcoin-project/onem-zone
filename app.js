@@ -65,7 +65,7 @@ function getWizardResponse(input, menu) {
     var response = 'a Confirm\nb Back\nYou selected:\n';
 
     for (var i = 0; i < menu.length; i++) {
-        response = response + menuOptions[i+2] + ' ' + menu[i].description + '\n';
+        response = response + menuOptions[i + 2] + ' ' + menu[i].description + '\n';
     }
 
     return response;
@@ -114,9 +114,13 @@ function serviceSwitch(input) {
 
 }
 
+// main handler for responses 
+// returns {response : main body of text without header or footer
+//          skip: tells main logic whether to skip to the next json item, ie not wait for a response from the user}
+
 function processRequest(input, context) {
 
-    var response = '';
+    var result = { response: '', skip: false };
     var i = context.indexPos;
     var type = '';
 
@@ -130,21 +134,40 @@ function processRequest(input, context) {
 
     switch (type) {
         case 'menu':
-            response = getMenuResponse(input, context.content[i].content);
+            result.response = getMenuResponse(input, context.content[i].content);
             break;
         case 'input':
             console.log("type input:");
             console.log(context.content[i].content.description);
-            response = context.content[i].content.description + '\n';
+            result.response = context.content[i].content.description + '\n';
             break;
         case 'wizard':
-            response = getWizardResponse(input, context.content[i].content);
+            result.response = getWizardResponse(input, context.content[i].content);
+            break;
+        case 'message':
+            result.response = context.content[i].description + '\n';
+            result.skip = true;
+            break;
+        case 'end':
+            console.log("end found");
+            console.log(context.content[i].ref);
+            result = serviceSwitch(context.content[i].ref);
+            console.log("result");
+            console.log(result);
+
+            if (result.success) {
+                context = JSON.parse(JSON.stringify(result.data));
+                context.indexPos = 0;
+                console.log("context");
+                console.log(context);
+                return processRequest(input, context);
+            }
             break;
         default:
             break;
     }
 
-    return response;
+    return result;
 
 }
 
@@ -164,8 +187,8 @@ function validateInput(moText, context) {
         type = context.content.type;
     }
 
-    console.log("validating input:"+ moText);
-    console.log("type:"+type);
+    console.log("validating input:" + moText);
+    console.log("type:" + type);
     console.log("index:" + i);
 
     switch (type) {
@@ -177,13 +200,13 @@ function validateInput(moText, context) {
 
             // if it's only 1 char long and in range of a to last menu option
             found = menuOptions.indexOf(input[0]);
-            console.log("found:"+found);
+            console.log("found:" + found);
             if (input.length === 1 &&
                 found !== -1 &&
-                found <= menuContent.length -1) {
+                found <= menuContent.length - 1) {
                 response.success = true;
                 response.firstOption = 'a';
-                response.lastOption = menuOptions[menuContent.length-1];
+                response.lastOption = menuOptions[menuContent.length - 1];
             } else {
                 response.success = false;
                 response.response = "invalid menu option";
@@ -199,17 +222,21 @@ function validateInput(moText, context) {
             console.log(wizardContent);
 
             found = menuOptions.indexOf(input[0]);
-            console.log("found:"+found);
+            console.log("found:" + found);
             if (input.length === 1 &&
                 found !== -1 &&
-                found <= wizardContent.length +1) {  // wizards have two extra options a) confirm and b) back
+                found <= wizardContent.length + 1) { // wizards have two extra options a) confirm and b) back
                 response.success = true;
                 response.firstOption = 'a';
-                response.lastOption = menuOptions[wizardContent.length+1];
+                response.lastOption = menuOptions[wizardContent.length + 1];
             } else {
                 response.success = false;
                 response.response = "invalid menu option";
             }
+            break;
+        case 'message':
+            console.log("message type");
+            response.success = true;
             break;
         default:
             break;
@@ -217,7 +244,6 @@ function validateInput(moText, context) {
     }
 
     return response;
-
 }
 
 function processHeader(content) {
@@ -230,13 +256,18 @@ function processHeader(content) {
 }
 
 function processFooter(content) {
-    return menuFooter;
+    if (content.type !== 'message') {
+        return menuFooter;
+    } else {
+        return '';
+    }
 }
 
 
-app.get('/api/getResponse', function(req, res) {
+app.get('/api/getResponse', function(req, res, next) {
 
-    var moText = req.query.moText.trim();
+    var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
+    var skip = req.query.skip;
     var response = '';
     var header = '';
     var footer = '';
@@ -256,12 +287,18 @@ app.get('/api/getResponse', function(req, res) {
         firstTime = true;
     }
 
+    if (typeof skip !== 'undefined') console.log("skip constructor:" + skip.constructor);
+
     i = req.session.onemContext.indexPos;
 
     firstChar = moText[0].toLowerCase();
 
     // check MO request for reserved verbs or service switching
     switch (true) {
+        case (skip === 'true'):
+            console.log("skip redirect found");
+            verb = true;
+            break;
         case (firstChar == '#'):
             var result = serviceSwitch(moText);
             if (result.success) {
@@ -298,24 +335,29 @@ app.get('/api/getResponse', function(req, res) {
         console.log(status);
     }
 
+    var body = {}; // container for processRequest
 
     if (status.success) {
         if (!firstTime && !serviceSwitched) {
             req.session.onemContext.indexPos++;
             i = req.session.onemContext.indexPos;
-            console.log("incrementing index, now:"+i);
+            console.log("incrementing index, now:" + i);
         }
-
         header = processHeader(req.session.onemContext.content[i]);
-        status.response = processRequest(moText, req.session.onemContext);
+        body = processRequest(moText, req.session.onemContext);
         footer = processFooter(req.session.onemContext.content[i]);
-
-
+    } else {
+        body.response = status.response;
     }
 
-    var finalResponse = header + status.response + footer;
+    var finalResponse = header + body.response + footer;
 
-    res.json({ mtText: finalResponse });
+    res.json({
+        mtText: finalResponse,
+        skip: body.skip
+    });
+
+
 });
 
 app.get('/', function(req, res, next) {

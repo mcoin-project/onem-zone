@@ -115,7 +115,7 @@ ONEmSimModule.directive('scrollBottom', function() {
                     //      $(element).scrollTop($(element)[0].scrollHeight);
 
                     var scrollHeight = $(element)[0].scrollHeight;
-                    $(element).animate({scrollTop: scrollHeight}, 300);
+                    $(element).animate({ scrollTop: scrollHeight }, 300);
                 }
             });
         }
@@ -146,6 +146,19 @@ ONEmSimModule.controller('mainController', [
                 };
 
                 $scope.results.push(outputObj);
+
+                // simulate an unsocilicted MT message and call another Get request
+                if (response.skip) {
+                    console.log("skipping");
+                    var result = SmsHandler.getResponse({ skip: true }, function() {
+                        var outputObj = {
+                             type: "mt",
+                             value: result.mtText
+                        };
+
+                        $scope.results.push(outputObj);
+                    });
+                }
 
             });
             $scope.smsText = '';

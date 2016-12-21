@@ -45,6 +45,6 @@
         "description": "Post added, code is %code%\nShare this code with anyone so they can see your post "
     }, {
         "type": "end",
-        "ref": "index.json"
+        "ref": "#onem"
     }]
 }
