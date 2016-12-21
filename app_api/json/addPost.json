@@ -5,7 +5,7 @@
         "header": "#post add",
         "content": {
             "type": "string",
-            "desription": "Give your new post a title"
+            "description": "Give your new post a title"
         }
     }, {
         "type": "input",

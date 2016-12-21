@@ -60,12 +60,19 @@ function getMenuResponse(input, menu) {
     return response;
 }
 
-function serviceSwitch(context, input) {
+// returns
+// {
+//    success : true || false,
+//    data : context
+//    response : error text
+// }
+function serviceSwitch(input) {
 
     var root = './app_api/json/';
     var fileName = '';
     var fullPath = '';
     var response = '';
+    var context = { success: false, data: undefined, response: '' };
 
     switch (input) {
         case '#onem':
@@ -79,19 +86,17 @@ function serviceSwitch(context, input) {
 
     fullPath = root + fileName;
 
-    console.log("reading: " + fileName);
-
     try {
         var index = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
-        console.log("index.content.length:" + index.content.length);
         if (typeof index !== 'undefined') {
-            // context = index.content[0];
-            context = JSON.parse(JSON.stringify(index.content[0]));
-            console.log("context");
-            console.log(context);
+            context.data = JSON.parse(JSON.stringify(index));
+            context.data.indexPos = 0;
+            context.success = true;
+        } else {
+            context.response = "error, service not found";
         }
     } catch (err) {
-        response = "error, service not found";
+        context.response = "error, service not found";
     }
 
     return context;
@@ -101,12 +106,25 @@ function serviceSwitch(context, input) {
 function processRequest(input, context) {
 
     var response = '';
+    var i = context.indexPos;
+    var type = '';
 
-    switch (context.type) {
+    if (context.content instanceof Array) {
+        console.log("content is a array");
+        type = context.content[i].type;
+    } else {
+        console.log("content is not an array");
+        type = context.content.type;
+    }
+
+    switch (type) {
         case 'menu':
-            var menuContent = context.content;
-            response = getMenuResponse(input, menuContent);
-            console.log("switched menu context");
+            response = getMenuResponse(input, context.content[i].content);
+            break;
+        case 'input':
+            console.log("type input:");
+            console.log(context.content[i].content.description);
+            response = context.content[i].content.description + '\n';
             break;
         default:
             break;
@@ -120,23 +138,45 @@ function validateInput(moText, context) {
 
     var input = moText.toLowerCase();
     var response = { success: true };
+    var i = context.indexPos;
+    var type = '';
 
-    switch (context.type) {
+    if (context.content instanceof Array) {
+        console.log("content is a array");
+        type = context.content[i].type;
+    } else {
+        console.log("content is not an array");
+        type = context.content.type;
+    }
+
+    console.log("validating input:"+ moText);
+    console.log("type:"+type);
+    console.log("index:" + i);
+
+    switch (type) {
         case 'menu':
-            var menuContent = context.content;
+            var menuContent = context.content[i].content;
+
+            console.log("menuContent:");
+            console.log(menuContent);
 
             // if it's only 1 char long and in range of a to last menu option
             var found = menuOptions.indexOf(input[0]);
+            console.log("found:"+found);
             if (input.length === 1 &&
                 found !== -1 &&
-                found >= menuContent.length &&
-                found <= menuContent.length) {
+                found <= menuContent.length -1) {
                 response.success = true;
                 response.firstOption = 'a';
-                response.lastOption = menuOptions[menuContent.length];
+                response.lastOption = menuOptions[menuContent.length-1];
             } else {
                 response.success = false;
+                response.response = "invalid menu option";
             }
+            break;
+        case 'input':
+            console.log('input found');
+            response.success = true;
             break;
         default:
             break;
@@ -147,15 +187,16 @@ function validateInput(moText, context) {
 
 }
 
-function processHeader(context) {
+function processHeader(content) {
     var header = '';
-    if (typeof context.header !== 'undefined') {
-        header = context.header + '\n';
+
+    if (typeof content.header !== 'undefined') {
+        header = content.header + '\n';
     }
     return header;
 }
 
-function processFooter(context) {
+function processFooter(content) {
     return menuFooter;
 }
 
@@ -168,65 +209,78 @@ app.get('/api/getResponse', function(req, res) {
     var footer = '';
     var firstChar = '';
     var firstTime = false;
-    var context = req.session.onemContext;
+    var serviceSwitched = false;
     var verb = false;
-    var status = {success : true };
-
-    console.log(req.session);
+    var status = { success: true };
+    var i;
 
     if (moText.length === 0) return res.json({ mtText: '' });
 
-    if (typeof context === 'undefined') { // must be first time, or expired
-        console.log("First time login or session expired");
-        req.session.onemContext = { fileName :'onem.json' };
-        context = req.session.onemContext;
-        context.savedContext = {};
+    if (typeof req.session.onemContext === 'undefined') { // must be first time, or expired
+        req.session.onemContext = { fileName: 'onem.json' };
+        req.session.onemContext.indexPos = 0;
         moText = "#onem";
         firstTime = true;
     }
+
+    i = req.session.onemContext.indexPos;
 
     firstChar = moText[0].toLowerCase();
 
     // check MO request for reserved verbs or service switching
     switch (true) {
         case (firstChar == '#'):
-            console.log("service switch");
-            context.savedContext = serviceSwitch(context.savedContext, moText);
-            verb = true;
+            var result = serviceSwitch(moText);
+            if (result.success) {
+                verb = true;
+                serviceSwitched = true;
+                req.session.onemContext = result.data;
+                req.session.onemContext.indexPos = 0;
+                i = 0;
+            } else {
+                status.success = false;
+                status.response = result.response;
+            }
             break;
         case (moText === 'menu'):
-            console.log("menu selected");
-            verb = true;
+            if (req.session.onemContext.content[i].type !== 'menu') {
+                status.success = false;
+            } else {
+                verb = true;
+            }
             break;
         case (moText === 'back'):
-            console.log("back selected");
             verb = true;
             break;
         default:
-            console.log("other");
             break;
     }
 
     // if it's not a reserved word, then validate the input against the savedContext
     // eg if it's a menu option, check the selected option value
     // if it's an input string, then accept anything else (other than a reserved verb)
-    if (!verb && !firstTime) {
-        status = validateInput(moText, context.savedContext);
+    if (!verb && !firstTime && status.success) {
+        status = validateInput(moText, req.session.onemContext);
+        console.log("after validated input, status:");
+        console.log(status);
     }
 
-    response = processRequest(moText, context.savedContext);
-
-    console.log("status.success:"+status.success);
 
     if (status.success) {
-        header = processHeader(context.savedContext);
-        footer = processFooter(context.savedContext);
+        if (!firstTime && !serviceSwitched) {
+            req.session.onemContext.indexPos++;
+            i = req.session.onemContext.indexPos;
+            console.log("incrementing index, now:"+i);
+        }
+
+        header = processHeader(req.session.onemContext.content[i]);
+        status.response = processRequest(moText, req.session.onemContext);
+        footer = processFooter(req.session.onemContext.content[i]);
+
+
     }
 
-//    console.log("after");
-//    console.log(context.savedContext);
-
-    var finalResponse = header + response + footer;
+    var finalResponse = header + status.response + footer;
 
     res.json({ mtText: finalResponse });
 });
