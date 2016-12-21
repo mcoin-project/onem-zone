@@ -30,8 +30,8 @@
         "menuRef": "postMenu.json",
         "header": "#post add",
         "content": [{
-            "type": "enum",
-            "values": ["Public", "Private"]
+            "type": "any",
+            "description": "Private"
         }, {
             "type": "any",
             "description": "post title"

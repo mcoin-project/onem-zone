@@ -60,6 +60,17 @@ function getMenuResponse(input, menu) {
     return response;
 }
 
+function getWizardResponse(input, menu) {
+
+    var response = 'a Confirm\nb Back\nYou selected:\n';
+
+    for (var i = 0; i < menu.length; i++) {
+        response = response + menuOptions[i+2] + ' ' + menu[i].description + '\n';
+    }
+
+    return response;
+}
+
 // returns
 // {
 //    success : true || false,
@@ -126,6 +137,9 @@ function processRequest(input, context) {
             console.log(context.content[i].content.description);
             response = context.content[i].content.description + '\n';
             break;
+        case 'wizard':
+            response = getWizardResponse(input, context.content[i].content);
+            break;
         default:
             break;
     }
@@ -140,6 +154,7 @@ function validateInput(moText, context) {
     var response = { success: true };
     var i = context.indexPos;
     var type = '';
+    var found;
 
     if (context.content instanceof Array) {
         console.log("content is a array");
@@ -161,7 +176,7 @@ function validateInput(moText, context) {
             console.log(menuContent);
 
             // if it's only 1 char long and in range of a to last menu option
-            var found = menuOptions.indexOf(input[0]);
+            found = menuOptions.indexOf(input[0]);
             console.log("found:"+found);
             if (input.length === 1 &&
                 found !== -1 &&
@@ -177,6 +192,24 @@ function validateInput(moText, context) {
         case 'input':
             console.log('input found');
             response.success = true;
+            break;
+        case 'wizard':
+            var wizardContent = context.content[i].content;
+            console.log("wizardContent:");
+            console.log(wizardContent);
+
+            found = menuOptions.indexOf(input[0]);
+            console.log("found:"+found);
+            if (input.length === 1 &&
+                found !== -1 &&
+                found <= wizardContent.length +1) {  // wizards have two extra options a) confirm and b) back
+                response.success = true;
+                response.firstOption = 'a';
+                response.lastOption = menuOptions[wizardContent.length+1];
+            } else {
+                response.success = false;
+                response.response = "invalid menu option";
+            }
             break;
         default:
             break;
