@@ -2,19 +2,19 @@
     "content": [{
         "ref": "index.json",
         "type": "menu",
-        "menuRef": "postaenu.json",
+        "menuRef": "postmenu.json",
         "shortcut": "recents",
         "header": "#post recents",
         "content": [{
-            "ref": "viewaost.json",
+            "ref": "viewpost.json",
             "type": "linkDynamic",
             "description": "post title 1"
         }, {
-            "ref": "viewaost.json",
+            "ref": "viewpost.json",
             "type": "linkDynamic",
             "description": "post title 2"
         }, {
-            "ref": "viewaost.json",
+            "ref": "viewpost.json",
             "type": "linkDynamic",
             "description": "post title 3"
         }]

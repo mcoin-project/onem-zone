@@ -363,7 +363,7 @@ app.get('/api/getResponse', function(req, res, next) {
         case (moText === 'menu'):
             if (req.session.onemContext.content[i].type !== 'menu') {
                 status.success = false;
-                status.response = "invalid option";
+                status.response = "Send a valid option";
             } else {
                 verb = true;
             }
@@ -419,7 +419,12 @@ app.get('/api/getResponse', function(req, res, next) {
         header = processHeader(req.session.onemContext.content[i]);
         footer = processFooter(req.session.onemContext.content[i]);
     } else {
+        //
+        // this is a failed case, can put customised header/footer in here
+        //
+        header = processHeader(req.session.onemContext.content[i]);
         body.response = status.response;
+        footer = processFooter(req.session.onemContext.content[i]);
     }
 
     var finalResponse = header + body.response + footer;
