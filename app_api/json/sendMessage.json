@@ -1,6 +1,6 @@
 {
     "content": [{
-        "ref": "sendMessage.json",
+        "ref": "sendmessage.json",
         "type": "input",
         "menuRef": "postmenu.json",
         "header": "%post title%",
