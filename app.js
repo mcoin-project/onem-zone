@@ -93,7 +93,7 @@ function serviceSwitch(input) {
                 fileName = 'onem.json';
                 break;
             default:
-                fileName = input.slice(1) + '.json';
+                fileName = input.slice(1).toLowerCase() + '.json';
                 break;
         }
     } else {
