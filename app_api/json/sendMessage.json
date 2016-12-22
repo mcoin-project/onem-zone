@@ -2,21 +2,21 @@
     "content": [{
         "ref": "sendMessage.json",
         "type": "input",
-        "menuRef": "postMenu.json",
+        "menuRef": "postmenu.json",
         "header": "%post title%",
         "description": "%post body%",
         "content": [{
-            "ref": "sendMessage.json",
+            "ref": "sendmessage.json",
             "type": "linkStatic",
             "shortcut": "send",
             "description": "Send Message"
         }, {
-            "ref": "addComment.json",
+            "ref": "addcomment.json",
             "type": "linkStatic",
             "shortcut": "Comments",
             "description": "Comments(%n)"
         }, {
-            "ref": "postOptions.json",
+            "ref": "postpptions.json",
             "type": "linkStatic",
             "shortcut": "options",
             "description": "Post options"

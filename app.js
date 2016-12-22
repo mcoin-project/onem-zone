@@ -85,14 +85,19 @@ function serviceSwitch(input) {
     var response = '';
     var context = { success: false, data: undefined, response: '' };
 
-    switch (input) {
-        case '#onem':
-        case '#':
-            fileName = 'onem.json';
-            break;
-        default:
-            fileName = input.slice(1) + '.json';
-            break;
+    if (input[0] === '#') {
+
+        switch (input) {
+            case '#onem':
+            case '#':
+                fileName = 'onem.json';
+                break;
+            default:
+                fileName = input.slice(1) + '.json';
+                break;
+        }
+    } else {
+        fileName = input;
     }
 
     fullPath = root + fileName;
@@ -113,6 +118,49 @@ function serviceSwitch(input) {
     return context;
 
 }
+
+function processMenuContext(input, context) {
+
+    var i = context.indexPos;
+    var result;
+    var switchRes;
+
+    var option = menuOptions.indexOf(input);
+
+    var selected = context.content[i].content[option];
+
+    console.log("option:" + option);
+    console.log("inside processMenuRequest, context.content[i].content[option]:");
+    console.log(selected);
+
+    switch (selected.type) {
+        case 'linkStatic':
+        case 'linkDynamic':
+            console.log(selected.ref);
+            switchRes = serviceSwitch(selected.ref);
+            console.log("switchRes");
+            console.log(switchRes);
+
+            if (switchRes.success) {
+                context = JSON.parse(JSON.stringify(switchRes.data));
+                context.indexPos = 0;
+                console.log("context");
+                console.log(context);
+            }
+            break;
+        case 'skip':
+            console.log("skipping");
+            context.indexPos++;
+            console.log("index:"+context.indexPos);
+            break;
+        default:
+            break;
+    }
+
+    return context;
+
+}
+
 
 // main handler for responses 
 // returns {response : main body of text without header or footer
@@ -174,7 +222,7 @@ function processRequest(input, context) {
 function validateInput(moText, context) {
 
     var input = moText.toLowerCase();
-    var response = { success: true };
+    var response = { success: true, menuOption: false };
     var i = context.indexPos;
     var type = '';
     var found;
@@ -197,14 +245,15 @@ function validateInput(moText, context) {
 
             console.log("menuContent:");
             console.log(menuContent);
+            console.log("input:"+input);
 
             // if it's only 1 char long and in range of a to last menu option
             found = menuOptions.indexOf(input[0]);
             console.log("found:" + found);
-            if (input.length === 1 &&
-                found !== -1 &&
+            if (found !== -1 &&
                 found <= menuContent.length - 1) {
                 response.success = true;
+                response.menuOption = true;
                 response.firstOption = 'a';
                 response.lastOption = menuOptions[menuContent.length - 1];
             } else {
@@ -344,14 +393,30 @@ app.get('/api/getResponse', function(req, res, next) {
 
     var body = {}; // container for processRequest
 
-    if (status.success) {
+    if (status.success && status.menuOption) {
+        // step into menu
+        req.session.onemContext = processMenuContext(moText, req.session.onemContext);
+        body = processRequest(moText, req.session.onemContext);
+        
+        i = req.session.onemContext.indexPos;
+
+        console.log("after processmenu, index:"+req.session.onemContext.indexPos+' i:'+i);
+
+        header = processHeader(req.session.onemContext.content[i]);
+
+        console.log("content:");
+        console.log(req.session.onemContext.content[i]);
+
+        footer = processFooter(req.session.onemContext.content[i]);
+
+    } else if (status.success) {
         if (!firstTime && !serviceSwitched && !verb) {
             req.session.onemContext.indexPos++;
             i = req.session.onemContext.indexPos;
             console.log("incrementing index, now:" + i);
         }
-        header = processHeader(req.session.onemContext.content[i]);
         body = processRequest(moText, req.session.onemContext);
+        header = processHeader(req.session.onemContext.content[i]);
         footer = processFooter(req.session.onemContext.content[i]);
     } else {
         body.response = status.response;

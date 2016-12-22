@@ -1,27 +1,27 @@
 {
     "content": [{
-        "ref": "postMenu.json",
+        "ref": "postmenu.json",
         "menuRef": "postMenu.json",
         "type": "menu",
        	"header": "#post menu",
         "shortcut": "menu",
         "content": [{
-            "ref": "addPost.json",
+            "ref": "addpost.json",
             "type": "linkStatic",
             "shortcut": "add",
             "description": "add a post"
         }, {
-            "ref": "searchPost.json",
+            "ref": "searchpost.json",
             "type": "linkStatic",
             "shortcut": "search",
             "description": "search"
         }, {
-            "ref": "myPosts.json",
+            "ref": "myposts.json",
             "type": "linkStatic",
             "shortcut": "my Posts",
             "description": "my Posts"
         }, {
-            "ref": "myProfile.json",
+            "ref": "myprofile.json",
             "type": "linkStatic",
             "shortcut": "my Profile",
             "description": "my Profile"

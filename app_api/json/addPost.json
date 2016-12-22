@@ -1,6 +1,6 @@
 {
     "content": [{
-        "ref": "addPost.json",
+        "ref": "addpost.json",
         "type": "input",
         "header": "#post add",
         "content": {
