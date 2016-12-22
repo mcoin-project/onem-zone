@@ -297,7 +297,6 @@ app.get('/api/getResponse', function(req, res, next) {
     switch (true) {
         case (skip === 'true'):
             console.log("skip redirect found");
-            verb = true;
             break;
         case (firstChar == '#'):
             var result = serviceSwitch(moText);
@@ -315,11 +314,19 @@ app.get('/api/getResponse', function(req, res, next) {
         case (moText === 'menu'):
             if (req.session.onemContext.content[i].type !== 'menu') {
                 status.success = false;
+                status.response = "invalid option";
             } else {
                 verb = true;
             }
             break;
         case (moText === 'back'):
+            if (req.session.onemContext.indexPos === 0) {
+                moText = 'menu';
+            } else {
+                req.session.onemContext.indexPos--;
+                i = req.session.onemContext.indexPos;
+                console.log("decrementing index, now:" + i);
+            }
             verb = true;
             break;
         default:
@@ -338,7 +345,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var body = {}; // container for processRequest
 
     if (status.success) {
-        if (!firstTime && !serviceSwitched) {
+        if (!firstTime && !serviceSwitched && !verb) {
             req.session.onemContext.indexPos++;
             i = req.session.onemContext.indexPos;
             console.log("incrementing index, now:" + i);

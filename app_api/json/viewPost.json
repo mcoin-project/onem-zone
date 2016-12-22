@@ -23,6 +23,6 @@
         }]
     }, {
         "type": "end",
-        "ref": "index.json"
+        "ref": "#recents"
     }]
 }

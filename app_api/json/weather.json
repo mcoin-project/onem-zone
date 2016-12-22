@@ -19,6 +19,6 @@
     },
     {
     	"type": "end",
-    	"ref": "weather.json"
+    	"ref": "#weather"
     }]
 }
