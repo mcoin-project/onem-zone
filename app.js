@@ -102,18 +102,21 @@ function serviceSwitch(input) {
 
     fullPath = root + fileName;
 
-    try {
-        var index = JSON.parse(fs.readFileSync(fullPath, 'utf8'));
-        if (typeof index !== 'undefined') {
-            context.data = JSON.parse(JSON.stringify(index));
-            context.data.indexPos = 0;
-            context.success = true;
-        } else {
-            context.response = "error, service not found";
-        }
-    } catch (err) {
-        context.response = "error, service not found";
+    console.log("fullPath:"+fullPath);
+
+    var file = fs.readFileSync(fullPath, 'utf8');
+    console.log("file:");
+    console.log(file);
+    var index = JSON.parse(file);
+    if (typeof index !== 'undefined') {
+        context.data = JSON.parse(JSON.stringify(index));
+        context.data.indexPos = 0;
+        context.success = true;
+    } else {
+        console.log("undefined");
+        context.response = "error, service not found\n";
     }
+
 
     return context;
 

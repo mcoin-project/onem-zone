@@ -3,7 +3,7 @@
         "ref": "xgroup.json",
         "menuRef": "xgroup.json",
         "type": "menu",
-       	"header": "** #xGroup menu **",
+        "header": "** #xGroup menu **",
         "shortcut": "menu",
         "content": [{
             "ref": "xgrouplist.json",
@@ -20,10 +20,9 @@
             "type": "linkStatic",
             "shortcut": "help",
             "description": "Tutorial"
-        }],
-    },
-    {
-    	"type": "end",
-    	"ref": "#xgroup"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#xgroup"
     }]
 }
