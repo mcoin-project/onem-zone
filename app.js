@@ -88,8 +88,10 @@ function serviceSwitch(input) {
     if (input[0] === '#') {
 
         switch (input) {
-            case '#onem':
             case '#':
+                fileName = 'index.json';
+                break;
+            case '#onem':
                 fileName = 'onem.json';
                 break;
             default:
@@ -114,7 +116,7 @@ function serviceSwitch(input) {
         context.success = true;
     } else {
         console.log("undefined");
-        context.response = "error, service not found\n";
+        context.response = "Not sure what you meant. Please send # to see all available services.\n";
     }
 
 

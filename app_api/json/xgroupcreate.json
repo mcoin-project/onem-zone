@@ -1,0 +1,46 @@
+{
+    "content": [{
+        "ref": "xgroupcreate.json",
+        "type": "input",
+        "header": "** xGroup create **",
+        "content": {
+            "type": "string",
+            "description": "Group name?"
+        }
+    }, {
+        "type": "input",
+        "header": "** xGroup create **",
+        "content": {
+            "type": "string",
+            "description": "Your Name?"
+        }
+    }, {
+        "type": "wizard",
+        "menuRef": "xgroupcreate.json",
+        "header": "** xGroup create **\nThis will create xGroup <name>.  You'll shortly receive a message from your xGroup - forward it to the people you wish to invite. Reply to it to send messages to the group.",
+        "content": [{
+            "type": "any",
+            "description": "<group name>"
+        }, {
+            "type": "any",
+            "description": "<your name>"
+        }]
+    }, {
+        "type": "menu",
+        "menuRef": "xgroupcreate.json",
+        "header": "** xGroup invite **\nInvite people to your new xGroup",
+        "content": [{
+            "type": "linkStatic",
+            "description": "Contact manager"
+        }, {
+            "type": "linkStatic",
+            "description": "by mID"
+        }, {
+            "type": "linkStatic",
+            "description": "Invite later"
+        }]        
+    }, {        
+        "type": "end",
+        "ref": "#onem"
+    }]
+}
