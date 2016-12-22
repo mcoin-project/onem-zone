@@ -1,0 +1,39 @@
+{
+    "content": [{
+        "ref": "postmenu.json",
+        "menuRef": "postMenu.json",
+        "type": "menu",
+       	"header": "#post menu",
+        "shortcut": "menu",
+        "content": [{
+            "ref": "addpost.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "add a post"
+        }, {
+            "ref": "searchpost.json",
+            "type": "linkStatic",
+            "shortcut": "search",
+            "description": "search"
+        }, {
+            "ref": "myposts.json",
+            "type": "linkStatic",
+            "shortcut": "my Posts",
+            "description": "my Posts"
+        }, {
+            "ref": "myprofile.json",
+            "type": "linkStatic",
+            "shortcut": "my Profile",
+            "description": "my Profile"
+        }, {
+            "ref": "inbox.json",
+            "type": "linkStatic",
+            "shortcut": "inbox",
+            "description": "inbox(3)"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#post"
+    }]
+}

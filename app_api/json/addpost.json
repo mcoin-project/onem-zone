@@ -1,0 +1,50 @@
+{
+    "content": [{
+        "ref": "addpost.json",
+        "type": "input",
+        "header": "#post add",
+        "content": {
+            "type": "string",
+            "description": "Give your new post a title"
+        }
+    }, {
+        "type": "input",
+        "header": "#post add",
+        "content": {
+            "type": "string",
+            "description": "Send post content (max 20 words)"
+        }
+    }, {
+        "type": "menu",
+        "menuRef": "postmenu.json",
+        "description": "Post visibility",
+        "content": [{
+            "type": "skip",
+            "description": "Private (share code)"
+        }, {
+            "type": "skip",
+            "description": "Public (everyone)"
+        }]
+    }, {
+        "type": "wizard",
+        "menuRef": "postmenu.json",
+        "header": "#post add",
+        "content": [{
+            "type": "any",
+            "description": "Private"
+        }, {
+            "type": "any",
+            "description": "post title"
+        }, {
+            "type": "any",
+            "description": "post content"
+        }]
+    }, {
+        "type": "message",
+        "header": "#post add",
+        "description": "Post added, code is %code%\nShare this code with anyone so they can see your post "
+    }, {
+        "type": "end",
+        "ref": "#onem"
+    }]
+}
