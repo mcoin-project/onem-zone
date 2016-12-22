@@ -16,7 +16,7 @@
         }
     }, {
         "type": "menu",
-        "menuRef": "postMenu.json",
+        "menuRef": "postmenu.json",
         "description": "Post visibility",
         "content": [{
             "type": "skip",
@@ -27,7 +27,7 @@
         }]
     }, {
         "type": "wizard",
-        "menuRef": "postMenu.json",
+        "menuRef": "postmenu.json",
         "header": "#post add",
         "content": [{
             "type": "any",
