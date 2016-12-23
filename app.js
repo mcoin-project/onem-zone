@@ -68,6 +68,8 @@ function getWizardResponse(input, menu) {
         response = response + menuOptions[i + 2] + ' ' + menu[i].description + '\n';
     }
 
+    console.log("inside wizard returning:"+response);
+
     return response;
 }
 
@@ -115,6 +117,7 @@ function serviceSwitch(input) {
         file = fs.readFileSync(fullPath, 'utf8');
         context.success = true;
     } catch (err) {
+        console.log(err);
         context.response = "Not sure what you meant. Please send # to see all available services.\n";
         context.success = false;
     }
@@ -146,7 +149,7 @@ function serviceSwitch(input) {
 function processMenuContext(input, context) {
 
     var i = context.indexPos;
-    var result;
+    var result = {success: false, data: {indexPos: 0}};
     var switchRes;
 
     var option = menuOptions.indexOf(input);
@@ -166,22 +169,27 @@ function processMenuContext(input, context) {
             console.log(switchRes);
 
             if (switchRes.success) {
-                context = JSON.parse(JSON.stringify(switchRes.data));
-                context.indexPos = 0;
-                console.log("context");
-                console.log(context);
+                result.data = JSON.parse(JSON.stringify(switchRes.data));
+                result.data.indexPos = 0;
+                result.success = true;
+                console.log("result");
+                console.log(result);
+            } else {
+                result.response = switchRes.response;
             }
             break;
         case 'skip':
             console.log("skipping");
             context.indexPos++;
-            console.log("index:" + context.indexPos);
+            result.data = context;
+            console.log("index:" + result.data.indexPos);
+            result.success = true;
             break;
         default:
             break;
     }
 
-    return context;
+    return result;
 
 }
 
@@ -195,6 +203,9 @@ function processRequest(input, context) {
     var result = { response: '', skip: false };
     var i = context.indexPos;
     var type = '';
+
+    console.log("processRequest");
+    console.log(context);
 
     if (context.content instanceof Array) {
         console.log("content is a array");
@@ -214,6 +225,7 @@ function processRequest(input, context) {
             result.response = context.content[i].content.description + '\n';
             break;
         case 'wizard':
+            console.log("processRequest, type wizard");
             result.response = getWizardResponse(input, context.content[i].content);
             break;
         case 'message':
@@ -415,12 +427,20 @@ app.get('/api/getResponse', function(req, res, next) {
         console.log(status);
     }
 
-    var body = {}; // container for processRequest
+    var body = {response: ''}; // container for processRequest
 
     if (status.success && status.menuOption) {
         // step into menu
-        req.session.onemContext = processMenuContext(moText, req.session.onemContext);
-        body = processRequest(moText, req.session.onemContext);
+
+            var result = {};
+        result = processMenuContext(moText, req.session.onemContext);
+        if (result.success) {
+            req.session.onemContext = JSON.parse(JSON.stringify(result.data));
+            body = processRequest(moText, req.session.onemContext);
+        } else {
+            body.response = result.response;
+        }
+//        req.session.onemContext = processMenuContext(moText, req.session.onemContext);
 
         i = req.session.onemContext.indexPos;
 
