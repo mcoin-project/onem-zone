@@ -4,29 +4,29 @@
         "menuRef": "postMenu.json",
         "type": "menu",
        	"header": "#post menu",
-        "shortcut": "menu",
+        "shortcut": "post",
         "content": [{
-            "ref": "addpost.json",
+            "ref": "post/add.json",
             "type": "linkStatic",
             "shortcut": "add",
             "description": "add a post"
         }, {
-            "ref": "searchpost.json",
+            "ref": "post/search.json",
             "type": "linkStatic",
             "shortcut": "search",
             "description": "search"
         }, {
-            "ref": "myposts.json",
+            "ref": "post/my.json",
             "type": "linkStatic",
             "shortcut": "my Posts",
             "description": "my Posts"
         }, {
-            "ref": "myprofile.json",
+            "ref": "post/profile.json",
             "type": "linkStatic",
             "shortcut": "my Profile",
             "description": "my Profile"
         }, {
-            "ref": "inbox.json",
+            "ref": "post/inbox.json",
             "type": "linkStatic",
             "shortcut": "inbox",
             "description": "inbox(3)"

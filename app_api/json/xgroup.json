@@ -11,7 +11,7 @@
             "shortcut": "add",
             "description": "List"
         }, {
-            "ref": "xgroupcreate.json",
+            "ref": "xgroup/create.json",
             "type": "linkStatic",
             "shortcut": "create",
             "description": "Create"

@@ -83,7 +83,12 @@ function serviceSwitch(input) {
     var fileName = '';
     var fullPath = '';
     var response = '';
-    var context = { success: false, data: undefined, response: '' };
+    var context = { success: false, data: null, response: '' };
+    var file;
+
+    var fileExtended = input.replace(/ /g, '/');
+
+    console.log("fileExtended:" + fileExtended);
 
     if (input[0] === '#') {
 
@@ -95,7 +100,7 @@ function serviceSwitch(input) {
                 fileName = 'onem.json';
                 break;
             default:
-                fileName = input.slice(1).toLowerCase() + '.json';
+                fileName = fileExtended.slice(1).toLowerCase() + '.json';
                 break;
         }
     } else {
@@ -104,21 +109,35 @@ function serviceSwitch(input) {
 
     fullPath = root + fileName;
 
-    console.log("fullPath:"+fullPath);
+    console.log("fullPath:" + fullPath);
 
-    var file = fs.readFileSync(fullPath, 'utf8');
-    console.log("file:");
-    console.log(file);
-    var index = JSON.parse(file);
-    if (typeof index !== 'undefined') {
-        context.data = JSON.parse(JSON.stringify(index));
-        context.data.indexPos = 0;
+    try {
+        file = fs.readFileSync(fullPath, 'utf8');
         context.success = true;
-    } else {
-        console.log("undefined");
+    } catch (err) {
         context.response = "Not sure what you meant. Please send # to see all available services.\n";
+        context.success = false;
     }
 
+    if (context.success) {
+        try {
+            var index = JSON.parse(file);
+            if (typeof index !== 'undefined') {
+                context.success = true;
+                context.data = JSON.parse(JSON.stringify(index));
+                context.data.indexPos = 0;
+            } else {
+                console.log("invalid json 1");
+                context.response = "Invalid JSON detected: " + fileName;
+                context.success = false;
+            }
+        } catch (err) {
+            console.log("error:"+err);
+            console.log("invalid json 2");
+            context.response = "Invalid JSON detected: " + fileName;
+            context.success = false;
+        }
+    }
 
     return context;
 
@@ -156,7 +175,7 @@ function processMenuContext(input, context) {
         case 'skip':
             console.log("skipping");
             context.indexPos++;
-            console.log("index:"+context.indexPos);
+            console.log("index:" + context.indexPos);
             break;
         default:
             break;
@@ -250,7 +269,7 @@ function validateInput(moText, context) {
 
             console.log("menuContent:");
             console.log(menuContent);
-            console.log("input:"+input);
+            console.log("input:" + input);
 
             // if it's only 1 char long and in range of a to last menu option
             found = menuOptions.indexOf(input[0]);
@@ -402,10 +421,10 @@ app.get('/api/getResponse', function(req, res, next) {
         // step into menu
         req.session.onemContext = processMenuContext(moText, req.session.onemContext);
         body = processRequest(moText, req.session.onemContext);
-        
+
         i = req.session.onemContext.indexPos;
 
-        console.log("after processmenu, index:"+req.session.onemContext.indexPos+' i:'+i);
+        console.log("after processmenu, index:" + req.session.onemContext.indexPos + ' i:' + i);
 
         header = processHeader(req.session.onemContext.content[i]);
 
@@ -425,11 +444,11 @@ app.get('/api/getResponse', function(req, res, next) {
         footer = processFooter(req.session.onemContext.content[i]);
     } else {
         //
-        // this is a failed case, can put customised header/footer in here
+        // this is a failed case, can put customised header/footer in here, but only if context is valid
         //
-        header = processHeader(req.session.onemContext.content[i]);
+        // header = processHeader(req.session.onemContext.content[i]);
         body.response = status.response;
-        footer = processFooter(req.session.onemContext.content[i]);
+        // footer = processFooter(req.session.onemContext.content[i]);
     }
 
     var finalResponse = header + body.response + footer;
