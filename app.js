@@ -407,11 +407,22 @@ app.get('/api/getResponse', function(req, res, next) {
             }
             break;
         case (moText === 'menu'):
-            if (req.session.onemContext.content[i].type !== 'menu') {
+            var menuRef = req.session.onemContext.content[i].menuRef;
+            if (typeof menuRef !== 'undefined') {
+                var result = serviceSwitch(menuRef);
+                if (result.success) {
+                    verb = true;
+                    serviceSwitched = true;
+                    req.session.onemContext = result.data;
+                    req.session.onemContext.indexPos = 0;
+                    i = 0;
+                } else {
+                    status.success = false;
+                    status.response = result.response;
+                }
+            } else {
                 status.success = false;
                 status.response = "Send a valid option";
-            } else {
-                verb = true;
             }
             break;
         case (moText === 'back'):
@@ -470,8 +481,8 @@ app.get('/api/getResponse', function(req, res, next) {
             req.session.onemContext.indexPos++;
             console.log("incrementing index, now:" + i);
         }
-   
-        console.log("before processRequest, not a menu option, i:"+i);
+
+        console.log("before processRequest, not a menu option, i:" + i);
 
         body = processRequest(moText, req.session.onemContext);
 
@@ -481,7 +492,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
         i = req.session.onemContext.indexPos;
 
-        console.log("after processRequest, not a menu option, i:"+i);
+        console.log("after processRequest, not a menu option, i:" + i);
 
         header = processHeader(req.session.onemContext.content[i]);
         footer = processFooter(req.session.onemContext.content[i]);

@@ -2,7 +2,7 @@
     "content": [{
         "ref": "index.json",
         "type": "menu",
-        "menuRef": "postmenu.json",
+        "menuRef": "/post/menu.json",
         "shortcut": "recents",
         "header": "#post recents",
         "content": [{

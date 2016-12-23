@@ -1,7 +1,8 @@
 {
     "content": [{
-        "ref": "addpost.json",
+        "ref": "add.json",
         "type": "input",
+        "menuRef": "/post/menu.json",
         "header": "#post add",
         "content": {
             "type": "string",
@@ -9,6 +10,7 @@
         }
     }, {
         "type": "input",
+        "menuRef": "/post/menu.json",
         "header": "#post add",
         "content": {
             "type": "string",
@@ -17,7 +19,7 @@
     }, {
         "type": "menu",
         "header": "#post add",
-        "menuRef": "postmenu.json",
+        "menuRef": "/post/menu.json",
         "description": "Post visibility",
         "content": [{
             "type": "skip",
@@ -28,7 +30,7 @@
         }]
     }, {
         "type": "wizard",
-        "menuRef": "postmenu.json",
+        "menuRef": "/post/menu.json",
         "header": "#post add",
         "content": [{
             "type": "any",
