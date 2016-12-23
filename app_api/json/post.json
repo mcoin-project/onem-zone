@@ -6,20 +6,20 @@
         "shortcut": "recents",
         "header": "#post recents",
         "content": [{
-            "ref": "viewpost.json",
+            "ref": "/post/view.json",
             "type": "linkDynamic",
-            "description": "post title 1"
+            "description": "%post title 1%"
         }, {
-            "ref": "viewpost.json",
+            "ref": "/post/view.json",
             "type": "linkDynamic",
-            "description": "post title 2"
+            "description": "%post title 2%"
         }, {
-            "ref": "viewpost.json",
+            "ref": "/post/view.json",
             "type": "linkDynamic",
-            "description": "post title 3"
+            "description": "%post title 3%"
         }]
     }, {
         "type": "end",
-        "ref": "index.json"
+        "ref": "#post"
     }]
 }

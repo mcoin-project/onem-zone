@@ -1,8 +1,8 @@
 {
     "content": [{
-        "ref": "viewpost.json",
-        "type": "menu",
-        "menuRef": "postmenu.json",
+        "ref": "send.json",
+        "type": "input",
+        "menuRef": "/post/menu.json",
         "header": "%post title%",
         "description": "%post body%",
         "content": [{
@@ -16,7 +16,7 @@
             "shortcut": "Comments",
             "description": "Comments(%n)"
         }, {
-            "ref": "postoptions.json",
+            "ref": "postpptions.json",
             "type": "linkStatic",
             "shortcut": "options",
             "description": "Post options"
