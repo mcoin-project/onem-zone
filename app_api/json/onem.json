@@ -22,7 +22,7 @@
             "type": "linkStatic",
             "description": "Free Services"
         }, {
-            "ref": "howtouse.json",
+            "ref": "onem/how.json",
             "type": "linkStatic",
             "description": "How to use"
         }]

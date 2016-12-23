@@ -15,7 +15,7 @@ var _ = require('underscore');
 var NodeCache = require("node-cache");
 
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-var menuFooter = '<send option>';
+var menuFooter = 'send option';
 
 var app = express();
 
@@ -68,7 +68,7 @@ function getWizardResponse(input, menu) {
         response = response + menuOptions[i + 2] + ' ' + menu[i].description + '\n';
     }
 
-    console.log("inside wizard returning:"+response);
+    console.log("inside wizard returning:" + response);
 
     return response;
 }
@@ -135,7 +135,7 @@ function serviceSwitch(input) {
                 context.success = false;
             }
         } catch (err) {
-            console.log("error:"+err);
+            console.log("error:" + err);
             console.log("invalid json 2");
             context.response = "Invalid JSON detected: " + fileName;
             context.success = false;
@@ -149,7 +149,7 @@ function serviceSwitch(input) {
 function processMenuContext(input, context) {
 
     var i = context.indexPos;
-    var result = {success: false, data: {indexPos: 0}};
+    var result = { success: false, data: { indexPos: 0 } };
     var switchRes;
 
     var option = menuOptions.indexOf(input);
@@ -200,7 +200,7 @@ function processMenuContext(input, context) {
 
 function processRequest(input, context) {
 
-    var result = { response: '', skip: false };
+    var result = { response: '', skip: false, newContext: false, context: null };
     var i = context.indexPos;
     var type = '';
 
@@ -240,11 +240,11 @@ function processRequest(input, context) {
             console.log(result);
 
             if (result.success) {
-                context = JSON.parse(JSON.stringify(result.data));
-                context.indexPos = 0;
-                console.log("context");
-                console.log(context);
-                return processRequest(input, context);
+                var newContext = JSON.parse(JSON.stringify(result.data));
+                var newResult = processRequest(input, newContext);
+                result.context = JSON.parse(JSON.stringify(result.data));
+                result.newContext = true;
+                result.response = newResult.response;
             }
             break;
         default:
@@ -334,6 +334,9 @@ function validateInput(moText, context) {
 function processHeader(content) {
     var header = '';
 
+    console.log("inside header content:");
+    console.log(content);
+
     if (typeof content.header !== 'undefined') {
         header = content.header + '\n';
     }
@@ -341,11 +344,18 @@ function processHeader(content) {
 }
 
 function processFooter(content) {
-    if (content.type !== 'message') {
-        return menuFooter;
+
+    var footerText;
+
+    if (content.type === 'message') {
+        footerText = '';
+    } else if (typeof content.footer !== 'undefined') {
+        footerText = '<' + content.footer + '>';
     } else {
-        return '';
+        footerText = '<' + menuFooter + '>';
     }
+
+    return footerText;
 }
 
 
@@ -427,39 +437,52 @@ app.get('/api/getResponse', function(req, res, next) {
         console.log(status);
     }
 
-    var body = {response: ''}; // container for processRequest
+    var body = { response: '' }; // container for processRequest
 
     if (status.success && status.menuOption) {
+
+        var result = {};
+
         // step into menu
 
-            var result = {};
+        i = req.session.onemContext.indexPos;
         result = processMenuContext(moText, req.session.onemContext);
         if (result.success) {
             req.session.onemContext = JSON.parse(JSON.stringify(result.data));
             body = processRequest(moText, req.session.onemContext);
+            i = req.session.onemContext.indexPos;
+            header = processHeader(req.session.onemContext.content[i]);
+            footer = processFooter(req.session.onemContext.content[i]);
         } else {
             body.response = result.response;
         }
-//        req.session.onemContext = processMenuContext(moText, req.session.onemContext);
-
-        i = req.session.onemContext.indexPos;
+        //        req.session.onemContext = processMenuContext(moText, req.session.onemContext);
 
         console.log("after processmenu, index:" + req.session.onemContext.indexPos + ' i:' + i);
-
-        header = processHeader(req.session.onemContext.content[i]);
 
         console.log("content:");
         console.log(req.session.onemContext.content[i]);
 
-        footer = processFooter(req.session.onemContext.content[i]);
 
     } else if (status.success) {
+
         if (!firstTime && !serviceSwitched && !verb) {
             req.session.onemContext.indexPos++;
-            i = req.session.onemContext.indexPos;
             console.log("incrementing index, now:" + i);
         }
+   
+        console.log("before processRequest, not a menu option, i:"+i);
+
         body = processRequest(moText, req.session.onemContext);
+
+        if (body.newContext) {
+            req.session.onemContext = JSON.parse(JSON.stringify(body.context));
+        }
+
+        i = req.session.onemContext.indexPos;
+
+        console.log("after processRequest, not a menu option, i:"+i);
+
         header = processHeader(req.session.onemContext.content[i]);
         footer = processFooter(req.session.onemContext.content[i]);
     } else {
