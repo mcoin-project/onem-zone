@@ -2,21 +2,21 @@
     "content": [{
         "ref": "addpost.json",
         "type": "input",
-        "header": "#post add 0",
+        "header": "#post add",
         "content": {
             "type": "string",
             "description": "Give your new post a title"
         }
     }, {
         "type": "input",
-        "header": "#post add 1",
+        "header": "#post add",
         "content": {
             "type": "string",
             "description": "Send post content (max 20 words)"
         }
     }, {
         "type": "menu",
-        "header": "#post add 2",
+        "header": "#post add",
         "menuRef": "postmenu.json",
         "description": "Post visibility",
         "content": [{
@@ -29,7 +29,7 @@
     }, {
         "type": "wizard",
         "menuRef": "postmenu.json",
-        "header": "#post add 3",
+        "header": "#post add",
         "content": [{
             "type": "any",
             "description": "Private"
@@ -42,7 +42,7 @@
         }]
     }, {
         "type": "message",
-        "header": "#post add 4",
+        "header": "#post add",
         "description": "Post added, code is %code%\nShare this code with anyone so they can see your post "
     }, {
         "type": "end",
