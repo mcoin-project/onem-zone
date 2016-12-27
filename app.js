@@ -12,10 +12,12 @@ var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
 var _ = require('underscore');
-var NodeCache = require("node-cache");
+
 
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = 'send option';
+var chunkSize = 140;
+var footerMoreLength = 16;
 
 var app = express();
 
@@ -181,6 +183,7 @@ function processMenuContext(input, context) {
         case 'skip':
             console.log("skipping");
             context.indexPos++;
+            req.session.onemContext.chunks = [];
             result.data = context;
             console.log("index:" + result.data.indexPos);
             result.success = true;
@@ -358,6 +361,42 @@ function processFooter(content) {
     return footerText;
 }
 
+function storeChunks(context, header, body) {
+
+    context.chunks = [];
+
+    var combined = header + body;
+
+    var i = header.length + body.length;
+
+    var realChunkSize = chunkSize - footerMoreLength;
+
+    var pages = Math.floor(i / realChunkSize);
+    var remainder = i % realChunkSize;
+
+    if (remainder > 0) {
+        pages++;
+    }
+
+    console.log("combined:"+combined);
+    console.log("pages:"+pages);
+
+    for (var j = 0; j < pages; j++) {
+        context.chunks.push(combined.slice(realChunkSize * j, realChunkSize*(j+1)));
+
+        console.log("chunk: "+j+": "+ combined.slice(realChunkSize * j, realChunkSize*(j+1)));
+
+        context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + pages + '>';
+    }
+
+    console.log("context.chunks:");
+    console.log(context.chunks);
+
+    context.currentChunkPage = 1;
+
+    return context.chunks[0];
+
+}
 
 app.get('/api/getResponse', function(req, res, next) {
 
@@ -370,8 +409,10 @@ app.get('/api/getResponse', function(req, res, next) {
     var firstTime = false;
     var serviceSwitched = false;
     var verb = false;
-    var status = { success: true };
+    var status = { success: true, chunking: false };
     var i;
+    var body = { response: '', skip: false }; // container for processRequest
+
 
     if (moText.length === 0) return res.json({ mtText: '' });
 
@@ -435,6 +476,26 @@ app.get('/api/getResponse', function(req, res, next) {
             }
             verb = true;
             break;
+        case (moText === 'more'):
+            if (typeof req.session.onemContext.chunks !== 'undefined' &&
+                req.session.onemContext.chunks.length > 0) {
+
+                if (req.session.onemContext.currentChunkPage >= req.session.onemContext.chunks.length ) {
+                    // wrap around to first page
+                    req.session.onemContext.currentChunkPage = 1;
+                    status.response = req.session.onemContext.chunks[0];
+
+                } else {
+                    var currentChunkPage = req.session.onemContext.currentChunkPage;
+                    status.response = req.session.onemContext.chunks[currentChunkPage];
+                    req.session.onemContext.currentChunkPage++;
+
+                }
+
+                status.success = false;
+                status.chunking = true;
+            }
+            break;
         default:
             break;
     }
@@ -448,8 +509,6 @@ app.get('/api/getResponse', function(req, res, next) {
         console.log(status);
     }
 
-    var body = { response: '' }; // container for processRequest
-
     if (status.success && status.menuOption) {
 
         var result = {};
@@ -459,12 +518,14 @@ app.get('/api/getResponse', function(req, res, next) {
         i = req.session.onemContext.indexPos;
         result = processMenuContext(moText, req.session.onemContext);
         if (result.success) {
+            console.log("result is success");
             req.session.onemContext = JSON.parse(JSON.stringify(result.data));
             body = processRequest(moText, req.session.onemContext);
             i = req.session.onemContext.indexPos;
             header = processHeader(req.session.onemContext.content[i]);
             footer = processFooter(req.session.onemContext.content[i]);
         } else {
+            console.log("result is fail");
             body.response = result.response;
         }
         //        req.session.onemContext = processMenuContext(moText, req.session.onemContext);
@@ -479,6 +540,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
         if (!firstTime && !serviceSwitched && !verb) {
             req.session.onemContext.indexPos++;
+            req.session.onemContext.chunks = [];
             console.log("incrementing index, now:" + i);
         }
 
@@ -505,7 +567,24 @@ app.get('/api/getResponse', function(req, res, next) {
         // footer = processFooter(req.session.onemContext.content[i]);
     }
 
-    var finalResponse = header + body.response + footer;
+    var finalResponse = '';
+
+    if (status.chunking) {
+
+        finalResponse = status.response;
+
+    } else {
+
+        req.session.onemContext.chunks = [];
+
+        finalResponse = header + body.response + footer;
+
+        if (finalResponse.length > chunkSize) {
+            console.log("response > chunkSize");
+            finalResponse = storeChunks(req.session.onemContext, header, body.response);
+        }
+    }
+
 
     res.json({
         mtText: finalResponse,
