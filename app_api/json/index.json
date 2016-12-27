@@ -22,6 +22,30 @@
             "type": "linkStatic",
             "description": "#contacts"
         }, {
+            "ref": "#du",
+            "type": "linkStatic",
+            "description": "#du"
+        }, {
+            "ref": "#exchange",
+            "type": "linkStatic",
+            "description": "#exchange"
+        }, {
+            "ref": "#football",
+            "type": "linkStatic",
+            "description": "#football"            
+        }, {
+            "ref": "#frenzy",
+            "type": "linkStatic",
+            "description": "#frenzy"
+        }, {
+            "ref": "#hangman",
+            "type": "linkStatic",
+            "description": "#hangman"  
+        }, {
+            "ref": "#invite",
+            "type": "linkStatic",
+            "description": "#invite"  
+        }, {
             "ref": "#post",
             "type": "linkStatic",
             "description": "#post"

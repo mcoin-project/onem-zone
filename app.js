@@ -5,7 +5,6 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var methodOverride = require('method-override');
 var session = require('express-session');
-var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 var errorHandler = require('errorhandler');
@@ -13,11 +12,11 @@ var request = require('request');
 var fs = require('fs');
 var _ = require('underscore');
 
-
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = 'send option';
 var chunkSize = 140;
 var footerMoreLength = 16;
+var maxMenuSize = 30;
 
 var app = express();
 
@@ -36,8 +35,6 @@ app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(multer());
-
-app.use(cookieParser());
 
 app.use(session({
     secret: '0nems1m',
@@ -196,6 +193,26 @@ function processMenuContext(input, context) {
 
 }
 
+function getType(context) {
+
+    var i = context.indexPos;
+    var type;
+
+    console.log("processRequest");
+    console.log(context);
+
+    if (context.content instanceof Array) {
+        console.log("content is a array");
+        type = context.content[i].type;
+    } else {
+        console.log("content is not an array");
+        type = context.content.type;
+    }
+
+    return type.toLowerCase();
+
+}
+
 
 // main handler for responses 
 // returns {response : main body of text without header or footer
@@ -210,13 +227,7 @@ function processRequest(input, context) {
     console.log("processRequest");
     console.log(context);
 
-    if (context.content instanceof Array) {
-        console.log("content is a array");
-        type = context.content[i].type;
-    } else {
-        console.log("content is not an array");
-        type = context.content.type;
-    }
+    type = getType(context);
 
     switch (type) {
         case 'menu':
@@ -363,32 +374,86 @@ function processFooter(content) {
 
 function storeChunks(context, header, body) {
 
+    var combined = header + body;
+    var l = header.length + body.length;
+    var realChunkSize = chunkSize - footerMoreLength;
+    var pages = Math.floor(l / realChunkSize);
+    var remainder = l % realChunkSize;
+    var type;
+    var i = context.indexPos;
+
+    type = getType(context);
+
     context.chunks = [];
 
-    var combined = header + body;
+    if (type !== 'menu') {
 
-    var i = header.length + body.length;
+        if (remainder > 0) {
+            pages++;
+        }
 
-    var realChunkSize = chunkSize - footerMoreLength;
+        console.log("combined:" + combined);
+        console.log("pages:" + pages);
 
-    var pages = Math.floor(i / realChunkSize);
-    var remainder = i % realChunkSize;
+        for (var j = 0; j < pages; j++) {
+            context.chunks.push(combined.slice(realChunkSize * j, realChunkSize * (j + 1)));
 
-    if (remainder > 0) {
-        pages++;
+            console.log("chunk: " + j + ": " + combined.slice(realChunkSize * j, realChunkSize * (j + 1)));
+
+            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + pages + '>';
+        }
+    } else {
+
+        // it's a menu, first truncate any lengths > 30 chars
+
+        var totalLength = header.length;
+        var newBody = '';
+        var menuItems = [];
+        var menuText = '';
+        for (var j = 0; j < context.content[i].content.length; j++) {
+            if (context.content[i].content[j].description.length > maxMenuSize && maxMenuSize > 4) {
+                menuText = menuOptions[j] + ' ' + context.content[i].content[j].description.slice(0, maxMenuSize - 4) + "...\n";
+            } else {
+                menuText = menuOptions[j] + ' ' + context.content[i].content[j].description + '\n';
+            }
+            newBody = newBody + menuText;
+            menuItems.push(menuText);
+        }
+        
+        console.log("menuItems:");
+        console.log(menuItems);
+
+        totalLength = totalLength + newBody.length;
+
+        combined = header + newBody;
+        l = header.length + newBody.length;
+        pages = Math.floor(l / realChunkSize);
+        remainder = l % realChunkSize;
+
+        if (remainder > 0) {
+            pages++;
+        }
+
+        console.log("type is menu combined:" + combined);
+        console.log("pages:" + pages);
+
+        var j = 0;
+        var m = 0;
+        while (j < pages) {
+            var chunk = '';
+            if (j===0) {
+                chunk = header;
+            }
+            while (chunk.length <= realChunkSize && typeof menuItems[m] !== 'undefined') {
+                chunk = chunk + menuItems[m];
+                m++;
+            }
+            context.chunks.push(chunk);
+            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + pages + '>';
+            j++;
+        }
+
     }
-
-    console.log("combined:"+combined);
-    console.log("pages:"+pages);
-
-    for (var j = 0; j < pages; j++) {
-        context.chunks.push(combined.slice(realChunkSize * j, realChunkSize*(j+1)));
-
-        console.log("chunk: "+j+": "+ combined.slice(realChunkSize * j, realChunkSize*(j+1)));
-
-        context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + pages + '>';
-    }
-
     console.log("context.chunks:");
     console.log(context.chunks);
 
@@ -480,7 +545,7 @@ app.get('/api/getResponse', function(req, res, next) {
             if (typeof req.session.onemContext.chunks !== 'undefined' &&
                 req.session.onemContext.chunks.length > 0) {
 
-                if (req.session.onemContext.currentChunkPage >= req.session.onemContext.chunks.length ) {
+                if (req.session.onemContext.currentChunkPage >= req.session.onemContext.chunks.length) {
                     // wrap around to first page
                     req.session.onemContext.currentChunkPage = 1;
                     status.response = req.session.onemContext.chunks[0];
