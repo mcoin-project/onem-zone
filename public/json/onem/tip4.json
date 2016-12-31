@@ -1,0 +1,21 @@
+{
+    "content": [{
+        "ref": "tip4.json",
+        "type": "menu",
+        "menuRef": "#onem",
+        "shortcut": "onem tips",
+        "header": "** Help **\nIf the text can't fit in one sms it is split in parts. Now send \"more\" as hinted below. No need to put quotes. The 2/3 you see below means this is part 2 out of 3. This text had 3 parts, you've now...seen all of them",
+        "content": [{
+            "ref": "onem/tip5.json",
+            "type": "linkStatic",
+            "description": "Next tip"
+        }, {
+            "ref": "#onem",
+            "type": "linkStatic",
+            "description": "Skip"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#onem"
+    }]
+}

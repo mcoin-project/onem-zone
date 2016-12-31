@@ -1,0 +1,24 @@
+{
+    "content": [{
+        "ref": "weather.json",
+        "menuRef": "weather.json",
+        "type": "menu",
+       	"header": "** Weather London, GB menu **",
+        "shortcut": "menu",
+        "content": [{
+            "ref": "details.json",
+            "type": "linkStatic",
+            "shortcut": "details",
+            "description": "details"
+        }, {
+            "ref": "hourly.json",
+            "type": "linkStatic",
+            "shortcut": "hour",
+            "description": "hour by hour"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#weather"
+    }]
+}

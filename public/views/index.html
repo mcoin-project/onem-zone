@@ -13,18 +13,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>ONEm Simulation tool</title>
     <link href="favicon.png" rel="icon" type="image/png">
-    <!-- <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.min.css" /> -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.5/css/bootstrap.min.css" integrity="sha384-AysaV+vQoT3kOAXZkl02PThvDr8HYKPZhNT5h/CXfBThSRXQ6jW5DO2ekP5ViFdi" crossorigin="anonymous"> -->
-    <!-- <link rel="stylesheet" href="/bower_components/angular-bootstrap/ui-bootstrap-csp.css" /> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-motion/0.4.4/angular-motion.min.css" />
-    <!-- <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap-theme.min.css" /> -->
-    <!-- <link rel="stylesheet" href="/bower_components/angular-loading-bar/src/loading-bar.css" /> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.min.css" />
-    <!-- Custom CSS-->
-    <!-- <link rel="stylesheet" href="/css/style.css" /> -->
-    <!-- <link rel="stylesheet" href="/css/bootstrap-cust.css" /> -->
-    <!-- <link rel="stylesheet" href="/css/animate.css" /> -->
+    <link rel="stylesheet" href="/css/font-awesome.min.css">
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="bower_components/bootswatch/paper/bootstrap.min.css" /> -->
+    <!-- angular-filemanager -->
+    <link rel="stylesheet" href="bower_components/angular-filemanager/dist/angular-filemanager.min.css" />
     <link rel="stylesheet" href="/css/onemsim.css" />
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
     <!-- WARNING: Respond.js doesn't work if you view the page via file://-->
@@ -41,7 +37,6 @@
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-animate.min.js"></script>
     <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular-touch.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.2.0/ui-bootstrap-tpls.min.js"></script>
-    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.10/angular-strap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-strap/2.3.10/angular-strap.tpl.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-toastr/2.1.1/angular-toastr.tpls.min.js"></script>
@@ -49,15 +44,16 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-moment/1.0.0/angular-moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/ngInfiniteScroll/1.3.0/ng-infinite-scroll.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-media-queries/0.6.1/match-media.min.js"></script>
-    <!-- for no html5 browsers support -->
-    <!--  <script type="text/javascript" src="/bower_components/angular-loading-bar/src/loading-bar.js"></script> -->
-    <!--Angular app module-->
-    <script data-require="jquery@*" data-semver="2.1.1" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="bower_components/angular-translate/angular-translate.min.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    <script src="bower_components/angular-filemanager/dist/angular-filemanager.min.js"></script>
     <script type="text/javascript" src="/js/onemsim.js"></script>
 </head>
 
 <body data-ng-controller="mainController">
-    <div class="container-fluid">
+    <div class="container">
         <div data-ng-view></div>
     </div>
 </body>

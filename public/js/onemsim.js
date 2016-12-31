@@ -9,6 +9,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'toastr',
     'angularMoment',
     'matchMedia',
+    'ngFileUpload',
+    'FileManagerApp',
 ]).run(function() {
     moment.locale('en', {
         relativeTime: {
@@ -93,7 +95,6 @@ ONEmSimModule.factory('SmsHandler', [
         return $resource('/api', {}, {
             getResponse: {
                 method: 'GET',
-                params: {},
                 url: 'api/getResponse',
                 params: {
                     moText: '@moText'
@@ -121,6 +122,30 @@ ONEmSimModule.directive('scrollBottom', function() {
         }
     };
 });
+
+ONEmSimModule.controller('uploadController', ['$scope', 'Upload', '$window', function($scope, Upload, $window) {
+
+    // upload on file select or drop
+    $scope.upload = function(file) {
+        Upload.upload({
+            url: 'upload',
+            data: { file: file, 'username': $scope.username }
+        }).then(function(resp) {
+            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
+        }, function(resp) {
+            console.log('Error status: ' + resp.status);
+        }, function(evt) {
+            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+        });
+    };
+    $scope.submit = function() {
+        if ($scope.form.file.$valid && $scope.file) {
+            $scope.upload($scope.file);
+        }
+    };
+
+}]);
 
 ONEmSimModule.controller('mainController', [
     '$scope',
@@ -152,8 +177,8 @@ ONEmSimModule.controller('mainController', [
                     console.log("skipping");
                     var result = SmsHandler.getResponse({ skip: true }, function() {
                         var outputObj = {
-                             type: "mt",
-                             value: result.mtText
+                            type: "mt",
+                            value: result.mtText
                         };
 
                         $scope.results.push(outputObj);
@@ -163,5 +188,45 @@ ONEmSimModule.controller('mainController', [
             });
             $scope.smsText = '';
         };
+    }
+]);
+
+ONEmSimModule.config(['fileManagerConfigProvider',
+    function(config) {
+        var defaults = config.$get();
+        debugger;
+        config.set({
+            listUrl: '/files/list',
+            getContentUrl: '/files/getContent',
+            uploadUrl: '/files/upload',
+            removeUrl: '/files/remove',
+            createFolderUrl: '/files/createFolder',
+            downloadFileUrl: '/files/download',
+            renameUrl: '/files/rename',
+            editUrl: '/files/edit',
+            appName: 'ONEmSim',
+            sidebar: true,
+            searchForm: false,
+            hidePermissions: true,
+            hideDate: true,
+            hideSize: true,
+            tplPath: 'tpl/templates',
+            showSizeForDirectories: false,
+            // pickCallback: function(item) {
+            //     var msg = 'Picked %s "%s" for external use'
+            //         .replace('%s', item.type)
+            //         .replace('%s', item.fullPath());
+            //     window.alert(msg);
+            // },
+
+            allowedActions: angular.extend(defaults.allowedActions, {
+                pickFiles: true,
+                changePermissions: false,
+                upload: true,
+                copy: false,
+                move: false,
+                pickFolders: false,
+            }),
+        });
     }
 ]);

@@ -1,0 +1,25 @@
+{
+    "content": [{
+        "ref": "index.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "shortcut": "recents",
+        "header": "#post recents",
+        "content": [{
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 1%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 2%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 3%"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#post"
+    }]
+}

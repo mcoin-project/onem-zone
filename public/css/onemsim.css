@@ -1,3 +1,16 @@
+#context-menu {
+    position: absolute;
+    left: 350px !important;
+}
+
+.breadcrumb {
+    margin-top: 10px;
+}
+
+.filemanager-container {
+    width: 100%;
+    margin-top: 20px;
+}
 
 
 .img-container img {
@@ -64,7 +77,7 @@
 
 .img-container .sms-response-pos .sms-mo-container .sms-mo {
     height: auto;
-    padding:10px;
+    padding: 10px;
 }
 
 .sms-mt span {

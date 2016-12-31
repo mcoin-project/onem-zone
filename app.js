@@ -11,7 +11,9 @@ var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
 var _ = require('underscore');
+var moment = require('moment');
 
+var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = 'send option';
 var chunkSize = 140;
@@ -34,7 +36,8 @@ app.use(logger('dev'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(multer());
+
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: '0nems1m',
@@ -43,10 +46,180 @@ app.use(session({
     cookie: { maxAge: 24 * 360000 } // 24 hours
 }));
 
+app.use(function(req, res, next) { //allow cross origin requests
+   res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+   res.header("Access-Control-Allow-Origin", "http://localhost");
+   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+   next();
+});
+
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(rootPath, req.body.destination));
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  }
+});
+
+
+var upload = multer({ storage: storage });
+
+
+
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.post('/files/upload', upload.any(), function (req, res, next) {
+
+  res.status(200);
+  res.send({
+    "result": {
+      "success": true,
+      "error": null
+    }
+  });
+});
+
+app.post('/files/createFolder', function(req, res) {
+    var fullPath = rootPath + req.body.newPath;
+    console.log("new path:" + fullPath);
+    try {
+        fs.mkdirSync(fullPath);
+        res.json({ result: { success: true, error: null } });
+    } catch (err) {
+        console.log("err:" + err);
+        res.json({ result: { success: false, error: err } });
+    }
+});
+
+
+app.post('/files/edit', function(req, res) {
+    var fullFile = rootPath + req.body.item;
+
+    try {
+        fs.writeFileSync(fullFile, req.body.content);
+        res.json({ result: { success: true, error: null } });
+
+    } catch (err) {
+        console.log("err:" + err);
+        res.json({ result: { success: false, error: err } });
+    }
+});
+
+app.post('/files/remove', function(req, res) {
+
+    var result = { success: true, error: null };
+
+    console.log(req.body);
+
+    req.body.items.forEach(function(item) {
+        var fullFile = rootPath + item;
+        console.log(fullFile);
+        try {
+            //console.log("processing ", file);
+            var stats = fs.statSync(fullFile);
+            console.log(stats.size);
+            if (stats.isDirectory()) {
+                console.log("removing directory:" + fullFile);
+                fs.rmdirSync(fullFile);
+            } else if (path.extname(fullFile) === '.json') {
+                console.log("unlinking file:" + fullFile);
+                fs.unlinkSync(fullFile);
+            }
+        } catch (err) {
+            console.log(err);
+            result.success = false;
+            result.error = err;
+        }
+
+    });
+
+    res.json({ result: result });
+
+});
+
+app.post('/files/getContent', function(req, res) {
+
+    var fullFile = rootPath + req.body.item;
+
+    console.log(req.body);
+    console.log("fullFile:" + fullFile);
+    try {
+        file = fs.readFileSync(fullFile, 'utf8');
+        console.log("file:" + file);
+        res.json({ result: file });
+    } catch (err) {
+        console.log("err:" + err);
+        res.json({ result: { success: false, error: err } });
+    }
+
+});
+
+app.post('/files/rename', function(req, res) {
+
+    var oldFileName = rootPath + req.body.item;
+    var newFileName = rootPath + req.body.newItemPath;
+
+    console.log(req.body);
+    try {
+        file = fs.renameSync(oldFileName, newFileName);
+        res.json({ result: { success: true, error: null } });
+    } catch (err) {
+        console.log("err:" + err);
+        res.json({ result: { success: false, error: err } });
+    }
+
+});
+
+app.get('/files/download', function(req, res) {
+
+    console.log(req.query);
+
+    res.sendFile(path.join(__dirname, rootPath, req.query.path));
+
+});
+
+app.post('/files/list', function(req, res) {
+    var currentDir = rootPath;
+
+    console.log("body:");
+    console.log(req.body);
+
+    var query = req.body.path || '';
+    if (query) currentDir = path.join(currentDir, query);
+    console.log("browsing ", currentDir);
+    fs.readdir(currentDir, function(err, files) {
+        if (err) {
+            throw err;
+        }
+        var data = [];
+        files
+            .filter(function(file) {
+                return true;
+            }).forEach(function(file) {
+                try {
+                    //console.log("processing ", file);
+                    var stats = fs.statSync(path.join(currentDir, file));
+                    var size = stats.size;
+                    var date = moment(stats.mtime).format('YYYY-MM-DD HH:MM:SS');
+                    if (stats.isDirectory()) {
+                        data.push({ name: file, type: 'dir', size: size, date: date });
+                    } else if (path.extname(file) === '.json') {
+                        data.push({ name: file, type: 'file', size: size, date: date });
+                    }
+
+                } catch (e) {
+                    console.log(e);
+                }
+
+            });
+        data = _.sortBy(data, function(f) {
+            return f.Name;
+        });
+        res.json({ result: data });
+    });
+});
 
 function getMenuResponse(input, menu) {
 
@@ -80,7 +253,7 @@ function getWizardResponse(input, menu) {
 // }
 function serviceSwitch(input) {
 
-    var root = './app_api/json/';
+    var root = 'json/';
     var fileName = '';
     var fullPath = '';
     var response = '';
@@ -419,7 +592,7 @@ function storeChunks(context, header, body) {
             newBody = newBody + menuText;
             menuItems.push(menuText);
         }
-        
+
         console.log("menuItems:");
         console.log(menuItems);
 
@@ -441,7 +614,7 @@ function storeChunks(context, header, body) {
         var m = 0;
         while (j < pages) {
             var chunk = '';
-            if (j===0) {
+            if (j === 0) {
                 chunk = header;
             }
             while (chunk.length <= realChunkSize && typeof menuItems[m] !== 'undefined') {
