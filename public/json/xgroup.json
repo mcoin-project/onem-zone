@@ -3,7 +3,7 @@
         "ref": "xgroup.json",
         "menuRef": "xgroup.json",
         "type": "menu",
-        "header": "** #xGroup menu **",
+       	"header": "** #xGroup menu **",
         "shortcut": "menu",
         "content": [{
             "ref": "xgrouplist.json",
@@ -11,7 +11,7 @@
             "shortcut": "add",
             "description": "List"
         }, {
-            "ref": "xgroup/create.json",
+            "ref": "xgroupcreate.json",
             "type": "linkStatic",
             "shortcut": "create",
             "description": "Create"
@@ -20,9 +20,10 @@
             "type": "linkStatic",
             "shortcut": "help",
             "description": "Tutorial"
-        }]
-    }, {
-        "type": "end",
-        "ref": "#xgroup"
+        }],
+    },
+    {
+    	"type": "end",
+    	"ref": "#xgroup"
     }]
 }

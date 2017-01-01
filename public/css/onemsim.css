@@ -28,6 +28,10 @@
     height:80vh;
 }
 
+.filemanager-container {
+    overflow: auto;
+    height:90vh;
+}
 
 .img-container img {
     width: 90%;

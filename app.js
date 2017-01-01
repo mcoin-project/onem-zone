@@ -10,6 +10,7 @@ var multer = require('multer');
 var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
+var fsx = require('fs-extra');
 var zip = require('express-zip');
 var moment = require('moment');
 var _ = require('underscore-node');
@@ -135,6 +136,48 @@ app.post('/files/edit', function(req, res) {
     }
 });
 
+//{
+//    "action": "copy",
+//    "items": ["/public_html/index.php", "/public_html/config.php"],
+//    "newPath": "/includes",
+//    "singleFilename": "renamed.php" <-- (only present in single selection copy)
+//}
+app.post('/files/copy', function(req, res) {
+
+    var result = { success: true, error: null };
+
+    console.log("req.body");
+    console.log(req.body);
+
+    if (typeof req.body.singleFilename !== 'undefined') {
+
+        try {
+            fsx.copySync(path.join(rootPath, req.body.items[0]), path.join(rootPath, req.body.newPath, req.body.singleFilename));
+        } catch (err) {
+            console.error(err);
+            result.error = "" + err;
+            result.success = false;
+        }
+    } else if (typeof req.body.items !== 'undefined' && req.body.items.length > 0) {
+        try {
+            _.each(req.body.items, function(item) {
+                fsx.copySync(path.join(rootPath, item), path.join(rootPath, req.body.newPath, item));
+            });
+        } catch (err) {
+            console.error(err);
+            result.error = "" + err;
+            result.success = false;
+        }
+    }
+
+    if (result.success) {
+        res.status(200).send({result: result});
+    } else {
+        res.status(500).send({result: result});
+    }
+
+});
+
 app.post('/files/remove', function(req, res) {
 
     var result = { success: true, error: null };
@@ -236,7 +279,7 @@ app.get('/files/downloadAll', function(req, res) {
                             next();
                         });
                     } else if (path.extname(file) === '.json') {
-                        var obj = {name: file.slice(rootPath.length+1,file.length), path: file};
+                        var obj = { name: file.slice(rootPath.length + 1, file.length), path: file };
                         results.push(obj);
                         next();
                     } else {

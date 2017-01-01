@@ -19,6 +19,7 @@
     "express-session": "^1.7.2",
     "express-spam-referral-blocker": "^1.2.1",
     "express-zip": "^2.0.1",
+    "fs-extra": "^1.0.0",
     "jade": "*",
     "jwt-simple": ">=0.5.0",
     "method-override": "2.1.2",

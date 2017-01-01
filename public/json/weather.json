@@ -1,24 +1,28 @@
 {
     "content": [{
-        "ref": "weather.json",
-        "menuRef": "weather.json",
-        "type": "menu",
-       	"header": "** Weather London, GB menu **",
-        "shortcut": "menu",
+        "ref": "sendMessage.json",
+        "type": "input",
+        "menuRef": "postMenu.json",
+        "header": "%post title%",
+        "description": "%post body%",
         "content": [{
-            "ref": "details.json",
+            "ref": "sendMessage.json",
             "type": "linkStatic",
-            "shortcut": "details",
-            "description": "details"
+            "shortcut": "send",
+            "description": "Send Message"
         }, {
-            "ref": "hourly.json",
+            "ref": "addComment.json",
             "type": "linkStatic",
-            "shortcut": "hour",
-            "description": "hour by hour"
+            "shortcut": "Comments",
+            "description": "Comments(%n)"
+        }, {
+            "ref": "postOptions.json",
+            "type": "linkStatic",
+            "shortcut": "options",
+            "description": "Post options"
         }]
-    },
-    {
-    	"type": "end",
-    	"ref": "#weather"
+    }, {
+        "type": "end",
+        "ref": "index.json"
     }]
 }
