@@ -555,6 +555,18 @@ function validateInput(moText, context) {
     return response;
 }
 
+function processComment(content) {
+    var comment;
+
+    console.log("inside comment content:");
+    console.log(content);
+
+    if (typeof content.comment !== 'undefined') {
+        comment = content.comment + '\n';
+    }
+    return comment;
+}
+
 function processHeader(content) {
     var header = '';
 
@@ -869,10 +881,13 @@ app.get('/api/getResponse', function(req, res, next) {
         }
     }
 
+    i = req.session.onemContext.indexPos;
+    var comment = processComment(req.session.onemContext.content[i]);
 
     res.json({
         mtText: finalResponse,
-        skip: body.skip
+        skip: body.skip,
+        comment: comment
     });
 
 

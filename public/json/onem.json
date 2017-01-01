@@ -5,6 +5,7 @@
         "menuRef": "onem.json",
         "shortcut": "onem",
         "header": "** ONEm menu **",
+        "comment": "developer comment goes here",
         "content": [{
             "ref": "myaccount.json",
             "type": "linkStatic",
