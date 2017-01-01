@@ -3,12 +3,29 @@
     left: 350px !important;
 }
 
+.panel > .panel-heading {
+    background-image: none;
+    background-color: black;
+    color: white;
+    font-size: 16px;
+
+}
+
 .breadcrumb {
     margin-top: 10px;
 }
 
+.comment {
+    margin-top: 20px;
+}
+
 .onem-border {
     margin-top: 20px;
+}
+
+.comments-container {
+    overflow: auto;
+    height:80vh;
 }
 
 

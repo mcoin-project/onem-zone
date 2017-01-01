@@ -691,7 +691,8 @@ app.get('/api/getResponse', function(req, res, next) {
     var skip = req.query.skip;
     var response = '';
     var header = '';
-    var footer = '';
+    var footer = '';    
+    var comment;
     var firstChar = '';
     var firstTime = false;
     var serviceSwitched = false;
@@ -701,7 +702,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var body = { response: '', skip: false }; // container for processRequest
 
 
-    if (moText.length === 0) return res.json({ mtText: '' });
+    if (moText.length === 0) return res.json({ mtText: undefined });
 
     if (typeof req.session.onemContext === 'undefined') { // must be first time, or expired
         req.session.onemContext = { fileName: 'onem.json' };
@@ -717,7 +718,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
     firstChar = moText[0].toLowerCase();
 
-    console.log("moText sliced:"+ moText.toLowerCase().slice(0, 4));
+    console.log("moText sliced:" + moText.toLowerCase().slice(0, 4));
 
     // check MO request for reserved verbs or service switching
     switch (true) {
@@ -825,6 +826,7 @@ app.get('/api/getResponse', function(req, res, next) {
             i = req.session.onemContext.indexPos;
             header = processHeader(req.session.onemContext.content[i]);
             footer = processFooter(req.session.onemContext.content[i]);
+            comment = processComment(req.session.onemContext.content[i]);
         } else {
             console.log("result is fail");
             body.response = result.response;
@@ -859,6 +861,8 @@ app.get('/api/getResponse', function(req, res, next) {
 
         header = processHeader(req.session.onemContext.content[i]);
         footer = processFooter(req.session.onemContext.content[i]);
+        comment = processComment(req.session.onemContext.content[i]);
+
     } else {
         body.response = status.response;
     }
@@ -881,8 +885,7 @@ app.get('/api/getResponse', function(req, res, next) {
         }
     }
 
-    i = req.session.onemContext.indexPos;
-    var comment = processComment(req.session.onemContext.content[i]);
+
 
     res.json({
         mtText: finalResponse,

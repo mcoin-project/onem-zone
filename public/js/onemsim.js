@@ -123,30 +123,6 @@ ONEmSimModule.directive('scrollBottom', function() {
     };
 });
 
-ONEmSimModule.controller('uploadController', ['$scope', 'Upload', '$window', function($scope, Upload, $window) {
-
-    // upload on file select or drop
-    $scope.upload = function(file) {
-        Upload.upload({
-            url: 'upload',
-            data: { file: file, 'username': $scope.username }
-        }).then(function(resp) {
-            console.log('Success ' + resp.config.data.file.name + 'uploaded. Response: ' + resp.data);
-        }, function(resp) {
-            console.log('Error status: ' + resp.status);
-        }, function(evt) {
-            var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-            console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-        });
-    };
-    $scope.submit = function() {
-        if ($scope.form.file.$valid && $scope.file) {
-            $scope.upload($scope.file);
-        }
-    };
-
-}]);
-
 ONEmSimModule.controller('mainController', [
     '$scope',
     '$http',
@@ -155,9 +131,13 @@ ONEmSimModule.controller('mainController', [
     function($scope, $http, toastr, SmsHandler) {
 
         $scope.results = [];
+        $scope.comments = [];
         $scope.responsesCount = 0;
 
         $scope.smsInput = function() {
+
+            if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;
+
             var inputObj = {
                 type: "mo",
                 value: $scope.smsText
@@ -165,12 +145,20 @@ ONEmSimModule.controller('mainController', [
             $scope.results.push(inputObj);
 
             var response = SmsHandler.getResponse({ moText: $scope.smsText }, function() {
+
+            if (typeof response.mtText === 'undefined' || response.mtText.length === 0) return;
+
                 var outputObj = {
                     type: "mt",
                     value: response.mtText
                 };
 
                 $scope.results.push(outputObj);
+
+                if (typeof response.comment !== 'undefined') {
+                    $scope.comments.push(response.comment);
+                    console.log("comments.length:"+$scope.comments.length);
+                }
 
                 // simulate an unsocilicted MT message and call another Get request
                 if (response.skip) {
