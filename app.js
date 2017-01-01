@@ -17,6 +17,7 @@ var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = 'send option';
 var chunkSize = 140;
+var defaultChunkSize = 140;
 var footerMoreLength = 16;
 var maxMenuSize = 30;
 
