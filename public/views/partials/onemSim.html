@@ -14,13 +14,15 @@
         </div>
  -->
         <div class="panel panel-default">
+            <!-- Default panel contents -->
             <div class="panel-heading">Developer Comments</div>
-            <div class="panel-body">
-                <div class="comments-container">
-                    <div class="comment" ng-repeat="comment in comments track by $index">
-                        {{comment}}
-                    </div>
-                </div>
+            <!-- Table -->
+            <div class="comments-container">
+                <table class="table">
+                    <tr ng-repeat="comment in comments track by $index">
+                        <td>{{comment}}</td>
+                    </tr>
+                </table>
             </div>
         </div>
     </div>

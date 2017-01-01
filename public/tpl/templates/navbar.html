@@ -26,6 +26,11 @@
                                         <i class="glyphicon glyphicon-cloud-upload"></i> {{"upload_files" | translate}}
                                     </a>
                                 </li>
+                                <li ng-show="config.allowedActions.downloadAll">
+                                    <a ng-href="{{config.downloadAllUrl}}" role="menuitem" tabindex="-1" target="_self">
+                                        <i class="glyphicon glyphicon-cloud-download"></i> {{"Download all" | translate}}
+                                    </a>
+                                </li>
                             </ul>
                         </div>
                     </div>

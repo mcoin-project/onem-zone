@@ -218,6 +218,45 @@ app.get('/files/downloadMultiple', function(req, res) {
 });
 
 
+app.get('/files/downloadAll', function(req, res) {
+
+    var walk = function(dir, done) {
+        var results = [];
+        fs.readdir(dir, function(err, list) {
+            if (err) return done(err);
+            var i = 0;
+            (function next() {
+                var file = list[i++];
+                if (!file) return done(null, results);
+                file = dir + '/' + file;
+                fs.stat(file, function(err, stat) {
+                    if (stat && stat.isDirectory()) {
+                        walk(file, function(err, res) {
+                            results = results.concat(res);
+                            next();
+                        });
+                    } else if (path.extname(file) === '.json') {
+                        var obj = {name: file.slice(rootPath.length+1,file.length), path: file};
+                        results.push(obj);
+                        next();
+                    } else {
+                        next();
+                    }
+                });
+            })();
+        });
+    };
+
+    walk(rootPath, function(err, results) {
+        if (err) {
+            res.status(500).send({ error: err });
+        } else {
+            console.log(results);
+            res.zip(results, "download.zip");
+        }
+    });
+});
+
 app.post('/files/list', function(req, res) {
     var currentDir = rootPath;
 
@@ -691,7 +730,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var skip = req.query.skip;
     var response = '';
     var header = '';
-    var footer = '';    
+    var footer = '';
     var comment;
     var firstChar = '';
     var firstTime = false;
