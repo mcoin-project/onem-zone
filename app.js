@@ -10,13 +10,12 @@ var multer = require('multer');
 var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
-var _ = require('underscore');
+var zip = require('express-zip');
 var moment = require('moment');
-
+var _ = require('underscore-node');
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = 'send option';
-var chunkSize = 140;
 var defaultChunkSize = 140;
 var footerMoreLength = 16;
 var maxMenuSize = 30;
@@ -203,9 +202,21 @@ app.post('/files/rename', function(req, res) {
 
 app.get('/files/download', function(req, res) {
     var fileName = path.basename(req.query.path);
-    res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
-    res.sendFile(path.join(__dirname, rootPath, req.query.path));
+    res.download(path.join(__dirname, rootPath, req.query.path));
 });
+
+app.get('/files/downloadMultiple', function(req, res) {
+    var zipArray = [];
+    _.each(req.query.items, function(item) {
+        var fullItem = path.join(rootPath, item);
+        var obj = { name: item, path: fullItem };
+        zipArray.push(obj);
+    });
+    console.log("zipArray: ");
+    console.log(zipArray);
+    res.zip(zipArray, "download.zip");
+});
+
 
 app.post('/files/list', function(req, res) {
     var currentDir = rootPath;
@@ -575,7 +586,7 @@ function storeChunks(context, header, body) {
 
     var combined = header + body;
     var l = header.length + body.length;
-    var realChunkSize = chunkSize - footerMoreLength;
+    var realChunkSize = context.chunkSize - footerMoreLength;
     var pages = Math.floor(l / realChunkSize);
     var remainder = l % realChunkSize;
     var type;
@@ -683,6 +694,7 @@ app.get('/api/getResponse', function(req, res, next) {
     if (typeof req.session.onemContext === 'undefined') { // must be first time, or expired
         req.session.onemContext = { fileName: 'onem.json' };
         req.session.onemContext.indexPos = 0;
+        req.session.onemContext.chunkSize = defaultChunkSize;
         moText = "#onem";
         firstTime = true;
     }
@@ -692,6 +704,8 @@ app.get('/api/getResponse', function(req, res, next) {
     i = req.session.onemContext.indexPos;
 
     firstChar = moText[0].toLowerCase();
+
+    console.log("moText sliced:"+ moText.toLowerCase().slice(0, 4));
 
     // check MO request for reserved verbs or service switching
     switch (true) {
@@ -711,7 +725,18 @@ app.get('/api/getResponse', function(req, res, next) {
                 status.response = result.response;
             }
             break;
-        case (moText === 'menu'):
+        case (moText.toLowerCase().slice(0, 4) === 'size'):
+            var newChunkSize = parseInt(moText.slice(4, moText.length));
+            req.session.onemContext.chunkSize = newChunkSize * defaultChunkSize;
+            if (newChunkSize >= 1 && newChunkSize <= 5) {
+                status.response = "Message Length is now " + 140 * newChunkSize;
+            } else {
+                status.response = "Size must be in range of 1 to 5";
+            }
+            verb = true;
+            status.success = false;
+            break;
+        case (moText.toLowerCase() === 'menu'):
             var menuRef = req.session.onemContext.content[i].menuRef;
             if (typeof menuRef !== 'undefined') {
                 var result = serviceSwitch(menuRef);
@@ -730,7 +755,7 @@ app.get('/api/getResponse', function(req, res, next) {
                 status.response = "Send a valid option";
             }
             break;
-        case (moText === 'back'):
+        case (moText.toLowerCase() === 'back'):
             if (req.session.onemContext.indexPos === 0) {
                 moText = 'menu';
             } else {
@@ -740,7 +765,7 @@ app.get('/api/getResponse', function(req, res, next) {
             }
             verb = true;
             break;
-        case (moText === 'more'):
+        case (moText.toLowerCase() === 'more'):
             if (typeof req.session.onemContext.chunks !== 'undefined' &&
                 req.session.onemContext.chunks.length > 0) {
 
@@ -823,12 +848,7 @@ app.get('/api/getResponse', function(req, res, next) {
         header = processHeader(req.session.onemContext.content[i]);
         footer = processFooter(req.session.onemContext.content[i]);
     } else {
-        //
-        // this is a failed case, can put customised header/footer in here, but only if context is valid
-        //
-        // header = processHeader(req.session.onemContext.content[i]);
         body.response = status.response;
-        // footer = processFooter(req.session.onemContext.content[i]);
     }
 
     var finalResponse = '';
@@ -843,7 +863,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
         finalResponse = header + body.response + footer;
 
-        if (finalResponse.length > chunkSize) {
+        if (finalResponse.length > req.session.onemContext.chunkSize) {
             console.log("response > chunkSize");
             finalResponse = storeChunks(req.session.onemContext, header, body.response);
         }
