@@ -47,38 +47,66 @@ app.use(session({
 }));
 
 app.use(function(req, res, next) { //allow cross origin requests
-   res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-   res.header("Access-Control-Allow-Origin", "http://localhost");
-   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-   next();
+    res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
+    res.header("Access-Control-Allow-Origin", "http://localhost");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
 });
 
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.join(rootPath, req.body.destination));
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  }
+var storage = multer.diskStorage({ //multers disk storage settings
+    destination: function(req, file, cb) {
+        cb(null, path.join(rootPath, req.body.destination));
+    },
+    filename: function(req, file, cb) {
+        cb(null, file.originalname);
+    }
 });
 
-
-var upload = multer({ storage: storage });
-
-
+var upload = multer({ //multer settings
+    storage: storage,
+    fileFilter: function(req, file, cb) {
+        if (path.extname(file.originalname).toLowerCase() !== ".json") {
+            return cb(new Error('File is not of type JSON'));
+        }
+        cb(null, true);
+    }
+}).fields([
+    { name: "file-0" },
+    { name: "file-1" },
+    { name: "file-2" },
+    { name: "file-3" },
+    { name: "file-4" },
+    { name: "file-5" },
+    { name: "file-6" },
+    { name: "file-7" },
+    { name: "file-8" },
+    { name: "file-9" },
+    { name: "file-10" },
+    { name: "file-11" },
+    { name: "file-12" },
+    { name: "file-13" },
+    { name: "file-14" },
+    { name: "file-15" },
+    { name: "file-16" },
+    { name: "file-17" },
+    { name: "file-18" },
+    { name: "file-19" }
+]);
 
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
 
-app.post('/files/upload', upload.any(), function (req, res, next) {
+app.post('/files/upload', function(req, res) {
+    console.log("upload");
 
-  res.status(200);
-  res.send({
-    "result": {
-      "success": true,
-      "error": null
-    }
-  });
+    upload(req, res, function(err) {
+        if (err) {
+            console.log('Error Occured' + err);
+            res.status(500).send({ result: { success: false, error: "" + err } });
+        } else {
+            res.status(200).send({ result: { success: true, error: null } });
+        }
+    });
 });
 
 app.post('/files/createFolder', function(req, res) {
@@ -98,12 +126,12 @@ app.post('/files/edit', function(req, res) {
     var fullFile = rootPath + req.body.item;
 
     try {
-        fs.writeFileSync(fullFile, req.body.content);
+        jsonFile = JSON.parse(req.body.content);
+        file = fs.writeFileSync(fullFile, req.body.content);
         res.json({ result: { success: true, error: null } });
-
     } catch (err) {
         console.log("err:" + err);
-        res.json({ result: { success: false, error: err } });
+        res.json({ result: { success: false, error: "error: " + err } });
     }
 });
 
@@ -173,11 +201,9 @@ app.post('/files/rename', function(req, res) {
 });
 
 app.get('/files/download', function(req, res) {
-
-    console.log(req.query);
-
+    var fileName = path.basename(req.query.path);
+    res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
     res.sendFile(path.join(__dirname, rootPath, req.query.path));
-
 });
 
 app.post('/files/list', function(req, res) {
@@ -253,7 +279,6 @@ function getWizardResponse(input, menu) {
 // }
 function serviceSwitch(input) {
 
-    var root = 'json/';
     var fileName = '';
     var fullPath = '';
     var response = '';
@@ -281,7 +306,7 @@ function serviceSwitch(input) {
         fileName = input;
     }
 
-    fullPath = root + fileName;
+    fullPath = path.join(rootPath, fileName);
 
     console.log("fullPath:" + fullPath);
 

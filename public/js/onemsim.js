@@ -226,6 +226,8 @@ ONEmSimModule.config(['fileManagerConfigProvider',
                 copy: false,
                 move: false,
                 pickFolders: false,
+                downloadMultiple: false,
+                compress: false
             }),
         });
     }
