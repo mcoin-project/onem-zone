@@ -19,15 +19,15 @@
             "shortcut": "my Posts",
             "description": "my Posts"
         }, {
+            "ref": "post/recent.json",
+            "type": "linkStatic",
+            "shortcut": "recent",
+            "description": "Recent"
+        }, {
             "ref": "post/profile.json",
             "type": "linkStatic",
             "shortcut": "profile",
             "description": "my Profile"
-        }, {
-            "ref": "post/inbox.json",
-            "type": "linkStatic",
-            "shortcut": "inbox",
-            "description": "inbox(3)"
         }]
     },
     {
