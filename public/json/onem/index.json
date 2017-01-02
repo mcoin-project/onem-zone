@@ -24,7 +24,8 @@
         }, {
             "ref": "onem/how.json",
             "type": "linkStatic",
-            "description": "How to use"
+            "description": "How to use",
+            "shortcut": "how"
         }]
     }, {
         "type": "end",

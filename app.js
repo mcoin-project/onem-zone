@@ -155,7 +155,7 @@ app.post('/files/copy', function(req, res) {
             fsx.copySync(
                 path.join(rootPath, req.body.items[0].toLowerCase()),
                 path.join(rootPath, req.body.newPath,
-                req.body.singleFilename.toLowerCase()));
+                    req.body.singleFilename.toLowerCase()));
         } catch (err) {
             console.error(err);
             result.error = "" + err;
@@ -445,14 +445,11 @@ function serviceSwitch(input) {
 
 }
 
-function processMenuContext(input, context) {
+function processMenuContext(option, context) {
 
     var i = context.indexPos;
     var result = { success: false, data: { indexPos: 0 } };
     var switchRes;
-
-    var option = menuOptions.indexOf(input);
-
     var selected = context.content[i].content[option];
 
     console.log("option:" + option);
@@ -569,6 +566,33 @@ function processRequest(input, context) {
 
 }
 
+function getMenuOption(input, menuContent) {
+
+    var response = { success: false, response: 'invalid menu option', menuOption: false, selectedOption: null };
+    // if it's only 1 char long and in range of a to last menu option
+    response.selectedOption = menuOptions.indexOf(input);
+    console.log("selectedOption:" + response.selectedOption);
+    response.firstOption = 'a';
+    response.lastOption = menuOptions[menuContent.length - 1];
+    if (response.selectedOption !== -1 &&
+        response.selectedOption <= menuContent.length - 1) {
+        response.success = true;
+        response.menuOption = true;
+    } else {
+        // not a-z, so check shortcuts
+        for (var i=0; i< menuContent.length; i++) {
+            if (typeof menuContent[i].shortcut !== 'undefined' && input === menuContent[i].shortcut.toLowerCase()) {
+                response.selectedOption = i;
+                response.success = true;
+                response.menuOption = true;
+                break;
+            }
+        }
+    }
+
+    return response;
+}
+
 function validateInput(moText, context) {
 
     var input = moText.toLowerCase();
@@ -597,19 +621,7 @@ function validateInput(moText, context) {
             console.log(menuContent);
             console.log("input:" + input);
 
-            // if it's only 1 char long and in range of a to last menu option
-            found = menuOptions.indexOf(input[0]);
-            console.log("found:" + found);
-            if (found !== -1 &&
-                found <= menuContent.length - 1) {
-                response.success = true;
-                response.menuOption = true;
-                response.firstOption = 'a';
-                response.lastOption = menuOptions[menuContent.length - 1];
-            } else {
-                response.success = false;
-                response.response = "invalid menu option";
-            }
+            response = getMenuOption(input, menuContent);
             break;
         case 'input':
             console.log('input found');
@@ -908,7 +920,7 @@ app.get('/api/getResponse', function(req, res, next) {
         // step into menu
 
         i = req.session.onemContext.indexPos;
-        result = processMenuContext(moText, req.session.onemContext);
+        result = processMenuContext(status.selectedOption, req.session.onemContext);
         if (result.success) {
             console.log("result is success");
             req.session.onemContext = JSON.parse(JSON.stringify(result.data));
