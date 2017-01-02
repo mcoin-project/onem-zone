@@ -3,7 +3,6 @@
         "ref": "index.json",
         "type": "menu",
         "menuRef": "index.json",
-        "shortcut": "#",
         "header": "** ONEm services **",
         "content": [{
             "ref": "#account",

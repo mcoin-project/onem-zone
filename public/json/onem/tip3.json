@@ -3,7 +3,6 @@
         "ref": "tip3.json",
         "type": "menu",
         "menuRef": "#onem",
-        "shortcut": "onem tips",
         "header": "** Help **\nHints on what to do next can be found between < >",
         "content": [{
             "ref": "onem/tip4.json",

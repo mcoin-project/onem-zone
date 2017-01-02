@@ -3,7 +3,6 @@
         "ref": "index.json",
         "type": "menu",
         "menuRef": "/post/menu.json",
-        "shortcut": "recents",
         "header": "#post recents",
         "content": [{
             "ref": "/post/view.json",

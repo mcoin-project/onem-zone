@@ -3,7 +3,6 @@
         "ref": "onem.json",
         "type": "menu",
         "menuRef": "onem.json",
-        "shortcut": "onem",
         "header": "** ONEm menu **",
         "comment": "developer comment goes here",
         "content": [{

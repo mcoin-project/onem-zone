@@ -4,7 +4,6 @@
         "menuRef": "xgroup.json",
         "type": "menu",
        	"header": "** #xGroup menu **",
-        "shortcut": "menu",
         "content": [{
             "ref": "xgrouplist.json",
             "type": "linkStatic",
@@ -20,7 +19,7 @@
             "type": "linkStatic",
             "shortcut": "help",
             "description": "Tutorial"
-        }],
+        }]
     },
     {
     	"type": "end",

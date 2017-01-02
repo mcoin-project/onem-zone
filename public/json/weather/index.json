@@ -4,7 +4,6 @@
         "menuRef": "weather.json",
         "type": "menu",
        	"header": "** Weather London, GB menu **",
-        "shortcut": "menu",
         "content": [{
             "ref": "details.json",
             "type": "linkStatic",

@@ -3,7 +3,6 @@
         "ref": "tip1.json",
         "type": "menu",
         "menuRef": "#onem",
-        "shortcut": "onem tips",
         "header": "** Help **\nTo see all available services send \"#onem\" and then choose \"Free services\" from the list",
         "content": [{
             "ref": "onem/tip2.json",

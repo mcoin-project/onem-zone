@@ -3,7 +3,6 @@
         "ref": "how.json",
         "type": "menu",
         "menuRef": "onem.json",
-        "shortcut": "onem how",
         "header": "** Help **\nSend \"a\" or \"b\" to:",
         "footer": "send \"a\" for tips, \"b\" to go back to service main menu",
         "content": [{

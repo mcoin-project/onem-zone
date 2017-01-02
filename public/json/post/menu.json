@@ -4,7 +4,6 @@
         "menuRef": "postMenu.json",
         "type": "menu",
        	"header": "#post menu",
-        "shortcut": "post",
         "content": [{
             "ref": "post/add.json",
             "type": "linkStatic",
