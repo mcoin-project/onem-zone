@@ -2,7 +2,7 @@
     "content": [{
         "menuRef": "post/menu.json",
         "type": "menu",
-       	"header": "#post menu",
+       	"header": "** #post menu **",
         "content": [{
             "ref": "post/add.json",
             "type": "linkStatic",
