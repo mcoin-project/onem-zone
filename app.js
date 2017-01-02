@@ -54,6 +54,10 @@ app.use(function(req, res, next) { //allow cross origin requests
     next();
 });
 
+process.on('ReferenceError', function(reason, p){
+   console.log("global ReferenceError");
+});
+
 var storage = multer.diskStorage({ //multers disk storage settings
     destination: function(req, file, cb) {
         cb(null, path.join(rootPath, req.body.destination));
@@ -375,7 +379,7 @@ function getWizardResponse(input, menu) {
 //    data : context
 //    response : error text
 // }
-function serviceSwitch(input) {
+function serviceSwitch(input, oldContext) {
 
     var fileName = '';
     var fullPath = '';
@@ -428,6 +432,7 @@ function serviceSwitch(input) {
                 context.success = true;
                 context.data = JSON.parse(JSON.stringify(index));
                 context.data.indexPos = 0;
+                context.data.chunkSize = oldContext.chunkSize;
             } else {
                 console.log("invalid json 1");
                 context.response = "Invalid JSON detected: " + fileName;
@@ -460,7 +465,7 @@ function processMenuContext(option, context) {
         case 'linkStatic':
         case 'linkDynamic':
             console.log(selected.ref);
-            switchRes = serviceSwitch(selected.ref);
+            switchRes = serviceSwitch(selected.ref, context);
             console.log("switchRes");
             console.log(switchRes);
 
@@ -546,7 +551,7 @@ function processRequest(input, context) {
         case 'end':
             console.log("end found");
             console.log(context.content[i].ref);
-            result = serviceSwitch(context.content[i].ref);
+            result = serviceSwitch(context.content[i].ref, context);
             console.log("result");
             console.log(result);
 
@@ -828,7 +833,7 @@ app.get('/api/getResponse', function(req, res, next) {
             console.log("skip redirect found");
             break;
         case (firstChar == '#'):
-            var result = serviceSwitch(moText);
+            var result = serviceSwitch(moText, req.session.onemContext);
             if (result.success) {
                 verb = true;
                 serviceSwitched = true;
@@ -854,7 +859,7 @@ app.get('/api/getResponse', function(req, res, next) {
         case (moText.toLowerCase() === 'menu'):
             var menuRef = req.session.onemContext.content[i].menuRef;
             if (typeof menuRef !== 'undefined') {
-                var result = serviceSwitch(menuRef);
+                var result = serviceSwitch(menuRef, req.session.onemContext);
                 if (result.success) {
                     verb = true;
                     serviceSwitched = true;
@@ -980,6 +985,8 @@ app.get('/api/getResponse', function(req, res, next) {
         req.session.onemContext.chunks = [];
 
         finalResponse = header + body.response + footer;
+
+        console.log("chunksize:"+req.session.onemContext.chunkSize);
 
         if (finalResponse.length > req.session.onemContext.chunkSize) {
             console.log("response > chunkSize");

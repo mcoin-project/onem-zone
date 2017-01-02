@@ -1,7 +1,6 @@
 {
     "content": [{
-        "ref": "postmenu.json",
-        "menuRef": "postMenu.json",
+        "menuRef": "post/menu.json",
         "type": "menu",
        	"header": "#post menu",
         "content": [{
@@ -22,7 +21,7 @@
         }, {
             "ref": "post/profile.json",
             "type": "linkStatic",
-            "shortcut": "my Profile",
+            "shortcut": "profile",
             "description": "my Profile"
         }, {
             "ref": "post/inbox.json",

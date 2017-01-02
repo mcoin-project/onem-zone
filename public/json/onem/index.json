@@ -1,6 +1,6 @@
 {
     "content": [{
-        "ref": "onem.json",
+        "ref": "index.json",
         "type": "menu",
         "menuRef": "onem.json",
         "header": "** ONEm menu **",
