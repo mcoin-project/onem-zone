@@ -134,6 +134,10 @@ ONEmSimModule.controller('mainController', [
         $scope.comments = [];
         $scope.responsesCount = 0;
 
+        $scope.resetComments = function() {
+            $scope.comments = [];
+        };
+
         $scope.smsInput = function() {
 
             if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;

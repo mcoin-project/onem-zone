@@ -26,9 +26,12 @@
             <div ng-if="devMode">
                 <div class="visible-lg visible-md panel panel-default">
                     <!-- Default panel contents -->
-                    <div class="panel-heading">Developer Comments</div>
+                    <div class="panel-heading">Developer Comments
+                        <button class="btn btn-sm btn-default pull-right" ng-click="resetComments()" type="button" aria-expanded="true">Clear
+                        </button>
+                    </div>
                     <!-- Table -->
-                    <div class="comments-container">
+                    <div scroll-bottom="comments" class="comments-container">
                         <table class="table">
                             <tr ng-repeat="comment in comments track by $index">
                                 <td>{{comment}}</td>
