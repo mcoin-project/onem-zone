@@ -7,58 +7,76 @@
             </a>
         </div>
     </div>
-</div>
-<div class="row onem-border">
-    <div class="col-lg-4 col-md-4">
-        <div class="visible-lg visible-md panel panel-default">
-            <!-- Default panel contents -->
-            <div class="panel-heading">Developer Comments</div>
-            <!-- Table -->
-            <div class="comments-container">
-                <table class="table">
-                    <tr ng-repeat="comment in comments track by $index">
-                        <td>{{comment}}</td>
-                    </tr>
-                </table>
-            </div>
+    <div class="onem-controls-container">
+        <div class="onem-controls checkbox">
+            <label>
+                <input type="checkbox" ng-model="devMode" ng-init="devMode=true"> Developer Mode
+            </label>
+        </div>
+        <div class="onem-controls checkbox">
+            <label>
+                <input type="checkbox" ng-model="fileMgr" ng-init="fileMgr=true"> File Manager
+            </label>
         </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-sm-6 col-xs-8">
-        <div class="img-container">
-            <div class="img-responsive">
-                <img ng-src="{{'/images/iPhone6.png'}}" alt="" />
+</div>
+<div class="row onem-border">
+    <div class="row">
+        <div class="col-lg-4 col-md-4">
+            <div ng-if="devMode">
+                <div class="visible-lg visible-md panel panel-default">
+                    <!-- Default panel contents -->
+                    <div class="panel-heading">Developer Comments</div>
+                    <!-- Table -->
+                    <div class="comments-container">
+                        <table class="table">
+                            <tr ng-repeat="comment in comments track by $index">
+                                <td>{{comment}}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <div class="sms-response">
-                <div scroll-bottom="results" class="sms-response-pos">
-                    <div ng-repeat="obj in results">
-                        <div ng-if="obj.type == 'mt'" class="sms-mt">
-                            <div class="sms-placeholder">
-                                <div class="sms-mt-container">
-                                    <span>{{obj.value}}</span>
+        </div>
+        <div class="col-lg-4 col-md-4 col-sm-6 col-xs-8">
+            <div class="img-container">
+                <div class="img-responsive">
+                    <img ng-src="{{'/images/iPhone6.png'}}" alt="" />
+                </div>
+                <div class="sms-response">
+                    <div scroll-bottom="results" class="sms-response-pos">
+                        <div ng-repeat="obj in results">
+                            <div ng-if="obj.type == 'mt'" class="sms-mt">
+                                <div class="sms-placeholder">
+                                    <div class="sms-mt-container">
+                                        <span>{{obj.value}}</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div ng-if="obj.type == 'mo'" class="sms-mo">
-                            <div class="sms-placeholder">
-                                <div class="sms-mo-container">
-                                    <span>{{obj.value}}</span>
+                            <div ng-if="obj.type == 'mo'" class="sms-mo">
+                                <div class="sms-placeholder">
+                                    <div class="sms-mo-container">
+                                        <span>{{obj.value}}</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="sms-input">
-                <form ng-submit="smsInput()">
-                    <label for="sms"></label>
-                    <input ng-model="smsText" type="text" placeholder="iMessage" class="form-control" id="sms">
-                </form>
+                <div class="sms-input">
+                    <form ng-submit="smsInput()">
+                        <label for="sms"></label>
+                        <input ng-model="smsText" type="text" placeholder="iMessage" class="form-control" id="sms">
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="filemanager-container col-lg-4 col-md-4">
-        <div class="visible-lg visible-md">
-            <angular-filemanager></angular-filemanager>
+        <div class="filemanager-container col-lg-4 col-md-4">
+            <div ng-if="fileMgr">
+                <div class="visible-lg visible-md">
+                    <angular-filemanager></angular-filemanager>
+                </div>
+            </div>
         </div>
     </div>
 </div>
