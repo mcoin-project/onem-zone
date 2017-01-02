@@ -10,7 +10,7 @@
             "type": "linkStatic",
             "description": "Call"
         }, {
-            "ref": "/post/comments.json",
+            "ref": "/post/rate.json",
             "type": "linkStatic",
             "description": "Rate post"
         }, {
