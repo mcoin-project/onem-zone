@@ -111,7 +111,7 @@ app.post('/files/upload', function(req, res) {
 });
 
 app.post('/files/createFolder', function(req, res) {
-    var fullPath = rootPath + req.body.newPath;
+    var fullPath = rootPath + req.body.newPath.toLowerCase();
     console.log("new path:" + fullPath);
     try {
         fs.mkdirSync(fullPath);
@@ -152,7 +152,10 @@ app.post('/files/copy', function(req, res) {
     if (typeof req.body.singleFilename !== 'undefined') {
 
         try {
-            fsx.copySync(path.join(rootPath, req.body.items[0]), path.join(rootPath, req.body.newPath, req.body.singleFilename));
+            fsx.copySync(
+                path.join(rootPath, req.body.items[0].toLowerCase()),
+                path.join(rootPath, req.body.newPath,
+                req.body.singleFilename.toLowerCase()));
         } catch (err) {
             console.error(err);
             result.error = "" + err;
@@ -161,6 +164,7 @@ app.post('/files/copy', function(req, res) {
     } else if (typeof req.body.items !== 'undefined' && req.body.items.length > 0) {
         try {
             _.each(req.body.items, function(item) {
+                item = item.toLowerCase();
                 fsx.copySync(path.join(rootPath, item), path.join(rootPath, req.body.newPath, item));
             });
         } catch (err) {
@@ -230,7 +234,7 @@ app.post('/files/getContent', function(req, res) {
 app.post('/files/rename', function(req, res) {
 
     var oldFileName = rootPath + req.body.item;
-    var newFileName = rootPath + req.body.newItemPath;
+    var newFileName = rootPath + req.body.newItemPath.toLowerCase();
 
     console.log(req.body);
     try {
