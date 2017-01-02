@@ -171,9 +171,9 @@ app.post('/files/copy', function(req, res) {
     }
 
     if (result.success) {
-        res.status(200).send({result: result});
+        res.status(200).send({ result: result });
     } else {
-        res.status(500).send({result: result});
+        res.status(500).send({ result: result });
     }
 
 });
@@ -379,22 +379,26 @@ function serviceSwitch(input) {
     var context = { success: false, data: null, response: '' };
     var file;
 
-    var fileExtended = input.replace(/ /g, '/');
+    var fileExtended = input.replace(/ /g, '/'); // eg convert #post add to #post/add
 
     console.log("fileExtended:" + fileExtended);
 
     if (input[0] === '#') {
 
-        switch (input) {
-            case '#':
-                fileName = 'index.json';
-                break;
-            case '#onem':
-                fileName = 'onem.json';
-                break;
-            default:
-                fileName = fileExtended.slice(1).toLowerCase() + '.json';
-                break;
+        if (input.indexOf(' ') === -1) { // if string does not have a space somewhere in the middle (it's been trimmed already)
+            fileName = '/' + input.slice(1).toLowerCase() + '/index.json'; // #convert #post to /post/index.json
+        } else {
+            switch (input) {
+                case '#': // if input string is exactly '#', then it's the main index
+                    fileName = 'index.json';
+                    break;
+                case '#onem':
+                    fileName = 'onem.json';
+                    break;
+                default:
+                    fileName = fileExtended.slice(1).toLowerCase() + '.json'; // remove '#'
+                    break;
+            }
         }
     } else {
         fileName = input;
@@ -472,7 +476,7 @@ function processMenuContext(input, context) {
         case 'skip':
             console.log("skipping");
             context.indexPos++;
-            req.session.onemContext.chunks = [];
+            context.chunks = [];
             result.data = context;
             console.log("index:" + result.data.indexPos);
             result.success = true;
