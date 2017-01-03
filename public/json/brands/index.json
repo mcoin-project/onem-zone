@@ -1,0 +1,38 @@
+{
+    "content": [{
+        "menuRef": "brands/menu.json",
+        "type": "menu",
+       	"header": "** #brands menu **",
+        "comment": "User wants to search for a brand\nCurrent user has no brands associated with its MSISDN\n\n#offers(10) shows count of 'active' offers, ie offers that are active in the current user's location and not expired",
+        "content": [{
+            "ref": "brands/search.json",
+            "type": "linkStatic",
+            "shortcut": "search",
+            "description": "#search"
+        }, {
+            "ref": "brands/nearby.json",
+            "type": "linkStatic",
+            "shortcut": "nearby",
+            "description": "#nearby"
+        }, {
+            "ref": "brands/offers.json",
+            "type": "linkStatic",
+            "shortcut": "offers",
+            "description": "#offers(10)"
+        }, {
+            "ref": "brands/add.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "#add my brand"
+        }, {
+            "ref": "brands/help.json",
+            "type": "linkStatic",
+            "shortcut": "help",
+            "description": "#help/tutorial"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#brands"
+    }]
+}

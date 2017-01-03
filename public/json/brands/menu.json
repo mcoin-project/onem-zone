@@ -1,0 +1,37 @@
+{
+    "content": [{
+        "menuRef": "brands/menu.json",
+        "type": "menu",
+       	"header": "** #brands menu **",
+        "content": [{
+            "ref": "brands/search.json",
+            "type": "linkStatic",
+            "shortcut": "search",
+            "description": "#search"
+        }, {
+            "ref": "brands/nearby.json",
+            "type": "linkStatic",
+            "shortcut": "nearby",
+            "description": "#nearby"
+        }, {
+            "ref": "brands/offers.json",
+            "type": "linkStatic",
+            "shortcut": "offers",
+            "description": "#offers"
+        }, {
+            "ref": "brands/add.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "#add my brand"
+        }, {
+            "ref": "brands/help.json",
+            "type": "linkStatic",
+            "shortcut": "help",
+            "description": "#help/tutorial"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#brands"
+    }]
+}

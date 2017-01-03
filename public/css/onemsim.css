@@ -18,13 +18,17 @@
     margin-top: 20px;
 }
 
+td {
+    white-space: pre-wrap;
+}
+
 .onem-border {
     margin-top: 10px;
 }
 
 .onem-controls-container {
-    margin-top:25px;
-    float:right;
+    margin-top: 25px;
+    float: right;
 }
 
 .onem-controls {
