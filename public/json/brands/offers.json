@@ -1,0 +1,53 @@
+{
+    "content": [{
+        "menuRef": "brands/menu.json",
+        "type": "menu",
+       	"header": "** #brands offers **\n10 active offers found",
+        "comment": "Platform fetches list of active offers, ie offers that are active in the current user's location and not expired",
+        "content": [{
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "McDonalds"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Starbucks"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Coca-Cola"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Harry's fish and chips"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Another company 1"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Another company 2"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Another company 3"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Another company 4"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Another company 5"
+        }, {
+            "ref": "brands/offerview.json",
+            "type": "linkStatic",
+            "description": "Another company 6"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#brands"
+    }]
+}

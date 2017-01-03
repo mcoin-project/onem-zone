@@ -1,28 +1,23 @@
 {
     "content": [{
-        "menuRef": "brands/menu.json",
+        "menuRef": "mcat/menu.json",
         "type": "menu",
-       	"header": "** #brands menu **",
+       	"header": "** #mcat menu **",
         "content": [{
-            "ref": "brands/search.json",
+            "ref": "mcat/search.json",
             "type": "linkStatic",
             "shortcut": "search",
             "description": "#search"
         }, {
-            "ref": "brands/nearby.json",
+            "ref": "mcat/basket.json",
             "type": "linkStatic",
             "shortcut": "nearby",
-            "description": "#nearby"
+            "description": "#basket(3)"
         }, {
-            "ref": "brands/offers.json",
+            "ref": "mcat/offers.json",
             "type": "linkStatic",
             "shortcut": "offers",
-            "description": "#offers"
-        }, {
-            "ref": "brands/mybrands.json",
-            "type": "linkStatic",
-            "shortcut": "my brands",
-            "description": "#my brands(3)"
+            "description": "#offers(10)"
         }, {
             "ref": "brands/help.json",
             "type": "linkStatic",
@@ -32,6 +27,6 @@
     },
     {
     	"type": "end",
-    	"ref": "#brands"
+    	"ref": "#mcat"
     }]
 }

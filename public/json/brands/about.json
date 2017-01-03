@@ -1,0 +1,22 @@
+{
+    "content": [{
+        "menuRef": "brands/menu.json",
+        "type": "menu",
+       	"header": "** The Coffee Shop - About **\nCode: b.thecoffeeshop\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.",
+        "content": [{
+            "ref": "brands/call.json",
+            "type": "linkStatic",
+            "shortcut": "call",
+            "description": "#call"
+        }, {
+            "ref": "brands/message.json",
+            "type": "linkStatic",
+            "shortcut": "message",
+            "description": "#message"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#brands menu"
+    }]
+}

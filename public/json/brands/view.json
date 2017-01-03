@@ -1,0 +1,32 @@
+{
+    "content": [{
+        "menuRef": "brands/menu.json",
+        "type": "menu",
+       	"header": "** The Coffee Shop **\nCode: b.thecoffeeshop",
+        "content": [{
+            "ref": "brands/about.json",
+            "type": "linkStatic",
+            "shortcut": "about",
+            "description": "#about"
+        }, {
+            "ref": "brands/location.json",
+            "type": "linkStatic",
+            "shortcut": "location",
+            "description": "#location"
+        }, {
+            "ref": "brands/contact.json",
+            "type": "linkStatic",
+            "shortcut": "contact",
+            "description": "#contact"
+        }, {
+            "ref": "brands/offers.json",
+            "type": "linkStatic",
+            "shortcut": "offers",
+            "description": "#offers"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#brands menu"
+    }]
+}
