@@ -18,6 +18,10 @@
     margin-top: 20px;
 }
 
+.comment-text {
+    white-space: pre-wrap;
+}
+
 .onem-border {
     margin-top: 10px;
 }
