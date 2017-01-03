@@ -20,6 +20,8 @@
 
 .comment-text {
     white-space: pre-wrap;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
 }
 
 .onem-border {
@@ -68,7 +70,7 @@
 
 .img-container .sms-input {
     position: absolute;
-    top: 78%;
+    top: 80%;
     left: 11%;
     width: 68%;
 }
@@ -93,29 +95,41 @@
     width: 100%;
     height: auto;
     display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .img-container .sms-response-pos .sms-mt-container {
     position: relative;
-    max-width: 75%;
+    max-width: 80%;
     height: auto;
     display: block;
     border-radius: 20px;
     float: left;
-    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
     background-color: #e0e0e0;
+    font-size: 13.5px;
+    line-height: 18px;
 }
 
 .img-container .sms-response-pos .sms-mo-container {
     position: relative;
-    max-width: 75%;
+    max-width: 80%;
     height: auto;
     display: block;
     border-radius: 20px;
     float: right;
-    padding: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
     background-color: blue;
     color: white;
+    font-size: 13.5px;
+    line-height: 18px;
 }
 
 .img-container .sms-response-pos .sms-mt-container .sms-mt {
@@ -129,11 +143,13 @@
 }
 
 .sms-mt span {
-    padding: 5px;
+    padding: 0;
     white-space: pre-wrap;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
 }
 
 .sms-mo span {
-    padding: 5px;
+    padding: 0;
     white-space: pre-wrap;
 }
