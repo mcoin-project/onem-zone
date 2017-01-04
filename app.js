@@ -54,8 +54,8 @@ app.use(function(req, res, next) { //allow cross origin requests
     next();
 });
 
-process.on('ReferenceError', function(reason, p){
-   console.log("global ReferenceError");
+process.on('ReferenceError', function(reason, p) {
+    console.log("global ReferenceError");
 });
 
 var storage = multer.diskStorage({ //multers disk storage settings
@@ -585,7 +585,7 @@ function getMenuOption(input, menuContent) {
         response.menuOption = true;
     } else {
         // not a-z, so check shortcuts
-        for (var i=0; i< menuContent.length; i++) {
+        for (var i = 0; i < menuContent.length; i++) {
             if (typeof menuContent[i].shortcut !== 'undefined' && input === menuContent[i].shortcut.toLowerCase()) {
                 response.selectedOption = i;
                 response.success = true;
@@ -704,39 +704,54 @@ function processFooter(content) {
 function storeChunks(context, header, body) {
 
     var combined = header + body;
-    var l = header.length + body.length;
     var realChunkSize = context.chunkSize - footerMoreLength;
-    var pages = Math.floor(l / realChunkSize);
-    var remainder = l % realChunkSize;
     var type;
     var i = context.indexPos;
 
-    type = getType(context);
-
     context.chunks = [];
 
-    if (type !== 'menu') {
+    var makeChunks = function(rawText) {
+        var combinedWords = rawText.split(/\b/);
+        var result = [];
+        var chunk = '';
 
-        if (remainder > 0) {
-            pages++;
+        console.log("realChunkSize:" + realChunkSize);
+
+        for (var j = 0; j < combinedWords.length; j++) {
+
+            if (chunk.length + combinedWords[j].length < realChunkSize) {
+                chunk = chunk + combinedWords[j];
+            } else {
+                result.push(chunk.trim());
+                chunk = '';
+                j--;
+            }
+        }
+        // push the last chunk that was less than the realChunkSize
+        if (chunk.length > 0) {
+            result.push(chunk.trim());
         }
 
-        console.log("combined:" + combined);
-        console.log("pages:" + pages);
+        return result;
 
-        for (var j = 0; j < pages; j++) {
-            context.chunks.push(combined.slice(realChunkSize * j, realChunkSize * (j + 1)));
+    };
 
-            console.log("chunk: " + j + ": " + combined.slice(realChunkSize * j, realChunkSize * (j + 1)));
 
-            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + pages + '>';
+    type = getType(context);
+
+    if (type !== 'menu' && type !== 'wizard') {
+
+        context.chunks = makeChunks(combined);
+
+        // add footers
+        for (var j = 0; j < context.chunks.length; j++) {
+            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + context.chunks.length + '>';
         }
+
     } else {
 
-        // it's a menu, first truncate any lengths > 30 chars
+        // it's a menu or wizard, first truncate any lengths > 30 chars
 
-        var totalLength = header.length;
-        var newBody = '';
         var menuItems = [];
         var menuText = '';
         for (var j = 0; j < context.content[i].content.length; j++) {
@@ -745,41 +760,39 @@ function storeChunks(context, header, body) {
             } else {
                 menuText = menuOptions[j] + ' ' + context.content[i].content[j].description + '\n';
             }
-            newBody = newBody + menuText;
             menuItems.push(menuText);
         }
 
-        console.log("menuItems:");
-        console.log(menuItems);
+        // start making the chunks, starting with the header, then we can start adding menu items
+        var chunkedHeader = makeChunks(header);
 
-        totalLength = totalLength + newBody.length;
-
-        combined = header + newBody;
-        l = header.length + newBody.length;
-        pages = Math.floor(l / realChunkSize);
-        remainder = l % realChunkSize;
-
-        if (remainder > 0) {
-            pages++;
+        // make another chunk to make room for menu items because this one is full
+        if (chunkedHeader[chunkedHeader.length-1] >= realChunkSize && menuItems.length > 0) {
+            chunkedHeader.push(' ');
         }
 
-        console.log("type is menu combined:" + combined);
-        console.log("pages:" + pages);
+        context.chunks = chunkedHeader;  // copy all header chunks
 
-        var j = 0;
-        var m = 0;
-        while (j < pages) {
-            var chunk = '';
-            if (j === 0) {
-                chunk = header;
+        lastChunk = context.chunks.pop() + '\n';  // remove the last chunk from the list and save it
+
+        //now we can start adding menu items
+        for (var j = 0; j < menuItems.length; j++) {
+            if (lastChunk.length + menuItems[j].length < realChunkSize) {
+                lastChunk = lastChunk + menuItems[j];
+            } else {
+                context.chunks.push(lastChunk.trim());
+                lastChunk = '';
+                j--;
             }
-            while (chunk.length <= realChunkSize && typeof menuItems[m] !== 'undefined') {
-                chunk = chunk + menuItems[m];
-                m++;
-            }
-            context.chunks.push(chunk);
-            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + pages + '>';
-            j++;
+        }
+        // push the last chunk that was less than the realChunkSize
+        if (lastChunk.length > 0) {
+            context.chunks.push(lastChunk.trim());
+        }
+
+        //now insert footers
+        for (var j = 0; j < context.chunks.length; j++) {
+            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + context.chunks.length + '>';
         }
 
     }
@@ -986,7 +999,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
         finalResponse = header + body.response + footer;
 
-        console.log("chunksize:"+req.session.onemContext.chunkSize);
+        console.log("chunksize:" + req.session.onemContext.chunkSize);
 
         if (finalResponse.length > req.session.onemContext.chunkSize) {
             console.log("response > chunkSize");

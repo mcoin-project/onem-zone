@@ -4,7 +4,6 @@
         "type": "menu",
         "menuRef": "onem.json",
         "header": "** ONEm menu **",
-        "comment": "developer comment goes here",
         "content": [{
             "ref": "myaccount.json",
             "type": "linkStatic",

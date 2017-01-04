@@ -1,0 +1,23 @@
+{
+    "content": [{
+        "ref": "test.json",
+        "type": "input",
+        "menuRef": "/mcat/test.json",
+        "header": "** #mcat test **",
+        "content": {
+            "type": "string",
+            "description": "this is a test, with some weird punctuation in it, it's a good test.Actually the grammar isn't blah,quite-right,"
+        }
+    }, {
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "** #post add **",
+        "content": {
+            "type": "string",
+            "description": "Send post content (max 20 words)"
+        }
+    }, {
+        "type": "end",
+        "ref": "#onem"
+    }]
+}
