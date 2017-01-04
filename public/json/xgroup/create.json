@@ -1,6 +1,6 @@
 {
     "content": [{
-        "ref": "xgroupcreate.json",
+        "ref": "create.json",
         "type": "input",
         "header": "** xGroup create **",
         "content": {
@@ -10,20 +10,21 @@
     }, {
         "type": "input",
         "header": "** xGroup create **",
+        "comment": "Nickname is generic across all xGroups, only ask this question if nickname is not defined",
         "content": {
             "type": "string",
-            "description": "Your Name?"
+            "description": "Your Nickname?"
         }
     }, {
         "type": "wizard",
         "menuRef": "/xgroup/create.json",
-        "header": "** xGroup create **\nThis will create xGroup <name>.  You'll shortly receive a message from your xGroup - forward it to the people you wish to invite. Reply to it to send messages to the group.",
+        "header": "** xGroup create **\nYou will soon receive a message from the xGroup.\nForward the message to people you wish to invite. Reply to it to send messages to the group.",
         "content": [{
             "type": "any",
             "description": "<group name>"
         }, {
             "type": "any",
-            "description": "<your name>"
+            "description": "<nickname>"
         }]
     }, {
         "type": "menu",
@@ -31,7 +32,7 @@
         "header": "** xGroup invite **\nInvite people to your new xGroup",
         "content": [{
             "type": "linkStatic",
-            "description": "Contact manager"
+            "description": "Contacts"
         }, {
             "type": "linkStatic",
             "description": "by mID"
@@ -41,6 +42,6 @@
         }]        
     }, {        
         "type": "end",
-        "ref": "#onem"
+        "ref": "#xgroup"
     }]
 }

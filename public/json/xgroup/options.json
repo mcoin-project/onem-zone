@@ -1,0 +1,43 @@
+{
+    "content": [{
+        "ref": "xgroup/options.json",
+        "menuRef": "xgroup/menu.json",
+        "type": "menu",
+       	"header": "** #xGroup options **",
+        "content": [{
+            "ref": "xgroup/mid.json",
+            "type": "linkStatic",
+            "shortcut": "number",
+            "description": "xGroup Number"
+        }, {
+            "ref": "xgroup/members.json",
+            "type": "linkStatic",
+            "shortcut": "members",
+            "description": "Members"
+        }, {
+            "ref": "xgroup/invite.json",
+            "type": "linkStatic",
+            "shortcut": "invite",
+            "description": "Invite"
+        }, {
+            "ref": "xgroup/remove.json",
+            "type": "linkStatic",
+            "shortcut": "remove",
+            "description": "Remove member"
+        }, {
+            "ref": "xgroup/rename.json",
+            "type": "linkStatic",
+            "shortcut": "mute",
+            "description": "Mute on/off*"
+        }, {
+            "ref": "xgroup/Invite.json",
+            "type": "linkStatic",
+            "shortcut": "delete",
+            "description": "Delete xGroup"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#xgroup menu"
+    }]
+}
