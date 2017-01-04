@@ -70,8 +70,8 @@
 
 .img-container .sms-input {
     position: absolute;
-    top: 80%;
-    left: 11%;
+    top: 78%;
+    left: 12%;
     width: 68%;
 }
 
@@ -79,7 +79,7 @@
     position: absolute;
     top: 13%;
     min-height: 65%;
-    height: 77%;
+    height: 75%;
     left: 11%;
     width: 70%;
 }
