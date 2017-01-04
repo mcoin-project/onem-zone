@@ -103,7 +103,7 @@
     position: relative;
     max-width: 80%;
     height: auto;
-    display: block;
+    display: inline-block;
     border-radius: 20px;
     float: left;
     padding-top: 5px;
@@ -113,6 +113,12 @@
     background-color: #e0e0e0;
     font-size: 13.5px;
     line-height: 18px;
+    vertical-align: top;
+}
+
+
+.sms-length span {
+    font-size: 9px;
 }
 
 .img-container .sms-response-pos .sms-mo-container {

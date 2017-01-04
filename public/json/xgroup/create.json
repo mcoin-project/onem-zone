@@ -16,7 +16,7 @@
         }
     }, {
         "type": "wizard",
-        "menuRef": "xgroupcreate.json",
+        "menuRef": "/xgroup/create.json",
         "header": "** xGroup create **\nThis will create xGroup <name>.  You'll shortly receive a message from your xGroup - forward it to the people you wish to invite. Reply to it to send messages to the group.",
         "content": [{
             "type": "any",

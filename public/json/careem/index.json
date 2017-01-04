@@ -1,0 +1,27 @@
+{
+    "content": [{
+        "menuRef": "careem/menu.json",
+        "type": "menu",
+       	"header": "** #careem menu **",
+        "content": [{
+            "ref": "careem/book.json",
+            "type": "linkStatic",
+            "shortcut": "office",
+            "description": "From: Office"
+        }, {
+            "ref": "careem/book.json",
+            "type": "linkStatic",
+            "shortcut": "home",
+            "description": "To: Home"
+        }, {
+            "ref": "careem/book.json",
+            "type": "linkStatic",
+            "shortcut": "book",
+            "description": "#book"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#careem"
+    }]
+}

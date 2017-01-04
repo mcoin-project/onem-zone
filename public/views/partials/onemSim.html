@@ -10,6 +10,11 @@
     <div class="onem-controls-container">
         <div class="onem-controls checkbox">
             <label>
+                <input type="checkbox" ng-model="smsLength" ng-init="smsLength=true"> SMS Length
+            </label>
+        </div>
+        <div class="onem-controls checkbox">
+            <label>
                 <input type="checkbox" ng-model="devMode" ng-init="devMode=true"> Developer Mode
             </label>
         </div>
@@ -53,6 +58,9 @@
                                 <div class="sms-placeholder">
                                     <div class="sms-mt-container">
                                         <span>{{obj.value}}</span>
+                                    </div>
+                                    <div ng-if="smsLength" class="sms-length">
+                                        <span>{{obj.value.length}}</span>
                                     </div>
                                 </div>
                             </div>
