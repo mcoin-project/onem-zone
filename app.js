@@ -20,6 +20,7 @@ var menuFooter = 'send option';
 var defaultChunkSize = 140;
 var footerMoreLength = 16;
 var maxMenuSize = 30;
+var wizardHeader = 'a Confirm\nb Back\nYou selected:\n';
 
 var app = express();
 
@@ -362,7 +363,7 @@ function getMenuResponse(input, menu) {
 
 function getWizardResponse(input, menu) {
 
-    var response = 'a Confirm\nb Back\nYou selected:\n';
+    var response = wizardHeader;
 
     for (var i = 0; i < menu.length; i++) {
         response = response + menuOptions[i + 2] + ' ' + menu[i].description + '\n';
@@ -754,11 +755,20 @@ function storeChunks(context, header, body) {
 
         var menuItems = [];
         var menuText = '';
+        var index;
+
+        if (type === 'wizard') {
+            menuItems.push(wizardHeader);
+            index = 2;
+        } else {
+            index = 0;
+        }
+
         for (var j = 0; j < context.content[i].content.length; j++) {
             if (context.content[i].content[j].description.length > maxMenuSize && maxMenuSize > 4) {
-                menuText = menuOptions[j] + ' ' + context.content[i].content[j].description.slice(0, maxMenuSize - 4) + "...\n";
+                menuText = menuOptions[j + index] + ' ' + context.content[i].content[j].description.slice(0, maxMenuSize - 4) + "...\n";
             } else {
-                menuText = menuOptions[j] + ' ' + context.content[i].content[j].description + '\n';
+                menuText = menuOptions[j + index] + ' ' + context.content[i].content[j].description + '\n';
             }
             menuItems.push(menuText);
         }
