@@ -1,0 +1,27 @@
+{
+    "content": [{
+        "menuRef": "wodaabe/menu.json",
+        "type": "menu",
+       	"header": "** #wodaabe menu **",
+        "content": [{
+            "ref": "wodaabe/book.json",
+            "type": "linkStatic",
+            "shortcut": "office",
+            "description": "From: Office"
+        }, {
+            "ref": "wodaabe/book.json",
+            "type": "linkStatic",
+            "shortcut": "home",
+            "description": "To: Home"
+        }, {
+            "ref": "wodaabe/book.json",
+            "type": "linkStatic",
+            "shortcut": "book",
+            "description": "#book"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#wodaabe"
+    }]
+}
