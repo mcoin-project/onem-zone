@@ -6,7 +6,8 @@
         "header": "** #post add **",
         "content": {
             "type": "string",
-            "description": "Give your new post a title"
+            "description": "Give your new post a title",
+            "var": "title"
         }
     }, {
         "type": "input",
@@ -14,13 +15,13 @@
         "header": "** #post add **",
         "content": {
             "type": "string",
-            "description": "Send post content (max 20 words)"
+            "description": "Send post content (max 20 words)",
+            "var": "description"
         }
     }, {
         "type": "menu",
         "header": "** #post add **",
         "menuRef": "/post/menu.json",
-        "description": "Post visibility",
         "content": [{
             "type": "skip",
             "description": "Private (share code)"
@@ -37,15 +38,15 @@
             "description": "Private"
         }, {
             "type": "any",
-            "description": "post title"
+            "description": "{{title}}"
         }, {
             "type": "any",
-            "description": "post content"
+            "description": "{{description}}"
         }]
     }, {
         "type": "message",
         "header": "** #post add **",
-        "description": "Post added, code is %code%\nShare this code with anyone so they can see your post "
+        "description": "Post added, code is {{code}}\nShare this code with anyone so they can see your post "
     }, {
         "type": "end",
         "ref": "#onem"

@@ -1,0 +1,37 @@
+{
+    "content": [{
+        "menuRef": "etisalat/index.json",
+        "type": "menu",
+       	"header": "** #Promotions menu **",
+        "content": [{
+            "ref": "etisalat/power.json",
+            "type": "linkStatic",
+            "shortcut": "power",
+            "description": "Power Packs"
+        }, {
+            "ref": "etisalat/data.json",
+            "type": "linkStatic",
+            "shortcut": "data",
+            "description": "Non-stop data"
+        }, {
+            "ref": "etisalat/iphone.json",
+            "type": "linkStatic",
+            "shortcut": "iPhone",
+            "description": "iPhone 6"
+        }, {
+            "ref": "etisalat/iphone.json",
+            "type": "linkStatic",
+            "shortcut": "deal",
+            "description": "Deal of the day"
+        }, {
+            "ref": "etisalat/iphone.json",
+            "type": "linkStatic",
+            "shortcut": "takaful",
+            "description": "Takaful - family"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#etisalat"
+    }]
+}

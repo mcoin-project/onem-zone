@@ -350,23 +350,71 @@ app.post('/files/list', function(req, res) {
     });
 });
 
-function getMenuResponse(input, menu) {
+function getMenuResponse(input, context) {
 
     var response = '';
+    var desc;
+    var i = context.indexPos;
+    var menu = context.content[i].content;
 
-    for (var i = 0; i < menu.length; i++) {
-        response = response + menuOptions[i] + ' ' + menu[i].description + '\n';
+    for (var j = 0; j < menu.length; j++) {
+        desc = processVars(menu[j].description, context.variables);
+        response = response + menuOptions[j] + ' ' + desc + '\n';
     }
 
     return response;
 }
 
-function getWizardResponse(input, menu) {
+function extractAttrs(str) {
+    var result = [];
+    var strMatch = str.match(/{{\s*[\w\.]+\s*}}/g);
+
+    _.each(strMatch, function(matched) {
+        result.push(matched.slice(2, matched.length - 2));
+    });
+
+    return result;
+}
+
+
+function processVars(textStr, variables) {
+
+    var result = textStr;
+
+    if (typeof textStr !== 'undefined' &&
+        typeof variables !== 'undefined') {
+
+        console.log("variables:");
+        console.log(variables);
+
+        var attrArray = extractAttrs(textStr);
+
+        if (attrArray.length > 0) {
+            _.each(attrArray, function(attr) {
+
+                if (typeof variables[attr.trim()] !== 'undefined') {
+                    result = result.replace('{{' + attr + '}}', variables[attr.trim()]);
+                } else {
+                    result = result.replace('{{' + attr + '}}', 'undefined');
+                }
+            });
+        }
+    }
+
+    return result;
+}
+
+function getWizardResponse(input, context) {
 
     var response = wizardHeader;
+    var desc;
+    var i = context.indexPos;
+
+    var menu = context.content[i].content;
 
     for (var i = 0; i < menu.length; i++) {
-        response = response + menuOptions[i + 2] + ' ' + menu[i].description + '\n';
+        desc = processVars(menu[i].description, context.variables);
+        response = response + menuOptions[i + 2] + ' ' + desc + '\n';
     }
 
     console.log("inside wizard returning:" + response);
@@ -534,7 +582,7 @@ function processRequest(input, context) {
 
     switch (type) {
         case 'menu':
-            result.response = getMenuResponse(input, context.content[i].content);
+            result.response = getMenuResponse(input, context);
             break;
         case 'input':
             console.log("type input:");
@@ -543,10 +591,10 @@ function processRequest(input, context) {
             break;
         case 'wizard':
             console.log("processRequest, type wizard");
-            result.response = getWizardResponse(input, context.content[i].content);
+            result.response = getWizardResponse(input, context);
             break;
         case 'message':
-            result.response = context.content[i].description + '\n';
+            result.response = processVars(context.content[i].description, context.variables) + '\n';
             result.skip = true;
             break;
         case 'end':
@@ -632,6 +680,15 @@ function validateInput(moText, context) {
         case 'input':
             console.log('input found');
             response.success = true;
+            if (typeof context.content[i].content.var !== 'undefined') {
+                if (typeof context.variables === 'undefined') {
+                    context.variables = {};
+                }
+                var varName = context.content[i].content.var;
+                context.variables[varName] = input;
+                console.log("detected var:" + context.variables);
+            }
+
             break;
         case 'wizard':
             var wizardContent = context.content[i].content;
@@ -675,26 +732,26 @@ function processComment(content) {
     return comment;
 }
 
-function processHeader(content) {
+function processHeader(content, context) {
     var header = '';
 
     console.log("inside header content:");
     console.log(content);
 
     if (typeof content.header !== 'undefined') {
-        header = content.header + '\n';
+        header = processVars(content.header, context.variables) + '\n';
     }
     return header;
 }
 
-function processFooter(content) {
+function processFooter(content, context) {
 
     var footerText;
 
     if (content.type === 'message') {
         footerText = '';
     } else if (typeof content.footer !== 'undefined') {
-        footerText = '<' + content.footer + '>';
+        footerText = '<' + processVars(content.footer, context.variables) + '>';
     } else {
         footerText = '<' + menuFooter + '>';
     }
@@ -702,12 +759,13 @@ function processFooter(content) {
     return footerText;
 }
 
-function storeChunks(context, header, body) {
+function storeChunks(context, header, footer, body) {
 
     var combined = header + body;
     var realChunkSize = context.chunkSize - footerMoreLength;
     var type;
     var i = context.indexPos;
+    var result;
 
     context.chunks = [];
 
@@ -756,6 +814,7 @@ function storeChunks(context, header, body) {
         var menuItems = [];
         var menuText = '';
         var index;
+        var desc;
 
         if (type === 'wizard') {
             menuItems.push(wizardHeader);
@@ -765,10 +824,15 @@ function storeChunks(context, header, body) {
         }
 
         for (var j = 0; j < context.content[i].content.length; j++) {
-            if (context.content[i].content[j].description.length > maxMenuSize && maxMenuSize > 4) {
-                menuText = menuOptions[j + index] + ' ' + context.content[i].content[j].description.slice(0, maxMenuSize - 4) + "...\n";
+
+            desc = processVars(context.content[i].content[j].description, context.variables);
+
+            console.log("desc:" + desc);
+
+            if (desc.length > maxMenuSize && maxMenuSize > 4) {
+                menuText = menuOptions[j + index] + ' ' + desc.slice(0, maxMenuSize - 4) + "...\n";
             } else {
-                menuText = menuOptions[j + index] + ' ' + context.content[i].content[j].description + '\n';
+                menuText = menuOptions[j + index] + ' ' + desc + '\n';
             }
             menuItems.push(menuText);
         }
@@ -777,13 +841,13 @@ function storeChunks(context, header, body) {
         var chunkedHeader = makeChunks(header);
 
         // make another chunk to make room for menu items because this one is full
-        if (chunkedHeader[chunkedHeader.length-1] >= realChunkSize && menuItems.length > 0) {
+        if (chunkedHeader[chunkedHeader.length - 1] >= realChunkSize && menuItems.length > 0) {
             chunkedHeader.push(' ');
         }
 
-        context.chunks = chunkedHeader;  // copy all header chunks
+        context.chunks = chunkedHeader; // copy all header chunks
 
-        lastChunk = context.chunks.pop() + '\n';  // remove the last chunk from the list and save it
+        lastChunk = context.chunks.pop() + '\n'; // remove the last chunk from the list and save it
 
         //now we can start adding menu items
         for (var j = 0; j < menuItems.length; j++) {
@@ -809,9 +873,21 @@ function storeChunks(context, header, body) {
     console.log("context.chunks:");
     console.log(context.chunks);
 
-    context.currentChunkPage = 1;
+    if (context.chunks.length === 1) {
+        //after all that, there is only one chunk, so set chunks back to zero and return the result
+        console.log("resetting");
+        result = context.chunks[0].slice(0, context.chunks[0].length - 11);
+        result = result + footer;
+        context.currentChunkPage = 0;
+        context.chunks = [];
 
-    return context.chunks[0];
+    } else {
+
+        result = context.chunks[0];
+        context.currentChunkPage = 1;
+    }
+
+    return result;
 
 }
 
@@ -954,8 +1030,8 @@ app.get('/api/getResponse', function(req, res, next) {
             req.session.onemContext = JSON.parse(JSON.stringify(result.data));
             body = processRequest(moText, req.session.onemContext);
             i = req.session.onemContext.indexPos;
-            header = processHeader(req.session.onemContext.content[i]);
-            footer = processFooter(req.session.onemContext.content[i]);
+            header = processHeader(req.session.onemContext.content[i], req.session.onemContext);
+            footer = processFooter(req.session.onemContext.content[i], req.session.onemContext);
             comment = processComment(req.session.onemContext.content[i]);
         } else {
             console.log("result is fail");
@@ -989,8 +1065,8 @@ app.get('/api/getResponse', function(req, res, next) {
 
         console.log("after processRequest, not a menu option, i:" + i);
 
-        header = processHeader(req.session.onemContext.content[i]);
-        footer = processFooter(req.session.onemContext.content[i]);
+        header = processHeader(req.session.onemContext.content[i], req.session.onemContext);
+        footer = processFooter(req.session.onemContext.content[i], req.session.onemContext);
         comment = processComment(req.session.onemContext.content[i]);
 
     } else {
@@ -1013,11 +1089,9 @@ app.get('/api/getResponse', function(req, res, next) {
 
         if (finalResponse.length > req.session.onemContext.chunkSize) {
             console.log("response > chunkSize");
-            finalResponse = storeChunks(req.session.onemContext, header, body.response);
+            finalResponse = storeChunks(req.session.onemContext, header, footer, body.response);
         }
     }
-
-
 
     res.json({
         mtText: finalResponse,

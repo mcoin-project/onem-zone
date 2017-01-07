@@ -1,0 +1,27 @@
+{
+    "content": [{
+        "menuRef": "etisalat/index.json",
+        "type": "menu",
+       	"header": "** #etisalat menu **",
+        "content": [{
+            "ref": "etisalat/offers.json",
+            "type": "linkStatic",
+            "shortcut": "offers",
+            "description": "Offers(3)"
+        }, {
+            "ref": "etisalat/account.json",
+            "type": "linkStatic",
+            "shortcut": "quick",
+            "description": "My account"
+        }, {
+            "ref": "etisalat/promotions.json",
+            "type": "linkStatic",
+            "shortcut": "promotions",
+            "description": "Promotions(5)"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#etisalat"
+    }]
+}
