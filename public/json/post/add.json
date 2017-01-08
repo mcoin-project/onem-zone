@@ -46,7 +46,7 @@
     }, {
         "type": "message",
         "header": "** #post add **",
-        "description": "Post added, code is {{code}}\nShare this code with anyone so they can see your post "
+        "description": "Post added, code is {{ Math.random().toString(36).substr(2, 6).toUpperCase() }}\nShare this code with anyone so they can see your post "
     }, {
         "type": "end",
         "ref": "#onem"

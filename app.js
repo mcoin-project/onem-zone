@@ -14,6 +14,8 @@ var fsx = require('fs-extra');
 var zip = require('express-zip');
 var moment = require('moment');
 var _ = require('underscore-node');
+var safeEval = require('safe-eval')
+
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 var menuFooter = 'send option';
@@ -367,10 +369,10 @@ function getMenuResponse(input, context) {
 
 function extractAttrs(str) {
     var result = [];
-    var strMatch = str.match(/{{\s*[\w\.]+\s*}}/g);
+    var strMatch = str.match(/{{\s*([^}]+)\s*}}/g);
 
     _.each(strMatch, function(matched) {
-        result.push(matched.slice(2, matched.length - 2));
+        result.push(matched);
     });
 
     return result;
@@ -380,6 +382,7 @@ function extractAttrs(str) {
 function processVars(textStr, variables) {
 
     var result = textStr;
+    var expression, evalRes;
 
     if (typeof textStr !== 'undefined' &&
         typeof variables !== 'undefined') {
@@ -389,17 +392,42 @@ function processVars(textStr, variables) {
 
         var attrArray = extractAttrs(textStr);
 
+        console.log("attrArray:");
+        console.log(attrArray);
+
         if (attrArray.length > 0) {
             _.each(attrArray, function(attr) {
+                _.each(variables, function(variable) {
+                    if (attr.includes(variable.name)) {
+                        result = result.replace(variable.name, variable.value);
+                    }
+                });
+            });
+            // now all the attribute names should be replaced with their values
+            // we can loop through attributes again and evaluate the expression, and remove {{ }}
 
-                if (typeof variables[attr.trim()] !== 'undefined') {
-                    result = result.replace('{{' + attr + '}}', variables[attr.trim()]);
-                } else {
-                    result = result.replace('{{' + attr + '}}', 'undefined');
+            attrArray = extractAttrs(result);
+
+            _.each(attrArray, function(attr) {
+                //    attr = attr.slice(2,attr.length);
+                //    console.log("attr sliced:"+attr);
+                expression = attr.slice(2, attr.length - 2); // remove {{ }}
+                console.log("expression:" + expression);
+                try {
+                    evalRes = safeEval(expression);
+                } catch (e) {
+                    evalRes = expression;
+                    console.log("safely catch the error");
                 }
+
+                console.log("evaluated attr:" + evalRes);
+                if (typeof evalRes === 'undefined') evalRes = 'undefined';
+                result = result.replace(attr, evalRes);
             });
         }
     }
+
+    console.log("result:" + result);
 
     return result;
 }
@@ -620,7 +648,7 @@ function processRequest(input, context) {
 
 }
 
-function getMenuOption(input, menuContent) {
+function getMenuOption(context, input, menuContent) {
 
     var response = { success: false, response: 'invalid menu option', menuOption: false, selectedOption: null };
     // if it's only 1 char long and in range of a to last menu option
@@ -632,6 +660,7 @@ function getMenuOption(input, menuContent) {
         response.selectedOption <= menuContent.length - 1) {
         response.success = true;
         response.menuOption = true;
+        checkForVar(context, menuContent[response.selectedOption], input);
     } else {
         // not a-z, so check shortcuts
         for (var i = 0; i < menuContent.length; i++) {
@@ -639,12 +668,36 @@ function getMenuOption(input, menuContent) {
                 response.selectedOption = i;
                 response.success = true;
                 response.menuOption = true;
+                checkForVar(context, menuContent[i], input);
                 break;
             }
         }
     }
 
+
+
     return response;
+}
+
+function checkForVar(context, content, input) {
+
+    if (typeof content.var !== 'undefined') {
+        if (typeof context.variables === 'undefined') {
+            context.variables = [];
+        }
+
+        var varObj;
+
+        if (!content.var.includes("=")) {
+            varObj = { "name": content.var, "value": input };
+        } else {
+            var splitString = content.var.split('=');
+            varObj = { "name": splitString[0].trim(), "value": splitString[1].trim() };
+        }
+
+        context.variables.push(varObj);
+        console.log("detected var:" + varObj);
+    }
 }
 
 function validateInput(moText, context) {
@@ -675,19 +728,12 @@ function validateInput(moText, context) {
             console.log(menuContent);
             console.log("input:" + input);
 
-            response = getMenuOption(input, menuContent);
+            response = getMenuOption(context, input, menuContent);
             break;
         case 'input':
             console.log('input found');
             response.success = true;
-            if (typeof context.content[i].content.var !== 'undefined') {
-                if (typeof context.variables === 'undefined') {
-                    context.variables = {};
-                }
-                var varName = context.content[i].content.var;
-                context.variables[varName] = input;
-                console.log("detected var:" + context.variables);
-            }
+            checkForVar(context, context.content[i].content, input);
 
             break;
         case 'wizard':
