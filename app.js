@@ -15,6 +15,7 @@ var zip = require('express-zip');
 var moment = require('moment');
 var _ = require('underscore-node');
 var safeEval = require('safe-eval');
+var glob = require("glob")
 
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -23,6 +24,8 @@ var defaultChunkSize = 140;
 var footerMoreLength = 16;
 var maxMenuSize = 30;
 var wizardHeader = 'a Confirm\nb Back\nYou selected:\n';
+var unsureResponse = "Not sure what you meant. Please send # to see all available services.\n";
+var dymHeader = "** Did you mean? **\n";
 
 var app = express();
 
@@ -311,6 +314,7 @@ app.get('/files/downloadAll', function(req, res) {
     });
 });
 
+
 app.post('/files/list', function(req, res) {
     var currentDir = rootPath;
 
@@ -351,6 +355,43 @@ app.post('/files/list', function(req, res) {
         res.json({ result: data });
     });
 });
+
+function didYouMean(input) {
+
+    var result = { status: "failed", commands: [], files: [] };
+    var options = {};
+
+    if (input[0] !== '#') return result;
+
+    var words = input.split(/\b/);
+
+    // try first word
+
+    var searchPath = path.join(rootPath, words[1] + '*');
+
+    console.log("searching: ", searchPath);
+    var files = glob.sync(searchPath, options);
+    files.forEach(function(file) {
+        console.log("file Object:");
+        console.log(path.parse(file).name);
+        result.commands.push('#' + path.parse(file).name +' \n');
+        result.files.push(path.join(file, '/index.json'));
+    });
+
+    if (result.commands.length === 1) {
+        result.status = 'success';
+    }
+
+    if (result.commands.length > 1) {
+        result.status = "partial";
+    }
+
+    console.log("returning:");
+    console.log(result);
+
+    return result;
+}
+
 
 function getMenuResponse(input, context) {
 
@@ -493,13 +534,34 @@ function serviceSwitch(input, oldContext) {
 
     console.log("fullPath:" + fullPath);
 
+    var dymRes = {};
+
+    context.success = false;
+
     try {
         file = fs.readFileSync(fullPath, 'utf8');
         context.success = true;
     } catch (err) {
-        console.log(err);
-        context.response = "Not sure what you meant. Please send # to see all available services.\n";
-        context.success = false;
+
+        dymRes = didYouMean(input);
+
+        if (dymRes.status === "success") {
+            try {
+                file = fs.readFileSync(dymRes.files[0], 'utf8');
+                context.success = true;
+            } catch (e) {
+                console.log(e);
+            }
+        } else if (dymRes.status === "partial") {
+            context.response = dymHeader;
+            _.each(dymRes.commands, function(command) {
+                context.response = context.response + command;
+            });
+            context.success = false;
+        } else {
+            context.response = unsureResponse;
+        }
+
     }
 
     if (context.success) {
@@ -1063,6 +1125,9 @@ app.get('/api/getResponse', function(req, res, next) {
 
                 status.success = false;
                 status.chunking = true;
+            } else {
+                status.response = "No chunks available";
+                status.success = false;
             }
             break;
         default:
