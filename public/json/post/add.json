@@ -7,7 +7,7 @@
         "content": {
             "type": "string",
             "description": "Give your new post a title",
-            "var": "title"
+            "var": "$title"
         }
     }, {
         "type": "input",
@@ -16,7 +16,7 @@
         "content": {
             "type": "string",
             "description": "Send post content (max 20 words)",
-            "var": "description"
+            "var": "$description"
         }
     }, {
         "type": "menu",
@@ -25,11 +25,11 @@
         "content": [{
             "type": "skip",
             "description": "Private (share code)",
-            "var": "visibility=Private"
+            "var": "$visibility=Private"
         }, {
             "type": "skip",
             "description": "Public (everyone)",
-            "var": "visibility=Public"
+            "var": "$visibility=Public"
         }]
     }, {
         "type": "wizard",
@@ -37,13 +37,13 @@
         "header": "** #post add **",
         "content": [{
             "type": "any",
-            "description": "{{visibility}}"
+            "description": "{{$visibility}}"
         }, {
             "type": "any",
-            "description": "{{title}}"
+            "description": "{{$title}}"
         }, {
             "type": "any",
-            "description": "{{description}}"
+            "description": "{{$description}}"
         }]
     }, {
         "type": "message",
@@ -51,6 +51,6 @@
         "description": "Post added, code is {{ Math.random().toString(36).substr(2, 6).toUpperCase() }}\nShare this code with anyone so they can see your post "
     }, {
         "type": "end",
-        "ref": "#onem"
+        "ref": "#post recent"
     }]
 }

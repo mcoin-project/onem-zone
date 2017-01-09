@@ -15,7 +15,7 @@ var zip = require('express-zip');
 var moment = require('moment');
 var _ = require('underscore-node');
 var safeEval = require('safe-eval');
-var glob = require("glob")
+var glob = require("glob");
 
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -374,7 +374,7 @@ function didYouMean(input) {
     files.forEach(function(file) {
         console.log("file Object:");
         console.log(path.parse(file).name);
-        result.commands.push('#' + path.parse(file).name +' \n');
+        result.commands.push('#' + path.parse(file).name + ' \n');
         result.files.push(path.join(file, '/index.json'));
     });
 
@@ -416,6 +416,9 @@ function extractAttrs(str) {
         result.push(matched);
     });
 
+    console.log("result:");
+    console.log(result);
+
     return result;
 }
 
@@ -436,34 +439,55 @@ function processVars(textStr, variables) {
         console.log("attrArray:");
         console.log(attrArray);
 
+        var declareVars = '';
+
         if (attrArray.length > 0) {
-            _.each(attrArray, function(attr) {
-                _.each(variables, function(variable) {
-                    if (attr.includes(variable.name)) {
-                        result = result.replace(variable.name, variable.value);
-                    }
-                });
-            });
+          //  _.each(attrArray, function(attr) {
+                for (j=0; j<variables.length; j++) {
+                    // var searchStr = new RegExp('\\b' + variables[j].name + '\\b');
+
+                    declareVars = declareVars + 'var ' + variables[j].name + '=\"' + variables[j].value + '\";\n';
+
+                    // console.log("searchStr:" + searchStr);
+                    // console.log("attr.match(searchStr)" + attr.match(searchStr));
+
+                  //  if (attr.match(searchStr) !== null || (variables[j].name[0] === '$' && attr.includes(variables[j].name))) {
+                        //      if (attr.includes(variable.name)) {
+                        // result = result.replace(variable.name, variable.value);
+                  //      result = result.replace(variables[j].name, 'variables[' + j + '].' + variables[j].name);
+
+                  //  }
+                }
+        //    });
             // now all the attribute names should be replaced with their values
             // we can loop through attributes again and evaluate the expression, and remove {{ }}
 
             attrArray = extractAttrs(result);
 
+            //make a string to declare all variavles
+
+            var code = '';
+
             _.each(attrArray, function(attr) {
                 //    attr = attr.slice(2,attr.length);
                 //    console.log("attr sliced:"+attr);
                 expression = attr.slice(2, attr.length - 2); // remove {{ }}
-                console.log("expression:" + expression);
-                try {
-                    evalRes = safeEval(expression);
-                } catch (e) {
-                    evalRes = expression;
-                    console.log("safely catch the error");
-                }
 
-                console.log("evaluated attr:" + evalRes);
-                if (typeof evalRes === 'undefined') evalRes = 'undefined';
-                result = result.replace(attr, evalRes);
+                code = 'function execCode() {' + declareVars + "return " + expression + ';}';
+
+                console.log("code to evaluate:"+code);
+
+                try {
+                    evalRes = safeEval(code);
+                    console.log("evalRes:"+evalRes);
+                    result = result.replace(attr, evalRes);
+                } catch (e) {
+                    console.log("safely catch the error" + e);
+                    result = result.replace(attr, 'undefined');
+
+                }
+              //   evalRes = evalRes.trim();
+
             });
         }
     }
@@ -572,6 +596,17 @@ function serviceSwitch(input, oldContext) {
                 context.data = JSON.parse(JSON.stringify(index));
                 context.data.indexPos = 0;
                 context.data.chunkSize = oldContext.chunkSize;
+                context.data.variables = [];
+                //copy global vars to new context
+                if (typeof oldContext.variables !== 'undefined') {
+                    _.each(oldContext.variables, function(variable) {
+                        if (variable.name[0] == '$') {
+                            context.data.variables.push(variable);
+                        }
+                    });
+                    //     context.data.variables = JSON.parse(JSON.stringify(oldContext.variables));
+                }
+
             } else {
                 console.log("invalid json 1");
                 context.response = "Invalid JSON detected: " + fileName;

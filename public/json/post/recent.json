@@ -7,7 +7,7 @@
         "content": [{
             "ref": "/post/view.json",
             "type": "linkDynamic",
-            "description": "%post title 1%"
+            "description": "{{$title || '%post title 1%'}}"
         }, {
             "ref": "/post/view.json",
             "type": "linkDynamic",
