@@ -117,7 +117,6 @@
     vertical-align: top;
 }
 
-
 .sms-length span {
     font-size: 9px;
 }
@@ -154,9 +153,13 @@
     white-space: pre-wrap;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
+    word-wrap: break-word;
 }
 
 .sms-mo span {
     padding: 0;
     white-space: pre-wrap;
+    word-wrap: break-word;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
 }

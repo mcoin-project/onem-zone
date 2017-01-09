@@ -24,10 +24,12 @@
         "menuRef": "/post/menu.json",
         "content": [{
             "type": "skip",
-            "description": "Private (share code)"
+            "description": "Private (share code)",
+            "var": "visibility=Private"
         }, {
             "type": "skip",
-            "description": "Public (everyone)"
+            "description": "Public (everyone)",
+            "var": "visibility=Public"
         }]
     }, {
         "type": "wizard",
@@ -35,7 +37,7 @@
         "header": "** #post add **",
         "content": [{
             "type": "any",
-            "description": "Private"
+            "description": "{{visibility}}"
         }, {
             "type": "any",
             "description": "{{title}}"

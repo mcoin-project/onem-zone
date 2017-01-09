@@ -14,7 +14,7 @@ var fsx = require('fs-extra');
 var zip = require('express-zip');
 var moment = require('moment');
 var _ = require('underscore-node');
-var safeEval = require('safe-eval')
+var safeEval = require('safe-eval');
 
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
@@ -674,8 +674,6 @@ function getMenuOption(context, input, menuContent) {
         }
     }
 
-
-
     return response;
 }
 
@@ -695,8 +693,25 @@ function checkForVar(context, content, input) {
             varObj = { "name": splitString[0].trim(), "value": splitString[1].trim() };
         }
 
-        context.variables.push(varObj);
-        console.log("detected var:" + varObj);
+        console.log("varObj:");
+        console.log(varObj);
+
+        //need to overwrite variable if it already exists
+
+        var found = false;
+
+        _.each(context.variables, function(variable) {
+            if (variable.name === varObj.name) {
+                console.log("overwriting");
+                variable.name = varObj.name; // already exists so overwrite
+                variable.value = varObj.value;
+                found = true;
+            }
+        });
+        if (!found) context.variables.push(varObj);
+
+        console.log("detected var, variables:");
+        console.log(context.variables);
     }
 }
 
