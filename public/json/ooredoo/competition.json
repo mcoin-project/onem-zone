@@ -1,0 +1,25 @@
+{
+    "content": [{
+        "ref": "/etisalat/competition.json",
+        "type": "menu",
+        "menuRef": "#etisalat",
+        "header": "** #Offers Menu **\nWin a iPhone 6\nWhat is the fastest land mammal?",
+        "content": [{
+            "type": "skip",
+            "description": "Cheetah",
+            "var" : "result=Congratulations, you have been added to the prize draw!"
+        }, {
+            "ref": "skip",
+            "type": "skip",
+            "description": "Antelope",
+            "var" : "result=Bad luck, better luck next time!"
+        }]
+    }, {
+        "type": "message",
+        "header": "** Competition **",
+        "description": "{{result}}"
+    }, {
+        "type": "end",
+        "ref": "#ooredoo"
+    }]
+}

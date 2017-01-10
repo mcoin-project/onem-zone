@@ -442,51 +442,40 @@ function processVars(textStr, variables) {
         var declareVars = '';
 
         if (attrArray.length > 0) {
-          //  _.each(attrArray, function(attr) {
-                for (j=0; j<variables.length; j++) {
-                    // var searchStr = new RegExp('\\b' + variables[j].name + '\\b');
+            for (j = 0; j < variables.length; j++) {
+                // var searchStr = new RegExp('\\b' + variables[j].name + '\\b');
 
-                    declareVars = declareVars + 'var ' + variables[j].name + '=\"' + variables[j].value + '\";\n';
+                declareVars = declareVars + 'var ' + variables[j].name + '=' + "\'" + variables[j].value + '\';\n';
 
-                    // console.log("searchStr:" + searchStr);
-                    // console.log("attr.match(searchStr)" + attr.match(searchStr));
+            }
 
-                  //  if (attr.match(searchStr) !== null || (variables[j].name[0] === '$' && attr.includes(variables[j].name))) {
-                        //      if (attr.includes(variable.name)) {
-                        // result = result.replace(variable.name, variable.value);
-                  //      result = result.replace(variables[j].name, 'variables[' + j + '].' + variables[j].name);
-
-                  //  }
-                }
-        //    });
             // now all the attribute names should be replaced with their values
             // we can loop through attributes again and evaluate the expression, and remove {{ }}
 
             attrArray = extractAttrs(result);
 
-            //make a string to declare all variavles
+            //make a string to declare all variables
 
             var code = '';
 
             _.each(attrArray, function(attr) {
-                //    attr = attr.slice(2,attr.length);
-                //    console.log("attr sliced:"+attr);
+
                 expression = attr.slice(2, attr.length - 2); // remove {{ }}
 
                 code = 'function execCode() {' + declareVars + "return " + expression + ';}';
 
-                console.log("code to evaluate:"+code);
+                console.log("code to evaluate:" + code);
 
                 try {
                     evalRes = safeEval(code);
-                    console.log("evalRes:"+evalRes);
+                    console.log("evalRes:" + evalRes);
                     result = result.replace(attr, evalRes);
                 } catch (e) {
                     console.log("safely catch the error" + e);
                     result = result.replace(attr, 'undefined');
 
                 }
-              //   evalRes = evalRes.trim();
+                //   evalRes = evalRes.trim();
 
             });
         }
@@ -719,6 +708,7 @@ function processRequest(input, context) {
             result.response = getWizardResponse(input, context);
             break;
         case 'message':
+            checkForVar(context, context.content[i], input);
             result.response = processVars(context.content[i].description, context.variables) + '\n';
             result.skip = true;
             break;
@@ -776,6 +766,9 @@ function getMenuOption(context, input, menuContent) {
 
 function checkForVar(context, content, input) {
 
+    console.log("inside checkForVar, content:");
+    console.log(content);
+
     if (typeof content.var !== 'undefined') {
         if (typeof context.variables === 'undefined') {
             context.variables = [];
@@ -787,7 +780,9 @@ function checkForVar(context, content, input) {
             varObj = { "name": content.var, "value": input };
         } else {
             var splitString = content.var.split('=');
-            varObj = { "name": splitString[0].trim(), "value": splitString[1].trim() };
+            var stringValue =  splitString[1].trim();
+            console.log("stringValue:"+stringValue);
+            varObj = { "name": splitString[0].trim(), "value":  stringValue };
         }
 
         console.log("varObj:");
@@ -869,6 +864,8 @@ function validateInput(moText, context) {
         case 'message':
             console.log("message type");
             response.success = true;
+            checkForVar(context, context.content[i], input);
+
             break;
         default:
             break;

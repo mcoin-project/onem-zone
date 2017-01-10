@@ -1,0 +1,22 @@
+{
+    "content": [{
+        "menuRef": "#ooredoo",
+        "type": "menu",
+       	"header": "** #offers menu **",
+        "content": [{
+            "ref": "ooredoo/onempower.json",
+            "type": "linkStatic",
+            "shortcut": "airtime",
+            "description": "One month of ONEm Power tier"
+        }, {
+            "ref": "ooredoo/topup.json",
+            "type": "linkStatic",
+            "shortcut": "competition",
+            "description": "Hala Go! Topup"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#ooredoo"
+    }]
+}

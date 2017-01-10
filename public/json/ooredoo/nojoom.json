@@ -1,0 +1,23 @@
+{
+    "content": [{
+        "menuRef": "ooredoo/index.json",
+        "type": "menu",
+       	"header": "** #ooredoo Nojoom Points **\nNojoom Points Balance: 2,000",
+        "content": [{
+            "type": "skip",
+            "shortcut": "redeem",
+            "description": "Redeem Points"
+        }, {
+            "type": "skip",
+            "shortcut": "offers",
+            "description": "Special offers (3)"
+        }, {
+            "type": "skip",
+            "shortcut": "Discover",
+            "description": "How can I earn more?"
+        }]
+    }, {
+    	"type": "end",
+    	"ref": "#ooredoo"
+    }]
+}
