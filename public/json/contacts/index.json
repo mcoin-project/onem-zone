@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "ref": "index.json",
+        "type": "menu",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #contacts recents **",
+        "comment": "Menu when no contacts exist\nbut there are recent made or received calls\nsort the menu by call made/received date",
+        "footer" : "send option or \"menu\"",
+        "content": [{
+            "ref": "/contacts/add.json",
+            "type": "linkDynamic",
+            "description": "Add/invite new contact\n\nRecently contacted:"
+        }, {
+            "ref": "/contacts/notcontactview.json",
+            "type": "linkDynamic",
+            "description": "555444333222111",
+            "var": "$onemnumber=555444333222111"
+        }, {
+            "ref": "/contacts/notcontactview.json",
+            "type": "linkDynamic",
+            "description": "222111222111222",
+            "var": "$onemnumber=222111222111222"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

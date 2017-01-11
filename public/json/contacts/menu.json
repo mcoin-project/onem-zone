@@ -1,0 +1,24 @@
+{
+    "content": [{
+        "ref": "menu.json",
+        "type": "menu",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #contacts menu **",
+        "content": [{
+            "ref": "/contacts/add.json",
+            "type": "linkDynamic",
+            "description": "Add a contact"
+        }, {
+            "ref": "/contacts/search.json",
+            "type": "linkDynamic",
+            "description": "Search"
+        }, {
+            "ref": "/contacts/xgroup.json",
+            "type": "linkDynamic",
+            "description": "xGroup"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

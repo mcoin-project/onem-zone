@@ -1,0 +1,40 @@
+{
+    "content": [{
+        "type": "input",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #Contact add **",
+        "footer": "send ONEm id or \"menu\"",
+        "content": {
+            "type": "string",
+            "description": "15-digit ONEm id?",
+            "var": "onemnumber"
+        }
+    }, {
+        "type": "input",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #Contact add **",
+        "content": {
+            "type": "string",
+            "description": "Nickname?",
+            "var": "nickname"
+        }
+    }, { 
+        "type": "wizard",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #Contact add **",
+        "content": [{
+            "type": "any",
+            "description": "{{onemnumber}}"
+        }, {
+            "type": "any",
+            "description": "{{nickname}}"
+        }]
+    }, {
+        "type": "message",
+        "header": "** #contacts add **",
+        "description": "{{onemnumber}} saved as {{nickname}}"
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

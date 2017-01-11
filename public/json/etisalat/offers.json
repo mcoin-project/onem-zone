@@ -4,7 +4,7 @@
         "type": "menu",
        	"header": "** #offers menu **",
         "content": [{
-            "ref": "etisalat/onempower.json",
+            "ref": "etisalat/offers.json",
             "type": "linkStatic",
             "shortcut": "airtime",
             "description": "One month of ONEm Power tier"

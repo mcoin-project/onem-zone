@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "type": "input",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #Contact add **\nSet nickname for {{$onemnumber}}",
+        "footer": "send nickname or \"menu\"",
+        "content": {
+            "type": "string",
+            "description": "Nickname?",
+            "var": "nickname"
+        }
+    }, { 
+        "type": "wizard",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #Contact add **",
+        "content": [{
+            "type": "any",
+            "description": "{{nickname}}"
+        }]
+    }, {
+        "type": "message",
+        "header": "** #contacts add **",
+        "description": "{{$onemnumber}} saved as {{nickname}}"
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

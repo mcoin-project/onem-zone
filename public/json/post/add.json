@@ -25,11 +25,11 @@
         "content": [{
             "type": "skip",
             "description": "Private (share code)",
-            "var": "$visibility=Private"
+            "var": "$visibility='Private'"
         }, {
             "type": "skip",
             "description": "Public (everyone)",
-            "var": "$visibility=Public"
+            "var": "$visibility='Public'"
         }]
     }, {
         "type": "wizard",

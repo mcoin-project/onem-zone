@@ -1,0 +1,53 @@
+{
+    "content": [{
+        "ref": "exists.json",
+        "type": "menu",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #contacts recents **",
+        "comment": "menu when contacts exist\nsorted by recent called date",
+        "content": [{
+            "ref": "/contacts/add.json",
+            "type": "linkDynamic",
+            "description": "Add/invite a contact"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "{{$onemnumber}}"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Chris R"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Sorin"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Kelly"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Maurius"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Cristi"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Bogdan"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Andrei"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Radu"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

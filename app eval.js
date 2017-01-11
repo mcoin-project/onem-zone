@@ -423,31 +423,10 @@ function extractAttrs(str) {
 }
 
 
-function globalEval(code, v) {
-    var variables = this.variables;
-
-    console.log("code=" + code);
-
-    console.log("variables=");
-    console.log(variables);
-
-    return Function(code)();
-}
-
 function processVars(textStr, variables) {
 
-    console.log("inside processVars");
-
     var result = textStr;
-    var expression, evalRes, finalResult, secondTry;
-
-    function makeEvalContext(declarations) {
-
-        console.log("declarations: "+declarations);
-
-        eval(declarations);
-        return function(str) { console.log("str:"+str); eval(str); };
-    }
+    var expression, evalRes;
 
     if (typeof textStr !== 'undefined' &&
         typeof variables !== 'undefined') {
@@ -460,24 +439,15 @@ function processVars(textStr, variables) {
         console.log("attrArray:");
         console.log(attrArray);
 
-        var declareVars = '';
+        var declareVars = 'var variables = this.variables;\n';
 
         if (attrArray.length > 0) {
-
-            var varString = JSON.stringify(variables);
-            var varsInScope = "x = " + varString + ';';
-
-            console.log(varsInScope);
-
             for (j = 0; j < variables.length; j++) {
-                declareVars = declareVars + 'var ' + variables[j].name + "=x[" + j + "].value;\n";
+                // var searchStr = new RegExp('\\b' + variables[j].name + '\\b');
+
+               declareVars = declareVars + 'var ' + variables[j].name + '=' + "\'" + variables[j].value + '\';\n';
+
             }
-
-            console.log("declareVars:"+declareVars);
-
-            eval1 = makeEvalContext("var x;");
-            eval2 = makeEvalContext(varsInScope);
-            eval3 = makeEvalContext(declareVars);
 
             // now all the attribute names should be replaced with their values
             // we can loop through attributes again and evaluate the expression, and remove {{ }}
@@ -490,42 +460,27 @@ function processVars(textStr, variables) {
 
             _.each(attrArray, function(attr) {
 
-                expression = "evalRes = " + attr.slice(2, attr.length - 2); // remove {{ }}
+                expression = attr.slice(2, attr.length - 2); // remove {{ }}
 
-                // code = '{' + declareVars + "return " + expression + ';}';
+                code = 'function execCode() {' + declareVars + "return " + expression + ';}';
 
-                console.log("code to evaluate:" + expression);
+                console.log("code to evaluate:" + code);
 
-                // var context = {expression: expression, variables: variables};
+                var context = {expression: expression, variables: variables};
 
                 try {
+                    
+                    evalRes = safeEval(code);
 
-                    eval3(expression);
-
-                    console.log("evaluating: secondTry=" + evalRes);
-
-                //    eval3("secondTry = " + evalRes);
-
-                    console.log("secondTry:"+ secondTry);
-
-                    // evalRes = evalInContext.call(code);
-
-                    // evalRes = globalEval(code, variables);
+                //    evalRes = evalInContext.call(context);
 
                     console.log("evalRes:" + evalRes);
+                    result = result.replace(attr, evalRes);
                 } catch (e) {
                     console.log("safely catch the error" + e);
-                }
-
-                if (typeof evalRes === 'undefined') {
                     result = result.replace(attr, 'undefined');
-           //     } else if (typeof secondTry !== 'undefined' ) {
-           //         result = result.replace(attr, secondTry);
-                } else {
-                    result = result.replace(attr, evalRes);
+
                 }
-                
- 
                 //   evalRes = evalRes.trim();
 
             });
@@ -759,7 +714,6 @@ function processRequest(input, context) {
             result.response = getWizardResponse(input, context);
             break;
         case 'message':
-            console.log("type message");
             checkForVar(context, context.content[i], input);
             result.response = processVars(context.content[i].description, context.variables) + '\n';
             result.skip = true;
@@ -832,9 +786,9 @@ function checkForVar(context, content, input) {
             varObj = { "name": content.var, "value": input };
         } else {
             var splitString = content.var.split('=');
-            var stringValue = splitString[1].trim();
-            console.log("stringValue:" + stringValue);
-            varObj = { "name": splitString[0].trim(), "value": stringValue };
+            var stringValue =  splitString[1].trim();
+            console.log("stringValue:"+stringValue);
+            varObj = { "name": splitString[0].trim(), "value":  stringValue };
         }
 
         console.log("varObj:");
