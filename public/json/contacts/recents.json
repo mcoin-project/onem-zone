@@ -8,11 +8,12 @@
         "content": [{
             "ref": "/contacts/add.json",
             "type": "linkDynamic",
-            "description": "Add/invite a contact"
+            "description": "Add/invite a contact\n"
         }, {
-            "ref": "/contacts/view.json",
+            "ref": "/contacts/viewmsisdn.json",
             "type": "linkDynamic",
-            "description": "{{$onemnumber}}"
+            "description": "447725342567",
+            "var" : "$msisdn=447725342567"
         }, {
             "ref": "/contacts/view.json",
             "type": "linkDynamic",
