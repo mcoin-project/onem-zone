@@ -123,12 +123,29 @@ ONEmSimModule.directive('scrollBottom', function() {
     };
 });
 
+ONEmSimModule.controller('tabController', [
+    '$rootScope',
+    function($rootScope) {
+        console.log("initialising");
+
+        $rootScope.selectTab = function(tab) {
+            for (var i = 0; i < $rootScope.onemtabs.length; i++) {
+                $rootScope.onemtabs[i].isActive = false;
+            }
+            tab.isActive = true;
+            console.log("tabs:");
+            console.log($rootScope.onemtabs);
+        };
+    }
+]);
+
 ONEmSimModule.controller('mainController', [
     '$scope',
+    '$rootScope',
     '$http',
     'toastr',
     'SmsHandler',
-    function($scope, $http, toastr, SmsHandler) {
+    function($scope, $rootScope, $http, toastr, SmsHandler) {
 
         $scope.results = [];
         $scope.comments = [];
@@ -137,6 +154,15 @@ ONEmSimModule.controller('mainController', [
         $scope.resetComments = function() {
             $scope.comments = [];
         };
+
+        if (typeof $rootScope.onemtabs === 'undefined') {
+            $rootScope.onemtabs = [
+                { name: "Files", isActive: true, refId: "#file-manager-tab" },
+                { name: "Log", isActive: false, refId: "#log-tab" },
+                { name: "Help", isActive: false, refId: "#help-tab" }
+            ];
+        }
+
 
         $scope.smsInput = function() {
 
@@ -150,7 +176,7 @@ ONEmSimModule.controller('mainController', [
 
             var response = SmsHandler.getResponse({ moText: $scope.smsText }, function() {
 
-            if (typeof response.mtText === 'undefined' || response.mtText.length === 0) return;
+                if (typeof response.mtText === 'undefined' || response.mtText.length === 0) return;
 
                 var outputObj = {
                     type: "mt",
@@ -161,7 +187,7 @@ ONEmSimModule.controller('mainController', [
 
                 if (typeof response.comment !== 'undefined') {
                     $scope.comments.push(response.comment);
-                    console.log("comments.length:"+$scope.comments.length);
+                    console.log("comments.length:" + $scope.comments.length);
                 }
 
                 // simulate an unsocilicted MT message and call another Get request

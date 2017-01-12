@@ -3,23 +3,30 @@
         "type": "input",
         "menuRef": "/contacts/menu.json",
         "header": "** #Contact add **",
+        "footer": "send name or \"menu\"",
+        "comment": "this is only requested if the current users name is not known",
+        "content": {
+            "type": "string",
+            "description": "Please provide your name which will be sent in the invite\n\nYour name?",
+            "var": "$avatarname"
+        }
+    }, {
+        "type": "input",
+        "menuRef": "/contacts/menu.json",
+        "header": "** #Contact add **",
         "footer": "send number or \"menu\"",
         "content": {
             "type": "string",
-            "description": "Send mobile number or 15-digit ONEm id",
+            "description": "Send your friend's mobile number or their 15-digit ONEm id",
             "var": "onemnumber"
         }
     }, {
-        "type": "menu",
+        "type": "wizard",
         "menuRef": "/contacts/menu.json",
-        "header": "** #Contact add **\n{{onemnumber}}\nThis person is not yet a ONEm member",
+        "header": "** #Contact add **\nAn invitation will be sent to {{onemnumber}}\n",
         "content": [{
             "type": "skip",
-            "description": "Invite them to join"
-        }, {
-            "type": "linkStatic",
-            "ref": "#contacts menu",
-            "description": "Maybe later"
+            "description": "{{onemnumber}}"
         }]
     }, {
         "type": "message",
@@ -27,6 +34,6 @@
         "description": "An invitation has been sent to {{onemnumber}}\nYou will be notified when this person accepts"
     }, {
         "type": "end",
-        "ref": "#contacts"
+        "ref": "#contacts menu"
     }]
 }

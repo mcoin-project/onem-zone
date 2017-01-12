@@ -41,12 +41,12 @@
 
 .comments-container {
     overflow: auto;
-    height: 80vh;
+    height: 70vh;
 }
 
 .filemanager-container {
     overflow: auto;
-    height: 90vh;
+    height: 70vh;
 }
 
 .onem-logo img {

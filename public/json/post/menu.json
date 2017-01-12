@@ -7,27 +7,32 @@
             "ref": "post/add.json",
             "type": "linkStatic",
             "shortcut": "add",
-            "description": "add a post"
+            "description": "Add a post"
         }, {
             "ref": "post/search.json",
             "type": "linkStatic",
-            "shortcut": "search",
-            "description": "search"
-        }, {
-            "ref": "post/my.json",
-            "type": "linkStatic",
-            "shortcut": "my Posts",
-            "description": "my Posts"
+            "shortcut": "Search",
+            "description": "Search"
         }, {
             "ref": "post/recent.json",
             "type": "linkStatic",
-            "shortcut": "recent",
+            "shortcut": "Recent",
             "description": "Recent"
+        }, {
+            "ref": "post/my.json",
+            "type": "linkStatic",
+            "shortcut": "My Posts",
+            "description": "My posts"
         }, {
             "ref": "post/profile.json",
             "type": "linkStatic",
             "shortcut": "profile",
-            "description": "my Profile"
+            "description": "My profile"
+        }, {
+            "ref": "post/tutorial.json",
+            "type": "linkStatic",
+            "shortcut": "tutorial",
+            "description": "Tutorial"
         }]
     },
     {
