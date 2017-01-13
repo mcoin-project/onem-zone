@@ -927,6 +927,16 @@ function validateInput(moText, context) {
     return response;
 }
 
+function makeLogContent(context) {
+    var i = context.indexPos;
+    var type = context.content[i].type;
+    var ref = context.content[0].ref;
+    var content = context.content[i];
+
+    var logText = "Index: " + i + " Type: \'" + type + "\' ref: " + ref + "\nContent: " + JSON.stringify(content);
+    return logText;
+}
+
 function processComment(content) {
     var comment;
 
@@ -1303,10 +1313,13 @@ app.get('/api/getResponse', function(req, res, next) {
         }
     }
 
+    var log = makeLogContent(req.session.onemContext);
+
     res.json({
         mtText: finalResponse,
         skip: body.skip,
-        comment: comment
+        comment: comment,
+        log: log
     });
 
 

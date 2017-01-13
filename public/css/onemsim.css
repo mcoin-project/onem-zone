@@ -39,6 +39,17 @@
     margin-left: 30px;
 }
 
+.tab-log-container {
+    overflow: auto;
+    height: 65vh;
+}
+
+.tab-log-text {
+    white-space: pre-wrap;
+    -webkit-box-decoration-break: clone;
+    box-decoration-break: clone;
+}
+
 .comments-container {
     overflow: auto;
     height: 70vh;

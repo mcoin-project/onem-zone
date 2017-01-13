@@ -1,17 +1,17 @@
 {
     "content": [{
         "ref": "xgroup.json",
-        "menuRef": "xgroup/menu.json",
+        "menuRef": "wodaabe/menu.json",
         "type": "menu",
        	"header": "** #xGroup menu **",
         "comment": "My xGroups(3) indicates the number of xGroups defined by the current user.\nIf there is only one xGroup, then the name of this xGroup should be shown instead\nIf there are no xGroups defined, then this menu option should not be present (only create and tutorial in that case)",
         "content": [{
-            "ref": "xgroup/list.json",
+            "ref": "wodaabe/list.json",
             "type": "linkStatic",
             "shortcut": "my",
             "description": "My xGroups (3)"
         }, {
-            "ref": "xgroup/create.json",
+            "ref": "wodaabe/create.json",
             "type": "linkStatic",
             "shortcut": "create",
             "description": "Create xGroup"

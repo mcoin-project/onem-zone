@@ -149,10 +149,15 @@ ONEmSimModule.controller('mainController', [
 
         $scope.results = [];
         $scope.comments = [];
+        $scope.logs = [];
         $scope.responsesCount = 0;
 
         $scope.resetComments = function() {
             $scope.comments = [];
+        };
+
+        $scope.resetlogs = function() {
+            $scope.logs = [];
         };
 
         if (typeof $rootScope.onemtabs === 'undefined') {
@@ -187,7 +192,15 @@ ONEmSimModule.controller('mainController', [
 
                 if (typeof response.comment !== 'undefined') {
                     $scope.comments.push(response.comment);
+                    $scope.logs.push(response.log);
                     console.log("comments.length:" + $scope.comments.length);
+                }
+
+                console.log("response.log:"+ response.log);
+
+                if (typeof response.log !== 'undefined') {
+                    $scope.logs.push(response.log);
+                    console.log("logs.length:" + $scope.logs.length);
                 }
 
                 // simulate an unsocilicted MT message and call another Get request

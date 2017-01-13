@@ -1,0 +1,47 @@
+{
+    "content": [{
+        "ref": "create.json",
+        "type": "input",
+        "header": "** xGroup create **",
+        "content": {
+            "type": "string",
+            "description": "Group name?"
+        }
+    }, {
+        "type": "input",
+        "header": "** xGroup create **",
+        "comment": "Nickname is generic across all xGroups, only ask this question if nickname is not defined",
+        "content": {
+            "type": "string",
+            "description": "Your Nickname?"
+        }
+    }, {
+        "type": "wizard",
+        "menuRef": "/xgroup/create.json",
+        "header": "** xGroup create **\nYou will soon receive a message from the xGroup.\nForward the message to people you wish to invite. Reply to it to send messages to the group.",
+        "content": [{
+            "type": "any",
+            "description": "<group name>"
+        }, {
+            "type": "any",
+            "description": "<nickname>"
+        }]
+    }, {
+        "type": "menu",
+        "menuRef": "xgroupcreate.json",
+        "header": "** xGroup invite **\nInvite people to your new xGroup",
+        "content": [{
+            "type": "linkStatic",
+            "description": "Contacts"
+        }, {
+            "type": "linkStatic",
+            "description": "by mID"
+        }, {
+            "type": "linkStatic",
+            "description": "Invite later"
+        }]        
+    }, {        
+        "type": "end",
+        "ref": "#xgroup"
+    }]
+}
