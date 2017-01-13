@@ -123,51 +123,102 @@ ONEmSimModule.directive('scrollBottom', function() {
     };
 });
 
+ONEmSimModule.factory('DataModel', function() {
+    var data = {
+        tabs: [
+            { name: "Files", isActive: true, refId: "#file-manager-tab" },
+            { name: "Log", isActive: false, refId: "#log-tab" },
+            { name: "Develop", isActive: false, refId: "#develop-tab" },
+            { name: "Help", isActive: false, refId: "#help-tab" }
+        ],
+        results: [],
+        logs: [],
+        comments: []
+    };
+
+    return {
+        data: data,
+        clearComments: function() {
+            data.comments = [];
+            return data.comments;
+        },
+        getTabs: function() {
+            return data.tabs;
+        },
+        getResults: function() {
+            return data.results;
+        },
+        getComments: function() {
+            return data.comments;
+        },
+        getLogs: function() {
+            return data.logs;
+        },
+        selectTab: function(tab) {
+            for (var i = 0; i < data.tabs.length; i++) {
+                if (tab.refId === data.tabs[i].refId) {
+                    data.tabs[i].isActive = true;
+                } else {
+                    data.tabs[i].isActive = false;
+                }
+            }
+            return data.tabs;
+        },
+        addResult: function(result) {
+            data.results.push(result);
+            return data.results;
+        },
+        addComment: function(comment) {
+            data.comments.push(comment);
+            return data.comments;
+        },
+        addLog: function(log) {
+            data.logs.push(log);
+            return data.logs;
+        },
+        clearLogs: function() {
+            data.logs = [];
+            return data.logs;
+        }
+    };
+});
+
 ONEmSimModule.controller('tabController', [
-    '$rootScope',
-    function($rootScope) {
+    '$scope',
+    'DataModel',
+    function($scope, DataModel) {
         console.log("initialising");
 
-        $rootScope.selectTab = function(tab) {
-            for (var i = 0; i < $rootScope.onemtabs.length; i++) {
-                $rootScope.onemtabs[i].isActive = false;
-            }
-            tab.isActive = true;
-            console.log("tabs:");
-            console.log($rootScope.onemtabs);
+        $scope.tabs = DataModel.getTabs();
+
+        $scope.selectTab = function(tab) {
+            $scope.tabs = DataModel.selectTab(tab);
         };
     }
 ]);
 
 ONEmSimModule.controller('mainController', [
     '$scope',
-    '$rootScope',
     '$http',
     'toastr',
     'SmsHandler',
-    function($scope, $rootScope, $http, toastr, SmsHandler) {
+    'DataModel',
+    function($scope, $http, toastr, SmsHandler, DataModel) {
 
-        $scope.results = [];
-        $scope.comments = [];
-        $scope.logs = [];
+        console.log("mainController initialising");
+
+        $scope.comments = DataModel.getComments();
+        $scope.results = DataModel.getResults();
+        $scope.logs = DataModel.getLogs();
         $scope.responsesCount = 0;
 
         $scope.resetComments = function() {
-            $scope.comments = [];
+            $scope.comments = DataModel.clearComments;
         };
 
         $scope.resetlogs = function() {
-            $scope.logs = [];
+            $scope.logs = DataModel.clearLogs;
         };
-
-        if (typeof $rootScope.onemtabs === 'undefined') {
-            $rootScope.onemtabs = [
-                { name: "Files", isActive: true, refId: "#file-manager-tab" },
-                { name: "Log", isActive: false, refId: "#log-tab" },
-                { name: "Help", isActive: false, refId: "#help-tab" }
-            ];
-        }
-
 
         $scope.smsInput = function() {
 
@@ -177,7 +228,7 @@ ONEmSimModule.controller('mainController', [
                 type: "mo",
                 value: $scope.smsText
             };
-            $scope.results.push(inputObj);
+            $scope.results = DataModel.addResult(inputObj);
 
             var response = SmsHandler.getResponse({ moText: $scope.smsText }, function() {
 
@@ -188,18 +239,17 @@ ONEmSimModule.controller('mainController', [
                     value: response.mtText
                 };
 
-                $scope.results.push(outputObj);
+                $scope.results = DataModel.addResult(outputObj);
 
                 if (typeof response.comment !== 'undefined') {
-                    $scope.comments.push(response.comment);
-                    $scope.logs.push(response.log);
+                    $scope.comments = DataModel.addComment(response.comment);
                     console.log("comments.length:" + $scope.comments.length);
                 }
 
-                console.log("response.log:"+ response.log);
+                console.log("response.log:" + response.log);
 
                 if (typeof response.log !== 'undefined') {
-                    $scope.logs.push(response.log);
+                    $scope.logs = DataModel.addLog(response.log);
                     console.log("logs.length:" + $scope.logs.length);
                 }
 
@@ -212,7 +262,7 @@ ONEmSimModule.controller('mainController', [
                             value: result.mtText
                         };
 
-                        $scope.results.push(outputObj);
+                        DataModel.addResult(outputObj);
                     });
                 }
 

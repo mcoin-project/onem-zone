@@ -20,6 +20,7 @@
 
 .comment-text {
     white-space: pre-wrap;
+    word-wrap: break-word;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
 }
@@ -30,7 +31,7 @@
 
 .onem-controls-container {
     margin-top: 25px;
-    float: right;
+    /* float: right;*/
 }
 
 .onem-controls {
@@ -46,6 +47,7 @@
 
 .tab-log-text {
     white-space: pre-wrap;
+    word-wrap: break-word;
     -webkit-box-decoration-break: clone;
     box-decoration-break: clone;
 }
@@ -64,6 +66,7 @@
     width: 90px;
     height: auto;
     vertical-align: inherit;
+    margin-left: 65px;
 }
 
 .onem-logo p {
