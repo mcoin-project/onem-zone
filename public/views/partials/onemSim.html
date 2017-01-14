@@ -107,6 +107,16 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">Help
                                 </div>
+                                <div class="row">
+                                    <div class="col-lg-5 col-md-5 tab-help-container">
+                                        <div class="tab-help-navigator">
+                                            <div ng-include="'/views/partials/help-sections-template.html'"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-7 col-md-7 tab-help-container">
+                                        <div ng-include="helpContentPage"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -114,4 +124,3 @@
             </div>
         </div>
     </div>
-</div>

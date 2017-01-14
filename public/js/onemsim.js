@@ -123,6 +123,35 @@ ONEmSimModule.directive('scrollBottom', function() {
     };
 });
 
+ONEmSimModule.factory('HelpData', function() {
+    var data = {
+        sections: [
+            { name: "1.0 Introduction", level: '1', fileName: "1_0_Introduction" },
+            { name: "2.0 Content Types", level: '1', fileName: "2_0_ContentTypes" },
+            { name: "2.1 Input", level: '2', fileName: "2_1_Input" },
+            { name: "2.2 Menu", level: '2', fileName: "2_2_Menu" }
+        ],
+        currentIndex: 0
+    };
+
+    return {
+        data: data,
+        getSections: function() {
+            return data.sections;
+        },
+        selectSection: function(index) {
+            data.currentIndex = index;
+            console.log("currentIndex: " + data.currentIndex);
+            var fileName = '/views/partials/helpContent/' + data.sections[data.currentIndex].fileName + ".html";
+            return fileName;
+        },
+        getFileName: function() {
+            var fileName = '/views/partials/helpContent/' + data.sections[data.currentIndex].fileName + ".html";
+            return fileName;
+        }
+    };
+});
+
 ONEmSimModule.factory('DataModel', function() {
     var data = {
         tabs: [
@@ -186,13 +215,22 @@ ONEmSimModule.factory('DataModel', function() {
 ONEmSimModule.controller('tabController', [
     '$scope',
     'DataModel',
-    function($scope, DataModel) {
-        console.log("initialising");
+    'HelpData',
+    function($scope, DataModel, HelpData) {
 
         $scope.tabs = DataModel.getTabs();
+        $scope.helpContentPage = HelpData.getFileName();
 
         $scope.selectTab = function(tab) {
             $scope.tabs = DataModel.selectTab(tab);
+        };
+
+        $scope.sections = HelpData.getSections();
+        $scope.currentSection = 0;
+
+        $scope.selectSection = function(index) {
+            console.log("section: " + index);
+            $scope.helpContentPage = HelpData.selectSection(index);
         };
     }
 ]);
