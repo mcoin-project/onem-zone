@@ -126,8 +126,12 @@ ONEmSimModule.directive('scrollBottom', function() {
 ONEmSimModule.factory('HelpData', function() {
     var data = {
         sections: [
-            { name: "1.0 Introduction", level: '1', fileName: "1_0_Introduction" },
-            { name: "2.0 Content Types", level: '1', fileName: "2_0_ContentTypes" },
+            { name: "1 Introduction", level: '1', fileName: "1_0_Introduction" },
+            { name: "1.1 Getting Started", level: '2', fileName: "1_1_GettingStarted" },
+            { name: "1.2 First Time Access", level: '2', fileName: "1_2_FirstTimeAccess" },
+            { name: "1.3 Menus", level: '2', fileName: "1_3_Menus" },
+            { name: "1.4 Variables", level: '2', fileName: "1_4_Variables" },
+            { name: "2 JSON Reference", level: '1', fileName: "2_0_Reference" },
             { name: "2.1 Input", level: '2', fileName: "2_1_Input" },
             { name: "2.2 Menu", level: '2', fileName: "2_2_Menu" }
         ],

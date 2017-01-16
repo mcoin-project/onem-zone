@@ -1,0 +1,35 @@
+{
+    "content": [{
+        "ref": "/profile/index.json",
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "** #profile **",
+        "content": {
+            "type": "string",
+            "description": "What is your first name?"
+        }
+    }, {
+        "menuRef": "post/menu.json",
+        "type": "menu",
+       	"header": "** #profile menu **\nWhat is your favourite colour?",
+        "content": [{
+            "ref": "profile/red.json",
+            "type": "linkStatic",
+            "shortcut": "red",
+            "description": "I like red"
+        }, {
+            "ref": "profile/blue.json",
+            "type": "linkStatic",
+            "shortcut": "blue",
+            "description": "I prefer blue"
+        }, {
+            "type": "skip",
+            "shortcut": "skip",
+            "description": "skip"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#profile"
+    }]
+}

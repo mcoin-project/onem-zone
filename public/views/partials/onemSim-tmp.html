@@ -108,13 +108,14 @@
                                 <div class="panel-heading">Help
                                 </div>
                                 <div class="row">
-                                    <div class="col-lg-4 col-md-4 tab-help-container">
+                                    <div class="col-lg-5 col-md-5 tab-help-container">
                                         <div class="tab-help-navigator">
-                                            <div ng-include="'/views/partials/help-sections-template.html'"></div>
+                                            <!-- <div ng-include="'/views/partials/help-sections-template.html'"></div> -->
+                                            <ak-panel-group-menu for="help-content"></ak-panel-group-menu>
                                         </div>
                                     </div>
-                                    <div class="col-lg-8 col-md-8 tab-help-container">
-                                        <div ng-include="helpContentPage"></div>
+                                    <div class="col-lg-7 col-md-7 tab-help-container">
+                                        <div ng-include="'/views/partials/help.html'"></div>
                                     </div>
                                 </div>
                             </div>

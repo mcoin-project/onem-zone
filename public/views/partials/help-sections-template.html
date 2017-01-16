@@ -1,14 +1,10 @@
 <table class="table table-hover">
-    <div ng-repeat="section in sections track by $index">
-        <div ng-if="section.level == '1'">
-            <h4>
-                    <a href="#" ng-click="selectSection($index)">{{section.name}}</a>
-                </h4>
+    <tr ng-repeat="section in sections">
+        <div >
+            <td class="tab-help-level-1" ng-if="section.level == '1'" ng-click="selectSection($index)">{{section.name}}</td>
         </div>
-        <div ng-if="section.level == '2'">
-            <p>
-                <a href="#" ng-click="selectSection($index)">{{section.name}}</a>
-            </p>
+        <div >
+            <td class="tab-help-level-2" ng-if="section.level == '2'" ng-click="selectSection($index)">{{section.name}}</td>
         </div>
-    </div>
+    </tr>
 </table>
