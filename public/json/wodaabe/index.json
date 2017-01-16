@@ -1,27 +1,37 @@
 {
     "content": [{
-        "menuRef": "wodaabe/menu.json",
+        "ref": "index.json",
         "type": "menu",
-       	"header": "** #wodaabe menu **",
+        "menuRef": "#wodaabe",
+        "header": "** Menu **",
         "content": [{
-            "ref": "wodaabe/book.json",
+            "ref": "userintro.json",
             "type": "linkStatic",
-            "shortcut": "office",
-            "description": "From: Office"
+            "description": "User Introduction"
         }, {
-            "ref": "wodaabe/book.json",
+            "ref": "userdetails.json",
             "type": "linkStatic",
-            "shortcut": "home",
-            "description": "To: Home"
+            "description": "User details"
         }, {
-            "ref": "wodaabe/book.json",
+            "ref": "propositions.json",
             "type": "linkStatic",
-            "shortcut": "book",
-            "description": "#book"
+            "description": "List of Propositions"
+        }, {
+            "ref": "bilitalinfo.json",
+            "type": "linkStatic",
+            "description": "Bilital Information"
+        }, {
+            "ref": "index.json",
+            "type": "linkStatic",
+            "description": "Free Services"
+        }, {
+            "ref": "wodaabe/how.json",
+            "type": "linkStatic",
+            "description": "How to use",
+            "shortcut": "how"
         }]
-    },
-    {
-    	"type": "end",
-    	"ref": "#wodaabe"
+    }, {
+        "type": "end",
+        "ref": "index.json"
     }]
 }

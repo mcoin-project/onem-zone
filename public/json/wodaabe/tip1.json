@@ -1,0 +1,20 @@
+{
+    "content": [{
+        "ref": "wodaabe/tip1.json",
+        "type": "menu",
+        "menuRef": "#wodaabe",
+        "header": "** Help **\nTo see all available services send \"#wodaabe\" and then choose \"Free services\" from the list",
+        "content": [{
+            "ref": "#wodaabe/tip2.json",
+            "type": "linkStatic",
+            "description": "Next tip"
+        }, {
+            "ref": "#wodaabe",
+            "type": "linkStatic",
+            "description": "Skip"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#wodaabe"
+    }]
+}

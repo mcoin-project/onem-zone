@@ -1,29 +1,24 @@
 {
     "content": [{
-        "ref": "xgroup.json",
-        "menuRef": "wodaabe/menu.json",
+        "ref": "menu.json",
         "type": "menu",
-       	"header": "** #xGroup menu **",
-        "comment": "My xGroups(3) indicates the number of xGroups defined by the current user.\nIf there is only one xGroup, then the name of this xGroup should be shown instead\nIf there are no xGroups defined, then this menu option should not be present (only create and tutorial in that case)",
+        "menuRef": "/wodaabe/menu.json",
+        "header": "** #wodaabe menu **",
         "content": [{
-            "ref": "wodaabe/list.json",
-            "type": "linkStatic",
-            "shortcut": "my",
-            "description": "My xGroups (3)"
+            "ref": "/wodaabe/userdetails.json",
+            "type": "linkDynamic",
+            "description": "Sex"
         }, {
-            "ref": "wodaabe/create.json",
-            "type": "linkStatic",
-            "shortcut": "create",
-            "description": "Create xGroup"
-        }, {
-            "ref": "Tutorial.json",
-            "type": "linkStatic",
-            "shortcut": "help",
-            "description": "Tutorial"
+            "ref": "/wodaabe/userdetails.json",
+            "type": "linkDynamic",
+            "description": "Age"
+        },{
+            "ref": "/wodaabe/userdetails.json",
+            "type": "linkDynamic",
+            "description": "location"
         }]
-    },
-    {
-    	"type": "end",
-    	"ref": "#xgroup"
+    }, {
+        "type": "end",
+        "ref": "#contacts"
     }]
 }

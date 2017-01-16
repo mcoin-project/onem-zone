@@ -1,0 +1,49 @@
+{
+    "content": [{
+        "type": "input",
+        "menuRef": "/wodaabe/index.json",
+        "header": "** #User details add **",
+        "footer": "send details or \"menu\"",
+        "content": {
+            "type": "string",
+            "description": "male or female?",
+            "var": "sex"
+        }
+    }, {
+        "type": "input",
+        "menuRef": "/wodaabe/menu.json",
+        "header": "** #Age **",
+        "content": {
+            "type": "string",
+            "description": "Age?",
+            "var": "Age"
+        }
+    }, {
+        "type": "input",
+        "menuRef": "/wodaabe/menu.json",
+        "header": "** #Location **",
+        "content": {
+            "type": "string",
+            "description": "Location?",
+            "var": "Location"
+        }
+    }, { 
+        "type": "wizard",
+        "menuRef": "/wodaabe/menu.json",
+        "header": "** #Contact add **",
+        "content": [{
+            "type": "any",
+            "description": "{{onemnumber}}"
+        }, {
+            "type": "any",
+            "description": "{{User name}}"
+        }]
+    }, {
+        "type": "message",
+        "header": "** #contacts add **",
+        "description": "{{onemnumber}} saved as {{Username}}"
+    }, {
+        "type": "end",
+        "ref": "#User details"
+    }]
+}
