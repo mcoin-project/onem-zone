@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "chelp.json",
+        "type": "string",
+        "menuRef": "/post/exchangemenuu.json",
+        "header": "** #post ''help'' **\nDisplays help for your active mode."        
+     }, {
+        "type": "end",
+        "ref": "#post tutorial"
+    }]
+}

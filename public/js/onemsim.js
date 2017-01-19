@@ -11,6 +11,7 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'matchMedia',
     'ngFileUpload',
     'FileManagerApp',
+    'akreitals.panel-snap',
 ]).run(function() {
     moment.locale('en', {
         relativeTime: {

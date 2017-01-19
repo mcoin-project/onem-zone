@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "cmode.json",
+        "type": "string",
+        "menuRef": "/exchange/exchangemenuu.json",
+        "header": "** #exchange ''mode'' **\nDisplays the active mode."        
+     }, {
+        "type": "end",
+        "ref": "#exchange tutorial"
+    }]
+}

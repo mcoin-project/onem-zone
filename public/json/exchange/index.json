@@ -1,0 +1,34 @@
+{
+    "content": [{
+        "ref": "index.json",
+        "menuRef": "/exchange/exchangemenuu.json",
+        "type": "menu",
+       	"header": "Welcome! To start, send 'c' to add a target currency.",
+        "content": [{
+            "ref": "exchange/start.json",
+            "type": "linkStatic",
+            "shortcut": "start",
+            "description": "Start conversion"
+        }, 
+{
+            "ref": "exchange/source.json",
+            "type": "linkStatic",
+            "shortcut": "source currency",
+            "description": "Source currency"
+        }, {
+            "ref": "exchange/add.json",
+            "type": "linkStatic",
+            "shortcut": "target currency",
+            "description": "Target currency"
+        }, {
+            "ref": "exchange/tutorial.json",
+            "type": "linkStatic",
+            "shortcut": "tutorial",
+            "description": "Tutorial"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#exchange"
+    }]
+}

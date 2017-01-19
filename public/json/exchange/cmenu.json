@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "cmenu.json",
+        "type": "string",
+        "menuRef": "/exchange/exchangemenuu.json",
+        "header": "** #exchange ''menu'' **\nLaunches a menu with all available commands."        
+     }, {
+        "type": "end",
+        "ref": "#exchange tutorial"
+    }]
+}

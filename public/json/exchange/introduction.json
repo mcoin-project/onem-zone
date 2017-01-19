@@ -1,0 +1,12 @@
+{
+    "content": [{
+        "ref": "introduction.json",
+        "type": "string",
+        "menuRef": "/exchange/exchangemenuu.json",
+        "header": "** #exchange introduction **\nAllows you to convert an amount from yours selected source currency to your selected target currencies. When accessing the service for the first time, the ONEm Platform will guide you through the process of conversion. You will receive hints about how to proceed further in the footer section of each received message."
+        
+     }, {
+        "type": "end",
+        "ref": "#exchange tutorial"
+    }]
+}

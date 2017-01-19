@@ -1,0 +1,33 @@
+{
+    "content": [{
+        "ref": "exchange/tutorial.json",
+        "menuRef": "exchange/exchangemenuu.json",
+        "type": "menu",
+       	"header": "** #exchange tutorial **",
+        "content": [{
+            "ref": "exchange/introduction.json",
+            "type": "linkStatic",
+            "shortcut": "introduction",
+            "description": "Introduction"
+        }, {
+            "ref": "exchange/howtouse.json",
+            "type": "linkStatic",
+            "shortcut": "how to use",
+            "description": "How to use"
+        }, {
+            "ref": "exchange/commands.json",
+            "type": "linkStatic",
+            "shortcut": "+commands",
+            "description": "+Commands"
+        }, {
+            "ref": "exchange/credits.json",
+            "type": "linkStatic",
+            "shortcut": "credits",
+            "description": "Credits"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#exchange tutorial"
+    }]
+}

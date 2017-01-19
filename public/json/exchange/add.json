@@ -1,0 +1,31 @@
+{
+    "content": [{
+        "ref": "add.json",
+        "type": "input",
+        "menuRef": "/exchange/menu.json",
+        "header": "** #exchange add **",
+        "content": {
+            "type": "string",
+            "description": "Send name or code of target currency",
+            "var": "$Currency"
+        }
+
+    }, {
+        "type": "menu",
+        "header": "** #exchange add **\n{{$Currency}} was added to your target currencies. Add another currency?",
+        "menuRef": "/exchange/menu.json",
+        "content": [{
+        "ref": "exchange/add.json",            
+        "type": "linkStatic",
+            "description": "Add currency"
+           
+        }, {
+         "ref": "exchange/menu.json",            
+         "type": "linkStatic",
+            "description": "Maybe later"
+             }]
+    }, {
+        "type": "end",
+        "ref": "#exchange"
+    }]
+}

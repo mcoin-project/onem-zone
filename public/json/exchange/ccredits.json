@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "ccredits.json",
+        "type": "string",
+        "menuRef": "/exchange/exchangemenuu.json",
+        "header": "** #exchange ''credits'' **\nShows you the application author and copyright."        
+     }, {
+        "type": "end",
+        "ref": "#exchange tutorial"
+    }]
+}

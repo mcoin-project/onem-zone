@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "cmore.json",
+        "type": "string",
+        "menuRef": "/exchange/exchangemenuu.json",
+        "header": "** #exchange ''more'' **\nDisplays the next chunk."        
+     }, {
+        "type": "end",
+        "ref": "#exchange tutorial"
+    }]
+}
