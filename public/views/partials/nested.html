@@ -15,7 +15,7 @@
 <script type="text/ng-template" id="menu.html">
     <div class="menu-element box box-blue">
         <h3>menu {{item.id}}</h3>
-        <div class="column" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
+        <div class="menu-item" ng-repeat="list in item.columns" ng-include="'list.html'"></div>
         <div class="clearfix"></div>
     </div>
 </script>
@@ -29,7 +29,7 @@
         <div ng-repeat="(zone, list) in models.dropzones">
             <div class="dropzone box box-yellow">
                 <!-- The dropzone also uses the list template -->
-                <h3>{{zone}}</h3>
+                <h3>Service: </h3>
                 <div ng-include="'list.html'"></div>
             </div>
         </div>
@@ -42,7 +42,7 @@
         <ul>
             <!-- The toolbox only allows to copy objects, not move it. After a new
                  element was created, dnd-copied is invoked and we generate the next id -->
-            <li ng-repeat="item in models.templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
+            <li ng-repeat="item in models.templates" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = models.dropzones.content.length + 1">
                 <!-- <button type="button" class="btn btn-default btn-lg" disabled="disabled">{{item.type}}</button> -->
                 <button type="button" class="btn btn-default btn-lg">{{item.type}}</button>
             </li>

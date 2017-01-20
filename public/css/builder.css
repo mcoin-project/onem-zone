@@ -69,13 +69,13 @@
     padding: 10px 15px;
 }
 
-.nestedDemo .dropzone .container-element {
+.nestedDemo .dropzone .menu-element {
     margin: 10px;
 }
 
-.nestedDemo .dropzone .container-element .column {
+.nestedDemo .dropzone .menu-element .menu-item {
     float: left;
-    width: 50%;
+    width: 100%;
 }
 
 /***************************** Toolbox *****************************/

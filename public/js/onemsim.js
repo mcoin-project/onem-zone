@@ -251,42 +251,45 @@ ONEmSimModule.controller('buildController', [
         $scope.models = {
             selected: null,
             templates: [
-                { type: "item", id: 2 },
-                { type: "menu", id: 1, columns: [
+                { type: "item"},
+                { type: "menu", columns: [
                         []
                     ] }
             ],
             dropzones: {
-                "#account": [{
+                "content": [{
                     "type": "menu",
                     "id": 1,
                     "columns": [
                         [{
                             "type": "item",
-                            "id": "1"
+                            "id": 100
                         }, {
                             "type": "item",
-                            "id": "2"
+                            "id": 200
                         }]
                     ]
                 }, {
                     "type": "item",
-                    "id": "4"
+                    "id": 2
                 }, {
                     "type": "item",
-                    "id": "5"
+                    "id": 3
                 }, {
                     "type": "item",
-                    "id": "6"
+                    "id": 4
                 }, {
                     "type": "item",
-                    "id": 16
+                    "id": 5
                 }]
             }
         };
 
         $scope.$watch('models.dropzones', function(model) {
             $scope.modelAsJson = angular.toJson(model, true);
+
+console.log("$scope.models.dropzones.content.length:"+$scope.models.dropzones.content.length);
+
         }, true);
     }
 ]);
