@@ -11,7 +11,7 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'matchMedia',
     'ngFileUpload',
     'FileManagerApp',
-    'akreitals.panel-snap',
+    'dndLists'
 ]).run(function() {
     moment.locale('en', {
         relativeTime: {
@@ -43,6 +43,10 @@ ONEmSimModule.config(['$routeProvider', '$locationProvider',
         when('/home', {
             templateUrl: 'views/partials/onemSim.html',
             controller: 'mainController',
+        }).
+        when('/builder', {
+            templateUrl: 'views/partials/builder.html',
+            controller: 'buildController',
         }).
         otherwise({
             redirectTo: '/'
@@ -237,6 +241,53 @@ ONEmSimModule.controller('tabController', [
             console.log("section: " + index);
             $scope.helpContentPage = HelpData.selectSection(index);
         };
+    }
+]);
+
+ONEmSimModule.controller('buildController', [
+    '$scope',
+    '$http',
+    function($scope, $http) {
+        $scope.models = {
+            selected: null,
+            templates: [
+                { type: "item", id: 2 },
+                { type: "menu", id: 1, columns: [
+                        []
+                    ] }
+            ],
+            dropzones: {
+                "#account": [{
+                    "type": "menu",
+                    "id": 1,
+                    "columns": [
+                        [{
+                            "type": "item",
+                            "id": "1"
+                        }, {
+                            "type": "item",
+                            "id": "2"
+                        }]
+                    ]
+                }, {
+                    "type": "item",
+                    "id": "4"
+                }, {
+                    "type": "item",
+                    "id": "5"
+                }, {
+                    "type": "item",
+                    "id": "6"
+                }, {
+                    "type": "item",
+                    "id": 16
+                }]
+            }
+        };
+
+        $scope.$watch('models.dropzones', function(model) {
+            $scope.modelAsJson = angular.toJson(model, true);
+        }, true);
     }
 ]);
 
