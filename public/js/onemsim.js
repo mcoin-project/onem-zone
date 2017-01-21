@@ -250,46 +250,90 @@ ONEmSimModule.controller('buildController', [
     function($scope, $http) {
         $scope.models = {
             selected: null,
-            templates: [
-                { type: "item"},
-                { type: "menu", columns: [
-                        []
-                    ] }
-            ],
-            dropzones: {
+            templates: [{
+                type: "input",
+                menuRef: "",
+                header: "",
+                content: { description: "" }
+            }, {
+                type: "menu",
+                content: [
+                    { "type": "skip", description: "" },
+                    { "type": "skip", description: "" }
+                ]
+            }, {
+                type: "wizard",
+                content: [
+                    { "type": "any", description: "" },
+                    { "type": "any", description: "" }
+                ]
+            }, {
+                type: "message",
+                header: "",
+                description: ""
+            }],
+            "content": [{
+                "ref": "add.json",
+                "type": "input",
+                "menuRef": "/post/menu.json",
+                "header": "** #post add **",
+                "content": {
+                    "type": "string",
+                    "description": "Give your new post a title",
+                    "var": "$title"
+                }
+            }, {
+                "type": "input",
+                "menuRef": "/post/menu.json",
+                "header": "** #post add **",
+                "content": {
+                    "type": "string",
+                    "description": "Send post content (max 20 words)",
+                    "var": "$description"
+                }
+            }, {
+                "type": "menu",
+                "header": "** #post add **",
+                "menuRef": "/post/menu.json",
                 "content": [{
-                    "type": "menu",
-                    "id": 1,
-                    "columns": [
-                        [{
-                            "type": "item",
-                            "id": 100
-                        }, {
-                            "type": "item",
-                            "id": 200
-                        }]
-                    ]
+                    "type": "skip",
+                    "description": "Private (share code)",
+                    "var": "$visibility=Private"
                 }, {
-                    "type": "item",
-                    "id": 2
-                }, {
-                    "type": "item",
-                    "id": 3
-                }, {
-                    "type": "item",
-                    "id": 4
-                }, {
-                    "type": "item",
-                    "id": 5
+                    "type": "skip",
+                    "description": "Public (everyone)",
+                    "var": "$visibility=Public"
                 }]
-            }
+            }, {
+                "type": "wizard",
+                "menuRef": "/post/menu.json",
+                "header": "** #post add **",
+                "content": [{
+                    "type": "any",
+                    "description": "{{$visibility}}"
+                }, {
+                    "type": "any",
+                    "description": "{{$title}}"
+                }, {
+                    "type": "any",
+                    "description": "{{$description}}"
+                }]
+            }, {
+                "type": "message",
+                "header": "** #post add **",
+                "description": "Post added, code is {{Math.random().toString(36).substr(2, 6).toUpperCase()}}\nShare this code with anyone so they can see your post "
+            }, {
+                "type": "end",
+                "ref": "#post recent"
+            }]
         };
 
-        $scope.$watch('models.dropzones', function(model) {
+        $scope.spliceItem = function(index) {
+            $scope.models.content.splice(index, 1);
+        };
+
+        $scope.$watch('models.content', function(model) {
             $scope.modelAsJson = angular.toJson(model, true);
-
-console.log("$scope.models.dropzones.content.length:"+$scope.models.dropzones.content.length);
-
         }, true);
     }
 ]);

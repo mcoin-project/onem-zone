@@ -1,0 +1,20 @@
+{
+    "content": [{
+        "ref": "how.json",
+        "type": "menu",
+        "menuRef": "#chain",
+        "header": "** #chain How **\nSend two friends mobiles who are on Du to earn points.  When your friends grow their chain you get ALL their points\nSend '#chain' to see the size of your chain and whether you qualify for a prize.\nSend '#chain top' to show the top 10 chain masters and your ranking against them.\nThe top 100 will win tickets to their home country.\nAll actions by your chain users will reap free minutes. ",
+        "content": [{
+            "ref": "/chain/create.json",
+            "type": "linkStatic",
+            "description": "Start building my chain"
+        }, {
+            "ref": "/chain/how.json",
+            "type": "linkStatic",
+            "description": "Repeat this tutorial"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#chain"
+    }]
+}

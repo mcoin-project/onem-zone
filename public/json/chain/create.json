@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "ref": "create.json",
+        "type": "input",
+        "menuRef": "#chain menu",
+        "header": "** #chain create**\n",
+        "content": {
+            "type": "string",
+            "description": "Send the mobile number of a friend to add to your chain or STOP to quit.",
+            "var" : "number"
+        }
+    }, {
+        "type": "message",
+        "header": "** #chain create**\n",
+        "description": "{{number}} has been added to your chain."
+    }, {
+        "type": "input",
+        "menuRef": "#chain menu",
+        "header": "** #chain create**\n",
+        "content": {
+            "type": "string",
+            "description": "Send the mobile number of a friend to add to your chain or STOP to quit"
+        }
+    }, {
+        "type": "end",
+        "ref": "#chain menu"
+    }]
+}

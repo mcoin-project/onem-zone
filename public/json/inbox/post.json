@@ -1,0 +1,27 @@
+{
+    "content": [{
+        "ref": "/inbox/post.json",
+        "type": "menu",
+        "menuRef": "/inbox/post.json",
+        "header": "** Postbox {{$item}}**",
+        "content": [{
+            "ref": "inbox/details.json",
+            "type": "linkStatic",
+            "description": "Muster:Hi I would like to buy..",
+            "var":"$postdetails=From:Muster\nHi I would like to buy your honey if you can give me a good price."
+        }, {
+            "ref": "inbox/details.json",
+            "type": "linkStatic",
+            "description": "Buddy:Is your honey pure..",
+            "var":"$postdetails=From:Buddy\nIs your honey pure if so I want to make tests."
+        },{
+            "ref": "inbox/details.json",
+            "type": "linkStatic",
+            "description": "Buyman:How much if I buy..",
+            "var":"$postdetails=From:Buyman\nHow much if I buy all of your stock?"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#inbox"
+    }]
+}

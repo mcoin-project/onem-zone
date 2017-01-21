@@ -17,6 +17,10 @@
     padding: 0px;
 }
 
+.glyphicon.glyphicon-trash {
+    font-size: 75px;
+}
+
 /**
  * Reduce opacity of elements during the drag operation. This allows the user
  * to see where he is dropping his element, even if the element is huge. The

@@ -1,0 +1,24 @@
+{
+    "content": [{
+        "ref": "index.json",
+        "type": "menu",
+        "menuRef": "inbox.json",
+        "header": "** ONEm inbox **",
+        "content": [{
+            "ref": "inbox/postbox.json",
+            "type": "linkStatic",
+            "description": "postbox(3)"
+        }, {
+            "ref": "inbox/offers.json",
+            "type": "linkStatic",
+            "description": "offers(2)"
+        }, {
+            "ref": "inbox/messages.json",
+            "type": "linkStatic",
+            "description": "messages(2)"
+        }]
+    }, {
+        "type": "end",
+        "ref": "index.json"
+    }]
+}
