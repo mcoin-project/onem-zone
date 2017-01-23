@@ -11,7 +11,7 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'matchMedia',
     'ngFileUpload',
     'FileManagerApp',
-    'dndLists'
+    'dndLists',
 ]).run(function() {
     moment.locale('en', {
         relativeTime: {
@@ -328,8 +328,17 @@ ONEmSimModule.controller('buildController', [
             }]
         };
 
-        $scope.spliceItem = function(index) {
-            $scope.models.content.splice(index, 1);
+        $scope.spliceItem = function(array, index) {
+            debugger;
+            console.log("before");
+            console.log(index);
+            console.log("array:");
+            console.log(array);
+            array.splice(index, 1);
+            console.log("after");
+            console.log(index);
+            console.log("array:");
+            console.log(array);
         };
 
         $scope.$watch('models.content', function(model) {
@@ -416,7 +425,6 @@ ONEmSimModule.controller('mainController', [
 ONEmSimModule.config(['fileManagerConfigProvider',
     function(config) {
         var defaults = config.$get();
-        debugger;
         config.set({
             listUrl: '/files/list',
             getContentUrl: '/files/getContent',
