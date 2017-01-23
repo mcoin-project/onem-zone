@@ -1,0 +1,27 @@
+{
+    "content": [{
+        "menuRef": "jokes/menu.json",
+        "type": "menu",
+       	"header": "** #jokes menu **",
+        "content": [{
+            "ref": "jokes/search.json",
+            "type": "linkStatic",
+            "shortcut": "search",
+            "description": "Search joke"
+        }, {
+            "ref": "post/submit.json",
+            "type": "linkStatic",
+            "shortcut": "submit",
+            "description": "Submit joke"
+        }, {
+            "ref": "post/my profile.json",
+            "type": "linkStatic",
+            "shortcut": "my profile",
+            "description": "My profile"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#joke"
+    }]
+}

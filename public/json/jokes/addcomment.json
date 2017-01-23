@@ -1,0 +1,41 @@
+{
+    "content": [{
+        "ref": "addcomment.json",
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "** #post profile **",
+        "comment": "User must have a name (avatar) to comment",
+        "footer": "send name, or 'back'",
+        "content": {
+            "type": "string",
+            "description": "Give yourself a name. Anything you like."
+        }
+    }, {
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "** %post title% **",
+        "footer": "Send comment or 'back'",
+        "content": {
+            "type": "string",
+            "description": "Send your comment here"
+        }
+    }, {
+        "type": "wizard",
+        "menuRef": "/post/menu.json",
+        "header": "** %post title% **",
+        "content": [{
+            "type": "any",
+            "description": "%avatar%"
+        }, {
+            "type": "any",
+            "description": "%comment text%"
+        }]
+    }, {
+        "type": "message",
+        "header": "** %post title% **",
+        "description": "Your comment was added to the post"
+    }, {
+        "type": "end",
+        "ref": "#post recent"
+    }]
+}

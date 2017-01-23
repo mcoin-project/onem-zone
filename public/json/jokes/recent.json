@@ -1,0 +1,52 @@
+{
+    "content": [{
+        "ref": "index.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "header": "** #post recents **",
+        "content": [{
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "{{$title || '%post title 1%'}}"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 2%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 3%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 4%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 5%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 6%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 7%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 8%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 9%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 10%"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#post"
+    }]
+}

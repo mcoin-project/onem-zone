@@ -1,0 +1,25 @@
+{
+    "content": [{
+        "ref": "view.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "comment": "The most important thing is to show as much of the post body as possible and present only the common option(s)\n%n% is count of number of comments display as much of the post body as the chunking will allow.\nIf there is more post body, then paginate?\nBack takes user back to original list (#post search or #post recents)",
+        "header": "** %post title% **\nCode: %code%\nExpires in: 3d\nThis is a test post with a very long body that should chunk, hope you like it",
+        "content": [{
+            "ref": "/post/message.json",
+            "type": "linkStatic",
+            "description": "Send Message"
+        }, {
+            "ref": "/post/comments.json",
+            "type": "linkStatic",
+            "description": "Comments(%n)"
+        }, {
+            "ref": "/post/options.json",
+            "type": "linkStatic",
+            "description": "Options"
+        }]
+    }, {
+        "type": "end",
+        "ref": "/post/menu.json"
+    }]
+}

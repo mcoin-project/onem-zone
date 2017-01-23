@@ -1,0 +1,31 @@
+{
+    "content": [{
+        "ref": "profileedit.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "header": "** #post profile **\nEdit your profile name",
+        "footer": "send \"a\" or \"menu\"",
+        "content": [{
+            "type": "skip",
+            "description": "old name",
+            "var": "newprofile"
+        }]
+    }, {
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "** #post profile **",
+        "footer": "send name or \"menu\"",
+        "content": {
+            "description": "Give yourself a name\nAnything you like.",
+            "type" : "string",
+            "var": "newprofile"
+        }
+    }, {
+        "type": "message",
+        "header": "** #post profile **",
+        "description": "Your profile name is now {{newprofile}}"
+    }, {
+        "type": "end",
+        "ref": "#post menu"
+    }]
+}

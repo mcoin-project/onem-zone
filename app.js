@@ -19,7 +19,7 @@ var glob = require("glob");
 
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-var menuFooter = 'send option';
+var menuFooter = '<send option>';
 var defaultChunkSize = 140;
 var footerMoreLength = 16;
 var maxMenuSize = 30;
@@ -443,10 +443,11 @@ function processVars(textStr, variables) {
 
     function makeEvalContext(declarations) {
 
-        console.log("declarations: "+declarations);
+        console.log("declarations: " + declarations);
 
         eval(declarations);
-        return function(str) { console.log("str:"+str); eval(str); };
+        return function(str) { console.log("str:" + str);
+            eval(str); };
     }
 
     if (typeof textStr !== 'undefined' &&
@@ -473,7 +474,7 @@ function processVars(textStr, variables) {
                 declareVars = declareVars + 'var ' + variables[j].name + "=x[" + j + "].value;\n";
             }
 
-            console.log("declareVars:"+declareVars);
+            console.log("declareVars:" + declareVars);
 
             eval1 = makeEvalContext("var x;");
             eval2 = makeEvalContext(varsInScope);
@@ -504,9 +505,9 @@ function processVars(textStr, variables) {
 
                     console.log("evaluating: secondTry=" + evalRes);
 
-                //    eval3("secondTry = " + evalRes);
+                    //    eval3("secondTry = " + evalRes);
 
-                    console.log("secondTry:"+ secondTry);
+                    console.log("secondTry:" + secondTry);
 
                     // evalRes = evalInContext.call(code);
 
@@ -519,13 +520,13 @@ function processVars(textStr, variables) {
 
                 if (typeof evalRes === 'undefined') {
                     result = result.replace(attr, 'undefined');
-           //     } else if (typeof secondTry !== 'undefined' ) {
-           //         result = result.replace(attr, secondTry);
+                    //     } else if (typeof secondTry !== 'undefined' ) {
+                    //         result = result.replace(attr, secondTry);
                 } else {
                     result = result.replace(attr, evalRes);
                 }
-                
- 
+
+
                 //   evalRes = evalRes.trim();
 
             });
@@ -965,12 +966,19 @@ function processFooter(content, context) {
 
     var footerText;
 
+    console.log("inside footer content:");
+    console.log(content);
+
     if (content.type === 'message') {
         footerText = '';
+    } else if (typeof content.footer !== 'undefined' && content.footer === '') {
+        footerText = '';
     } else if (typeof content.footer !== 'undefined') {
-        footerText = '<' + processVars(content.footer, context.variables) + '>';
+        footerText = processVars(content.footer, context.variables);
+    } else if (content.footer === '') {
+        footerText = '';
     } else {
-        footerText = '<' + menuFooter + '>';
+        footerText = menuFooter;
     }
 
     return footerText;

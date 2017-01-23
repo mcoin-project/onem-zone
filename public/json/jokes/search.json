@@ -1,0 +1,34 @@
+{
+    "content": [{
+        "ref": "search.json",
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "#post search",
+        "footer": "send text, or 'back'",
+        "content": {
+            "type": "string",
+            "description": "Send post code, user name, any keyword or 'back'."
+        }
+    }, {
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "header": "** #post search %string% **",
+        "comment": "\n** #post search %string% **\nNo results found.\nSend another keyword or 'back'.\n<send keyword or 'back'>\nif not found then prompt again for another search string",
+        "content": [{
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 1%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 2%"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "%post title 3%"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#post menu"
+    }]
+}

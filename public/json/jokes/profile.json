@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "ref": "profile.json",
+        "type": "input",
+        "menuRef": "/post/menu.json",
+        "header": "** #post profile **",
+        "footer": "send name, or 'back'",
+        "content": {
+            "type": "string",
+            "description": "Give yourself a name. Anything you like."
+        }
+    }, {
+        "type": "wizard",
+        "menuRef": "/post/menu.json",
+        "header": "** #post profile **",
+        "content": [{
+            "type": "any",
+            "description": "%avatar%"
+        }]
+    }, {
+        "type": "message",
+        "header": "** #post profile **",
+        "description": "Your profile name is %avatar%"
+    }, {
+        "type": "end",
+        "ref": "#post menu"
+    }]
+}
