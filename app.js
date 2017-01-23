@@ -19,13 +19,26 @@ var glob = require("glob");
 
 var rootPath = 'public/json';
 var menuOptions = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
-var menuFooter = '<send option>';
+
 var defaultChunkSize = 140;
 var footerMoreLength = 16;
 var maxMenuSize = 30;
 var wizardHeader = 'a Confirm\nb Back\nYou selected:\n';
 var unsureResponse = "Not sure what you meant. Please send # to see all available services.\n";
 var dymHeader = "** Did you mean? **\n";
+
+var footerPlaceholders = false;
+var footerStart = process.env.FOOTER_START || '<';
+var footerEnd = process.env.FOOTER_END|| '>';
+var menuFooter = 'send option';
+
+if (process.env.FOOTER_PLACEHOLDERS === 'ON') {
+    footerPlaceholders = true;
+    menuFooter = footerStart + menuFooter + footerEnd;
+} else {
+    footerStart = '';
+    footerEnd = '';
+}
 
 var app = express();
 
@@ -446,8 +459,10 @@ function processVars(textStr, variables) {
         console.log("declarations: " + declarations);
 
         eval(declarations);
-        return function(str) { console.log("str:" + str);
-            eval(str); };
+        return function(str) {
+            console.log("str:" + str);
+            eval(str);
+        };
     }
 
     if (typeof textStr !== 'undefined' &&
@@ -991,6 +1006,7 @@ function storeChunks(context, header, footer, body) {
     var type;
     var i = context.indexPos;
     var result;
+    var moreText = process.env.MORE_TEXT || '"more" ';
 
     context.chunks = [];
 
@@ -1029,7 +1045,7 @@ function storeChunks(context, header, footer, body) {
 
         // add footers
         for (var j = 0; j < context.chunks.length; j++) {
-            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + context.chunks.length + '>';
+            context.chunks[j] = context.chunks[j] + '\n' + footerStart + moreText + (j + 1) + '/' + context.chunks.length + footerEnd;
         }
 
     } else {
@@ -1089,9 +1105,9 @@ function storeChunks(context, header, footer, body) {
             context.chunks.push(lastChunk.trim());
         }
 
-        //now insert footers
+        // add footers
         for (var j = 0; j < context.chunks.length; j++) {
-            context.chunks[j] = context.chunks[j] + '\n<"more" ' + (j + 1) + '/' + context.chunks.length + '>';
+            context.chunks[j] = context.chunks[j] + '\n' + footerStart + moreText + (j + 1) + '/' + context.chunks.length + footerEnd;
         }
 
     }
