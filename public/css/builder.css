@@ -98,6 +98,10 @@
     background-color: #CAE0FC;
 }
 
+.panel .background-menu {
+    background-color: #FFE2F5;
+}
+
 .typesDemo ul[dnd-list] li.background-wizard {
     background-color: #CAE0FC;
 }

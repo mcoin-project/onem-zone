@@ -47,8 +47,8 @@
             <div ng-include="'header.html'"></div>
         </div>
         <div class="panel-body background-{{item.type}}">
-            <ul dnd-list="item.content">
-                <li class="background-{{item.type}}" ng-repeat="(menKey, menuItem) in item.content" dnd-draggable="menuItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(menKey,1)" ng-include="'menuItem.html'"></li>
+            <ul dnd-list="item.content" dnd-allowed-types="[item.type]">
+                <li class="background-{{item.type}}" ng-repeat="(menKey, menuItem) in item.content" dnd-type="item.type" dnd-draggable="menuItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(menKey,1)" ng-include="'menuItem.html'"></li>
                 <div class="clearfix"></div>
             </ul>
         </div>
@@ -63,8 +63,8 @@
             <div ng-include="'header.html'"></div>
         </div>
         <div class="panel-body background-{{item.type}}">
-            <ul dnd-list="item.content">
-                <li class="background-{{item.type}}" ng-repeat="(wizKey, wizardItem) in item.content" dnd-draggable="wizardItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(wizKey,1)" ng-include="'wizardItem.html'"></li>
+            <ul dnd-list="item.content" dnd-allowed-types="[item.type]">
+                <li class="background-{{item.type}}" ng-repeat="(wizKey, wizardItem) in item.content" dnd-type="item.type" dnd-draggable="wizardItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(wizKey,1)" ng-include="'wizardItem.html'"></li>
                 <div class="clearfix"></div>
             </ul>
         </div>
@@ -137,9 +137,9 @@
         <!-- The dropzone also uses the list template -->
         <h3>Service: Post </h3>
         <!-- The dropzone also uses the list template -->
-        <ul dnd-list="models.content">
+        <ul dnd-list="models.content" dnd-allowed-types="['item']">
             <div ng-repeat="(key,item) in models.content">
-                <li dnd-draggable="item" dnd-effect-allowed="move" dnd-moved="models.content.splice(key,1)" dnd-selected="models.selected = item" ng-class="{selected: models.selected === item}" ng-include="item.type + '.html'">
+                <li dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" dnd-selected="models.selected = item" ng-class="{selected: models.selected === item}" ng-include="item.type + '.html'">
                 </li>
             </div>
         </ul>
