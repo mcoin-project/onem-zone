@@ -1,5 +1,7 @@
 .glyphicon.glyphicon-trash {
-    font-size: 600%;
+    font-size: 300%;
+    vertical-align: middle;
+    padding-right: 30px;
 }
 
 
