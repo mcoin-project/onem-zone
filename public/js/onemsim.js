@@ -250,82 +250,36 @@ ONEmSimModule.controller('buildController', [
     function($scope, $http) {
         $scope.models = {
             selected: null,
-            collapsed: [false, false, false, false, false, false],
             templates: [{
                 type: "input",
                 menuRef: "",
                 header: "",
-                content: { description: "" }
+                content: { description: "" },
+                collapsed: false
             }, {
                 type: "menu",
                 content: [
                     { "type": "skip", description: "" },
                     { "type": "skip", description: "" }
-                ]
+                ],
+                collapsed: false
             }, {
                 type: "wizard",
                 content: [
                     { "type": "any", description: "" },
                     { "type": "any", description: "" }
-                ]
+                ],
+                collapsed: false
             }, {
                 type: "message",
                 header: "",
-                description: ""
+                description: "",
+                collapsed: false
             }],
-            "content": [{
-                "ref": "add.json",
-                "type": "input",
-                "menuRef": "/post/menu.json",
-                "header": "** #post add **",
-                "content": {
-                    "type": "string",
-                    "description": "Give your new post a title",
-                    "var": "$title"
-                }
-            }, {
-                "type": "input",
-                "menuRef": "/post/menu.json",
-                "header": "** #post add **",
-                "content": {
-                    "type": "string",
-                    "description": "Send post content (max 20 words)",
-                    "var": "$description"
-                }
-            }, {
-                "type": "menu",
-                "header": "** #post add **",
-                "menuRef": "/post/menu.json",
-                "content": [{
-                    "type": "skip",
-                    "description": "Private (share code)",
-                    "var": "$visibility=Private"
-                }, {
-                    "type": "skip",
-                    "description": "Public (everyone)",
-                    "var": "$visibility=Public"
-                }]
-            }, {
-                "type": "wizard",
-                "menuRef": "/post/menu.json",
-                "header": "** #post add **",
-                "content": [{
-                    "type": "any",
-                    "description": "{{$visibility}}"
-                }, {
-                    "type": "any",
-                    "description": "{{$title}}"
-                }, {
-                    "type": "any",
-                    "description": "{{$description}}"
-                }]
-            }, {
-                "type": "message",
-                "header": "** #post add **",
-                "description": "Post added, code is {{Math.random().toString(36).substr(2, 6).toUpperCase()}}\nShare this code with anyone so they can see your post "
-            }, {
-                "type": "end",
-                "ref": "#post recent"
+            content: [{
+                type: "end",
+                ref: "#onem",
+                collapsed: false
             }]
         };
 
@@ -333,28 +287,17 @@ ONEmSimModule.controller('buildController', [
 
         $scope.collapseToggle = function() {
             $scope.closedAll = !$scope.closedAll;
-            for (var i = 0; i < $scope.models.collapsed.length; i++) {
-                $scope.models.collapsed[i] = $scope.closedAll;
-
+            for (var i = 0; i < $scope.models.content.length; i++) {
+                $scope.models.content[i].collapsed = $scope.closedAll;
             }
         };
 
-
-        $scope.spliceItem = function(array, index) {
-            debugger;
-            console.log("before");
-            console.log(index);
-            console.log("array:");
-            console.log(array);
-            array.splice(index, 1);
-            console.log("after");
-            console.log(index);
-            console.log("array:");
-            console.log(array);
-        };
-
         $scope.$watch('models.content', function(model) {
-            $scope.modelAsJson = angular.toJson(model, true);
+            var modelCopy = JSON.parse(JSON.stringify(model));
+            for (var i = 0; i < modelCopy.length; i++) {
+                delete modelCopy[i].collapsed;
+            }
+            $scope.modelAsJson = angular.toJson(modelCopy, true);
         }, true);
     }
 ]);

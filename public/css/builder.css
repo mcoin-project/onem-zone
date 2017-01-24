@@ -1,9 +1,3 @@
-.glyphicon.glyphicon-trash {
-    font-size: 300%;
-    vertical-align: middle;
-    padding-right: 30px;
-}
-
 .typesDemo .collapse-container {
     width: 100%
 }
@@ -118,6 +112,10 @@
 
 .panel {
     margin-bottom: 0;
+}
+
+.panel-heading h4 {
+    display: inline-block;
 }
 
 .panel-body {
