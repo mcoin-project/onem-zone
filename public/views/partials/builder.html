@@ -16,6 +16,16 @@
         </div>
     </form>
 </script>
+<script type="text/ng-template" id="footer.html">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="footer" class="col-sm-2 control-label">footer:</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
+            </div>
+        </div>
+    </form>
+</script>
 <script type="text/ng-template" id="panel-header.html">
     <h4 class="panel-title">{{item.type}}</h4>
     <button ng-click="models.content.splice(key,1)" type="button" class="btn btn-sm btn-default pull-right">
@@ -64,6 +74,7 @@
                 <div class="clearfix"></div>
             </ul>
             <button type="button" ng-click="addItem(item.content, item.type)" class="btn btn-block btn-primary">Add Option</button>
+            <div ng-include="'footer.html'"></div>
         </div>
     </div>
     </div>
@@ -82,6 +93,7 @@
                 <div class="clearfix"></div>
             </ul>
             <button type="button" ng-click="addItem(item.content, item.type)" class="btn btn-block btn-primary">Add Option</button>
+            <div ng-include="'footer.html'"></div>
         </div>
     </div>
 </script>
@@ -95,6 +107,7 @@
             <div ng-include="'header.html'"></div>
             <div ng-include="'menuRef.html'"></div>
             <div ng-include="'text.html'"></div>
+            <div ng-include="'footer.html'"></div>
         </div>
         <div class="clearfix"></div>
     </div>
@@ -140,9 +153,7 @@
 <script type="text/ng-template" id="end.html">
     <div class="panel panel-info">
         <div class="panel-heading clearfix">
-            <div class="panel-heading">
-                <h4 class="panel-title">{{item.type}}</h4>
-            </div>
+            <h4 class="panel-title">{{item.type}}</h4>
         </div>
         <div ng-class="{ showMe: !models.content[$index].collapsed  }" class="collapsable panel-body">
             <form class="form-horizontal">
@@ -205,7 +216,7 @@
         <div class="col-md-5 col-md-offset-1">
             <div class="row">
                 <div view-source="nested"></div>
-                <h3>JSON Output</h3>
+                <h3>JSON</h3>
                 <pre>{"content": {{modelAsJson}}}   </pre>
             </div>
         </div>
