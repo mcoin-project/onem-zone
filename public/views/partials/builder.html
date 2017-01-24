@@ -63,6 +63,7 @@
                 <li class="background-{{item.type}}" ng-repeat="(menKey, menuItem) in item.content" dnd-type="item.type" dnd-draggable="menuItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(menKey,1)" ng-include="'menuItem.html'"></li>
                 <div class="clearfix"></div>
             </ul>
+            <button type="button" ng-click="addItem(item.content, item.type)" class="btn btn-block btn-primary">Add Option</button>
         </div>
     </div>
     </div>
@@ -80,6 +81,7 @@
                 <li class="background-{{item.type}}" ng-repeat="(wizKey, wizardItem) in item.content" dnd-type="item.type" dnd-draggable="wizardItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(wizKey,1)" ng-include="'wizardItem.html'"></li>
                 <div class="clearfix"></div>
             </ul>
+            <button type="button" ng-click="addItem(item.content, item.type)" class="btn btn-block btn-primary">Add Option</button>
         </div>
     </div>
 </script>
@@ -101,18 +103,24 @@
 <script type="text/ng-template" id="menuItem.html">
     <dnd-nodrag>
         <div dnd-handle class="handle">:::</div>
-        <div class="name">
+        <div class="menuItem">
             <input type="text" ng-model="menuItem.description" class="background-{{item.type}} form-control input-sm">
         </div>
+        <button ng-if="item.content.length > 1" ng-click="item.content.splice(menKey,1)" type="button" class="btn btn-sm btn-default pull-right">
+            <span class="glyphicon glyphicon-trash"></span>
+        </button>
     </dnd-nodrag>
 </script>
 <!-- Template for a normal wizard item -->
 <script type="text/ng-template" id="wizardItem.html">
     <dnd-nodrag>
         <div dnd-handle class="handle">:::</div>
-        <div class="name">
+        <div class="menuItem">
             <input type="text" ng-model="wizardItem.description" class="background-{{item.type}} form-control input-sm">
         </div>
+        <button ng-if="item.content.length > 1" ng-click="item.content.splice(wizKey,1)" type="button" class="btn btn-sm btn-default pull-right">
+            <span class="glyphicon glyphicon-trash"></span>
+        </button>
     </dnd-nodrag>
 </script>
 <!-- Template for message item -->

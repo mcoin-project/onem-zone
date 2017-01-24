@@ -285,6 +285,14 @@ ONEmSimModule.controller('buildController', [
 
         $scope.closedAll = false;
 
+        $scope.addItem = function(array, type) {
+            if (type === 'wizard') {
+                array.push({ "type": "any", description: "" });
+            } else if (type === 'menu') {
+                array.push({ "type": "skip", description: "" });
+            }
+        };
+
         $scope.collapseToggle = function() {
             $scope.closedAll = !$scope.closedAll;
             for (var i = 0; i < $scope.models.content.length; i++) {

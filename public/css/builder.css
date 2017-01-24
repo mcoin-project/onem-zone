@@ -6,17 +6,15 @@
     display: inline-block;
 }
 
-
 .typesDemo .collapse-container .btn {
     vertical-align: top;
     display: inline-block;
 }
 
-
 .collapsable {
     overflow: hidden;
     height: 0;
-    width:100%;
+    width: 100%;
     transition: height 0.4s;
     -webkit-transition: height 0.4s;
     -moz-transition: height 0.4s;
@@ -43,6 +41,7 @@
     display: inline-block;
     width: 90%;
 }
+
 
 /**
  * The dnd-list should always have a min-height,
@@ -94,7 +93,8 @@
     border: 1px solid #ddd;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
-    display: block;  /* was previously block */
+    display: block;
+    /* was previously block */
     margin-bottom: -1px;
     /* Disable text selection if item is not draggable */
     -webkit-touch-callout: none;
@@ -168,12 +168,17 @@
     cursor: move;
     position: absolute;
     top: 14px;
-}
-
-.typesDemo .name {
-    margin-left: 20px;
-}
-
-.typesDemo input {
     display: inline-block;
 }
+
+.typesDemo .menuItem {
+    margin-left: 20px;
+    width: 85%;
+    display: inline-block;
+}
+
+.typesDemo .menuItem input {
+    display: inline-block;
+}
+
+
