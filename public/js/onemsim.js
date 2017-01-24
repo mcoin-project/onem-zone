@@ -250,6 +250,7 @@ ONEmSimModule.controller('buildController', [
     function($scope, $http) {
         $scope.models = {
             selected: null,
+            collapsed: [false, false, false, false, false, false],
             templates: [{
                 type: "input",
                 menuRef: "",
@@ -327,6 +328,17 @@ ONEmSimModule.controller('buildController', [
                 "ref": "#post recent"
             }]
         };
+
+        $scope.closedAll = false;
+
+        $scope.collapseToggle = function() {
+            $scope.closedAll = !$scope.closedAll;
+            for (var i = 0; i < $scope.models.collapsed.length; i++) {
+                $scope.models.collapsed[i] = $scope.closedAll;
+
+            }
+        };
+
 
         $scope.spliceItem = function(array, index) {
             debugger;

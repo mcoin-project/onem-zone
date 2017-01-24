@@ -46,7 +46,7 @@
         <div class="panel-heading clearfix">
             <div ng-include="'header.html'"></div>
         </div>
-        <div class="panel-body background-{{item.type}}">
+        <div ng-class="{ showMe: !models.collapsed[$index] }" class="collapsable panel-body background-{{item.type}}">
             <ul dnd-list="item.content" dnd-allowed-types="[item.type]">
                 <li class="background-{{item.type}}" ng-repeat="(menKey, menuItem) in item.content" dnd-type="item.type" dnd-draggable="menuItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(menKey,1)" ng-include="'menuItem.html'"></li>
                 <div class="clearfix"></div>
@@ -62,13 +62,12 @@
         <div class="panel-heading clearfix">
             <div ng-include="'header.html'"></div>
         </div>
-        <div class="panel-body background-{{item.type}}">
+        <div ng-class="{ showMe: !models.collapsed[$index] }" class="collapsable panel-body background-{{item.type}}">
             <ul dnd-list="item.content" dnd-allowed-types="[item.type]">
                 <li class="background-{{item.type}}" ng-repeat="(wizKey, wizardItem) in item.content" dnd-type="item.type" dnd-draggable="wizardItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(wizKey,1)" ng-include="'wizardItem.html'"></li>
                 <div class="clearfix"></div>
             </ul>
         </div>
-    </div>
     </div>
 </script>
 <!-- Template for a normal input item -->
@@ -76,10 +75,9 @@
     <div class="panel">
         <div class="panel-heading clearfix>" <div ng-include="'header.html'"></div>
     </div>
-    <div class="panel-body">
+    <div ng-class="{ showMe: !models.collapsed[$index] }" class="collapsable panel-body">
         <div ng-include="'menuRef.html'"></div>
         <div ng-include="'text.html'"></div>
-    </div>
     </div>
     <div class="clearfix"></div>
 </script>
@@ -106,7 +104,7 @@
     <div class="panel panel-info">
         <div class="panel-heading clearfix>" <div ng-include="'header.html'"></div>
     </div>
-    <div class="panel-body">
+    <div ng-class="{ showMe: !models.collapsed[$index] }" class="collapsable panel-body">
         <div ng-include="'messageText.html'"></div>
     </div>
     <div class="clearfix"></div>
@@ -118,7 +116,7 @@
         <div class="panel-heading">
             <h4 class="panel-title">{{item.type}}</h4>
         </div>
-        <div class="panel-body">
+        <div ng-class="{ showMe: !models.collapsed[$index] }" class="collapsable panel-body">
             <form class="form-horizontal">
                 <div class="form-group">
                     <label for="ref" class="col-sm-2 control-label">Ref:</label>
@@ -145,8 +143,8 @@
                  element was created, dnd-copied is invoked and we generate the next id -->
             <span ng-repeat="item in models.templates" dnd-type="'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
             <!-- <button type="button" class="btn btn-default btn-lg" disabled="disabled">{{item.type}}</button> -->
-            	<button type="button" class="btn btn-primary btn-lg">{{item.type}}</button>
-	        </span>
+                <button type="button" class="btn btn-primary btn-lg">{{item.type}}</button>
+            </span>
         </div>
     </div>
     <div class="row">
@@ -154,11 +152,23 @@
             <div class="typesDemo row">
                 <!-- The dropzone also uses the list template -->
                 <h3>Service: Post </h3>
+                <button ng-click="collapseToggle()" type="button" class="btn btn-default">
+                    <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span> Collapse All</div>  
+                    <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span> Expand All</div>  
+                </button>
                 <!-- The dropzone also uses the list template -->
                 <ul dnd-list="models.content" dnd-allowed-types="['item']">
                     <div ng-repeat="(key,item) in models.content">
-                        <li dnd-disable-if="item.type == 'end'" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" dnd-selected="models.selected = item" ng-class="{selected: models.selected === item}" ng-include="item.type + '.html'">
-                        </li>
+                        <div class="collapse-container">
+                            <button ng-click="models.collapsed[key] = !models.collapsed[key]" type="button" class="btn btn-default">
+                                <span ng-if="models.collapsed[key]" class="glyphicon glyphicon-plus"></span>
+                                <span ng-if="!models.collapsed[key]" class="glyphicon glyphicon-minus"></span>
+                            </button>
+                            <div class="collapse-item">
+                                <li dnd-disable-if="item.type === 'end'" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" dnd-selected="models.selected = item" ng-include="item.type + '.html'">
+                                </li>
+                            </div>
+                        </div>
                     </div>
                 </ul>
             </div>

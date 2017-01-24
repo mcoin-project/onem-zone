@@ -4,6 +4,35 @@
     padding-right: 30px;
 }
 
+.typesDemo .collapse-container {
+    width: 100%
+}
+
+.typesDemo .collapse-container ul[dnd-list] {
+    display: inline-block;
+}
+
+
+.typesDemo .collapse-container .btn {
+    vertical-align: top;
+    display: inline-block;
+}
+
+
+.collapsable {
+    overflow: hidden;
+    height: 0;
+    width:100%;
+    transition: height 0.4s;
+    -webkit-transition: height 0.4s;
+    -moz-transition: height 0.4s;
+    -o-transition: height 0.4s;
+}
+
+.collapsable.showMe {
+    height: 100%;
+}
+
 
 /**
  * For the correct positioning of the placeholder element, the dnd-list and
@@ -13,8 +42,13 @@
 .typesDemo ul[dnd-list],
 .typesDemo ul[dnd-list] > li {
     position: relative;
+    width: 100%;
 }
 
+.typesDemo .collapse-item {
+    display: inline-block;
+    width: 90%;
+}
 
 /**
  * The dnd-list should always have a min-height,
@@ -66,7 +100,7 @@
     border: 1px solid #ddd;
     border-top-right-radius: 4px;
     border-top-left-radius: 4px;
-    display: block;
+    display: block;  /* was previously block */
     margin-bottom: -1px;
     /* Disable text selection if item is not draggable */
     -webkit-touch-callout: none;
@@ -87,8 +121,8 @@
 }
 
 .panel-body {
-    padding-top: 5px;
-    padding-bottom: 5px;
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 
