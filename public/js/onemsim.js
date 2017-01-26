@@ -258,6 +258,7 @@ ONEmSimModule.controller('buildController', [
                 collapsed: false
             }, {
                 type: "menu",
+                menuRef: "",
                 content: [
                     { "type": "skip", description: "" },
                     { "type": "skip", description: "" }
@@ -265,6 +266,7 @@ ONEmSimModule.controller('buildController', [
                 collapsed: false
             }, {
                 type: "wizard",
+                menuRef: "",
                 content: [
                     { "type": "any", description: "" },
                     { "type": "any", description: "" }

@@ -9,117 +9,129 @@
 <script type="text/ng-template" id="header.html">
     <form class="form-horizontal">
         <div class="form-group">
-            <label for="header" class="col-sm-2 control-label">header:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
+            <dnd-nodrag>
+                <label for="header" class="col-sm-2 control-label">header:</label>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button style="margin-left:5px" type="button " class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">Default <span class="caret "></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">Default</a></li>
+                            <li><a href="#">Off</a></li>
+                            <li><a href="#">Custom</a></li>
+                        </ul>
+                        <!-- /btn-group -->
+                    </div>
+                    <input type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
+                </div>
+            </dnd-nodrag>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template " id="footer.html ">
+    <form class="form-horizontal ">
+        <div class="form-group ">
+            <label for="footer " class="col-sm-2 control-label ">footer:</label>
+            <div class="col-sm-10 ">
+                <input type="text " class="form-control input-sm background-{{item.type}} " id="footer " ng-model="item.footer ">
             </div>
         </div>
     </form>
 </script>
-<script type="text/ng-template" id="footer.html">
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="footer" class="col-sm-2 control-label">footer:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
-            </div>
-        </div>
-    </form>
-</script>
-<script type="text/ng-template" id="panel-header.html">
-    <h4 class="panel-title">{{item.type}}</h4>
-    <button ng-click="models.content.splice(key,1)" type="button" class="btn btn-sm btn-default pull-right">
-        <span class="glyphicon glyphicon-trash"></span>
+<script type="text/ng-template " id="panel-header.html ">
+    <h4 class="panel-title ">{{item.type}}</h4>
+    <button ng-click="models.content.splice(key,1) " type="button " class="btn btn-sm btn-default pull-right ">
+        <span class="glyphicon glyphicon-trash "></span>
     </button>
 </script>
-<script type="text/ng-template" id="menuRef.html">
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="menuRef" class="col-sm-2 control-label">menuRef:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control input-sm background-{{item.type}}" id="menuRef" ng-model="item.menuRef">
+<script type="text/ng-template " id="menuRef.html ">
+    <form class="form-horizontal ">
+        <div class="form-group ">
+            <label for="menuRef " class="col-sm-2 control-label ">menuRef:</label>
+            <div class="col-sm-10 ">
+                <input type="text " class="form-control input-sm background-{{item.type}} " id="menuRef " ng-model="item.menuRef ">
             </div>
         </div>
     </form>
 </script>
-<script type="text/ng-template" id="text.html">
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="text" class="col-sm-2 control-label">Text:</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control input-sm background-{{item.type}}" id="text" ng-model="item.content.description">
+<script type="text/ng-template " id="text.html ">
+    <form class="form-horizontal ">
+        <div class="form-group ">
+            <label for="text " class="col-sm-2 control-label ">Text:</label>
+            <div class="col-sm-10 ">
+                <input type="text " class="form-control input-sm background-{{item.type}} " id="text " ng-model="item.content.description ">
             </div>
         </div>
     </form>
 </script>
-<script type="text/ng-template" id="messageText.html">
-    <form class="form-horizontal">
-        <div class="form-group">
-            <label for="message" class="col-sm-2 control-label">Text:</label>
-            <div class="col-sm-10">
-                <textarea rows=4 type="text" class="form-control input-sm background-{{item.type}}" id="message" ng-model="item.description"></textarea>
+<script type="text/ng-template " id="messageText.html ">
+    <form class="form-horizontal ">
+        <div class="form-group ">
+            <label for="message " class="col-sm-2 control-label ">Text:</label>
+            <div class="col-sm-10 ">
+                <textarea rows=4 type="text " class="form-control input-sm background-{{item.type}} " id="message " ng-model="item.description "></textarea>
             </div>
         </div>
     </form>
 </script>
-<script type="text/ng-template" id="menu.html">
-    <div class="panel panel-info background-{{item.type}}">
-        <div class="panel-heading clearfix">
-            <div ng-include="'panel-header.html'"></div>
+<script type="text/ng-template " id="menu.html ">
+    <div class="panel panel-info background-{{item.type}} ">
+        <div class="panel-heading clearfix ">
+            <div ng-include=" 'panel-header.html' "></div>
         </div>
-        <div ng-class="{ showMe: !models.content[$index].collapsed }" class="collapsable panel-body background-{{item.type}}">
-            <div ng-include="'header.html'"></div>
-            <ul dnd-list="item.content" dnd-allowed-types="[item.type]">
-                <li class="background-{{item.type}}" ng-repeat="(menKey, menuItem) in item.content" dnd-type="item.type" dnd-draggable="menuItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(menKey,1)" ng-include="'menuItem.html'"></li>
-                <div class="clearfix"></div>
+        <div ng-class="{ showMe: !models.content[$index].collapsed } " class="collapsable panel-body background-{{item.type}} ">
+            <div ng-include=" 'header.html' "></div>
+            <div ng-include=" 'menuRef.html' "></div>
+            <ul dnd-list="item.content " dnd-allowed-types="[item.type] ">
+                <li class="background-{{item.type}} " ng-repeat="(menKey, menuItem) in item.content " dnd-type="item.type " dnd-draggable="menuItem " dnd-effect-allowed="move " dnd-moved="item.content.splice(menKey,1) " ng-include=" 'menuItem.html' "></li>
+                <div class="clearfix "></div>
             </ul>
-            <button type="button" ng-click="addItem(item.content, item.type)" class="btn btn-block btn-primary">Add Option</button>
-            <div ng-include="'footer.html'"></div>
+            <button type="button " ng-click="addItem(item.content, item.type) " class="btn btn-block btn-primary ">Add Option</button>
+            <div ng-include=" 'footer.html' "></div>
         </div>
     </div>
     </div>
 </script>
 <!-- This template is responsible for rendering a menu element. It uses
      the above list template to render each menu column -->
-<script type="text/ng-template" id="wizard.html">
-    <div class="panel panel-info background-{{item.type}}">
-        <div class="panel-heading clearfix">
-            <div ng-include="'panel-header.html'"></div>
+<script type="text/ng-template " id="wizard.html ">
+    <div class="panel panel-info background-{{item.type}} ">
+        <div class="panel-heading ">
+            <div ng-include=" 'panel-header.html' "></div>
         </div>
-        <div ng-class="{ showMe: !models.content[$index].collapsed }" class="collapsable panel-body background-{{item.type}}">
-            <div ng-include="'header.html'"></div>
-            <ul dnd-list="item.content" dnd-allowed-types="[item.type]">
-                <li class="background-{{item.type}}" ng-repeat="(wizKey, wizardItem) in item.content" dnd-type="item.type" dnd-draggable="wizardItem" dnd-effect-allowed="move" dnd-moved="item.content.splice(wizKey,1)" ng-include="'wizardItem.html'"></li>
-                <div class="clearfix"></div>
+        <div ng-class="{ showMe: !models.content[$index].collapsed } " class="collapsable panel-body background-{{item.type}} ">
+            <div ng-include=" 'header.html' "></div>
+            <div ng-include=" 'menuRef.html' "></div>
+            <ul dnd-list="item.content " dnd-allowed-types="[item.type] ">
+                <li class="background-{{item.type}} " ng-repeat="(wizKey, wizardItem) in item.content " dnd-type="item.type " dnd-draggable="wizardItem " dnd-effect-allowed="move " dnd-moved="item.content.splice(wizKey,1) " ng-include=" 'wizardItem.html' "></li>
+                <div class="clearfix "></div>
             </ul>
-            <button type="button" ng-click="addItem(item.content, item.type)" class="btn btn-block btn-primary">Add Option</button>
-            <div ng-include="'footer.html'"></div>
+            <button type="button " ng-click="addItem(item.content, item.type) " class="btn btn-block btn-primary ">Add Option</button>
+            <div ng-include=" 'footer.html' "></div>
         </div>
     </div>
 </script>
 <!-- Template for a normal input item -->
-<script type="text/ng-template" id="input.html">
-    <div class="panel">
-        <div class="panel-heading clearfix">
-            <div ng-include="'panel-header.html'"></div>
+<script type="text/ng-template " id="input.html ">
+    <div class="panel ">
+        <div class="panel-heading ">
+            <div ng-include=" 'panel-header.html' "></div>
         </div>
-        <div ng-class="{ showMe: !models.content[$index].collapsed }" class="collapsable panel-body">
-            <div ng-include="'header.html'"></div>
-            <div ng-include="'menuRef.html'"></div>
-            <div ng-include="'text.html'"></div>
-            <div ng-include="'footer.html'"></div>
+        <div ng-class="{ showMe: !models.content[$index].collapsed } " class="collapsable panel-body ">
+            <div ng-include=" 'header.html' "></div>
+            <div ng-include=" 'menuRef.html' "></div>
+            <div ng-include=" 'text.html' "></div>
+            <div ng-include=" 'footer.html' "></div>
         </div>
-        <div class="clearfix"></div>
     </div>
 </script>
 <!-- Template for a normal menu item -->
-<script type="text/ng-template" id="menuItem.html">
+<script type="text/ng-template " id="menuItem.html ">
     <dnd-nodrag>
-        <div dnd-handle class="handle">:::</div>
-        <div class="menuItem">
-            <input type="text" ng-model="menuItem.description" class="background-{{item.type}} form-control input-sm">
+        <div dnd-handle class="handle ">:::</div>
+        <div class="menuItem ">
+            <input type="text " ng-model="menuItem.description " class="background-{{item.type}} form-control input-sm ">
         </div>
-        <button ng-if="item.content.length > 1" ng-click="item.content.splice(menKey,1)" type="button" class="btn btn-sm btn-default pull-right">
+        <button ng-if="item.content.length> 1" ng-click="item.content.splice(menKey,1)" type="button" class="btn btn-sm btn-default pull-right">
             <span class="glyphicon glyphicon-trash"></span>
         </button>
     </dnd-nodrag>
@@ -195,7 +207,6 @@
                     <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span> Collapse All</div>
                     <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span> Expand All</div>
                 </button>
-                <!-- The dropzone also uses the list template -->
                 <ul dnd-list="models.content" dnd-allowed-types="['item']">
                     <div ng-repeat="(key,item) in models.content">
                         <div class="collapse-container">
@@ -204,7 +215,7 @@
                                 <span ng-if="!models.content[key].collapsed" class="glyphicon glyphicon-minus"></span>
                             </button>
                             <div class="collapse-item">
-                                <li dnd-disable-if="item.type === 'end'" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" dnd-selected="models.selected = item" ng-include="item.type + '.html'">
+                                <li dnd-disable-if="item.type === 'end'" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'">
                                 </li>
                             </div>
                         </div>

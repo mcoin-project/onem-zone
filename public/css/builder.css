@@ -185,4 +185,7 @@
     display: inline-block;
 }
 
+.typesDemo ul.dropdown-menu li {
+    border: none;
+}
 
