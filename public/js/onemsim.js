@@ -249,13 +249,17 @@ ONEmSimModule.controller('buildController', [
     '$http',
     function($scope, $http) {
         $scope.models = {
+            defaultHeader: '',
             selected: null,
             templates: [{
                 type: "input",
                 menuRef: "",
                 header: "",
                 content: { description: "" },
-                collapsed: false
+                collapsed: false,
+                headerOpt: 'Default',
+                footerOpt: 'Default',
+                menuOpt: 'Default'
             }, {
                 type: "menu",
                 menuRef: "",
@@ -263,7 +267,11 @@ ONEmSimModule.controller('buildController', [
                     { "type": "skip", description: "" },
                     { "type": "skip", description: "" }
                 ],
-                collapsed: false
+                collapsed: false,
+                headerOpt: 'Default',
+                footerOpt: 'Default',
+                menuOpt: 'Default'
+
             }, {
                 type: "wizard",
                 menuRef: "",
@@ -271,12 +279,19 @@ ONEmSimModule.controller('buildController', [
                     { "type": "any", description: "" },
                     { "type": "any", description: "" }
                 ],
-                collapsed: false
+                collapsed: false,
+                headerOpt: 'Default',
+                footerOpt: 'Default',
+                menuOpt: 'Default'
+
             }, {
                 type: "message",
                 header: "",
                 description: "",
-                collapsed: false
+                collapsed: false,
+                headerOpt: 'Default',
+                footerOpt: 'Default',
+                menuOpt: 'Default'
             }],
             content: [{
                 type: "end",
@@ -286,6 +301,7 @@ ONEmSimModule.controller('buildController', [
         };
 
         $scope.closedAll = false;
+        $scope.defaultFooter = '<send option>';
 
         $scope.addItem = function(array, type) {
             if (type === 'wizard') {
@@ -295,6 +311,16 @@ ONEmSimModule.controller('buildController', [
             }
         };
 
+        $scope.isDisabled = function(item, index) {
+            if (item.type === 'end') return true;
+
+            console.log("index:" + index);
+
+            if ($scope.models.content[$scope.models.content.length - 1].type !== 'end') return true;
+
+            return false;
+        };
+
         $scope.collapseToggle = function() {
             $scope.closedAll = !$scope.closedAll;
             for (var i = 0; i < $scope.models.content.length; i++) {
@@ -302,10 +328,58 @@ ONEmSimModule.controller('buildController', [
             }
         };
 
+        $scope.setHeader = function(item, opt) {
+            if (opt == 'Off') {
+                item.header = '';
+                item.headerOpt = 'Off';
+            } else {
+                item.headerOpt = 'Default';
+                item.header = $scope.models.defaultHeader;
+            }
+        };
+
+        $scope.setFooter = function(item, opt) {
+            if (opt == 'Off') {
+                item.footer = '';
+                item.footerOpt = 'Off';
+            } else {
+                item.footerOpt = 'Default';
+                item.footer = $scope.models.defaultfooter;
+            }
+        };
+
+        $scope.setMenu = function(item, opt) {
+            if (opt == 'Default') {
+                item.menuOpt = 'Default';
+                item.menuRef = $scope.models.defaultMenu;
+            }
+        };
+
+        $scope.$watch('models.defaultHeader', function(defaultHeader) {
+
+            for (var i = 0; i < $scope.models.content.length; i++) {
+                if ($scope.models.content[i].headerOpt === 'Default') {
+                    $scope.models.content[i].header = $scope.models.defaultHeader;
+                }
+            }
+        }, true);
+
+        $scope.$watch('models.defaultMenu', function(defaultMenu) {
+
+            for (var i = 0; i < $scope.models.content.length; i++) {
+                if ($scope.models.content[i].menuOpt === 'Default') {
+                    $scope.models.content[i].menuRef = $scope.models.defaultMenu;
+                }
+            }
+        }, true);
+
         $scope.$watch('models.content', function(model) {
             var modelCopy = JSON.parse(JSON.stringify(model));
             for (var i = 0; i < modelCopy.length; i++) {
                 delete modelCopy[i].collapsed;
+                delete modelCopy[i].headerOpt;
+                delete modelCopy[i].footerOpt;
+ 
             }
             $scope.modelAsJson = angular.toJson(modelCopy, true);
         }, true);

@@ -1,9 +1,19 @@
+.typesDemo .defaultValue {
+    padding-left: 10px;
+    padding-top: 7px;
+}
+/*
 .typesDemo form {
     margin-top: 15px;
-}
+}*/
+
 
 .typesDemo .collapse-container {
     width: 100%
+}
+
+.typesDemo .collapse-container .form-group {
+    margin-bottom: 0;
 }
 
 .typesDemo .collapse-container ul[dnd-list] {
@@ -16,7 +26,8 @@
 }
 
 .collapsable {
-    overflow: hidden;
+   /* overflow: hidden;*/
+    display: none;
     height: 0;
     width: 100%;
     transition: height 0.4s;
@@ -27,6 +38,7 @@
 
 .collapsable.showMe {
     height: 100%;
+    display: block;
 }
 
 

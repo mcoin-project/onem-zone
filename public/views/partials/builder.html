@@ -6,6 +6,51 @@
      it from the original list yourself using the dnd-moved attribute -->
 <!-- This template is responsible for rendering a menu element. It uses
      the above list template to render each menu column -->
+<script type="text/ng-template" id="defaultMenu.html">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="defaultMenu" class="col-sm-3 control-label">Default menuRef:</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control input-sm background-{{item.type}}" id="defaultHeader" ng-model="models.defaultMenu">
+            </div>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="defaultHeader.html">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label for="defaultHeader" class="col-sm-3 control-label">Default header:</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control input-sm background-{{item.type}}" id="defaultHeader" ng-model="models.defaultHeader">
+            </div>
+        </div>
+    </form>
+</script>
+<script type="text/ng-template" id="menuRef.html">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <dnd-nodrag>
+                <label for="menuRef" class="col-sm-2 control-label">menuRef:</label>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button style="margin-left:5px" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">{{item.menuOpt}} <span class="caret "></span></button>
+                        <ul class="dropdown-menu">
+                            <li ng-click="setMenu(item, 'Default')"><a href="#">Default</a></li>
+                            <li ng-click="item.menuOpt = 'Custom'"><a href="#">Custom</a></li>
+                        </ul>
+                        <!-- /btn-group -->
+                    </div>
+                    <div ng-if="item.menuOpt == 'Custom'">
+                        <input type="text" class="form-control input-sm background-{{item.type}}" id="menuRef" ng-model="item.menuRef">
+                    </div>
+                    <div class="defaultValue" ng-if="item.menuOpt == 'Default'">
+                        {{item.menuRef}}
+                    </div>
+                </div>
+            </dnd-nodrag>
+        </div>
+    </form>
+</script>
 <script type="text/ng-template" id="header.html">
     <form class="form-horizontal">
         <div class="form-group">
@@ -13,27 +58,48 @@
                 <label for="header" class="col-sm-2 control-label">header:</label>
                 <div class="input-group">
                     <div class="input-group-btn">
-                        <button style="margin-left:5px" type="button " class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">Default <span class="caret "></span></button>
+                        <button style="margin-left:5px" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">{{item.headerOpt}} <span class="caret "></span></button>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Default</a></li>
-                            <li><a href="#">Off</a></li>
-                            <li><a href="#">Custom</a></li>
+                            <li ng-click="setHeader(item, 'Default')"><a href="#">Default</a></li>
+                            <li ng-click="setHeader(item, 'Off')"><a href="#">Off</a></li>
+                            <li ng-click="item.headerOpt = 'Custom'"><a href="#">Custom</a></li>
                         </ul>
                         <!-- /btn-group -->
                     </div>
-                    <input type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
+                    <div ng-if="item.headerOpt == 'Custom'">
+                        <input type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
+                    </div>
+                    <div class="defaultValue" ng-if="item.headerOpt == 'Default'">
+                        {{item.header}}
+                    </div>
                 </div>
             </dnd-nodrag>
         </div>
     </form>
 </script>
-<script type="text/ng-template " id="footer.html ">
-    <form class="form-horizontal ">
-        <div class="form-group ">
-            <label for="footer " class="col-sm-2 control-label ">footer:</label>
-            <div class="col-sm-10 ">
-                <input type="text " class="form-control input-sm background-{{item.type}} " id="footer " ng-model="item.footer ">
-            </div>
+<script type="text/ng-template" id="footer.html">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <dnd-nodrag>
+                <label for="footer" class="col-sm-2 control-label">footer:</label>
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button style="margin-left:5px" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">{{item.footerOpt}} <span class="caret "></span></button>
+                        <ul class="dropdown-menu">
+                            <li ng-click="setFooter(item, 'Default')"><a href="#">Default</a></li>
+                            <li ng-click="setFooter(item, 'Off')"><a href="#">Off</a></li>
+                            <li ng-click="item.footerOpt = 'Custom'"><a href="#">Custom</a></li>
+                        </ul>
+                        <!-- /btn-group -->
+                    </div>
+                    <div ng-if="item.footerOpt == 'Custom'">
+                        <input type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
+                    </div>
+                    <div class="defaultValue" ng-if="item.footerOpt == 'Default'">
+                        <p>{{item.footer}}</p>
+                    </div>
+                </div>
+            </dnd-nodrag>
         </div>
     </form>
 </script>
@@ -42,16 +108,6 @@
     <button ng-click="models.content.splice(key,1) " type="button " class="btn btn-sm btn-default pull-right ">
         <span class="glyphicon glyphicon-trash "></span>
     </button>
-</script>
-<script type="text/ng-template " id="menuRef.html ">
-    <form class="form-horizontal ">
-        <div class="form-group ">
-            <label for="menuRef " class="col-sm-2 control-label ">menuRef:</label>
-            <div class="col-sm-10 ">
-                <input type="text " class="form-control input-sm background-{{item.type}} " id="menuRef " ng-model="item.menuRef ">
-            </div>
-        </div>
-    </form>
 </script>
 <script type="text/ng-template " id="text.html ">
     <form class="form-horizontal ">
@@ -203,6 +259,8 @@
             <div class="typesDemo row">
                 <!-- The dropzone also uses the list template -->
                 <h3>Service: Post </h3>
+                <div ng-include="'defaultHeader.html'"></div>
+                <div ng-include="'defaultMenu.html'"></div>
                 <button ng-click="collapseToggle()" type="button" class="btn btn-default">
                     <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span> Collapse All</div>
                     <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span> Expand All</div>
@@ -215,7 +273,7 @@
                                 <span ng-if="!models.content[key].collapsed" class="glyphicon glyphicon-minus"></span>
                             </button>
                             <div class="collapse-item">
-                                <li dnd-disable-if="item.type === 'end'" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'">
+                                <li dnd-disable-if="isDisabled(item, key)" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'">
                                 </li>
                             </div>
                         </div>
