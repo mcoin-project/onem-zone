@@ -329,22 +329,18 @@ ONEmSimModule.controller('buildController', [
         };
 
         $scope.setHeader = function(item, opt) {
-            if (opt == 'Off') {
-                item.header = '';
-                item.headerOpt = 'Off';
-            } else {
-                item.headerOpt = 'Default';
+            if (opt == 'Default') {
                 item.header = $scope.models.defaultHeader;
+            } else if (opt == 'Off') {
+                item.header = '';
             }
         };
 
         $scope.setFooter = function(item, opt) {
-            if (opt == 'Off') {
+            if (opt == 'Default') {
+                item.footer = $scope.models.defaultFooter;
+            } else if (opt == 'Off') {
                 item.footer = '';
-                item.footerOpt = 'Off';
-            } else {
-                item.footerOpt = 'Default';
-                item.footer = $scope.models.defaultfooter;
             }
         };
 
@@ -352,6 +348,8 @@ ONEmSimModule.controller('buildController', [
             if (opt == 'Default') {
                 item.menuOpt = 'Default';
                 item.menuRef = $scope.models.defaultMenu;
+            } else {
+                item.menuOpt = 'Custom';
             }
         };
 
@@ -364,22 +362,29 @@ ONEmSimModule.controller('buildController', [
             }
         }, true);
 
-        $scope.$watch('models.defaultMenu', function(defaultMenu) {
+         $scope.$watch('models.defaultMenu', function(defaultMenu) {
 
-            for (var i = 0; i < $scope.models.content.length; i++) {
-                if ($scope.models.content[i].menuOpt === 'Default') {
-                    $scope.models.content[i].menuRef = $scope.models.defaultMenu;
-                }
-            }
-        }, true);
+             for (var i = 0; i < $scope.models.content.length; i++) {
+                 if ($scope.models.content[i].menuOpt === 'Default') {
+                     $scope.models.content[i].menuRef = $scope.models.defaultMenu;
+                 }
+             }
+         }, true);
 
         $scope.$watch('models.content', function(model) {
             var modelCopy = JSON.parse(JSON.stringify(model));
             for (var i = 0; i < modelCopy.length; i++) {
+                if ($scope.models.content[i].menuOpt === 'Default') {
+                    $scope.models.content[i].menuRef = $scope.models.defaultMenu;
+                }
+                if ($scope.models.content[i].headerOpt === 'Default') {
+                    $scope.models.content[i].header = $scope.models.defaultHeader;
+                }
                 delete modelCopy[i].collapsed;
                 delete modelCopy[i].headerOpt;
                 delete modelCopy[i].footerOpt;
- 
+                delete modelCopy[i].menuOpt;
+                delete modelCopy[i].id;
             }
             $scope.modelAsJson = angular.toJson(modelCopy, true);
         }, true);

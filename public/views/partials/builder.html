@@ -31,20 +31,18 @@
         <div class="form-group">
             <dnd-nodrag>
                 <label for="menuRef" class="col-sm-2 control-label">menuRef:</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <div class="input-group-btn">
-                        <button style="margin-left:5px" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">{{item.menuOpt}} <span class="caret "></span></button>
-                        <ul class="dropdown-menu">
-                            <li ng-click="setMenu(item, 'Default')"><a href="#">Default</a></li>
-                            <li ng-click="item.menuOpt = 'Custom'"><a href="#">Custom</a></li>
-                        </ul>
-                        <!-- /btn-group -->
+                        <select ng-model="item.menuOpt" class="form-control">
+                            <option value="Default">Default</option>
+                            <option value="Custom">Custom</option>
+                        </select>
                     </div>
                     <div ng-if="item.menuOpt == 'Custom'">
-                        <input type="text" class="form-control input-sm background-{{item.type}}" id="menuRef" ng-model="item.menuRef">
+                        <input style="width:100%" type="text" class="form-control input-sm background-{{item.type}}" id="menuRef" ng-model="item.menuRef">
                     </div>
-                    <div class="defaultValue" ng-if="item.menuOpt == 'Default'">
-                        {{item.menuRef}}
+                    <div ng-if="item.menuOpt == 'Default'">
+                        <input style="width:100%" disabled type="text" class="form-control input-sm background-{{item.type}}" id="menuRef" ng-model="item.menuRef">
                     </div>
                 </div>
             </dnd-nodrag>
@@ -56,21 +54,19 @@
         <div class="form-group">
             <dnd-nodrag>
                 <label for="header" class="col-sm-2 control-label">header:</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <div class="input-group-btn">
-                        <button style="margin-left:5px" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">{{item.headerOpt}} <span class="caret "></span></button>
-                        <ul class="dropdown-menu">
-                            <li ng-click="setHeader(item, 'Default')"><a href="#">Default</a></li>
-                            <li ng-click="setHeader(item, 'Off')"><a href="#">Off</a></li>
-                            <li ng-click="item.headerOpt = 'Custom'"><a href="#">Custom</a></li>
-                        </ul>
-                        <!-- /btn-group -->
+                        <select ng-model="item.headerOpt" ng-change="setHeader(item, item.headerOpt)" class="form-control">
+                            <option value="Default">Default</option>
+                            <option value="Off">Off</option>
+                            <option value="Custom">Custom</option>
+                        </select>
                     </div>
                     <div ng-if="item.headerOpt == 'Custom'">
                         <input type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
                     </div>
-                    <div class="defaultValue" ng-if="item.headerOpt == 'Default'">
-                        {{item.header}}
+                    <div ng-if="item.headerOpt == 'Default'">
+                        <input disabled type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
                     </div>
                 </div>
             </dnd-nodrag>
@@ -82,21 +78,19 @@
         <div class="form-group">
             <dnd-nodrag>
                 <label for="footer" class="col-sm-2 control-label">footer:</label>
-                <div class="input-group">
+                <div class="input-group input-group-sm">
                     <div class="input-group-btn">
-                        <button style="margin-left:5px" type="button" class="btn btn-sm btn-default dropdown-toggle" data-toggle="dropdown">{{item.footerOpt}} <span class="caret "></span></button>
-                        <ul class="dropdown-menu">
-                            <li ng-click="setFooter(item, 'Default')"><a href="#">Default</a></li>
-                            <li ng-click="setFooter(item, 'Off')"><a href="#">Off</a></li>
-                            <li ng-click="item.footerOpt = 'Custom'"><a href="#">Custom</a></li>
-                        </ul>
-                        <!-- /btn-group -->
+                        <select ng-model="item.footerOpt" ng-change="setFooter(item, item.footerOpt)" class="form-control">
+                            <option value="Default">Default</option>
+                            <option value="Off">Off</option>
+                            <option value="Custom">Custom</option>
+                        </select>
                     </div>
                     <div ng-if="item.footerOpt == 'Custom'">
                         <input type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
                     </div>
-                    <div class="defaultValue" ng-if="item.footerOpt == 'Default'">
-                        <p>{{item.footer}}</p>
+                    <div ng-if="item.footerOpt == 'Default'">
+                        <input disabled type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
                     </div>
                 </div>
             </dnd-nodrag>
@@ -104,6 +98,7 @@
     </form>
 </script>
 <script type="text/ng-template " id="panel-header.html ">
+    <span class="dnd-handle panel-handle glyphicon glyphicon-menu-hamburger"></span>
     <h4 class="panel-title ">{{item.type}}</h4>
     <button ng-click="models.content.splice(key,1) " type="button " class="btn btn-sm btn-default pull-right ">
         <span class="glyphicon glyphicon-trash "></span>
@@ -262,8 +257,8 @@
                 <div ng-include="'defaultHeader.html'"></div>
                 <div ng-include="'defaultMenu.html'"></div>
                 <button ng-click="collapseToggle()" type="button" class="btn btn-default">
-                    <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span> Collapse All</div>
-                    <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span> Expand All</div>
+                    <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span></div>
+                    <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span></div>
                 </button>
                 <ul dnd-list="models.content" dnd-allowed-types="['item']">
                     <div ng-repeat="(key,item) in models.content">

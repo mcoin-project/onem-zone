@@ -1,3 +1,20 @@
+.typesDemo .input-group-sm .form-control:last-child{
+  margin-left: -1px;
+  width: auto;
+}
+
+.typesDemo .input-group-btn select {
+    height:30px;
+    font-size:12px;
+    font-weight:500; 
+}
+
+.typesDemo .panel-handle {
+    padding-right:5px;
+    vertical-align: middle;
+    color: lightgrey;
+}
+
 .typesDemo .defaultValue {
     padding-left: 10px;
     padding-top: 7px;
