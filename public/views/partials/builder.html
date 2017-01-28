@@ -21,7 +21,7 @@
         <div class="form-group">
             <label for="defaultHeader" class="col-sm-3 control-label">Default header:</label>
             <div class="col-sm-8">
-                <input type="text" class="form-control input-sm background-{{item.type}}" id="defaultHeader" ng-model="models.defaultHeader">
+                <textarea rows="3" type="text" class="form-control input-sm background-{{item.type}}" id="defaultHeader" ng-model="models.defaultHeader"></textarea>
             </div>
         </div>
     </form>
@@ -63,10 +63,10 @@
                         </select>
                     </div>
                     <div ng-if="item.headerOpt == 'Custom'">
-                        <input type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
+                        <textarea rows="3" style="width:100%" type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header"></textarea>
                     </div>
                     <div ng-if="item.headerOpt == 'Default'">
-                        <input disabled type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header">
+                        <textarea rows="3" style="width:100%" disabled type="text" class="form-control input-sm background-{{item.type}}" id="header" ng-model="item.header"></textarea>
                     </div>
                 </div>
             </dnd-nodrag>
@@ -87,10 +87,10 @@
                         </select>
                     </div>
                     <div ng-if="item.footerOpt == 'Custom'">
-                        <input type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
+                        <input style="width:100%" type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
                     </div>
                     <div ng-if="item.footerOpt == 'Default'">
-                        <input disabled type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
+                        <input style="width:100%" disabled type="text" class="form-control input-sm background-{{item.type}}" id="footer" ng-model="item.footer">
                     </div>
                 </div>
             </dnd-nodrag>

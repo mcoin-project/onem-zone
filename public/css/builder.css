@@ -3,6 +3,10 @@
   width: auto;
 }
 
+.typesDemo .input-group-btn {
+    vertical-align: top;
+}
+
 .typesDemo .input-group-btn select {
     height:30px;
     font-size:12px;
