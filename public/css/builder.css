@@ -1,3 +1,15 @@
+
+.fixed-header {
+    position: fixed;
+    width: 100%;
+    background-color: white;
+    z-index: 9999999;
+}
+
+.typesDemoBody {
+    padding-top: 100px;
+}
+
 .box {
     margin-bottom: 20px;
     background-color: #fff;

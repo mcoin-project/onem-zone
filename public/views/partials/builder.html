@@ -248,60 +248,60 @@
     </div>
 </script>
 <!-- Main area with dropzones and source code -->
-<div class="typesDemo">
-    <div class="row">
+<div class="fixed-header">
+    <div class="typesDemo row">
         <div class="col-md-4 visible-lg visible-md onem-logo">
             <a href="http://www.onem.com">
                 <img ng-src="{{'/images/onem-logo.svg'}}" alt="" />
                 <p>Service Builder</p>
             </a>
         </div>
-        <div class="onem-border col-md-6 col-md-offset-1">
+        <div style="padding:15px" class="onem-border col-md-6">
             <!-- The toolbox only allows to copy objects, not move it. After a new
                  element was created, dnd-copied is invoked and we generate the next id -->
             <span ng-repeat="item in models.templates" dnd-type="'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
             <!-- <button type="button" class="btn btn-default btn-lg" disabled="disabled">{{item.type}}</button> -->
                 <button type="button" class="btn btn-primary btn-lg">{{item.type}}</button>
-            </span>
+                </span>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="typesDemo row">
-                <!-- The dropzone also uses the list template -->
-                <h3>Service: Post </h3>
-                <div ng-include="'defaultHeader.html'"></div>
-                <div ng-include="'defaultMenu.html'"></div>
-                <div class="dropzone box">
-                    <button ng-click="collapseToggle()" type="button" class="btn btn-default">
-                        <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span></div>
-                        <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span></div>
-                    </button>
-                    <div class="pull-right dropzone-title">Dropzone</div>
-                    <ul dnd-list="models.content" dnd-allowed-types="['item']">
-                        <div ng-repeat="(key,item) in models.content | limitTo:models.content.length -1 ">
-                            <div class="collapse-container">
-                                <button ng-click="models.content[key].collapsed = !models.content[key].collapsed" type="button" class="btn btn-default">
-                                    <span ng-if="models.content[key].collapsed" class="glyphicon glyphicon-plus"></span>
-                                    <span ng-if="!models.content[key].collapsed" class="glyphicon glyphicon-minus"></span>
-                                </button>
-                                <div class="collapse-item">
-                                    <li dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'"></li>
-                                </div>
+</div>
+<div class="typesDemo typesDemoBody">
+    <div class="col-md-6">
+        <div class="typesDemo row">
+            <!-- The dropzone also uses the list template -->
+            <h3>Service: Post </h3>
+            <div ng-include="'defaultHeader.html'"></div>
+            <div ng-include="'defaultMenu.html'"></div>
+            <div class="dropzone box">
+                <button ng-click="collapseToggle()" type="button" class="btn btn-default">
+                    <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span></div>
+                    <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span></div>
+                </button>
+                <div class="pull-right dropzone-title">Dropzone</div>
+                <ul dnd-list="models.content" dnd-allowed-types="['item']">
+                    <div ng-repeat="(key,item) in models.content | limitTo:models.content.length -1 ">
+                        <div class="collapse-container">
+                            <button ng-click="models.content[key].collapsed = !models.content[key].collapsed" type="button" class="btn btn-default">
+                                <span ng-if="models.content[key].collapsed" class="glyphicon glyphicon-plus"></span>
+                                <span ng-if="!models.content[key].collapsed" class="glyphicon glyphicon-minus"></span>
+                            </button>
+                            <div class="collapse-item">
+                                <li dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'"></li>
                             </div>
                         </div>
-                    </ul>
-                </div>
-                <div ng-include="'end.html'"></div>
+                    </div>
+                </ul>
             </div>
+            <div ng-include="'end.html'"></div>
         </div>
-        <!-- Sidebar -->
-        <div class="col-md-5 col-md-offset-1">
-            <div class="row">
-                <div view-source="nested"></div>
-                <h3>JSON</h3>
-                <pre>{"content": {{modelAsJson}}}   </pre>
-            </div>
+    </div>
+    <!-- Sidebar -->
+    <div class="col-md-5 col-md-offset-1">
+        <div class="row">
+            <div view-source="nested"></div>
+            <h3>JSON</h3>
+            <pre>{"content": {{modelAsJson}}}   </pre>
         </div>
     </div>
 </div>
