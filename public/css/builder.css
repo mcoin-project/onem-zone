@@ -1,3 +1,26 @@
+.box {
+    margin-bottom: 20px;
+    background-color: #fff;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.05);
+    box-shadow: 0 1px 2px rgba(0,0,0,.05);
+}
+
+.typesDemo .dropzone  {
+    margin: 0px;
+    min-height: 42px;
+    border: 1px dashed grey;
+    padding: 0px;
+    width: 100%;
+}
+
+.typesDemo .dropzone-title {
+    min-height: 40px;
+    display: inline;
+    padding-right: 5px;
+}
+
 .typesDemo .input-group-sm .form-control:last-child{
   margin-left: -1px;
   width: auto;
@@ -30,7 +53,8 @@
 
 
 .typesDemo .collapse-container {
-    width: 100%
+    width: 100%;
+    display: inline-block;
 }
 
 .typesDemo .collapse-container .form-group {

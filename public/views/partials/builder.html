@@ -180,11 +180,27 @@
     <dnd-nodrag>
         <div dnd-handle class="handle ">:::</div>
         <div class="menuItem ">
-            <input type="text " ng-model="menuItem.description " class="background-{{item.type}} form-control input-sm ">
+            <textarea rows="1" ng-model="menuItem.description " class="background-{{item.type}} form-control input-sm "></textarea>
         </div>
         <button ng-if="item.content.length> 1" ng-click="item.content.splice(menKey,1)" type="button" class="btn btn-sm btn-default pull-right">
             <span class="glyphicon glyphicon-trash"></span>
         </button>
+        <div class="menuItem">
+            <div class="input-group input-group-sm">
+                <div class="input-group-btn">
+                    <select ng-model="menuItem.type" class="form-control">
+                        <option value="skip">Skip</option>
+                        <option value="linkStatic">Link</option>
+                    </select>
+                </div>
+                <div ng-if="menuItem.type == 'linkStatic'">
+                    <input style="width:100%" type="text" class="form-control input-sm background-{{item.type}}" ng-model="menuItem.ref">
+                </div>
+                <div ng-if="menuItem.type == 'skip'">
+                    <input style="width:100%" disabled type="text" class="form-control input-sm background-{{item.type}}" ng-init="menuItem.ref = ''">
+                </div>
+            </div>
+        </div>
     </dnd-nodrag>
 </script>
 <!-- Template for a normal wizard item -->
@@ -192,7 +208,7 @@
     <dnd-nodrag>
         <div dnd-handle class="handle">:::</div>
         <div class="menuItem">
-            <input type="text" ng-model="wizardItem.description" class="background-{{item.type}} form-control input-sm">
+            <textarea rows="1" ng-model="wizardItem.description" class="background-{{item.type}} form-control input-sm"></textarea>
         </div>
         <button ng-if="item.content.length > 1" ng-click="item.content.splice(wizKey,1)" type="button" class="btn btn-sm btn-default pull-right">
             <span class="glyphicon glyphicon-trash"></span>
@@ -216,7 +232,7 @@
 <script type="text/ng-template" id="end.html">
     <div class="panel panel-info">
         <div class="panel-heading clearfix">
-            <h4 class="panel-title">{{item.type}}</h4>
+            <h4 class="panel-title">end</h4>
         </div>
         <div ng-class="{ showMe: !models.content[$index].collapsed  }" class="collapsable panel-body">
             <form class="form-horizontal">
@@ -256,24 +272,27 @@
                 <h3>Service: Post </h3>
                 <div ng-include="'defaultHeader.html'"></div>
                 <div ng-include="'defaultMenu.html'"></div>
-                <button ng-click="collapseToggle()" type="button" class="btn btn-default">
-                    <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span></div>
-                    <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span></div>
-                </button>
-                <ul dnd-list="models.content" dnd-allowed-types="['item']">
-                    <div ng-repeat="(key,item) in models.content">
-                        <div class="collapse-container">
-                            <button ng-click="models.content[key].collapsed = !models.content[key].collapsed" type="button" class="btn btn-default">
-                                <span ng-if="models.content[key].collapsed" class="glyphicon glyphicon-plus"></span>
-                                <span ng-if="!models.content[key].collapsed" class="glyphicon glyphicon-minus"></span>
-                            </button>
-                            <div class="collapse-item">
-                                <li dnd-disable-if="isDisabled(item, key)" dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'">
-                                </li>
+                <div class="dropzone box">
+                    <button ng-click="collapseToggle()" type="button" class="btn btn-default">
+                        <div ng-if="!closedAll"><span class="glyphicon glyphicon-minus"></span></div>
+                        <div ng-if="closedAll"><span class="glyphicon glyphicon-plus"></span></div>
+                    </button>
+                    <div class="pull-right dropzone-title">Dropzone</div>
+                    <ul dnd-list="models.content" dnd-allowed-types="['item']">
+                        <div ng-repeat="(key,item) in models.content | limitTo:models.content.length -1 ">
+                            <div class="collapse-container">
+                                <button ng-click="models.content[key].collapsed = !models.content[key].collapsed" type="button" class="btn btn-default">
+                                    <span ng-if="models.content[key].collapsed" class="glyphicon glyphicon-plus"></span>
+                                    <span ng-if="!models.content[key].collapsed" class="glyphicon glyphicon-minus"></span>
+                                </button>
+                                <div class="collapse-item">
+                                    <li dnd-draggable="item" dnd-effect-allowed="move" dnd-type="'item'" dnd-moved="models.content.splice(key,1)" ng-include="item.type + '.html'"></li>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </ul>
+                    </ul>
+                </div>
+                <div ng-include="'end.html'"></div>
             </div>
         </div>
         <!-- Sidebar -->
