@@ -1,0 +1,24 @@
+{
+    "content": [{
+        "ref": "tutorial/entertainment.json",
+        "type": "menu",
+        "menuRef": "indexcategories.json",
+        "header": "** Entertainment services **",
+        "content": [{
+            "ref": "#football",
+            "type": "linkStatic",
+            "description": "#football"
+        }, {
+            "ref": "#frenzy",
+            "type": "linkStatic",
+            "description": "#frenzy"
+        }, {
+            "ref": "#hangman",
+            "type": "linkStatic",
+            "description": "#hangman"    
+        }]
+    }, {
+        "type": "end",
+        "ref": "tutorial/entertainment.json"
+    }]
+}

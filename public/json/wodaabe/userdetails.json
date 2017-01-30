@@ -2,21 +2,21 @@
     "content": [{
         "type": "input",
         "menuRef": "/wodaabe/index.json",
-        "header": "** #User details add **",
+        "header": "** User details **",
         "footer": "send details or \"menu\"",
         "content": {
             "type": "string",
-            "description": "male or female?",
+            "description": "Male or Female?",
             "var": "sex"
         }
     }, {
         "type": "input",
         "menuRef": "/wodaabe/menu.json",
-        "header": "** #Age **",
+        "header": "** Age **",
         "content": {
             "type": "string",
-            "description": "Age?",
-            "var": "Age"
+            "description": "Your age?",
+            "var": "age"
         }
     }, {
         "type": "input",
@@ -24,26 +24,29 @@
         "header": "** #Location **",
         "content": {
             "type": "string",
-            "description": "Location?",
-            "var": "Location"
+            "description": "Your location?",
+            "var": "location"
         }
     }, { 
         "type": "wizard",
         "menuRef": "/wodaabe/menu.json",
-        "header": "** #Contact add **",
+        "header": "** User details **",
         "content": [{
             "type": "any",
-            "description": "{{onemnumber}}"
+            "description": "{{sex}}"
         }, {
             "type": "any",
-            "description": "{{User name}}"
+            "description": "{{age}}"
+        }, {
+            "type": "any",
+            "description": "{{location}}"
         }]
     }, {
         "type": "message",
-        "header": "** #contacts add **",
-        "description": "{{onemnumber}} saved as {{Username}}"
+        "header": "** #User details **",
+        "description": "User details saved"
     }, {
         "type": "end",
-        "ref": "#User details"
+        "ref": "#wodaabe"
     }]
 }

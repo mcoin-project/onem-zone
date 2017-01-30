@@ -196,6 +196,21 @@
     padding-bottom: 0;
 }
 
+.panel-heading.panel-heading-input {
+    background: #428bca;
+}
+
+.panel-heading.panel-heading-menu {
+    background: #5bc0de;
+}
+
+.panel-heading.panel-heading-wizard {
+    background: #f0ad4e;
+}
+
+.panel-heading.panel-heading-message {
+    background: #d9534f;
+}
 
 /**
  * Gender-specifc background
@@ -206,7 +221,7 @@
 }
 
 .panel .background-menu {
-    background-color: #FFE2F5;
+    background-color: rgb(91, 192, 222);
 }
 
 .typesDemo ul[dnd-list] li.background-wizard {
@@ -214,7 +229,7 @@
 }
 
 .typesDemo ul[dnd-list] li.background-menu {
-    background-color: #FFE2F5;
+    background-color: rgb(91, 192, 222);
 }
 
 .typesDemo ul[dnd-list] input.background-wizard {
@@ -222,9 +237,9 @@
     color: #2F4D99;
 }
 
-.typesDemo ul[dnd-list] input.background-menu {
-    background-color: #FFF0FA;
-    color: #D84FA7;
+.typesDemo ul[dnd-list] .background-menu input {
+    background-color: rgb(91, 192, 222, 0.3);
+    /* color: #D84FA7;*/
 }
 
 

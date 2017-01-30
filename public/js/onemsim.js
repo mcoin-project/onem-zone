@@ -253,6 +253,7 @@ ONEmSimModule.controller('buildController', [
             selected: null,
             templates: [{
                 type: "input",
+                btnStyle: "primary",
                 menuRef: "",
                 header: "",
                 content: { description: "" },
@@ -262,6 +263,7 @@ ONEmSimModule.controller('buildController', [
                 menuOpt: 'Default'
             }, {
                 type: "menu",
+                btnStyle: "info",
                 menuRef: "",
                 content: [
                     { "type": "skip", description: "" },
@@ -274,6 +276,7 @@ ONEmSimModule.controller('buildController', [
 
             }, {
                 type: "wizard",
+                btnStyle: "warning",
                 menuRef: "",
                 content: [
                     { "type": "any", description: "" },
@@ -286,6 +289,7 @@ ONEmSimModule.controller('buildController', [
 
             }, {
                 type: "message",
+                btnStyle: "danger",
                 header: "",
                 description: "",
                 collapsed: false,
@@ -362,14 +366,14 @@ ONEmSimModule.controller('buildController', [
             }
         }, true);
 
-         $scope.$watch('models.defaultMenu', function(defaultMenu) {
+        $scope.$watch('models.defaultMenu', function(defaultMenu) {
 
-             for (var i = 0; i < $scope.models.content.length; i++) {
-                 if ($scope.models.content[i].menuOpt === 'Default') {
-                     $scope.models.content[i].menuRef = $scope.models.defaultMenu;
-                 }
-             }
-         }, true);
+            for (var i = 0; i < $scope.models.content.length; i++) {
+                if ($scope.models.content[i].menuOpt === 'Default') {
+                    $scope.models.content[i].menuRef = $scope.models.defaultMenu;
+                }
+            }
+        }, true);
 
         $scope.$watch('models.content', function(model) {
             var modelCopy = JSON.parse(JSON.stringify(model));
@@ -385,6 +389,11 @@ ONEmSimModule.controller('buildController', [
                 delete modelCopy[i].footerOpt;
                 delete modelCopy[i].menuOpt;
                 delete modelCopy[i].id;
+                delete modelCopy[i].btnStyle;
+            }
+            // put the service ref in pos 0
+            if ($scope.models.content.length > 1) {
+                modelCopy[0].ref = $scope.models.ref;
             }
             $scope.modelAsJson = angular.toJson(modelCopy, true);
         }, true);

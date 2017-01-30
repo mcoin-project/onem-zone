@@ -1,20 +1,20 @@
 {
-    "content": [{
-        "ref": "wodaabe/tip1.json",
+    "wodaabe": [{
+        "ref": "tip2.json",
         "type": "menu",
         "menuRef": "#wodaabe",
-        "header": "** Help **\nTo see all available services send \"#\" and then choose \"Option\" from the list",
+        "header": "** Help **\nSend \"#account\" to set your name or change settings like language or location",
         "content": [{
-            "ref": "#wodaabe/tip2.json",
+            "ref": "onem/tip3.json",
             "type": "linkStatic",
             "description": "Next tip"
         }, {
-            "ref": "#wodaabe",
+            "ref": "#onem",
             "type": "linkStatic",
             "description": "Skip"
         }]
     }, {
         "type": "end",
-        "ref": "#wodaabe"
+        "ref": "#onem"
     }]
 }

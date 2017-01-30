@@ -3,7 +3,6 @@
         "menuRef": "ooredoo/index.json",
         "type": "menu",
        	"header": "** #ooredoo menu **",
-        "footer": "** send option **",
         "content": [{
             "ref": "ooredoo/offers.json",
             "type": "linkStatic",

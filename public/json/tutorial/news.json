@@ -1,0 +1,21 @@
+{
+    "content": [{
+        "ref": "tutorial/news.json",
+        "type": "menu",
+        "menuRef": "indexcategories.json",
+        "header": "** News services **",
+        "content": [{
+           "ref": "#aljazeera",
+            "type": "linkStatic",
+            "shortcut": "aljazeera",
+            "description": "#aljazeera"
+        }, {
+            "ref": "#brands",
+            "type": "linkStatic",
+            "description": "#brands"
+        }]
+    }, {
+        "type": "end",
+        "ref": "tutorial/news.json"
+    }]
+}

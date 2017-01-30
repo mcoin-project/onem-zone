@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "tutorial/tip1.json",
+        "type": "string",
+        "menuRef": "#tutorial",
+        "header": "** ONEm welcome **\nHints for what to do next can be found between <>.\nNow send 'more' as hinted below, no need for quotes.\nTo go to services put '#' before their name. If stuck send 'menu' or #onem to get out. Now send menu. "
+        }, {
+        "type": "end",
+        "ref": "#tutorial"
+    }]
+}

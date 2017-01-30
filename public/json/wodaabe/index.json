@@ -5,19 +5,23 @@
         "menuRef": "#wodaabe",
         "header": "** Menu **",
         "content": [{
-            "ref": "userintro.json",
+            "ref": "wodaabe/userintro.json",
             "type": "linkStatic",
             "description": "User Introduction"
         }, {
-            "ref": "userdetails.json",
+            "ref": "wodaabe/userdetails.json",
             "type": "linkStatic",
             "description": "User details"
         }, {
-            "ref": "propositions.json",
+            "ref": "wodaabe/tribeinfo.json",
+            "type": "linkStatic",
+            "description": "Tribe Information"
+        },{
+            "ref": "wodaabe/propositions.json",
             "type": "linkStatic",
             "description": "List of Propositions"
         }, {
-            "ref": "bilitalinfo.json",
+            "ref": "wodaabe/bilitalinfo.json",
             "type": "linkStatic",
             "description": "Bilital Information"
         }, {

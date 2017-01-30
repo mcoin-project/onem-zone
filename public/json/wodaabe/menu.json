@@ -7,11 +7,11 @@
         "content": [{
             "ref": "/wodaabe/userdetails.json",
             "type": "linkDynamic",
-            "description": "Sex"
+            "description": "sex"
         }, {
             "ref": "/wodaabe/userdetails.json",
             "type": "linkDynamic",
-            "description": "Age"
+            "description": "age"
         },{
             "ref": "/wodaabe/userdetails.json",
             "type": "linkDynamic",

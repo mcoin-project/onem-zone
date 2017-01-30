@@ -1,0 +1,20 @@
+{
+    "content": [{
+        "ref": "tutorial/social.json",
+        "type": "menu",
+        "menuRef": "indexcategories.json",
+        "header": "** Social services **",
+        "content": [{
+            "ref": "#post",
+            "type": "linkStatic",
+            "description": "#post"
+        }, {
+            "ref": "#du",
+            "type": "linkStatic",
+            "description": "#du"
+        }]
+    }, {
+        "type": "end",
+        "ref": "tutorial/social.json"
+    }]
+}
