@@ -1006,7 +1006,7 @@ function storeChunks(context, header, footer, body) {
     var type;
     var i = context.indexPos;
     var result;
-    var moreText = process.env.MORE_TEXT || '"more" ';
+    var moreText = process.env.MORE_TEXT || ' "more"';
 
     context.chunks = [];
 
@@ -1045,7 +1045,7 @@ function storeChunks(context, header, footer, body) {
 
         // add footers
         for (var j = 0; j < context.chunks.length; j++) {
-            context.chunks[j] = context.chunks[j] + '\n' + footerStart + moreText + (j + 1) + '/' + context.chunks.length + footerEnd;
+            context.chunks[j] = context.chunks[j] + '\n' + footerStart + (j + 1) + '/' + context.chunks.length + moreText + footerEnd;
         }
 
     } else {
@@ -1107,7 +1107,7 @@ function storeChunks(context, header, footer, body) {
 
         // add footers
         for (var j = 0; j < context.chunks.length; j++) {
-            context.chunks[j] = context.chunks[j] + '\n' + footerStart + moreText + (j + 1) + '/' + context.chunks.length + footerEnd;
+            context.chunks[j] = context.chunks[j] + '\n' + footerStart +  (j + 1) + '/' + context.chunks.length + moreText + footerEnd;
         }
 
     }

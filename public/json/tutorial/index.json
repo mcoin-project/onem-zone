@@ -4,6 +4,7 @@
         "type": "menu",
         "menuRef": "#tutorial",
         "header": "** ONEm menu **",
+        "footer": "** Select option **",
         "content": [{
             "ref": "myaccount.json",
             "type": "linkStatic",
@@ -20,11 +21,11 @@
         }, {
             "ref": "createxgroup.json",
             "type": "linkStatic",
-            "description": "Create free SMS group chats (xGroup"
+            "description": "Create free SMS group chat - xGroup"
         }, {
             "ref": "sendsms.json",
             "type": "linkStatic",
-            "description": "Send free SMS to friends"
+            "description": "Send free SMS"
         }]
     }, {
         "type": "end",

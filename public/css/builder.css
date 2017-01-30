@@ -212,34 +212,10 @@
     background: #d9534f;
 }
 
-/**
- * Gender-specifc background
- */
-
-.panel .background-wizard {
-    background-color: #CAE0FC;
-}
-
-.panel .background-menu {
-    background-color: rgb(91, 192, 222);
-}
-
-.typesDemo ul[dnd-list] li.background-wizard {
-    background-color: #CAE0FC;
-}
-
-.typesDemo ul[dnd-list] li.background-menu {
-    background-color: rgb(91, 192, 222);
-}
-
-.typesDemo ul[dnd-list] input.background-wizard {
-    background-color: #D8E9FF;
-    color: #2F4D99;
-}
-
-.typesDemo ul[dnd-list] .background-menu input {
-    background-color: rgb(91, 192, 222, 0.3);
-    /* color: #D84FA7;*/
+.typesDemo .templatesBox {
+    border-style: dotted;
+    border-width: 1px;
+    padding: 20px;
 }
 
 

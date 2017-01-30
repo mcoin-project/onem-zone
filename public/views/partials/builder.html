@@ -7,7 +7,7 @@
 <!-- This template is responsible for rendering a menu element. It uses
      the above list template to render each menu column -->
 <script type="text/ng-template" id="serviceName.html">
-    <form class="form-horizontal">
+    <form style="padding-top:30px" class="form-horizontal">
         <div class="form-group">
             <label for="serviceName" class="col-sm-3 control-label">Service:</label>
             <div class="col-sm-8">
@@ -266,21 +266,23 @@
                 <p>Service Builder</p>
             </a>
         </div>
-        <div style="padding:15px" class="onem-border col-md-6">
-            <!-- The toolbox only allows to copy objects, not move it. After a new
+        <div class="row">
+            <div style="padding:15px" class="onem-border col-md-4 text-center">
+                <!-- The toolbox only allows to copy objects, not move it. After a new
                  element was created, dnd-copied is invoked and we generate the next id -->
-            <div class="templatesBox">
-                <span ng-repeat="item in models.templates" dnd-type="'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
+                <div class="templatesBox">
+                    <span ng-repeat="item in models.templates" dnd-type="'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
             <!-- <button type="button" class="btn btn-default btn-lg" disabled="disabled">{{item.type}}</button> -->
                 <button type="button" class="btn btn-{{item.btnStyle}} btn-lg">{{item.type}}</button>
                 </span>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <div class="typesDemo typesDemoBody">
-    <div class="col-md-6">
-        <div class="typesDemo row">
+    <div class="typesDemo row">
+        <div class="col-md-6">
             <div ng-include="'serviceName.html'"></div>
             <div ng-include="'defaultHeader.html'"></div>
             <div ng-include="'defaultMenu.html'"></div>
@@ -306,7 +308,7 @@
             </div>
             <div ng-include="'end.html'"></div>
         </div>
-    </div>
+
     <!-- Sidebar -->
     <div class="col-md-5 col-md-offset-1">
         <div class="row">
@@ -314,5 +316,6 @@
             <h3>JSON</h3>
             <pre>{"content": {{modelAsJson}}}   </pre>
         </div>
+    </div>
     </div>
 </div>

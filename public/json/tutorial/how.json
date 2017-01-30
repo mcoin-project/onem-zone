@@ -4,7 +4,7 @@
         "type": "menu",
         "menuRef": "#tutorial",
         "header": "** Welcome to ONEm **\nPlease follow the tutorial.Choose an option by sending the letter in front of it:",
-        "footer": "send 'a' for next tip,'b' to skip>",
+        "footer": "\n** send 'a' for next tip,'b' to skip **",
         "content": [{
             "ref": "tutorial/tip1.json",
             "type": "linkStatic",
