@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "ref": "weather.json",
+        "menuRef": "/weather/details.json",
+        "type": "menu",
+       	"header": "** Weather London, UK **",
+        "content": [{
+            "ref": "/weather/add.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "Add a location"
+        }, {
+            "ref": "/weather/delete.json",
+            "type": "linkStatic",
+            "shortcut": "delete",
+            "description": "Delete a location"
+        }, {
+            "ref": "/weather/search.json",
+            "type": "linkStatic",
+            "shortcut": "hour",
+            "description": "Search place or city"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#weather"
+    }]
+}

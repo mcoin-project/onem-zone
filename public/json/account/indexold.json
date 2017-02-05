@@ -1,0 +1,22 @@
+{
+    "content": [{
+        "menuRef": "account/index.json",
+        "type": "menu",
+       	"header": "** Account menu **",
+        "content": [{
+            "ref": "account/nickname.json",
+            "type": "linkStatic",
+            "shortcut": "nickname",
+            "description": "set my nickname"
+        }, {
+            "ref": "account/invite.json",
+            "type": "linkStatic",
+            "shortcut": "invite",
+            "description": "invite a friend"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#account"
+    }]
+}

@@ -1,0 +1,25 @@
+{
+    "content": [{
+        "ref": "replies.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "header": "** %post title% **",
+        "comment": "Replies are sorted by recent created by date",
+        "content": [{
+            "ref": "/post/reply.json",
+            "type": "linkStatic",
+            "description": "Reply to this comment"
+        }, {
+            "ref": "/post/viewreply.json",
+            "type": "linkDynamic",
+            "description": "%Reply 2...%"
+        }, {
+            "ref": "/post/viewreply.json",
+            "type": "linkDynamic",
+            "description": "%Reply 1...%"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#post recent"
+    }]
+}

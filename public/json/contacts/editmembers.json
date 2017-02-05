@@ -1,0 +1,26 @@
+{
+    "content": [{
+        "ref": "editmembers.json",
+        "type": "menu",
+        "menuRef": "/contacts/xgroupmenu.json\nSelect xGroup members",
+        "header": "** #xgroup create **\nSelected: 447725342567, Chris R, Sorin\n",
+        "footer": "<send option or \"next\">",
+        "content": [{
+            "ref": "/contacts/addmember.json",
+            "type": "linkDynamic",
+            "description": "Add a member"
+        }, {
+            "ref": "/contacts/deletemember.json",
+            "type": "linkDynamic",
+            "description": "Delete a member"
+        }, {
+            "ref": "/contacts/xgroupfinal.json",
+            "type": "linkStatic",
+            "description": "Delete all members",
+            "shortcut": "next" 
+        }]
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

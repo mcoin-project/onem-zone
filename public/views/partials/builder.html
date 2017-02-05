@@ -7,7 +7,7 @@
 <!-- This template is responsible for rendering a menu element. It uses
      the above list template to render each menu column -->
 <script type="text/ng-template" id="serviceName.html">
-    <form style="padding-top:30px" class="form-horizontal">
+    <form style="padding-top:50px" class="form-horizontal">
         <div class="form-group">
             <label for="serviceName" class="col-sm-3 control-label">Service:</label>
             <div class="col-sm-8">
@@ -271,10 +271,19 @@
                 <!-- The toolbox only allows to copy objects, not move it. After a new
                  element was created, dnd-copied is invoked and we generate the next id -->
                 <div class="templatesBox">
-                    <span ng-repeat="item in models.templates" dnd-type="'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
-            <!-- <button type="button" class="btn btn-default btn-lg" disabled="disabled">{{item.type}}</button> -->
-                <button type="button" class="btn btn-{{item.btnStyle}} btn-lg">{{item.type}}</button>
-                </span>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="pull-right">Templates (Drag to Dropzone)</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="templateItem" ng-repeat="item in models.templates" dnd-type="'item'" dnd-draggable="item" dnd-effect-allowed="copy" dnd-copied="item.id = item.id + 1">
+                                <!-- <button type="button" class="btn btn-default btn-lg" disabled="disabled">{{item.type}}</button> -->
+                                <button type="button" class="btn btn-{{item.btnStyle}} btn-lg">{{item.type}}</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -308,14 +317,14 @@
             </div>
             <div ng-include="'end.html'"></div>
         </div>
-
-    <!-- Sidebar -->
-    <div class="col-md-5 col-md-offset-1">
-        <div class="row">
-            <div view-source="nested"></div>
-            <h3>JSON</h3>
-            <pre>{"content": {{modelAsJson}}}   </pre>
+        <!-- Sidebar -->
+        <div class="col-md-5 col-md-offset-1">
+            <div style="padding-top:20px" class="row">
+                <div view-source="nested"></div>
+                <h3>JSON</h3>
+                <button ng-click="saveFile()" type="button" class="btn btn-primary btn-lg">Save</button>
+                <pre>{ "content": {{modelAsJson}}}</pre>
+            </div>
         </div>
-    </div>
     </div>
 </div>

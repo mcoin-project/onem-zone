@@ -156,6 +156,12 @@
                 });
         };
 
+        $scope.builderUrl = function() {
+            var item = $scope.singleSelection();
+            return '/builder' + '?item=' + $scope.apiMiddleware.getFilePath(item);
+            
+        };
+
         $scope.openEditItem = function() {
             var item = $scope.singleSelection();
             $scope.apiMiddleware.getContent(item).then(function(data) {
@@ -192,6 +198,18 @@
             $scope.apiMiddleware.changePermissions($scope.temps, $scope.temp).then(function() {
                 $scope.modal('changepermissions', true);
             });
+        };
+
+        $scope.builder = function() {
+            var item = $scope.singleSelection();
+            if ($scope.selectionHas('dir')) {
+                return;
+            }
+            if (item) {
+                return $scope.apiMiddleware.builder(item);
+            } else {
+                return;
+            }
         };
 
         $scope.download = function() {

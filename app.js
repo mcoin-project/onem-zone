@@ -145,6 +145,25 @@ app.post('/files/createFolder', function(req, res) {
     }
 });
 
+app.post('/files/save', function(req, res) {
+    var fullFile = rootPath + req.body.item;
+
+    console.log("item:"+req.body.item);
+    console.log("content:");
+    console.log(req.body.content);
+
+    try {
+       jsonFile = JSON.parse(req.body.content);
+
+       var content = '{\n\"content\": ' + req.body.content + '\n}';
+
+        file = fs.writeFileSync(fullFile, content);
+        res.json({ result: { success: true, error: null } });
+    } catch (err) {
+        console.log("err:" + err);
+        res.json({ result: { success: false, error: "error: " + err } });
+    }
+});
 
 app.post('/files/edit', function(req, res) {
     var fullFile = rootPath + req.body.item;
@@ -790,9 +809,18 @@ function processRequest(input, context) {
             if (result.success) {
                 var newContext = JSON.parse(JSON.stringify(result.data));
                 var newResult = processRequest(input, newContext);
+
+console.log("after recursion");
+
                 result.context = JSON.parse(JSON.stringify(result.data));
+
+console.log("result.context:");
+console.log(result.context);
                 result.newContext = true;
                 result.response = newResult.response;
+                result.skip = newResult.skip;
+            } else {
+                console.log("problem in service switch");
             }
             break;
         default:
@@ -1045,7 +1073,7 @@ function storeChunks(context, header, footer, body) {
 
         // add footers
         for (var j = 0; j < context.chunks.length; j++) {
-            context.chunks[j] = context.chunks[j] + '\n' + footerStart + (j + 1) + '/' + context.chunks.length + moreText + footerEnd;
+            context.chunks[j] = context.chunks[j] + '\n' + footerStart + ' ' + (j + 1) + '/' + context.chunks.length + moreText + footerEnd;
         }
 
     } else {
@@ -1107,7 +1135,7 @@ function storeChunks(context, header, footer, body) {
 
         // add footers
         for (var j = 0; j < context.chunks.length; j++) {
-            context.chunks[j] = context.chunks[j] + '\n' + footerStart +  (j + 1) + '/' + context.chunks.length + moreText + footerEnd;
+            context.chunks[j] = context.chunks[j] + '\n' + footerStart + ' ' + (j + 1) + '/' + context.chunks.length + moreText + footerEnd;
         }
 
     }
@@ -1117,7 +1145,7 @@ function storeChunks(context, header, footer, body) {
     if (context.chunks.length === 1) {
         //after all that, there is only one chunk, so set chunks back to zero and return the result
         console.log("resetting");
-        result = context.chunks[0].slice(0, context.chunks[0].length - 11);
+        result = context.chunks[0].slice(0, context.chunks[0].length - (footerStart.length + 4 + moreText.length + footerEnd.length));
         result = result + footer;
         context.currentChunkPage = 0;
         context.chunks = [];
@@ -1303,6 +1331,8 @@ app.get('/api/getResponse', function(req, res, next) {
 
         if (body.newContext) {
             req.session.onemContext = JSON.parse(JSON.stringify(body.context));
+console.log("new context");
+console.log("req.session.onemContext");
         }
 
         i = req.session.onemContext.indexPos;

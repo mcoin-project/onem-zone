@@ -1,0 +1,32 @@
+{
+"content": [
+  {
+    "type": "menu",
+    "menuRef": "#account menu",
+    "content": [
+      {
+        "type": "skip",
+        "description": "Answer 5",
+        "ref": ""
+      },
+      {
+        "type": "linkStatic",
+        "description": "Answer 6",
+        "ref": "#account wrong"
+      }
+    ],
+    "header": "** Account Champion 3 of 3 **\nQ1. What is blah blah blah",
+    "ref": "#account champ"
+  },
+  {
+    "type": "message",
+    "header": "** Account Champion **",
+    "description": "You are now a champion!\nCode: FGDESJ\nYou receive xxx free minutes when a friend registers for ONEm with\n #onem FGDESJ to 333100",
+    "menuRef": "#account menuchamp"
+  },
+  {
+    "type": "end",
+    "ref": "#account menuchamp"
+  }
+]
+}

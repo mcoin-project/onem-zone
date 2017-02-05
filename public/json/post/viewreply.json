@@ -1,0 +1,17 @@
+{
+    "content": [{
+        "ref": "viewreply.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "header": "** %post title% **\nUser: %avatar%\n%this is a very long reply body with lots of words in it so that the menu is chunked, what do you think about that?%",
+        "footer": "Send option, 'menu' or 'back'",
+        "content": [{
+            "ref": "/post/viewcomment.json",
+            "type": "linkStatic",
+            "description": "Back"
+        }]
+    }, {
+        "type": "end",
+        "ref": "/post/viewcomment.json"
+    }]
+}

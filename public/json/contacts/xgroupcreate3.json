@@ -1,0 +1,48 @@
+{
+    "content": [{
+        "ref": "xgroupcreate.json",
+        "type": "menu",
+        "menuRef": "/contacts/xgroupmenu.json\nSelect xGroup members",
+        "header": "** #xgroup create **\nSelected: 447725342567, Chris R, Sorin\n",
+        "footer": "<send option or \"next\">",
+        "content": [{
+            "ref": "/contacts/xgroupcreate4.json",
+            "type": "linkDynamic",
+            "description": "Kelly"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Maurius"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Cristi"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Bogdan"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Andrei"
+        }, {
+            "type": "skip",
+            "ref": "/contacts/xgroupfinal.json",
+            "description": "Radu",
+            "shortcut": "next"
+        }]
+  }, {
+    "type": "input",
+    "footer": "<send name or \"back\">",
+    "menuRef": "/contacts/menu.json",
+    "header": "** #xGroup name **",
+    "content": {
+      "description": "Give your xGroup a name",
+      "type": "string",
+      "var": "$xgroupname"
+    }
+  }, {
+        "type": "end",
+        "ref": "#contacts xgroupfinal"
+    }]
+}

@@ -1,0 +1,49 @@
+{
+    "content": [{
+        "ref": "xgroupcreate.json",
+        "type": "menu",
+        "menuRef": "/contacts/xgroupmenu.json\nSelect xGroup members",
+        "header": "** #xgroup create **\nSelect contacts:\n",
+        "footer": "<send option or \"next\">",
+        "content": [{
+            "ref": "/contacts/xgroupcreate1.json",
+            "type": "linkDynamic",
+            "description": "447725342567"
+        }, {
+            "ref": "/contacts/xgroupcreate.json",
+            "type": "linkDynamic",
+            "description": "Chris R"
+        }, {
+            "ref": "/contacts/.json",
+            "type": "linkDynamic",
+            "description": "Sorin"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Kelly"
+        }, {
+            "ref": "/contacts/view.json",
+            "type": "linkDynamic",
+            "description": "Maurius"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Cristi"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Bogdan"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Andrei"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Radu"
+        }]
+    }, {
+        "type": "end",
+        "ref": "#contacts"
+    }]
+}

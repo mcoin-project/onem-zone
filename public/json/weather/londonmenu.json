@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "ref": "weather.json",
+        "menuRef": "/weather/londonmenu.json",
+        "type": "menu",
+       	"header": "** Weather London, UK **",
+        "content": [{
+            "ref": "/weather/details.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "Details"
+        }, {
+            "ref": "/weather/hour.json",
+            "type": "linkStatic",
+            "shortcut": "delete",
+            "description": "Hour by hour"
+        }, {
+            "ref": "/weather/forecast.json",
+            "type": "linkStatic",
+            "shortcut": "hour",
+            "description": "5 day forecast"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#weather"
+    }]
+}

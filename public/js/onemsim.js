@@ -5,32 +5,33 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'ngRoute',
     'ngResource',
     'ngMessages',
-    'ngAnimate',
+    //  'ngAnimate',
     'toastr',
     'angularMoment',
-    'matchMedia',
+    //  'matchMedia',
     'ngFileUpload',
     'FileManagerApp',
     'dndLists',
-]).run(function() {
-    moment.locale('en', {
-        relativeTime: {
-            future: "in %s",
-            past: "%s",
-            s: "just now",
-            m: "1m",
-            mm: "%dm",
-            h: "1h",
-            hh: "%dh",
-            d: "1d",
-            dd: "%dd",
-            M: "1m",
-            MM: "%dm",
-            y: "1y",
-            yy: "%dy"
-        }
-    });
-});
+    // ]).run(function() {
+    //     moment.locale('en', {
+    //         relativeTime: {
+    //             future: "in %s",
+    //             past: "%s",
+    //             s: "just now",
+    //             m: "1m",
+    //             mm: "%dm",
+    //             h: "1h",
+    //             hh: "%dh",
+    //             d: "1d",
+    //             dd: "%dd",
+    //             M: "1m",
+    //             MM: "%dm",
+    //             y: "1y",
+    //             yy: "%dy"
+    //         }
+    //     });
+    //});
+]);
 
 ONEmSimModule.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -45,6 +46,10 @@ ONEmSimModule.config(['$routeProvider', '$locationProvider',
             controller: 'mainController',
         }).
         when('/builder', {
+            templateUrl: 'views/partials/builder.html',
+            controller: 'buildController',
+        }).
+        when('/builder/:file', {
             templateUrl: 'views/partials/builder.html',
             controller: 'buildController',
         }).
@@ -357,6 +362,22 @@ ONEmSimModule.controller('buildController', [
             }
         };
 
+        $scope.saveFile = function() {
+
+            var data = { item: '/file.json', content: {} };
+
+            data.content = $scope.modelAsJson;
+
+            $http.post('/files/save', data).then(function(result) {
+                console.log("saved, result:");
+                console.log(result);
+            });
+        };
+
+        $scope.$watch('models.ref', function(ref) {
+            $scope.models.content[0].ref = ref;
+        }, true);
+
         $scope.$watch('models.defaultHeader', function(defaultHeader) {
 
             for (var i = 0; i < $scope.models.content.length; i++) {
@@ -390,6 +411,7 @@ ONEmSimModule.controller('buildController', [
                 delete modelCopy[i].menuOpt;
                 delete modelCopy[i].id;
                 delete modelCopy[i].btnStyle;
+                if ($scope.models.content[i].type !== 'end') delete modelCopy[i].ref;
             }
             // put the service ref in pos 0
             if ($scope.models.content.length > 1) {
@@ -482,6 +504,7 @@ ONEmSimModule.config(['fileManagerConfigProvider',
             listUrl: '/files/list',
             getContentUrl: '/files/getContent',
             uploadUrl: '/files/upload',
+            builderUrl: '/builder',
             removeUrl: '/files/remove',
             createFolderUrl: '/files/createFolder',
             downloadFileUrl: '/files/download',
@@ -496,6 +519,7 @@ ONEmSimModule.config(['fileManagerConfigProvider',
             hidePermissions: true,
             hideDate: true,
             hideSize: true,
+            builder: true,
             tplPath: 'tpl/templates',
             showSizeForDirectories: false,
             // pickCallback: function(item) {
@@ -511,6 +535,7 @@ ONEmSimModule.config(['fileManagerConfigProvider',
                 upload: true,
                 downloadAll: true,
                 copy: true,
+                builder: true,
                 move: false,
                 pickFolders: false,
                 compress: false
