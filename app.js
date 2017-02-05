@@ -146,7 +146,8 @@ app.post('/files/createFolder', function(req, res) {
 });
 
 app.post('/files/save', function(req, res) {
-    var fullFile = rootPath + req.body.item;
+
+    var fullFile =  path.join(rootPath, req.body.item.toLowerCase());
 
     console.log("item:"+req.body.item);
     console.log("content:");
