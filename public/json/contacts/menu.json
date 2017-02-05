@@ -13,9 +13,9 @@
             "type": "linkDynamic",
             "description": "Search"
         }, {
-            "ref": "/contacts/xgroup.json",
+            "ref": "/contacts/xgroupcreate.json",
             "type": "linkDynamic",
-            "description": "xGroup"
+            "description": "Create an xGroup"
         }]
     }, {
         "type": "end",

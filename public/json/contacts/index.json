@@ -5,11 +5,15 @@
         "menuRef": "/contacts/menu.json",
         "header": "** #contacts recents **",
         "comment": "Menu when no contacts exist\nbut there are recent made or received calls\nsort the menu by call made/received date",
-        "footer" : "send option or \"menu\"",
+        "footer" : "<send option or \"menu\">",
         "content": [{
             "ref": "/contacts/add.json",
             "type": "linkDynamic",
-            "description": "Add/invite new contact\n\nRecently contacted:"
+            "description": "Add/invite new contact"
+        }, {
+            "ref": "/contacts/xgroupcreate.json",
+            "type": "linkDynamic",
+            "description": "Create an xGroup\n\nRecents:"
         }, {
             "ref": "/contacts/notcontactview.json",
             "type": "linkDynamic",
