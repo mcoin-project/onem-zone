@@ -320,9 +320,18 @@
         <!-- Sidebar -->
         <div class="col-md-5 col-md-offset-1">
             <div style="padding-top:20px" class="row">
-                <div view-source="nested"></div>
                 <h3>JSON</h3>
-                <button ng-click="saveFile()" type="button" class="btn btn-primary btn-lg">Save</button>
+                <form class="form-horizontal">
+                    <div class="form-group">
+                        <label for="filePath" class="col-sm-2 control-label">filename:</label>
+                        <div class="input-group">
+                            <input input-sm type="text" class="form-control" id="filePath" ng-model="filePath">
+                            <span class="input-group-btn">
+                              <button ng-click="saveFile()" type="button" class="btn btn-primary">Save</button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
                 <pre>{ "content": {{modelAsJson}}}</pre>
             </div>
         </div>

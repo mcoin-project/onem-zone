@@ -75,7 +75,7 @@
 
         ApiMiddleware.prototype.builder = function(item) {
             var itemPath = this.getFilePath(item);
-            return this.apiHandler.builder(fileManagerConfig.builderUrl, itemPath);
+            return this.apiHandler.getUrl(fileManagerConfig.builderUrl, itemPath);
         };
 
         ApiMiddleware.prototype.download = function(item, forceNewWindow) {

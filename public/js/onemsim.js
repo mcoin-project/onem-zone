@@ -11,27 +11,21 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     //  'matchMedia',
     'ngFileUpload',
     'FileManagerApp',
-    'dndLists',
-    // ]).run(function() {
-    //     moment.locale('en', {
-    //         relativeTime: {
-    //             future: "in %s",
-    //             past: "%s",
-    //             s: "just now",
-    //             m: "1m",
-    //             mm: "%dm",
-    //             h: "1h",
-    //             hh: "%dh",
-    //             d: "1d",
-    //             dd: "%dd",
-    //             M: "1m",
-    //             MM: "%dm",
-    //             y: "1y",
-    //             yy: "%dy"
-    //         }
-    //     });
-    //});
+    'dndLists'
 ]);
+
+ONEmSimModule.config(function(toastrConfig) {
+  angular.extend(toastrConfig, {
+    autoDismiss: false,
+    containerId: 'toast-container',
+    maxOpened: 0,
+    newestOnTop: true,
+    positionClass: 'toast-bottom-right',
+    preventDuplicates: false,
+    preventOpenDuplicates: false,
+    target: 'body'
+  });
+});
 
 ONEmSimModule.config(['$routeProvider', '$locationProvider',
     function($routeProvider, $locationProvider) {
@@ -252,7 +246,9 @@ ONEmSimModule.controller('tabController', [
 ONEmSimModule.controller('buildController', [
     '$scope',
     '$http',
-    function($scope, $http) {
+    '$routeParams',
+    'toastr',
+    function($scope, $http, $routeParams, toastr) {
         $scope.models = {
             defaultHeader: '',
             selected: null,
@@ -309,6 +305,69 @@ ONEmSimModule.controller('buildController', [
             }]
         };
 
+
+        //
+        // On refresh or load, it there is an item parameter, then load that into the model and put all the "control" attributes in place
+        //
+        if ($routeParams.item) {
+
+            $scope.filePath = $routeParams.item;
+
+            var apiUrl = "/files/getContent";
+            var data = { item: $routeParams.item };
+            $http.post(apiUrl, data).then(function(result) {
+
+                var loaded = {};
+
+                try {
+                    loaded = JSON.parse(result.data.result).content;
+
+                    for (var i = 0; i < loaded.length; i++) {
+                        loaded[i].collapsed = false;
+                        if (typeof loaded[i].header !== 'undefined') {
+                            loaded[i].headerOpt = 'Custom';
+                        } else if (loaded[i].header === '') {
+                            loaded[i].headerOpt = 'Off';
+                        } else {
+                            loaded[i].headerOpt = 'Default';
+                        }
+                        if (typeof loaded[i].footer !== 'undefined') {
+                            loaded[i].footerOpt = 'Custom';
+                        } else if (loaded[i].footer === "") {
+                            loaded[i].footerOpt = 'Off';
+                        } else {
+                            loaded[i].footerOpt = 'Default';
+                        }
+                        if (typeof loaded[i].menuRef !== 'undefined') {
+                            loaded[i].menuOpt = 'Custom';
+                        } else {
+                            loaded[i].menuOpt = 'Off';
+                        }
+                        switch (loaded[i].type) {
+                            case 'menu':
+                                loaded[i].btnStyle = "info";
+                                break;
+                            case 'wizard':
+                                loaded[i].btnStyle = "warning";
+                                break;
+                            case 'input':
+                                loaded[i].btnStyle = "primary";
+                                break;
+                            case 'message':
+                                loaded[i].btnStyle = "danger";
+                                break;
+                        }
+                    }
+                    $scope.models.content = loaded;
+
+                } catch (err) {
+                    console.log("err:" + err);
+                    toastr.error('Error loading file: ' + err);
+                }
+
+            });
+        }
+
         $scope.closedAll = false;
         $scope.defaultFooter = '<send option>';
 
@@ -364,13 +423,21 @@ ONEmSimModule.controller('buildController', [
 
         $scope.saveFile = function() {
 
-            var data = { item: '/file.json', content: {} };
+
+            var data = { item: $scope.filePath, content: {} };
 
             data.content = $scope.modelAsJson;
 
             $http.post('/files/save', data).then(function(result) {
-                console.log("saved, result:");
+                console.log("result:");
                 console.log(result);
+                if (result.data.result.success) {
+                    toastr.success("File saved ok");
+                    console.log("File saved ok");
+                } else {
+                    toastr.error(result.data.result.error);
+                    console.log(result.data.result.error);
+                }
             });
         };
 
