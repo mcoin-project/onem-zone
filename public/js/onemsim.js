@@ -423,6 +423,10 @@ ONEmSimModule.controller('buildController', [
 
         $scope.saveFile = function() {
 
+            if (path.extname($scope.filePath).toLowerCase() !== '.json') {
+                toastr.error("file must be of type .JSON");
+                return;
+            }
 
             var data = { item: $scope.filePath, content: {} };
 

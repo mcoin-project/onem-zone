@@ -1,30 +1,26 @@
 {
     "content": [{
         "ref": "index.json",
-        "menuRef": "/exchange/exchangemenuu.json",
+        "menuRef": "/exchange/menu.json",
         "type": "menu",
-       	"header": "Welcome! To start, send 'c' to add a target currency.",
+       	"header": "** #exchange **\n Selected GBP:100",
+        "footer": "**send option or amount**",
         "content": [{
-            "ref": "exchange/start.json",
+            "ref": "exchange/addcurrency.json",
             "type": "linkStatic",
-            "shortcut": "start",
-            "description": "Start conversion"
+            "shortcut": "add",
+            "description": "Add new currency"
         }, 
 {
-            "ref": "exchange/source.json",
+            "ref": "exchange/usd2.json",
             "type": "linkStatic",
-            "shortcut": "source currency",
-            "description": "Source currency"
+            "shortcut": "usd",
+            "description": "USD 125.41"
         }, {
-            "ref": "exchange/add.json",
+            "ref": "exchange/EUR.json",
             "type": "linkStatic",
-            "shortcut": "target currency",
-            "description": "Target currency"
-        }, {
-            "ref": "exchange/tutorial.json",
-            "type": "linkStatic",
-            "shortcut": "tutorial",
-            "description": "Tutorial"
+            "shortcut": "eur",
+            "description": "EUR 116.20"
         }]
     },
     {

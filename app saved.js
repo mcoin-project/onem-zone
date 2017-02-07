@@ -29,7 +29,7 @@ var dymHeader = "** Did you mean? **\n";
 
 var footerPlaceholders = false;
 var footerStart = process.env.FOOTER_START || '<';
-var footerEnd = process.env.FOOTER_END || '>';
+var footerEnd = process.env.FOOTER_END|| '>';
 var menuFooter = 'send option';
 
 if (process.env.FOOTER_PLACEHOLDERS === 'ON') {
@@ -147,16 +147,16 @@ app.post('/files/createFolder', function(req, res) {
 
 app.post('/files/save', function(req, res) {
 
-    var fullFile = path.join(rootPath, req.body.item.toLowerCase());
+    var fullFile =  path.join(rootPath, req.body.item.toLowerCase());
 
-    console.log("item:" + req.body.item);
+    console.log("item:"+req.body.item);
     console.log("content:");
     console.log(req.body.content);
 
     try {
-        jsonFile = JSON.parse(req.body.content);
+       jsonFile = JSON.parse(req.body.content);
 
-        var content = '{\n\"content\": ' + req.body.content + '\n}';
+       var content = '{\n\"content\": ' + req.body.content + '\n}';
 
         file = fs.writeFileSync(fullFile, content);
         res.json({ result: { success: true, error: null } });
@@ -455,11 +455,35 @@ function extractAttrs(str) {
     return result;
 }
 
+
+function globalEval(code, v) {
+    var variables = this.variables;
+
+    console.log("code=" + code);
+
+    console.log("variables=");
+    console.log(variables);
+
+    return Function(code)();
+}
+
 function processVars(textStr, variables) {
 
     console.log("inside processVars");
 
     var result = textStr;
+    var expression, evalRes, finalResult, secondTry;
+
+    function makeEvalContext(declarations) {
+
+        console.log("declarations: " + declarations);
+
+        eval(declarations);
+        return function(str) {
+            console.log("str:" + str);
+            eval(str);
+        };
+    }
 
     if (typeof textStr !== 'undefined' &&
         typeof variables !== 'undefined') {
@@ -487,36 +511,58 @@ function processVars(textStr, variables) {
 
             console.log("declareVars:" + declareVars);
 
+            eval1 = makeEvalContext("var x;");
+            eval2 = makeEvalContext(varsInScope);
+            eval3 = makeEvalContext(declareVars);
 
             // now all the attribute names should be replaced with their values
             // we can loop through attributes again and evaluate the expression, and remove {{ }}
 
             attrArray = extractAttrs(result);
 
+            //make a string to declare all variables
+
+            var code = '';
+
             _.each(attrArray, function(attr) {
 
-                var evaluated;
+                expression = "evalRes = " + attr.slice(2, attr.length - 2); // remove {{ }}
 
-                var code = '(function expression(x) { ' + declareVars + ' return ' + attr.slice(2, attr.length - 2) + '})(' + varString + ')';
-                console.log("code to evaluate with safe-eval:" + code);
+                // code = '{' + declareVars + "return " + expression + ';}';
+
+                console.log("code to evaluate:" + expression);
+
+                // var context = {expression: expression, variables: variables};
 
                 try {
 
-                    evaluated = safeEval(code);
+                    eval3(expression);
 
-                    console.log("evaluated: " + evaluated);
+                    console.log("evaluating: secondTry=" + evalRes);
 
+                    //    eval3("secondTry = " + evalRes);
+
+                    console.log("secondTry:" + secondTry);
+
+                    // evalRes = evalInContext.call(code);
+
+                    // evalRes = globalEval(code, variables);
+
+                    console.log("evalRes:" + evalRes);
                 } catch (e) {
                     console.log("safely catch the error" + e);
                 }
 
-                if (typeof evaluated === 'undefined') {
+                if (typeof evalRes === 'undefined') {
                     result = result.replace(attr, 'undefined');
                     //     } else if (typeof secondTry !== 'undefined' ) {
                     //         result = result.replace(attr, secondTry);
                 } else {
-                    result = result.replace(attr, evaluated);
+                    result = result.replace(attr, evalRes);
                 }
+
+
+                //   evalRes = evalRes.trim();
 
             });
         }
@@ -765,12 +811,12 @@ function processRequest(input, context) {
                 var newContext = JSON.parse(JSON.stringify(result.data));
                 var newResult = processRequest(input, newContext);
 
-                console.log("after recursion");
+console.log("after recursion");
 
                 result.context = JSON.parse(JSON.stringify(result.data));
 
-                console.log("result.context:");
-                console.log(result.context);
+console.log("result.context:");
+console.log(result.context);
                 result.newContext = true;
                 result.response = newResult.response;
                 result.skip = newResult.skip;
@@ -828,33 +874,12 @@ function checkForVar(context, content, input) {
         var varObj;
 
         if (!content.var.includes("=")) {
-
-
-            if (!(isNaN(Number(input)))) {
-                console.log("seems to be a number of sorts");
-                input = Number(input);
-            }
-
             varObj = { "name": content.var, "value": input };
         } else {
             var splitString = content.var.split('=');
             var stringValue = splitString[1].trim();
             console.log("stringValue:" + stringValue);
-
-            var varString = JSON.stringify(context.variables);
-            var varsInScope = "x = " + varString + ';';
-            var declareVars = '';
-
-            console.log(varsInScope);
-
-            for (j = 0; j < context.variables.length; j++) {
-                declareVars = declareVars + 'var ' + context.variables[j].name + "=x[" + j + "].value;\n";
-            }
-
-            var code = '(function expression(x) { ' + declareVars + ' return ' + stringValue + '})(' + varString + ')';
-            console.log("code to evaluate with safe-eval:" + code);
-
-            varObj = { "name": splitString[0].trim(), "value": safeEval(code) };
+            varObj = { "name": splitString[0].trim(), "value": stringValue };
         }
 
         console.log("varObj:");
@@ -917,7 +942,6 @@ function validateInput(moText, context) {
             break;
         case 'wizard':
             var wizardContent = context.content[i].content;
-
             console.log("wizardContent:");
             console.log(wizardContent);
 
@@ -928,9 +952,7 @@ function validateInput(moText, context) {
                 found <= wizardContent.length + 1) { // wizards have two extra options a) confirm and b) back
                 response.success = true;
                 response.firstOption = 'a';
-
-                checkForVar(context, wizardContent[found], input);
-
+                response.lastOption = menuOptions[wizardContent.length + 1];
             } else {
                 response.success = false;
                 response.response = "invalid menu option";
@@ -1270,7 +1292,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
     if (status.success && status.menuOption) {
 
-        result = {};
+        var result = {};
 
         // step into menu
 
@@ -1310,8 +1332,8 @@ app.get('/api/getResponse', function(req, res, next) {
 
         if (body.newContext) {
             req.session.onemContext = JSON.parse(JSON.stringify(body.context));
-            console.log("new context");
-            console.log("req.session.onemContext");
+console.log("new context");
+console.log("req.session.onemContext");
         }
 
         i = req.session.onemContext.indexPos;

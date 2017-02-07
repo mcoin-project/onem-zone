@@ -1,24 +1,30 @@
 {
     "content": [{
+        "ref": "exchange/amount.json",
         "menuRef": "exchange/menu.json",
-        "type": "menu",
-       	"header": "** #exchange **\n Selected GBP:100",
+        "type": "input",
+       	"header": "** #exchange **\n Selected USD:500",
         "footer": "**send option or amount**", 
-        "content": [{
+            "content": [{
             "ref": "exchange/addcurrency.json",
             "type": "linkStatic",
             "shortcut": "add",
             "description": "Add new currency"
         }, {
-            "ref": "exchange/usd2.json",
+            "ref": "exchange/GBP.json",
             "type": "linkStatic",
-            "shortcut": "usd",
-            "description": "USD 125.41"
+            "shortcut": "gbp",
+            "description": "GBP 401.69"
         }, {
             "ref": "exchange/EUR.json",
             "type": "linkStatic",
             "shortcut": "eur",
-            "description": "EUR 116.20"
+            "description": "EUR 465.72"
+        }, {
+            "ref": "exchange/CAD.json",
+            "type": "linkStatic",
+            "shortcut": "cad",
+            "description": "CAD 656.32"
         }]
     },
     {
