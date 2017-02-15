@@ -29,9 +29,9 @@
             "type": "linkStatic",
             "description": "Free Services"
         }, {
-            "ref": "wodaabe/how.json",
+            "ref": "wodaabe/tutorial.json",
             "type": "linkStatic",
-            "description": "How to use",
+            "description": "Tutorial",
             "shortcut": "how"
         }]
     }, {

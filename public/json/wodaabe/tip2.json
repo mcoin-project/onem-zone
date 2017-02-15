@@ -1,15 +1,15 @@
 {
-    "wodaabe": [{
+    "content": [{
         "ref": "tip2.json",
         "type": "menu",
         "menuRef": "#wodaabe",
         "header": "** Help **\nSend \"#account\" to set your name or change settings like language or location",
         "content": [{
-            "ref": "onem/tip3.json",
+            "ref": "wodaabe/tip3.jason",
             "type": "linkStatic",
             "description": "Next tip"
         }, {
-            "ref": "#onem",
+            "ref": "#wodaabe",
             "type": "linkStatic",
             "description": "Skip"
         }]

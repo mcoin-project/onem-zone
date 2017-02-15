@@ -1,0 +1,45 @@
+{
+    "content": [{
+        "ref": "translate/eng.json",
+        "menuRef": "translate/menu.json",
+        "type": "input",
+       	"header": "** #translate **",
+        "footer": "**send option or amount**",
+        "content": {
+        "type": "string",
+        "description": "Selected English: Hello\na Add new language\nb DE: Hallo\nc FR: Salut\nd SVK: Ahoj",
+        "var": "$title"
+        }
+    }, {
+          "type": "menu",
+          "menuRef": "translate/menu.json",
+          "header": "** #translate **\n Selected English: How are you",
+          "footer": "**send option or amount**", 
+            "content": [{
+            "ref": "translate/addlanguage.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "Add new language"
+        }, {
+            "ref": "translate/GBP.json",
+            "type": "linkStatic",
+            "shortcut": "de",
+            "description": "DE: Wie geht es Ihnen"
+        }, {
+            "ref": "translate/EUR.json",
+            "type": "linkStatic",
+            "shortcut": "svk",
+            "description": "SVK: Ako sa máš"
+        }, {
+            "ref": "translate/CAD.json",
+            "type": "linkStatic",
+            "shortcut": "fr",
+            "description": "FR: Comment allez-vous"
+        }]
+ 
+    },
+    {
+    	"type": "end",
+    	"ref": "#translate"
+    }]
+}

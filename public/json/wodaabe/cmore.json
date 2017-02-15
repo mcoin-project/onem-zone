@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "cmore.json",
+        "type": "string",
+        "menuRef": "/wodaabe/tutorial.json",
+        "header": "** #wodaabe ''more'' **\nDisplays the next chunk."        
+     }, {
+        "type": "end",
+        "ref": "#wodaabe tutorial"
+    }]
+}

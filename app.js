@@ -637,6 +637,10 @@ function serviceSwitch(input, oldContext) {
                     //     context.data.variables = JSON.parse(JSON.stringify(oldContext.variables));
                 }
 
+                // add any new vars from the top of the file
+                checkForVar(context.data, context.data.content[0], input);
+
+
             } else {
                 console.log("invalid json 1");
                 context.response = "Invalid JSON detected: " + fileName;
@@ -1173,6 +1177,11 @@ app.get('/api/getResponse', function(req, res, next) {
     firstChar = moText[0].toLowerCase();
 
     console.log("moText sliced:" + moText.toLowerCase().slice(0, 4));
+
+    // if at the top, then can check for variables
+    if (typeof req.session.onemContext.content !== 'undefined' && req.session.onemContext.indexPos === 0) {
+        checkForVar(req.session.onemContext, req.session.onemContext.content[0], moText);
+    }
 
     // check MO request for reserved verbs or service switching
     switch (true) {

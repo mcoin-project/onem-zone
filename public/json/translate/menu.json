@@ -1,0 +1,28 @@
+{
+    "content": [{
+        "menuRef": "translate/menu.json",
+        "type": "menu",
+       	"header": "** ** #translate **\n Selected Slovak: Ahoj",
+        "footer": "**send option or phrase**", 
+        "content": [{
+            "ref": "translate/addlanguage.json",
+            "type": "linkStatic",
+            "shortcut": "add",
+            "description": "Add new language"
+        }, {
+            "ref": "translate/eng.json",
+            "type": "linkStatic",
+            "shortcut": "eng",
+            "description": "ENG: Hello"
+        }, {
+            "ref": "translate/de.json",
+            "type": "linkStatic",
+            "shortcut": "de",
+            "description": "ENG: Hello"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#translate"
+    }]
+}

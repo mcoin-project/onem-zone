@@ -3,7 +3,7 @@
         "type": "input",
         "menuRef": "/wodaabe/index.json",
         "header": "** User details **",
-        "footer": "send details or \"menu\"",
+        "footer": "** send details or \"menu\" **",
         "content": {
             "type": "string",
             "description": "Male or Female?",

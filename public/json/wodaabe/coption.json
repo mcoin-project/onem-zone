@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "coption.json",
+        "type": "string",
+        "menuRef": "/wodaabe/tutorial.json",
+        "header": "** #wodaabe ''option'' **\nDisplays current options."        
+     }, {
+        "type": "end",
+        "ref": "#wodaabe tutorial"
+    }]
+}

@@ -1,0 +1,12 @@
+{
+    "content": [{
+        "ref": "credits.json",
+        "type": "string",
+        "menuRef": "/wodaabe/index.json",
+        "header": "** #wodaabe credits **\nAuthors:name, name\nCopyright:url"
+        
+     }, {
+        "type": "end",
+        "ref": "#wodaabe tutorial"
+    }]
+}

@@ -3,7 +3,7 @@
         "ref": "index.json",
         "type": "menu",
         "menuRef": "/post/menu.json",
-        "header": "** #post recents **",
+        "header": "** Post recent **",
         "content": [{
             "ref": "/post/view.json",
             "type": "linkDynamic",

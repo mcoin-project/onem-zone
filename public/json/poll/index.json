@@ -1,0 +1,24 @@
+{
+    "content": [{
+        "menuRef": "poll/menu.json",
+        "type": "menu",
+       	"header": "** Poll **\nAre you happy today?",
+        "footer": "Answer to see all results!",
+        "comment": "The first menu will give a simple poll with two options for answers. When the person gives an answer they will get the poll results.",
+        "content": [{
+            "ref": "poll/results.json",
+            "type": "linkStatic",
+            "shortcut": "results",
+            "description": "Yes"
+        }, {
+            "ref": "poll/results.json",
+            "type": "linkStatic",
+            "shortcut": "results",
+            "description": "No"
+        }]
+    },
+    {
+    	"type": "end",
+    	"ref": "#brands"
+    }]
+}

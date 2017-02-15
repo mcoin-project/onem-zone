@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "csize.json",
+        "type": "string",
+        "menuRef": "/wodaabe/tutorial.json",
+        "header": "** #wodaabe ''size'' **\nResets the message size limit. Allowed values: 1, 2, 3, 4, 5."        
+     }, {
+        "type": "end",
+        "ref": "#wodaabe tutorial"
+    }]
+}

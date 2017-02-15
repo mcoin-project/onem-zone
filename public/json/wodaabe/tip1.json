@@ -1,11 +1,11 @@
 {
     "content": [{
-        "ref": "wodaabe/tip1.json",
+        "ref": "tip1.json",
         "type": "menu",
         "menuRef": "#wodaabe",
         "header": "** Help **\nTo see all available services send \"#\" and then choose \"Option\" from the list",
         "content": [{
-            "ref": "#wodaabe/tip2.json",
+            "ref": "wodaabe/tip2.json",
             "type": "linkStatic",
             "description": "Next tip"
         }, {

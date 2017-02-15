@@ -1,0 +1,25 @@
+{
+    "content": [{
+        "ref": "index.json",
+        "type": "menu",
+        "menuRef": "/post/menu.json",
+        "header": "** Post Report **\nReport this post as offensive or inappropriate",
+        "content": [{
+            "ref": "/post/reportconfirm.json",
+            "type": "skip",
+            "description": "Confirm"
+        }, {
+            "ref": "/post/view.json",
+            "type": "linkDynamic",
+            "description": "Back"
+        }]
+   }, {
+        "type": "message",
+        "header": "** #post Report **",
+        "description": "Post <code> was reported as inappropriate or offensive.  If the post is breeches our guidelines, we will take appropriate action"
+    }, {
+
+        "type": "end",
+        "ref": "#post recent"
+    }]
+}

@@ -6,12 +6,12 @@
         "header": "** ONEm id: 111222333444555 **\nCall made 12d ago\nDuration: 30s",
         "comment": "'call made' could also be 'message sent', 'call received', 'message received'",
         "content": [{
-            "ref": "/contacts/add.json",
+            "ref": "#wodaabe",
             "type": "linkStatic",
             "description": "Add to contacts"
         }]
     }, {
         "type": "end",
-        "ref": "/contacts/menu.json"
+        "ref": "#wodaabe"
     }]
 }

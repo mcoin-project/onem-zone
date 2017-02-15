@@ -1,0 +1,17 @@
+{
+    "content": [{
+        "menuRef": "poll/menu.json",
+        "type": "input",
+       	"header": "** Poll Suggest **",
+        "footer":"",
+        "comment": "The first menu will give a simple poll with two options for answers. When the person gives an answer they will get the poll results.",
+       "content": {
+            "type": "string",
+            "description": "What is your (Yes/No) Poll?"
+        }
+    },
+    {
+    	"type": "end",
+    	"ref": "poll/menu.json"
+    }]
+}

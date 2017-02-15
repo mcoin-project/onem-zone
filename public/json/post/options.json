@@ -3,7 +3,7 @@
         "ref": "options.json",
         "type": "menu",
         "menuRef": "/post/menu.json",
-        "header": "** %post title% **\nCode: %code%\nExpires in: %time left%\nRating: %***** %",
+        "header": "** Post Coffee for sale **\nCode: %code%\nExpires in: %time left%\nRating: %***** %",
         "comment": "For post rating, show a number of stars from * to *****\nThe rating is the combined rating score of this post only (not the rating of the poster)\n\n%time left%, (see moment.js), eg:\njust show most relevant time unit (days if >=24 hours)\n(hours if >=1 <=24 hours)\n(mins if >=1 <=59)\n60s = 60 seconds\n1d = 1 day\n6h = 6 hours\n4m = 4 minutes",
         "content": [{
             "ref": "/post/call.json",
@@ -17,6 +17,10 @@
             "ref": "/post/options.json",
             "type": "linkStatic",
             "description": "More posts by %avatar%"
+        }, {
+            "ref": "/post/report.json",
+            "type": "linkStatic",
+            "description": "Report this post"
         }]
     }, {
         "type": "end",

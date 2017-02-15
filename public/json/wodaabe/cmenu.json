@@ -1,0 +1,11 @@
+{
+    "content": [{
+        "ref": "cmenu.json",
+        "type": "string",
+        "menuRef": "/wodaabe/tutorial.json",
+        "header": "** #wodaabe ''menu'' **\nLaunches a menu with all available commands."        
+     }, {
+        "type": "end",
+        "ref": "#wodaabe tutorial"
+    }]
+}

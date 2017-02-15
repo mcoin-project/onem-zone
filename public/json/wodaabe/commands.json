@@ -1,0 +1,53 @@
+{
+    "content": [{
+        "ref": "commands.json",
+        "type": "menu",
+        "menuRef": "/wodaabe/tutorial.json",
+        "header": "** #wodaabe commands **",
+        "content": [{
+            "ref": "wodaabe/cback.json",
+            "type": "linkStatic",
+            "description": "''back''"
+        }, {
+            "ref": "wodaabe/ccredits.json",
+            "type": "linkStatic",
+            "description": "''credits''"
+        }, {
+            "ref": "wodaabe/cmenu.json",
+            "type": "linkStatic",
+            "description": "''menu''"
+        }, {
+            "ref": "wodaabe/cmode.json",
+            "type": "linkStatic",
+            "description": "''mode''"
+        }, {
+            "ref": "wodaabe/cmore.json",
+            "type": "linkStatic",
+            "description": "''more''"
+        }, {
+            "ref": "wodaabe/cnext.json",
+            "type": "linkStatic",
+            "description": "''next''"
+         }, {
+            "ref": "wodaabe/coption.json",
+            "type": "linkStatic",
+            "description": "''option''"
+         }, {
+            "ref": "wodaabe/csize.json",
+            "type": "linkStatic",
+            "description": "''size'' number"
+          }, {
+            "ref": "wodaabe/ctutorial.json",
+            "type": "linkStatic",
+            "description": "''tutorial''"
+          }, {
+            "ref": "wodaabe/cup.json",
+            "type": "linkStatic",
+            "description": "''up''"
+          }]
+     }, 
+     {
+        "type": "end",
+        "ref": "#wodaabe tutorial"
+    }]
+}
