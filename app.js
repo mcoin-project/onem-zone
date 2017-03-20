@@ -147,7 +147,7 @@ app.get('/api/getResponse', function(req, res, next) {
         console.log("pdu:");
         console.log(pdu);
 
-        if (pdu.short_message.length == 0) {
+        if (pdu.short_message.length === 0) {
             console.log("payload");
             mtText = pdu.message_payload;
         } else {
@@ -156,7 +156,9 @@ app.get('/api/getResponse', function(req, res, next) {
         }
         console.log("mtText:" + mtText);
 
-        if (pdu.more_messages_to_send == 0) {
+        console.log("more messages:" + pdu.more_messages_to_send);
+
+        if (pdu.more_messages_to_send === 0) {
 //            alreadySent = true;
             res.json({
          //       mtText: pdu.short_message.message,
