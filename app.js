@@ -135,7 +135,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
     smppSession.on('submit_sm', function(pdu) {
         //  var msgid = getMsgId(); // generate a message_id for this message.
-        console.log("submit_sm received, msgid:" + msgid);
+        console.log("submit_sm received");
         smppSession.send(pdu.response({
             //   message_id: msgid
         }));
