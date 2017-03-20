@@ -168,9 +168,9 @@ function getMsgId(min, max) {
 
 
 var server = http.createServer(app);
-server.listen(app.get('port'), function() {
-    console.log('Express server listening on port ' + app.get('port'));
-});
+//server.listen(app.get('port'), function() {
+//    console.log('Express server listening on port ' + app.get('port'));
+//});
 server.listen(5000);
 
 module.exports = app;
