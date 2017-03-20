@@ -124,6 +124,14 @@ app.get('/api/getResponse', function(req, res, next) {
 
     sendSMS('447725419720', '333', moText);
 
+    smppSession.on('submit_sm', function(pdu) {
+        var msgid = getMsgId; // generate a message_id for this message.
+        console.log("submit_sm received");
+        session.send(pdu.response({
+            message_id: msgid
+        }));
+    });
+
     smppSession.on('deliver_sm', function(pdu) {
         console.log("deliver_sm received" + pdu);
         if (pdu.esm_class == 4) {
