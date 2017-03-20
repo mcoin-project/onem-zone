@@ -104,7 +104,7 @@ function sendSMS(from, to, text) {
         destination_addr: to,
         short_message: text
     }, function(pdu) {
-        console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
+    //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
         if (pdu.command_status == 0) {
             // Message successfully sent
             console.log("message sent:" +pdu.message_id);
