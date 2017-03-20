@@ -104,10 +104,10 @@ function sendSMS(from, to, text) {
         destination_addr: to,
         short_message: text
     }, function(pdu) {
-    //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
+        //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
         if (pdu.command_status == 0) {
             // Message successfully sent
-            console.log("message sent:" +pdu.message_id);
+            console.log("message sent:" + pdu.message_id);
         }
     });
 }
@@ -124,21 +124,17 @@ app.get('/api/getResponse', function(req, res, next) {
 
     sendSMS('447725419720', '333', moText);
 
-    smppSession.on('submit_sm', function(pdu) {
-        var msgid = getMsgId(); // generate a message_id for this message.
-        console.log("msgid:" + msgid);
-
-        session.send(pdu.response({
-            message_id: msgid
-        }));
-
-        console.log("message received:" + pdu.short_message);
-
-        res.json({
-            mtText: pdu.short_message,
-            skip: false
-        });
-
+    session.on('deliver_sm', function(pdu) {
+       // console.log(pdu);
+        if (pdu.esm_class == 4) {
+            var shortMessage = pdu.short_message;
+            console.log('Received DR: %s', shortMessage.trim());
+            session.send(pdu.response());
+            res.json({
+                mtText: pdu.short_message,
+                skip: false
+            });
+        }
     });
 
 });
