@@ -117,7 +117,7 @@ function sendSMS(from, to, text) {
 }
 
 function getMsgId(min, max) {
-    return Math.floor(Math.random() * 4294967295);
+    return Math.floor(Math.random() * 65);
 }
 
 app.get('/api/getResponse', function(req, res, next) {
