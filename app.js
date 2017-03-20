@@ -143,8 +143,10 @@ app.get('/api/getResponse', function(req, res, next) {
         }));
 
         if (pdu.short_message.length == 0) {
+            console.log("payload");
             mtText = pdu.message_payload;
         } else {
+            console.log("short_message");
             mtText = pdu.short_message.message;
         }
         console.log("mtText:" + mtText);
