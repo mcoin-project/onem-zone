@@ -150,10 +150,6 @@ app.get('/api/getResponse', function(req, res, next) {
             var shortMessage = pdu.short_message;
             console.log('Received DR: %s', shortMessage.trim());
             smppSession.send(pdu.response());
-            res.json({
-                mtText: pdu.short_message,
-                skip: false
-            });
         }
     });
 
