@@ -126,7 +126,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
     var alreadySent = false;
-    vat mtText = '';
+    var mtText = '';
 
     var body = { response: '', skip: false }; // container for processRequest
 
