@@ -152,12 +152,12 @@ app.get('/api/getResponse', function(req, res, next) {
             mtText = pdu.message_payload;
         } else {
             console.log("short_message");
-            mtText = pdu.short_message.message;
+            mtText = mtText + pdu.short_message.message;
         }
         console.log("mtText:" + mtText);
 
-        if (!alreadySent) {
-            alreadySent = true;
+        if (pdu.more_messages_to_send == 0) {
+//            alreadySent = true;
             res.json({
          //       mtText: pdu.short_message.message,
                 mtText: mtText,
