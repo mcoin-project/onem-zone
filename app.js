@@ -116,6 +116,10 @@ function sendSMS(from, to, text) {
     });
 }
 
+function getMsgId(min, max) {
+    return Math.floor(Math.random() * 4294967295);
+}
+
 app.get('/api/getResponse', function(req, res, next) {
 
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
@@ -129,8 +133,8 @@ app.get('/api/getResponse', function(req, res, next) {
     sendSMS('447725419720', '333100', moText);
 
     smppSession.on('submit_sm', function(pdu) {
-        var msgid = getMsgId; // generate a message_id for this message.
-        console.log("submit_sm received");
+        var msgid = getMsgId(); // generate a message_id for this message.
+        console.log("submit_sm received, msgid:"+ msgid);
         smppSession.send(pdu.response({
             message_id: msgid
         }));
@@ -168,10 +172,6 @@ app.get('/*', function(req, res, next) {
 // error handling middleware should be loaded after the loading the routes
 if ('development' == app.get('env')) {
     app.use(errorHandler());
-}
-
-function getMsgId(min, max) {
-    return Math.floor(Math.random() * 4294967295);
 }
 
 
