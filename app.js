@@ -126,7 +126,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
     if (moText.length === 0) return res.json({ mtText: undefined });
 
-    sendSMS('447725419720', '333', moText);
+    sendSMS('447725419720', '333100', moText);
 
     smppSession.on('submit_sm', function(pdu) {
         var msgid = getMsgId; // generate a message_id for this message.
