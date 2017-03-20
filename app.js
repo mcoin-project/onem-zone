@@ -142,6 +142,9 @@ app.get('/api/getResponse', function(req, res, next) {
             //   message_id: msgid
         }));
 
+        console.log("pdu:");
+        console.log(pdu);
+
         if (pdu.short_message.length == 0) {
             console.log("payload");
             mtText = pdu.message_payload;
