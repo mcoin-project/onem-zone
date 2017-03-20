@@ -139,7 +139,7 @@ app.get('/api/getResponse', function(req, res, next) {
             //   message_id: msgid
         }));
         res.json({
-            mtText: pdu.short_message,
+            mtText: pdu.short_message.message,
             skip: false
         });
     });
