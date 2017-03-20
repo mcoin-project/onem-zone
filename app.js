@@ -99,7 +99,8 @@ function sendSMS(from, to, text) {
     //    from = '+' + from.toString();
     //    to = '+' + to.toString();
 
-    smppSession.submit_sm({
+   // smppSession.submit_sm({
+    smppSession.deliver_sm({
         source_addr: from,
         source_addr_ton: 2,
         source_addr_npi: 1,
@@ -125,6 +126,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
     var alreadySent = false;
+    vat mtText = '';
 
     var body = { response: '', skip: false }; // container for processRequest
 
@@ -139,11 +141,19 @@ app.get('/api/getResponse', function(req, res, next) {
         smppSession.send(pdu.response({
             //   message_id: msgid
         }));
+
+        if (pdu.short_message.length == 0) {
+            mtText = pdu.message_payload;
+        } else {
+            mtText = pdu.short_message.message;
+        }
+        console.lg("mtText:" + mtText);
+
         if (!alreadySent) {
             alreadySent = true;
             res.json({
-//                mtText: pdu.short_message.message,
-                 mtText: pdu.message_payload,
+         //       mtText: pdu.short_message.message,
+                mtText: mtText,
                 skip: false
             });
         }
