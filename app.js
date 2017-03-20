@@ -133,6 +133,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
     if (moText.length === 0) return res.json({ mtText: undefined });
 
+    console.log("sending SMS");
     sendSMS('447725419720', '333100', moText);
 
     smppSession.on('submit_sm', function(pdu) {
