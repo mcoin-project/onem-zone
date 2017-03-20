@@ -124,6 +124,7 @@ app.get('/api/getResponse', function(req, res, next) {
 
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
+    var alreadySent = false;
 
     var body = { response: '', skip: false }; // container for processRequest
 
@@ -133,15 +134,19 @@ app.get('/api/getResponse', function(req, res, next) {
     sendSMS('447725419720', '333100', moText);
 
     smppSession.on('submit_sm', function(pdu) {
-        var msgid = getMsgId(); // generate a message_id for this message.
+        //  var msgid = getMsgId(); // generate a message_id for this message.
         console.log("submit_sm received, msgid:" + msgid);
         smppSession.send(pdu.response({
             //   message_id: msgid
         }));
-        res.json({
-            mtText: pdu.short_message.message,
-            skip: false
-        });
+        if (!alreadySent) {
+            alreadySent = true;
+            res.json({
+                mtText: pdu.short_message.message,
+                skip: false
+            });
+        }
+
     });
 
     smppSession.on('deliver_sm', function(pdu) {
