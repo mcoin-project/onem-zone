@@ -138,23 +138,19 @@ app.get('/api/getResponse', function(req, res, next) {
 
     smppSession.on('submit_sm', function(pdu) {
         //  var msgid = getMsgId(); // generate a message_id for this message.
-        console.log("submit_sm received");
+        console.log("submit_sm received, sequence_number:" + sequence_number);
         smppSession.send(pdu.response({
             sequence_number: pdu.sequence_number
             //   message_id: msgid
         }));
 
-        console.log("pdu:");
-        console.log(pdu);
-
         if (pdu.short_message.length === 0) {
-            console.log("payload");
+            console.log("** payload being used **");
             mtText = pdu.message_payload;
         } else {
-            console.log("short_message");
             mtText = mtText + pdu.short_message.message;
         }
-        console.log("mtText:" + mtText);
+        // console.log("mtText:" + mtText);
 
         console.log("more messages:" + pdu.more_messages_to_send);
 
