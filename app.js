@@ -158,8 +158,8 @@ app.get('/api/getResponse', function(req, res, next) {
 
         console.log("more messages:" + pdu.more_messages_to_send);
 
-        if (pdu.more_messages_to_send === 0) {
-//            alreadySent = true;
+        if (pdu.more_messages_to_send === 0 && !alreadySent) {
+            alreadySent = true;
             res.json({
          //       mtText: pdu.short_message.message,
                 mtText: mtText,
