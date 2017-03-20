@@ -101,7 +101,11 @@ function sendSMS(from, to, text) {
 
     smppSession.submit_sm({
         source_addr: from,
+        source_addr_ton: 2,
+        source_addr_npi: 1,
         destination_addr: to,
+        destination_addr_ton: 1,
+        destination_addr_npi: 1,
         short_message: text
     }, function(pdu) {
         //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
