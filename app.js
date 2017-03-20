@@ -125,7 +125,7 @@ app.get('/api/getResponse', function(req, res, next) {
     sendSMS('447725419720', '333', moText);
 
     smppSession.on('deliver_sm', function(pdu) {
-       // console.log(pdu);
+        console.log("deliver_sm received" + pdu);
         if (pdu.esm_class == 4) {
             var shortMessage = pdu.short_message;
             console.log('Received DR: %s', shortMessage.trim());
