@@ -147,7 +147,7 @@ app.get('/api/getResponse', function(req, res, next) {
         } else {
             mtText = pdu.short_message.message;
         }
-        console.lg("mtText:" + mtText);
+        console.log("mtText:" + mtText);
 
         if (!alreadySent) {
             alreadySent = true;
