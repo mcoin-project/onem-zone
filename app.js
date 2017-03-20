@@ -110,9 +110,9 @@ function sendSMS(from, to, text) {
         short_message: text
     }, function(pdu) {
         //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
-        if (pdu.command_status == 0) {
+        if (pdu.command_status === 0) {
             // Message successfully sent
-            console.log("message sent:" + pdu.message_id);
+            console.log("message sent:");
         }
     });
 }
@@ -140,10 +140,12 @@ app.get('/api/getResponse', function(req, res, next) {
         //  var msgid = getMsgId(); // generate a message_id for this message.
         console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
-     //   smppSession.send(pdu.response({
-     //       sequence_number: pdu.sequence_number
-            //   message_id: msgid
-     //   }));
+        // smppSession.send(pdu.response({
+        //     sequence_number: pdu.sequence_number
+        //          message_id: msgid
+        //  }));
+
+        smppSession.send(pdu.response());
 
         if (pdu.short_message.length === 0) {
             console.log("** payload being used **");
