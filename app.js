@@ -142,7 +142,8 @@ app.get('/api/getResponse', function(req, res, next) {
         if (!alreadySent) {
             alreadySent = true;
             res.json({
-                mtText: pdu.short_message.message,
+//                mtText: pdu.short_message.message,
+                 mtText: pdu.message_payload,
                 skip: false
             });
         }
