@@ -141,7 +141,7 @@ app.get('/api/getResponse', function(req, res, next) {
         if (pdu.esm_class == 4) {
             var shortMessage = pdu.short_message;
             console.log('Received DR: %s', shortMessage.trim());
-            session.send(pdu.response());
+            smppSession.send(pdu.response());
             res.json({
                 mtText: pdu.short_message,
                 skip: false
