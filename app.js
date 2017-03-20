@@ -96,8 +96,8 @@ function sendSMS(from, to, text) {
     // We need to convert them to String
     // and add `+` before
 
-    from = '+' + from.toString();
-    to = '+' + to.toString();
+//    from = '+' + from.toString();
+//    to = '+' + to.toString();
 
     smppSession.submit_sm({
         source_addr: from,
