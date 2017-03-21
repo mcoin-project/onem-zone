@@ -12,6 +12,7 @@ var fs = require('fs');
 var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
+var firstTime = false;
 
 var app = express();
 
@@ -128,7 +129,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var skip = req.query.skip;
     var alreadySent = false;
     var mtText = '';
-    var firstTime = false;
+
 
     var body = { response: '', skip: false }; // container for processRequest
 
