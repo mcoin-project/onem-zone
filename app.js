@@ -133,6 +133,7 @@ var smppServer = smpp.createServer(function(session) {
                 mtText: mtText,
                 skip: false
             });
+            mtText = '';
         }
 
     });
