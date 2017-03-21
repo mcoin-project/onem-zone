@@ -26,6 +26,7 @@ var routesApi = require('./app_api/routes/index.js');
 var theport = process.env.PORT || 5000;
 
 var smppSession; // the smpp session context saved globally.
+var resArray = [];
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -53,6 +54,10 @@ app.use(function(req, res, next) { //allow cross origin requests
 app.use('/api', routesApi);
 
 var smppServer = smpp.createServer(function(session) {
+
+    var alreadySent = false;
+    var mtText = '';
+    var i, resObj;
 
     smppSession = session; // save the session globally
 
@@ -87,20 +92,65 @@ var smppServer = smpp.createServer(function(session) {
         session.close();
     });
 
+    smppSession.on('submit_sm', function(pdu) {
+        //  var msgid = getMsgId(); // generate a message_id for this message.
+        console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
+
+        // smppSession.send(pdu.response({
+        //     sequence_number: pdu.sequence_number
+        //          message_id: msgid
+        //  }));
+
+        smppSession.send(pdu.response());
+
+        if (pdu.short_message.length === 0) {
+            console.log("** payload being used **");
+            mtText = pdu.message_payload;
+        } else {
+            mtText = mtText + pdu.short_message.message;
+        }
+        // console.log("mtText:" + mtText);
+
+        console.log("more messages:" + pdu.more_messages_to_send);
+
+        // find the matching res object against the msisdn
+
+
+        for (i = 0; i < resArray.length; i++) {
+            if (resArray[i].msisdn === pdu.destination_addr) {
+                resObj = resArray[i].res;
+                break;
+            }
+        }
+        // remove the matching record so we dont reply to it again
+        resArray.splice(i, 1);
+
+        if ((pdu.more_messages_to_send === 0 ||
+                typeof pdu.more_messages_to_send === 'undefined') &&
+            !alreadySent) {
+            alreadySent = true;
+            resObj.json({
+                //       mtText: pdu.short_message.message,
+                mtText: mtText,
+                skip: false
+            });
+        }
+
+    });
+
+    smppSession.on('deliver_sm', function(pdu) {
+        console.log("deliver_sm received" + pdu);
+        if (pdu.esm_class == 4) {
+            var shortMessage = pdu.short_message;
+            console.log('Received DR: %s', shortMessage.trim());
+            smppSession.send(pdu.response());
+        }
+    });
+
 });
 
-smppServer.listen(2775);
-
-
 function sendSMS(from, to, text) {
-    // in this example, from & to are integers
-    // We need to convert them to String
-    // and add `+` before
 
-    //    from = '+' + from.toString();
-    //    to = '+' + to.toString();
-
-    // smppSession.submit_sm({
     smppSession.deliver_sm({
         source_addr: from,
         source_addr_ton: 2,
@@ -124,11 +174,9 @@ function getMsgId(min, max) {
 
 app.get('/api/getResponse', function(req, res, next) {
 
+    var msisdn = '447725419720';
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
-    var alreadySent = false;
-    var mtText = '';
-
 
     var body = { response: '', skip: false }; // container for processRequest
 
@@ -136,50 +184,11 @@ app.get('/api/getResponse', function(req, res, next) {
     if (moText.length === 0) return res.json({ mtText: undefined });
 
     console.log("sending SMS");
-    sendSMS('447725419720', '333100', moText);
+    sendSMS(msisdn, '333100', moText);
 
-    smppSession.on('submit_sm', function(pdu) {
-        //  var msgid = getMsgId(); // generate a message_id for this message.
-        console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
-
-        // smppSession.send(pdu.response({
-        //     sequence_number: pdu.sequence_number
-        //          message_id: msgid
-        //  }));
-
-        smppSession.send(pdu.response());
-
-        if (pdu.short_message.length === 0) {
-            console.log("** payload being used **");
-            mtText = pdu.message_payload;
-        } else {
-            mtText = mtText + pdu.short_message.message;
-        }
-        // console.log("mtText:" + mtText);
-
-        console.log("more messages:" + pdu.more_messages_to_send);
-
-        if ((pdu.more_messages_to_send === 0 ||
-                typeof pdu.more_messages_to_send === 'undefined') &&
-            !alreadySent) {
-            alreadySent = true;
-            res.json({
-                //       mtText: pdu.short_message.message,
-                mtText: mtText,
-                skip: false
-            });
-        }
-
-    });
-
-
-    smppSession.on('deliver_sm', function(pdu) {
-        console.log("deliver_sm received" + pdu);
-        if (pdu.esm_class == 4) {
-            var shortMessage = pdu.short_message;
-            console.log('Received DR: %s', shortMessage.trim());
-            smppSession.send(pdu.response());
-        }
+    resArray.push({
+        msisdn: msisdn,
+        res: res
     });
 
 });
@@ -203,6 +212,7 @@ if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
 
+smppServer.listen(2775);
 
 var server = http.createServer(app);
 //server.listen(app.get('port'), function() {
