@@ -12,7 +12,6 @@ var fs = require('fs');
 var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
-var firstTime = false;
 
 var app = express();
 
@@ -139,44 +138,40 @@ app.get('/api/getResponse', function(req, res, next) {
     console.log("sending SMS");
     sendSMS('447725419720', '333100', moText);
 
-    if (!firstTime) {
-        firstTime = true;
+    smppSession.on('submit_sm', function(pdu) {
+        //  var msgid = getMsgId(); // generate a message_id for this message.
+        console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
+        // smppSession.send(pdu.response({
+        //     sequence_number: pdu.sequence_number
+        //          message_id: msgid
+        //  }));
 
-        smppSession.on('submit_sm', function(pdu) {
-            //  var msgid = getMsgId(); // generate a message_id for this message.
-            console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
+        smppSession.send(pdu.response());
 
-            // smppSession.send(pdu.response({
-            //     sequence_number: pdu.sequence_number
-            //          message_id: msgid
-            //  }));
+        if (pdu.short_message.length === 0) {
+            console.log("** payload being used **");
+            mtText = pdu.message_payload;
+        } else {
+            mtText = mtText + pdu.short_message.message;
+        }
+        // console.log("mtText:" + mtText);
 
-            smppSession.send(pdu.response());
+        console.log("more messages:" + pdu.more_messages_to_send);
 
-            if (pdu.short_message.length === 0) {
-                console.log("** payload being used **");
-                mtText = pdu.message_payload;
-            } else {
-                mtText = mtText + pdu.short_message.message;
-            }
-            // console.log("mtText:" + mtText);
+        if ((pdu.more_messages_to_send === 0 ||
+                typeof pdu.more_messages_to_send === 'undefined') &&
+            !alreadySent) {
+            alreadySent = true;
+            res.json({
+                //       mtText: pdu.short_message.message,
+                mtText: mtText,
+                skip: false
+            });
+        }
 
-            console.log("more messages:" + pdu.more_messages_to_send);
+    });
 
-            if ((pdu.more_messages_to_send === 0 ||
-                    typeof pdu.more_messages_to_send === 'undefined') &&
-                !alreadySent) {
-                alreadySent = true;
-                res.json({
-                    //       mtText: pdu.short_message.message,
-                    mtText: mtText,
-                    skip: false
-                });
-            }
-
-        });
-    }
 
     smppSession.on('deliver_sm', function(pdu) {
         console.log("deliver_sm received" + pdu);
