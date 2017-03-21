@@ -125,8 +125,8 @@ var smppServer = smpp.createServer(function(session) {
         // remove the matching record so we dont reply to it again
         if (i < resArray.length) resArray.splice(i, 1);
 
-        if (pdu.more_messages_to_send === 0 ||
-                typeof pdu.more_messages_to_send === 'undefined') {
+        if (resObj && (pdu.more_messages_to_send === 0 ||
+                typeof pdu.more_messages_to_send === 'undefined')) {
           //  alreadySent = true;
             resObj.json({
                 //       mtText: pdu.short_message.message,
