@@ -87,10 +87,9 @@ var smppServer = smpp.createServer(function(session) {
         session.close();
     });
 
-    smppServer.listen(2775);
-
 });
 
+smppServer.listen(2775);
 
 
 function sendSMS(from, to, text) {
