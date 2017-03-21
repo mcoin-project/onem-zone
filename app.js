@@ -26,6 +26,7 @@ var routesApi = require('./app_api/routes/index.js');
 var theport = process.env.PORT || 5000;
 
 var smppSession; // the smpp session context saved globally.
+var mtText = '';
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -89,6 +90,9 @@ var smppServer = smpp.createServer(function(session) {
 
 
     smppSession.on('submit_sm', function(pdu) {
+
+        var alreadySent = false;
+
         //  var msgid = getMsgId(); // generate a message_id for this message.
         console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
@@ -172,7 +176,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
     var alreadySent = false;
-    var mtText = '';
+
 
     var body = { response: '', skip: false }; // container for processRequest
 
