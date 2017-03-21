@@ -86,8 +86,6 @@ var smppServer = smpp.createServer(function(session) {
         session.send(pdu.response());
         session.close();
     });
-
-});
 smppServer.listen(2775);
 
 
