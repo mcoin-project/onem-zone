@@ -99,7 +99,7 @@ function sendSMS(from, to, text) {
     //    from = '+' + from.toString();
     //    to = '+' + to.toString();
 
-   // smppSession.submit_sm({
+    // smppSession.submit_sm({
     smppSession.deliver_sm({
         source_addr: from,
         source_addr_ton: 2,
@@ -127,6 +127,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var skip = req.query.skip;
     var alreadySent = false;
     var mtText = '';
+    var firstTime = false;
 
     var body = { response: '', skip: false }; // container for processRequest
 
@@ -136,39 +137,44 @@ app.get('/api/getResponse', function(req, res, next) {
     console.log("sending SMS");
     sendSMS('447725419720', '333100', moText);
 
-    smppSession.on('submit_sm', function(pdu) {
-        //  var msgid = getMsgId(); // generate a message_id for this message.
-        console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
+    if (!firstTime) {
+        firstTime = true;
 
-        // smppSession.send(pdu.response({
-        //     sequence_number: pdu.sequence_number
-        //          message_id: msgid
-        //  }));
 
-        smppSession.send(pdu.response());
+        smppSession.on('submit_sm', function(pdu) {
+            //  var msgid = getMsgId(); // generate a message_id for this message.
+            console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
-        if (pdu.short_message.length === 0) {
-            console.log("** payload being used **");
-            mtText = pdu.message_payload;
-        } else {
-            mtText = mtText + pdu.short_message.message;
-        }
-        // console.log("mtText:" + mtText);
+            // smppSession.send(pdu.response({
+            //     sequence_number: pdu.sequence_number
+            //          message_id: msgid
+            //  }));
 
-        console.log("more messages:" + pdu.more_messages_to_send);
+            smppSession.send(pdu.response());
 
-        if ((pdu.more_messages_to_send === 0 ||
-            typeof pdu.more_messages_to_send === 'undefined') &&
-            !alreadySent) {
-            alreadySent = true;
-            res.json({
-         //       mtText: pdu.short_message.message,
-                mtText: mtText,
-                skip: false
-            });
-        }
+            if (pdu.short_message.length === 0) {
+                console.log("** payload being used **");
+                mtText = pdu.message_payload;
+            } else {
+                mtText = mtText + pdu.short_message.message;
+            }
+            // console.log("mtText:" + mtText);
 
-    });
+            console.log("more messages:" + pdu.more_messages_to_send);
+
+            if ((pdu.more_messages_to_send === 0 ||
+                    typeof pdu.more_messages_to_send === 'undefined') &&
+                !alreadySent) {
+                alreadySent = true;
+                res.json({
+                    //       mtText: pdu.short_message.message,
+                    mtText: mtText,
+                    skip: false
+                });
+            }
+
+        });
+    }
 
     smppSession.on('deliver_sm', function(pdu) {
         console.log("deliver_sm received" + pdu);
