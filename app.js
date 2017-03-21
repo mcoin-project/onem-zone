@@ -55,7 +55,7 @@ app.use('/api', routesApi);
 
 var smppServer = smpp.createServer(function(session) {
 
-    var alreadySent = false;
+    // var alreadySent = false;
     var mtText = '';
     var i, resObj;
 
@@ -123,12 +123,11 @@ var smppServer = smpp.createServer(function(session) {
             }
         }
         // remove the matching record so we dont reply to it again
-        resArray.splice(i, 1);
+        if (i < resArray.length) resArray.splice(i, 1);
 
-        if ((pdu.more_messages_to_send === 0 ||
-                typeof pdu.more_messages_to_send === 'undefined') &&
-            !alreadySent) {
-            alreadySent = true;
+        if (pdu.more_messages_to_send === 0 ||
+                typeof pdu.more_messages_to_send === 'undefined') {
+          //  alreadySent = true;
             resObj.json({
                 //       mtText: pdu.short_message.message,
                 mtText: mtText,
