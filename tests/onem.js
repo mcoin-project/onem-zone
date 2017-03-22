@@ -27,25 +27,10 @@ describe('onem test suite', function() {
                         'b Subscription\n' +
                         'c Settings\n' +
                         'd Tutorial\n' +
-                        '<send option>  '
+                        '<send option>'
                     );
                 });
             });
         });
-    });
-    it('should send #post search', function() {
-        element(by.id('sms')).sendKeys('#post search');
-        element(by.id('sms')).sendKeys(protractor.Key.ENTER).then(function() {
-            element.all(by.repeater('obj in results')).then(function(mt) {
-                var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
-                expect(message.getText()).toEqual(
-                    'POST mode activated\n' +
-                    '** Post search **\n' +
-                    'Send post code, user name, any keyword or \"back\"\n' +
-                    '<\"back\">'
-                );
-            });
-        });
-
     });
 });
