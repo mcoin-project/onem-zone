@@ -3,6 +3,6 @@ exports.config = {
 		mid: "\\d{15}"
 	},
     seleniumAddress: 'http://localhost:4444/wd/hub',
-    specs: ['account.js'],
+    specs: ['all.js'],
     resultJsonOutputFile: './result.json'
 };

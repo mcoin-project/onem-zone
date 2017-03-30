@@ -28,7 +28,7 @@ describe('Suite 2 - onem test suite', function() {
             element.all(by.repeater('obj in results')).then(function(mt) {
                 var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
                 expect(message.getText()).toEqual(
-                    'ACCOUNT mode activated\n' +
+                    "ACCOUNT mode activated\n" +                  
                     '** Account menu **\n' +
                     'a mID\n' +
                     'b Subscription\n' +
@@ -39,13 +39,20 @@ describe('Suite 2 - onem test suite', function() {
             });
         });
 
+        var re = new RegExp(
+                    "\\*\\* Account menu \\*\\*\n" +
+                    "default: " + browser.params.mid + "\n" +
+                    "a mID\n" +
+                    "b Subscription\n" +
+                    "c Settings\n" +
+                    "d Tutorial\n" +
+                    "<send option>");
+
         element(by.id('sms')).sendKeys('a');
         element(by.id('sms')).sendKeys(protractor.Key.ENTER).then(function() {
             element.all(by.repeater('obj in results')).then(function(mt) {
                 var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
-                expect(message.getText()).toMatch(
-                    /\*\* Account menu \*\*\ndefault: \d{15}\na mID\nb Subscription\nc Settings\nd Tutorial\n<send option>/
-                );
+                expect(message.getText()).toMatch(re);
             });
         });
     });
