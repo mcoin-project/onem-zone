@@ -28,7 +28,7 @@ describe('Suite 2 - onem test suite', function() {
             element.all(by.repeater('obj in results')).then(function(mt) {
                 var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
                 expect(message.getText()).toEqual(
-                    "ACCOUNT mode activated\n" +                  
+                    "ACCOUNT mode activated\n" +
                     '** Account menu **\n' +
                     'a mID\n' +
                     'b Subscription\n' +
