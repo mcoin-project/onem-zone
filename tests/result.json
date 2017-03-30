@@ -1,0 +1,11 @@
+[
+  {
+    "description": "2.2 - should execute the #account menu",
+    "assertions": [
+      {
+        "passed": true
+      }
+    ],
+    "duration": 2366
+  }
+]
