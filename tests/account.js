@@ -40,7 +40,7 @@ describe('Suite 2 - onem test suite', function() {
 
     });
 
-    it('2.2.2 - should execute the #account subscription', function() {
+    it('2.2.2.1 - #account - should execute the #account subscription', function() {
 
         re = new RegExp(
             "\\*\\* Account menu \\*\\*\n" +
@@ -62,7 +62,7 @@ describe('Suite 2 - onem test suite', function() {
 
     });
 
-    it('2.2.3 - should execute the #account settings', function() {
+    it('2.2.3.1 - #account - should set the account full name', function() {
 
         re = new RegExp(
             "\\*\\* Account settings \\*\\*\n" +
@@ -80,6 +80,47 @@ describe('Suite 2 - onem test suite', function() {
             });
         });
 
-    });
+        element(by.id('sms')).sendKeys('a');
+        element(by.id('sms')).sendKeys(protractor.Key.ENTER).then(function() {
+            element.all(by.repeater('obj in results')).then(function(mt) {
+                var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
+                expect(message.getText()).toEqual(
+                    "** Account full name **\n" +
+                    "This information is used for your account setup and recovery\n" +
+                    "Send first name"
+                );
 
+            });
+        });
+
+        element(by.id('sms')).sendKeys('Chris');
+        element(by.id('sms')).sendKeys(protractor.Key.ENTER).then(function() {
+            element.all(by.repeater('obj in results')).then(function(mt) {
+                var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
+                expect(message.getText()).toEqual(
+                    "** Account full name **\n" +
+                    "Send last name"
+                );
+
+            });
+        });
+
+        element(by.id('sms')).sendKeys('Horn');
+        element(by.id('sms')).sendKeys(protractor.Key.ENTER).then(function() {
+            element.all(by.repeater('obj in results')).then(function(mt) {
+                var message = mt[mt.length - 1].element(by.className('sms-mt-container'));
+                expect(message.getText()).toEqual(
+                    "** Account full name **\n" +
+                    "a Confirm\n" +
+                    "b Back\n" +
+                    "You selected:\n" +
+                    "c Chris\n" +
+                    "d Horn\n" +
+                    "<send option>"
+                );
+            });
+        });
+
+        
+    });
 });

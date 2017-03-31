@@ -507,6 +507,7 @@ ONEmSimModule.controller('mainController', [
         $scope.results = DataModel.getResults();
         $scope.logs = DataModel.getLogs();
         $scope.responsesCount = 0;
+        $scope.msisdn = 447725419720;
 
         $scope.resetComments = function() {
             $scope.comments = DataModel.clearComments;
@@ -526,7 +527,7 @@ ONEmSimModule.controller('mainController', [
             };
             $scope.results = DataModel.addResult(inputObj);
 
-            var response = SmsHandler.getResponse({ moText: $scope.smsText }, function() {
+            var response = SmsHandler.getResponse({ msisdn: $scope.msisdn, moText: $scope.smsText }, function() {
 
                 if (typeof response.mtText === 'undefined' || response.mtText.length === 0) return;
 

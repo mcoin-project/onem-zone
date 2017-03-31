@@ -174,7 +174,7 @@ function getMsgId(min, max) {
 
 app.get('/api/getResponse', function(req, res, next) {
 
-    var msisdn = '447725419720';
+    var msisdn = '447725419720' || req.query.msisdn.trim();
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
 

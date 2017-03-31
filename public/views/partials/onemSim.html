@@ -3,12 +3,18 @@
         <div class="visible-lg visible-md onem-logo">
             <a href="http://www.onem.com">
                 <img ng-src="{{'/images/onem-logo.svg'}}" alt="" />
-                <p>Simulator</p>
+                <p>AutoTest</p>
             </a>
         </div>
     </div>
-    <div class="col-lg-4 col-md-4 col-lg-offset-2 col-md-offset-2">
+    <div class="col-lg-5 col-md-5 col-lg-offset-1 col-md-offset-1">
         <div class="onem-controls-container">
+            <div class="onem-label">
+                <strong>Msisdn:</strong>
+            </div>
+            <div class="onem-label">
+                <input ng-model="msisdn" type="text" placeholder="{{msisdn}}" class="form-control" id="msisdn" autocomplete="col-md-offset-1">
+            </div>
             <div class="onem-controls checkbox">
                 <label>
                     <input type="checkbox" ng-model="smsLength" ng-init="smsLength=true"> SMS Length

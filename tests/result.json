@@ -6,7 +6,7 @@
         "passed": true
       }
     ],
-    "duration": 2393
+    "duration": 2313
   },
   {
     "description": "2.2.2 - should execute the #account subscription",
@@ -15,7 +15,7 @@
         "passed": true
       }
     ],
-    "duration": 1113
+    "duration": 1023
   },
   {
     "description": "2.2.3 - should execute the #account settings",
@@ -24,6 +24,6 @@
         "passed": true
       }
     ],
-    "duration": 1016
+    "duration": 4256
   }
 ]
