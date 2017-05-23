@@ -184,7 +184,7 @@ app.get('/api/getResponse', function(req, res, next) {
     if (moText.length === 0) return res.json({ mtText: undefined });
 
     console.log("sending SMS");
-    sendSMS(msisdn, '333100', moText);
+    sendSMS(msisdn, '444100', moText);
 
     resArray.push({
         msisdn: msisdn,
