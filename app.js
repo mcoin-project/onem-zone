@@ -158,6 +158,7 @@ function sendSMS(from, to, text) {
         destination_addr: to,
         destination_addr_ton: 1,
         destination_addr_npi: 1,
+        data_coding: 8,
         short_message: text
     }, function(pdu) {
         //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
