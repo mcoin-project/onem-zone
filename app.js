@@ -35,6 +35,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// JsSIP is not designed to use "express" library. To be loaded we need its path:
+app.use(express.static(path.join(__dirname, 'node_modules/jssip/dist')));
+
 app.use(session({
     secret: 'aut0test',
     resave: false,
@@ -151,6 +154,15 @@ var smppServer = smpp.createServer(function(session) {
 
 function sendSMS(from, to, text) {
 
+    //As we need UCS-2, a conversion is needed from ASCII to UCS-2:
+    var buffer = new Buffer(2 * text.length);
+    //This is for writing the UTF-16-BE in the message:
+    for (var i=0; i<text.length; i++) {
+        buffer.writeUInt16BE(text.charCodeAt(i),2*i);
+    };
+    ////This is for writing the text in the message as it is (just in case we need it):
+    //buffer.write(text,"ascii");
+
     smppSession.deliver_sm({
         source_addr: from,
         source_addr_ton: 2,
@@ -159,7 +171,8 @@ function sendSMS(from, to, text) {
         destination_addr_ton: 1,
         destination_addr_npi: 1,
         data_coding: 8,
-        short_message: text
+        //short_message: text
+        short_message: buffer
     }, function(pdu) {
         //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
         if (pdu.command_status === 0) {
