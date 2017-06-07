@@ -13,8 +13,9 @@ var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
 var basicAuth = require('basic-auth');
-
 var app = express();
+
+require('dotenv').load();
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
@@ -34,20 +35,20 @@ var resArray = [];
 var auth = function (req, res, next) {
   function unauthorized(res) {
     res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
-    return res.send(401);
-  };
+    return res.sendStatus(401);
+  }
 
   var user = basicAuth(req);
 
   if (!user || !user.name || !user.pass) {
     return unauthorized(res);
-  };
+  }
 
   if (user.name === username && user.pass === password) {
     return next();
   } else {
     return unauthorized(res);
-  };
+  }
 };
 
 
