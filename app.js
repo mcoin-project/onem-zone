@@ -12,6 +12,7 @@ var fs = require('fs');
 var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
+var basicAuth = require('basic-auth');
 
 var app = express();
 
@@ -24,9 +25,31 @@ var routesApi = require('./app_api/routes/index.js');
 // The http server will listen to an appropriate port, or default to
 // port 5000.
 var theport = process.env.PORT || 5000;
+var username = process.env.USERNAME;
+var password = process.env.PASSWORD;
 
 var smppSession; // the smpp session context saved globally.
 var resArray = [];
+
+var auth = function (req, res, next) {
+  function unauthorized(res) {
+    res.set('WWW-Authenticate', 'Basic realm=Authorization Required');
+    return res.send(401);
+  };
+
+  var user = basicAuth(req);
+
+  if (!user || !user.name || !user.pass) {
+    return unauthorized(res);
+  };
+
+  if (user.name === username && user.pass === password) {
+    return next();
+  } else {
+    return unauthorized(res);
+  };
+};
+
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -207,15 +230,15 @@ app.get('/api/getResponse', function(req, res, next) {
 
 });
 
-app.get('/', function(req, res, next) {
+app.get('/', auth, function(req, res, next) {
     res.sendFile('/public/views/index.html', { root: __dirname });
 });
 
-app.get('*', function(req, res) {
+app.get('*', auth, function(req, res) {
     res.sendFile('/public/views/index.html', { root: __dirname });
 });
 
-app.get('/*', function(req, res, next) {
+app.get('/*', auth, function(req, res, next) {
     console.log("caught default route");
     // Just send the index.html for other files to support HTML5Mode
     res.sendFile('/public/views/index.html', { root: __dirname });
