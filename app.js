@@ -112,7 +112,6 @@ var smppServer = smpp.createServer(function(session) {
                 break;
             }
         }
-        if (msisdnFound) resArray.splice(i, 1);
 
         if (msisdnFound && pdu.more_messages_to_send === 1) {
             resObj.req.session.message = resObj.req.session.message + mtText;
@@ -122,6 +121,7 @@ var smppServer = smpp.createServer(function(session) {
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
+                resArray.splice(i, 1);
                 var resultText = resObj.req.session.message + mtText;
                 resObj.req.session.message = '';
                 resObj.res.json({
