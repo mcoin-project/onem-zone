@@ -122,12 +122,13 @@ var smppServer = smpp.createServer(function(session) {
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
+                var resultText = resObj.req.session.message + mtText;
                 resObj.req.session.message = '';
                 resObj.res.json({
-                    mtText: mtText,
+                    mtText: resultText,
                     skip: false
                 });
-            } catch(err) {
+            } catch (err) {
                 console.log("oops no session:" + err);
             }
         }
