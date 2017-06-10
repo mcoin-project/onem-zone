@@ -21,8 +21,8 @@ require('dotenv').load();
 var routesApi = require('./app_api/routes/index.js');
 
 var theport = process.env.PORT || 5000;
-var username = process.env.USERNAME;  // used for web basic auth
-var password = process.env.PASSWORD;  // used for web basic auth
+var username = process.env.USERNAME; // used for web basic auth
+var password = process.env.PASSWORD; // used for web basic auth
 var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 var smppPassword = process.env.SMPP_PASSWORD || "password";
 
@@ -102,20 +102,27 @@ var smppServer = smpp.createServer(function(session) {
 
         console.log("more messages:" + pdu.more_messages_to_send);
 
+        var msisdnFound = false;
+
         for (i = 0; i < resArray.length; i++) {
             if (resArray[i].msisdn === pdu.destination_addr) {
                 resObj = resArray[i].res;
+                msisdnFound = true;
                 break;
             }
         }
         if (i < resArray.length) resArray.splice(i, 1);
 
-        if (resObj && (pdu.more_messages_to_send === 0 ||
+        if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
-            resObj.json({
-                mtText: mtText,
-                skip: false
-            });
+            try {
+                resObj.json({
+                    mtText: mtText,
+                    skip: false
+                });
+            } catch(err) {
+                console.log("oops no session:" + err);
+            }
             mtText = '';
         }
     });
@@ -134,8 +141,8 @@ var smppServer = smpp.createServer(function(session) {
 function sendSMS(from, to, text) {
 
     var buffer = new Buffer(2 * text.length);
-    for (var i=0; i<text.length; i++) {
-        buffer.writeUInt16BE(text.charCodeAt(i),2*i);
+    for (var i = 0; i < text.length; i++) {
+        buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
     };
 
     smppSession.deliver_sm({
@@ -206,4 +213,3 @@ var server = http.createServer(app);
 server.listen(5000);
 
 module.exports = app;
-
