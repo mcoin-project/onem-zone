@@ -114,6 +114,11 @@ var smppServer = smpp.createServer(function(session) {
         }
         if (msisdnFound) resArray.splice(i, 1);
 
+        if (msisdnFound && pdu.more_messages_to_send === 1) {
+            resObj.req.session.message = resObj.req.session.message + mtText;
+            return;
+        }
+
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
@@ -125,10 +130,6 @@ var smppServer = smpp.createServer(function(session) {
             } catch(err) {
                 console.log("oops no session:" + err);
             }
-        }
-
-        if (msisdnFound && pdu.more_messages_to_send === 1) {
-            resObj.req.session.message = resObj.req.session.message + mtText;
         }
 
     });
