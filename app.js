@@ -41,7 +41,7 @@ app.use(session({
     resave: false,
     store: new FileStore,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 360000 } // 24 hours
+    cookie: { maxAge: 365 * 2 * 24 * 60 * 60 * 1000 } // 2 years
 }));
 
 app.use(function(req, res, next) { //allow cross origin requests
