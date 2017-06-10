@@ -212,20 +212,25 @@ function getMsgId(min, max) {
 
 app.get('/api/getResponse', function(req, res, next) {
 
-    var msisdn = '447725419720' || req.query.msisdn.trim();
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
 
     var body = { response: '', skip: false }; // container for processRequest
 
+    if (typeof req.session.onemContext === 'undefined') { // must be first time, or expired
+        var msisdn = moment().format('YYMMDDHHMMSS');
+        console.log("msisdn:" + msisdn);
+
+        req.session.onemContext = { msisdn: msisdn };
+    }
 
     if (moText.length === 0) return res.json({ mtText: undefined });
 
     console.log("sending SMS");
-    sendSMS(msisdn, '444100', moText);
+    sendSMS(req.session.onemContext.msisdn, '444100', moText);
 
     resArray.push({
-        msisdn: msisdn,
+        msisdn: req.session.onemContext.msisdn,
         res: res
     });
 
