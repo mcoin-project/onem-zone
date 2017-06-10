@@ -36,8 +36,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: 'aut0test',
-    resave: false,
-    saveUninitialized: true,
     cookie: { maxAge: 24 * 360000 } // 24 hours
 }));
 
