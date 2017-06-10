@@ -34,8 +34,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.set('trust proxy', 1); // trust first proxy
+
 app.use(session({
     secret: 'aut0test',
+    resave: false,
+    saveUninitialized: true,
     cookie: { maxAge: 24 * 360000 } // 24 hours
 }));
 
