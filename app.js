@@ -105,6 +105,7 @@ var smppServer = smpp.createServer(function(session) {
 
         var msisdnFound = false;
 
+        // retrieve the session information based on the msisdn
         for (i = 0; i < resArray.length; i++) {
             if (resArray[i].msisdn === pdu.destination_addr) {
                 resObj = resArray[i];
@@ -113,11 +114,17 @@ var smppServer = smpp.createServer(function(session) {
             }
         }
 
+        // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (msisdnFound && pdu.more_messages_to_send === 1) {
             resObj.req.session.message = resObj.req.session.message + mtText;
             return;
         }
 
+        // if this is the last message in the sequence, we can:
+        //   1) delete the session
+        //   2) retrieve the saved/concatenated message string
+        //   3) reset the message string to blank
+        //   4) send the result back to the client using the saved session
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
