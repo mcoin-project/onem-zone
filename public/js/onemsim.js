@@ -5,10 +5,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'ngRoute',
     'ngResource',
     'ngMessages',
-    //  'ngAnimate',
     'toastr',
     'angularMoment',
-    //  'matchMedia',
     'ngFileUpload',
     'FileManagerApp',
     'dndLists'
@@ -117,8 +115,6 @@ ONEmSimModule.directive('scrollBottom', function() {
         link: function(scope, element) {
             scope.$watchCollection('scrollBottom', function(newValue) {
                 if (newValue) {
-                    //      $(element).scrollTop($(element)[0].scrollHeight);
-
                     var scrollHeight = $(element)[0].scrollHeight;
                     $(element).animate({ scrollTop: scrollHeight }, 300);
                 }
@@ -306,9 +302,6 @@ ONEmSimModule.controller('buildController', [
         };
 
 
-        //
-        // On refresh or load, it there is an item parameter, then load that into the model and put all the "control" attributes in place
-        //
         if ($routeParams.item) {
 
             $scope.filePath = $routeParams.item;
@@ -484,7 +477,6 @@ ONEmSimModule.controller('buildController', [
                 delete modelCopy[i].btnStyle;
                 if ($scope.models.content[i].type !== 'end') delete modelCopy[i].ref;
             }
-            // put the service ref in pos 0
             if ($scope.models.content.length > 1) {
                 modelCopy[0].ref = $scope.models.ref;
             }
@@ -502,108 +494,6 @@ ONEmSimModule.controller('mainController', [
     function($scope, $http, toastr, SmsHandler, DataModel) {
 
         console.log("mainController initialising");
-
-        var audioElement = document.getElementById('myAudio');
-
-        var rtp_session = null;
-        var isInCall = 0;
-        var isIncomingCall = 0;
-        var globalSession = null;
-
-        var socket = new JsSIP.WebSocketInterface('ws://zoiper.dhq.onem');
-
-        var configuration = {
-            'sockets'  : [ socket ],
-            'uri'      : 'sip:447725419720@zoiper.dhq.onem',
-            'password' : 'ONEmP@$$w0rd2016'
-        };
-
-        var ua = new JsSIP.UA(configuration);
-
-        // For debug run this in the browser's console and reload the page:
-        // JsSIP.debug.enable('JsSIP:*');
-
-        // Register callbacks to desired call events
-        var eventHandlers = {
-            'progress'  : function(e) {
-                console.log('eventHandlers - progress');
-            },
-            'failed'    : function(e) {
-                console.log('eventHandlers - failed');
-                audioElement.pause();
-            },
-            'ended'     : function(e) {
-                console.log('eventHandlers - ended');
-                audioElement.pause();
-            },
-            'confirmed' : function(e) {
-                console.log('eventHandlers - confirmed');
-            },
-            'addstream' : function(e) {
-                console.log('eventHandlers - addstream');
-            }
-        };
-
-        var options = {
-            'eventHandlers'        : eventHandlers,
-            'sessionTimersExpires' : 600,
-            'mediaConstraints'     : { 'audio' : true, 'video' : false } //,
-        };
-
-        ua.on('newRTCSession', function(data){
-            console.log('newRTCSession');
-            //var session = data.session; //session pointer
-            globalSession = data.session; //session pointer
-
-            isIncomingCall = 1;
-            button.innerHTML = "Answer the call!";
-
-            //Play ring tone:
-            audioElement.src = "/sounds/old_british_phone.wav";
-            audioElement.play();
-
-            if(globalSession.direction === "incoming"){
-                //incoming call here:
-                globalSession.on("accepted",function(){
-                    console.log('newRTCSession - incoming - accepted');
-                    //audioElement.src = window.URL.createObjectURL(session.connection.getRemoteStreams()[0]);
-                    audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                    audioElement.play();
-                    isInCall = 1;
-                    button.innerHTML = "End the call!";
-                });
-                globalSession.on("ended",function(e){
-                    console.log('newRTCSession - incoming - ended');
-                    audioElement.pause();
-                });
-                globalSession.on("failed",function(e){
-                    console.log('newRTCSession - incoming - failed');
-                    audioElement.pause();
-                });
-            };
-        });
-
-        ua.start();
-
-        // Answer or end the call:
-        button.addEventListener ("click", function(){
-            if ( isInCall == 1) {
-                globalSession.terminate();
-                console.log("Call ended!");
-                isInCall = 0;
-                isIncomingCall = 0;
-                button.innerHTML = "Idle";
-                audioElement.pause();
-            }
-            else {
-                if ( isIncomingCall == 1 ) {
-                    globalSession.answer(options);
-                    console.log("Call answered!");
-                    button.innerHTML = "End the call!";
-                    isInCall = 1;
-                };
-            };
-        });
 
         $scope.comments = DataModel.getComments();
         $scope.results = DataModel.getResults();
@@ -652,7 +542,6 @@ ONEmSimModule.controller('mainController', [
                     console.log("logs.length:" + $scope.logs.length);
                 }
 
-                // simulate an unsocilicted MT message and call another Get request
                 if (response.skip) {
                     console.log("skipping");
                     var result = SmsHandler.getResponse({ skip: true }, function() {
@@ -696,12 +585,6 @@ ONEmSimModule.config(['fileManagerConfigProvider',
             builder: true,
             tplPath: 'tpl/templates',
             showSizeForDirectories: false,
-            // pickCallback: function(item) {
-            //     var msg = 'Picked %s "%s" for external use'
-            //         .replace('%s', item.type)
-            //         .replace('%s', item.fullPath());
-            //     window.alert(msg);
-            // },
 
             allowedActions: angular.extend(defaults.allowedActions, {
                 pickFiles: true,
@@ -717,3 +600,4 @@ ONEmSimModule.config(['fileManagerConfigProvider',
         });
     }
 ]);
+
