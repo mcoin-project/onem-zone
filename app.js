@@ -161,7 +161,7 @@ app.get('/api/getResponse', function(req, res, next) {
     var skip = req.query.skip;
     var body = { response: '', skip: false };
 
-    if (typeof req.session.onemContext === 'undefined') { // must be first time, or expired
+    if (req.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
         console.log("msisdn:" + msisdn);
 
