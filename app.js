@@ -19,8 +19,10 @@ require('dotenv').load();
 var routesApi = require('./app_api/routes/index.js');
 
 var theport = process.env.PORT || 5000;
-var username = process.env.USERNAME;
-var password = process.env.PASSWORD;
+var username = process.env.USERNAME;  // used for web basic auth
+var password = process.env.PASSWORD;  // used for web basic auth
+var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
+var smppPassword = process.env.SMPP_PASSWORD || "password";
 
 var smppSession;
 var resArray = [];
@@ -59,7 +61,7 @@ var smppServer = smpp.createServer(function(session) {
     session.on('bind_transceiver', function(pdu) {
         console.log('Bind request received, system_id:' + pdu.system_id + ' password:' + pdu.password);
         session.pause();
-        if (!(pdu.system_id == "ONEmSim" && pdu.password == '0N3mS1mp')) {
+        if (!(pdu.system_id == smppSystemId && pdu.password == smppPassword)) {
             session.send(pdu.response({
                 command_status: smpp.ESME_RBINDFAIL
             }));
@@ -155,20 +157,24 @@ function getMsgId(min, max) {
 
 app.get('/api/getResponse', function(req, res, next) {
 
-    var msisdn = '447725419720' || req.query.msisdn.trim();
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
-
     var body = { response: '', skip: false };
 
+    if (typeof req.session.onemContext === 'undefined') { // must be first time, or expired
+        var msisdn = moment().format('YYMMDDHHMMSS');
+        console.log("msisdn:" + msisdn);
+
+        req.session.onemContext = { msisdn: msisdn };
+    }
 
     if (moText.length === 0) return res.json({ mtText: undefined });
 
     console.log("sending SMS");
-    sendSMS(msisdn, '444100', moText);
+    sendSMS(req.session.onemContext.msisdn, '444100', moText);
 
     resArray.push({
-        msisdn: msisdn,
+        msisdn: req.session.onemContext.msisdn,
         res: res
     });
 
