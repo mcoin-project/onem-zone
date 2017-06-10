@@ -13,6 +13,8 @@ var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
 var app = express();
+var FileStore = require('session-file-store')(session);
+
 
 require('dotenv').load();
 
@@ -34,11 +36,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.set('trust proxy', 1); // trust first proxy
-
 app.use(session({
     secret: 'aut0test',
     resave: false,
+    store: new FileStore,
     saveUninitialized: true,
     cookie: { maxAge: 24 * 360000 } // 24 hours
 }));
