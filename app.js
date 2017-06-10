@@ -89,6 +89,7 @@ var smppServer = smpp.createServer(function(session) {
     });
 
     smppSession.on('submit_sm', function(pdu) {
+
         console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
         smppSession.send(pdu.response());
@@ -97,7 +98,7 @@ var smppServer = smpp.createServer(function(session) {
             console.log("** payload being used **");
             mtText = pdu.message_payload;
         } else {
-            mtText = mtText + pdu.short_message.message;
+            mtText = pdu.short_message.message;
         }
 
         console.log("more messages:" + pdu.more_messages_to_send);
@@ -116,6 +117,7 @@ var smppServer = smpp.createServer(function(session) {
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
+                resObj.session.message = '';
                 resObj.json({
                     mtText: mtText,
                     skip: false
@@ -123,8 +125,12 @@ var smppServer = smpp.createServer(function(session) {
             } catch(err) {
                 console.log("oops no session:" + err);
             }
-            mtText = '';
         }
+
+        if (msisdnFound && pdu.more_messages_to_send === 1) {
+            resObj.session.message = resObj.session.message + mtText;
+        }
+
     });
 
     smppSession.on('deliver_sm', function(pdu) {
