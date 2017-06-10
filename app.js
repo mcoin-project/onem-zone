@@ -107,18 +107,18 @@ var smppServer = smpp.createServer(function(session) {
 
         for (i = 0; i < resArray.length; i++) {
             if (resArray[i].msisdn === pdu.destination_addr) {
-                resObj = resArray[i].res;
+                resObj = resArray[i];
                 msisdnFound = true;
                 break;
             }
         }
-        if (i < resArray.length) resArray.splice(i, 1);
+        if (msisdnFound) resArray.splice(i, 1);
 
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
-                resObj.session.message = '';
-                resObj.json({
+                resObj.req.session.message = '';
+                resObj.res.json({
                     mtText: mtText,
                     skip: false
                 });
@@ -128,7 +128,7 @@ var smppServer = smpp.createServer(function(session) {
         }
 
         if (msisdnFound && pdu.more_messages_to_send === 1) {
-            resObj.session.message = resObj.session.message + mtText;
+            resObj.req.session.message = resObj.req.session.message + mtText;
         }
 
     });
@@ -149,7 +149,7 @@ function sendSMS(from, to, text) {
     var buffer = new Buffer(2 * text.length);
     for (var i = 0; i < text.length; i++) {
         buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
-    };
+    }
 
     smppSession.deliver_sm({
         source_addr: from,
@@ -191,7 +191,8 @@ app.get('/api/getResponse', function(req, res, next) {
 
     resArray.push({
         msisdn: req.session.onemContext.msisdn,
-        res: res
+        res: res,
+        req: req
     });
 
 });
