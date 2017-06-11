@@ -1,7 +1,7 @@
 var express = require('express');
 var app = require('express')();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server, { path: '/sockets' }).listen(server);
+var io = require('socket.io')(server);
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -26,6 +26,7 @@ var username = process.env.USERNAME; // used for web basic auth
 var password = process.env.PASSWORD; // used for web basic auth
 var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 var smppPassword = process.env.SMPP_PASSWORD || "password";
+var smppPort = process.env.SMPP_PORT || 2775;
 
 var smppSession;
 var resArray = [];
@@ -245,8 +246,8 @@ if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
 
-smppServer.listen(2775);
-server.listen(5000);
+smppServer.listen(smppPort);
+server.listen(theport);
 //io.listen(http);
 
 module.exports = app;
