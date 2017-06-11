@@ -523,6 +523,7 @@ ONEmSimModule.controller('mainController', [
 
         $scope.$on('socket:error', function(ev, data) {
             console.log("socket error:" + ev);
+            console.log(ev);
             console.log(data);
         });
 
