@@ -542,7 +542,7 @@ ONEmSimModule.controller('mainController', [
 
             var outputObj = {
                 type: "mt",
-                value: data
+                value: data.mtText
             };
 
             $scope.results = DataModel.addResult(outputObj);
