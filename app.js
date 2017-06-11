@@ -1,6 +1,6 @@
 var express = require('express');
 var app = require('express')();
-var http = require('http').Server(app);
+var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var logger = require('morgan');
 var path = require('path');
@@ -247,6 +247,5 @@ if ('development' == app.get('env')) {
 
 smppServer.listen(2775);
 http.listen(5000);
-io.listen(5000);
 
 module.exports = app;
