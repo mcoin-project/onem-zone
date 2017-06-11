@@ -125,7 +125,7 @@ var smppServer = smpp.createServer(function(session) {
                 break;
             }
         }
-        resObj.mtText = resObj.mtText + mtText;
+        if (msisdnFound) resObj.mtText = resObj.mtText + mtText;
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (msisdnFound && pdu.more_messages_to_send === 1) {
