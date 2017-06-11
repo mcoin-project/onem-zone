@@ -183,6 +183,8 @@ function sendSMS(from, to, text) {
 
 io.on('connection', function(socket) {
 
+    console.log("connection received");
+
     if (!socket.handshake.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
         console.log("msisdn:" + msisdn);
