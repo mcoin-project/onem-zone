@@ -1,7 +1,7 @@
 var express = require('express');
 var app = require('express')();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server, {path: '/sockets'});
+var io = require('socket.io')(server);
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -15,7 +15,7 @@ var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
 var FileStore = require('session-file-store')(session);
-var sharedsession = require("express-socket.io-session");
+// var sharedsession = require("express-socket.io-session");
 
 require('dotenv').load();
 
@@ -38,18 +38,18 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
+var express_middleware = session({
     secret: 'aut0test',
     resave: true,
     store: new FileStore,
     saveUninitialized: true,
     cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
-}));
+});
 
-// Share session with io sockets
-io.use(sharedsession(session, {
-    autoSave: true
-}));
+//Use of Express-Session as Middleware    
+io.use(function(socket, next) {
+    express_middleware(socket.handshake, {}, next);
+});
 
 app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -189,7 +189,7 @@ io.on('connection', function(socket) {
     if (!socket.handshake.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
         console.log("msisdn:" + msisdn);
-        socket.handshake.onemContext = { msisdn: msisdn };
+        socket.handshake.session.onemContext = { msisdn: msisdn };
         socket.handshake.session.save();
     }
 

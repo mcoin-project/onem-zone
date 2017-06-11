@@ -93,7 +93,7 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 ONEmSimModule.factory('Socket', function(socketFactory) {
-    var myIoSocket = io.connect('/sockets');
+    var myIoSocket = io.connect('localhost:5000');
 
     var mySocket = socketFactory({
         ioSocket: myIoSocket
