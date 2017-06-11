@@ -512,7 +512,7 @@ ONEmSimModule.controller('mainController', [
 
         console.log("mainController initialising");
 
-        Socket.forward('MT SMS', $scope);
+        Socket.forward('socket:MT SMS', $scope);
 
         $scope.comments = DataModel.getComments();
         $scope.results = DataModel.getResults();
