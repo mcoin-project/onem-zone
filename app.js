@@ -46,6 +46,8 @@ var express_middleware = session({
     cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
 });
 
+app.use(session);
+
 //Use of Express-Session as Middleware    
 io.use(function(socket, next) {
     express_middleware(socket.handshake, {}, next);
