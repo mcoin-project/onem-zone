@@ -122,10 +122,10 @@ var smppServer = smpp.createServer(function(session) {
                 break;
             }
         }
+        resObj.mtText = resObj.mtText + mtText;
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (msisdnFound && pdu.more_messages_to_send === 1) {
-            resObj.mtText = resObj.mtText + mtText;
             return;
         }
 
@@ -144,7 +144,7 @@ var smppServer = smpp.createServer(function(session) {
                 resArray.splice(i, 1);
                 var resultText = resObj.mtText + mtText;
                 resObj.mtText = '';
-                console.log("trying response: "+ resultText);
+                console.log("trying response: " + resultText);
                 resObj.socket.emit('SMS MT', "response");
 
             } catch (err) {
