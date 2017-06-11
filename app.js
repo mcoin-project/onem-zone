@@ -206,7 +206,8 @@ io.on('connection', function(socket) {
 
         var moRecord = {
             msisdn: socket.handshake.session.onemContext.msisdn,
-            socket: socket
+            socket: socket,
+            mtText: ''
         };
 
         resArray.push(moRecord);
