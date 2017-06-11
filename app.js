@@ -1,7 +1,7 @@
 var express = require('express');
 var app = require('express')();
-var http = require('http').createServer(app);
-var io = require('socket.io')(http, { path: 'localhost:5000/socket.io'});
+var server = require('http').createServer(app);
+var io = require('socket.io')(server, { path: '/sockets' }).listen(server);
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -246,7 +246,7 @@ if ('development' == app.get('env')) {
 }
 
 smppServer.listen(2775);
-http.listen(5000);
+server.listen(5000);
 //io.listen(http);
 
 module.exports = app;
