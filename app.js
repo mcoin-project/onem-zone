@@ -247,5 +247,6 @@ if ('development' == app.get('env')) {
 
 smppServer.listen(2775);
 http.listen(5000);
+io.listen(http);
 
 module.exports = app;
