@@ -46,7 +46,9 @@ app.use(session({
 }));
 
 // Share session with io sockets
-io.use(sharedsession(session));
+io.use(sharedsession(session, {
+    autoSave: true
+}));
 
 app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -220,7 +222,7 @@ app.get('/api/start', function(req, res, next) {
         req.session.onemContext = { msisdn: msisdn };
     }
 
-    res.json({msisdn: req.session.onemContext.msisdn});
+    res.json({ msisdn: req.session.onemContext.msisdn });
 
 });
 
