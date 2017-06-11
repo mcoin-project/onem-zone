@@ -140,10 +140,8 @@ var smppServer = smpp.createServer(function(session) {
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
-
-                resArray.splice(i, 1);
                 console.log("trying response: " + resObj.mtText);
-                resObj.socket.emit('MT SMS', { mtText: resObj.mtText});
+                resObj.socket.emit('MT SMS', { mtText: resObj.mtText });
                 resObj.mtText = '';
 
             } catch (err) {
@@ -200,17 +198,17 @@ io.on('connection', function(socket) {
         socket.handshake.session.save();
     }
 
+    var moRecord = {
+        msisdn: socket.handshake.session.onemContext.msisdn,
+        socket: socket,
+        mtText: ''
+    };
+
+    resArray.push(moRecord);
+
     socket.on('MO SMS', function(moText) {
         console.log('moText: ');
         console.log(moText);
-
-        var moRecord = {
-            msisdn: socket.handshake.session.onemContext.msisdn,
-            socket: socket,
-            mtText: ''
-        };
-
-        resArray.push(moRecord);
 
         console.log("sending SMS");
         sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
