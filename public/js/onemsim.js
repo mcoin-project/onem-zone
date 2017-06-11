@@ -93,13 +93,13 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 ONEmSimModule.factory('Socket', function(socketFactory) {
-    var myIoSocket = io.connect('localhost:5000');
+   // var myIoSocket = io.connect('localhost:5000');
 
-    var mySocket = socketFactory({
-        ioSocket: myIoSocket
-    });
+  //  var mySocket = socketFactory({
+   //     ioSocket: myIoSocket
+  //  });
 
-    return mySocket;
+    return socketFactory();
 });
 
 ONEmSimModule.factory('SmsHandler', [
