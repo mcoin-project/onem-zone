@@ -143,7 +143,7 @@ var smppServer = smpp.createServer(function(session) {
 
                 resArray.splice(i, 1);
                 console.log("trying response: " + resObj.mtText);
-                resObj.socket.emit('SMS MT', { mtText: resObj.mtText});
+                resObj.socket.emit('MT SMS', { mtText: resObj.mtText});
                 resObj.mtText = '';
 
             } catch (err) {
