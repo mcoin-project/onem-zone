@@ -118,9 +118,9 @@ var smppServer = smpp.createServer(function(session) {
         var msisdnFound = false;
 
         // retrieve the session information based on the msisdn
-        for (i = 0; i < resArray.length; i++) {
-            if (resArray[i].msisdn === pdu.destination_addr) {
-                resObj = resArray[i];
+        for (i = 0; i < cllients.length; i++) {
+            if (clients[i].moRecord.msisdn === pdu.destination_addr) {
+                resObj = clients[i].moRecord;
                 msisdnFound = true;
                 break;
             }
@@ -204,16 +204,13 @@ io.on('connection', function(socket) {
         console.log('moText: ');
         console.log(moText);
 
-        if (clients.indexOf(socket) === -1) {
+        var moRecord = {
+            msisdn: socket.handshake.session.onemContext.msisdn,
+            socket: socket,
+            mtText: ''
+        };
 
-            var moRecord = {
-                msisdn: socket.handshake.session.onemContext.msisdn,
-                socket: socket,
-                mtText: ''
-            };
-            resArray.push(moRecord);
-
-        }
+        clients[socket].moRecord = moRecord;
 
         console.log("sending SMS");
         sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
