@@ -30,7 +30,7 @@ var smppPort = process.env.SMPP_PORT || 2775;
 
 var smppSession;
 var resArray = [];
-var msisdns = [];
+var clients = [];
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -203,17 +203,14 @@ io.on('connection', function(socket) {
         console.log('moText: ');
         console.log(moText);
 
-        console.log("msisdns:");
-        console.log(msisdns);
-
-        if (msisdns.indexOf(socket.handshake.session.onemContext.msisdn) === -1) {
+        if (clients.indexOf(socket) === -1) {
 
             var moRecord = {
                 msisdn: socket.handshake.session.onemContext.msisdn,
                 socket: socket,
                 mtText: ''
             };
-            msisdns.push(socket.handshake.session.onemContext.msisdn);
+            clients.push(socket);
             resArray.push(moRecord);
 
         }
@@ -225,10 +222,8 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {
         console.info('Client gone (id=' + socket.id + ').');
-        var index = msisdns.indexOf(socket.handshake.session.onemContext.msisdn);
-        msisdns.splice(index,1);
-        console.log("msisdns:");
-        console.log(msisdns);
+        var index = clients.indexOf(socket);
+        clients.splice(index,1);
     });
 
 });
