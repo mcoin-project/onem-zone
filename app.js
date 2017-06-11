@@ -1,5 +1,6 @@
-var http = require('http');
-var express = require('express');
+var app = require('express')();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -12,9 +13,8 @@ var fs = require('fs');
 var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
-var app = express();
 var FileStore = require('session-file-store')(session);
-
+var sharedsession = require("express-socket.io-session");
 
 require('dotenv').load();
 
@@ -38,11 +38,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(session({
     secret: 'aut0test',
-    resave: false,
+    resave: true,
     store: new FileStore,
     saveUninitialized: true,
     cookie: { maxAge: 365 * 2 * 24 * 60 * 60 * 1000 } // 2 years
 }));
+
+// Share session with io sockets
+io.use(sharedsession(session));
 
 app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -116,7 +119,7 @@ var smppServer = smpp.createServer(function(session) {
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (msisdnFound && pdu.more_messages_to_send === 1) {
-            resObj.req.session.message = resObj.req.session.message + mtText;
+            resObj.mtText = resObj.mtText + mtText;
             return;
         }
 
@@ -129,12 +132,11 @@ var smppServer = smpp.createServer(function(session) {
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
                 resArray.splice(i, 1);
-                var resultText = resObj.req.session.message + mtText;
-                resObj.req.session.message = '';
-                resObj.res.json({
-                    mtText: resultText,
-                    skip: false
-                });
+                var resultText = resObj.mtText + mtText;
+                resObj.mtText = '';
+
+                resObj.socket.emit('SMS MT', resultText);
+
             } catch (err) {
                 console.log("oops no session:" + err);
             }
@@ -176,16 +178,40 @@ function sendSMS(from, to, text) {
     });
 }
 
-function getMsgId(min, max) {
-    return Math.floor(Math.random() * 65);
-}
+io.on('connection', function(socket) {
 
-app.get('/api/getResponse', function(req, res, next) {
+    if (!socket.handshake.session.onemContext) { // must be first time, or expired
+        var msisdn = moment().format('YYMMDDHHMMSS');
+        console.log("msisdn:" + msisdn);
+        socket.handshake.onemContext = { msisdn: msisdn };
+        socket.handshake.session.save();
+    }
 
-    var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
-    var skip = req.query.skip;
-    var body = { response: '', skip: false };
+    socket.on('MO SMS', function(moText) {
+        console.log('moText: ');
+        console.log(moText);
 
+        var moRecord = {
+            msisdn: socket.handshake.session.onemContext.msisdn,
+            socket: socket
+        };
+
+        resArray.push(moRecord);
+
+        console.log("sending SMS");
+        sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
+
+    });
+
+    socket.on('disconnect', function() {
+        console.info('Client gone (id=' + socket.id + ').');
+    });
+
+});
+
+app.get('/api/start', function(req, res, next) {
+
+    // if first time (no session) then generate a virtual MSISDN using current timestamp, which is saved in session cookie
     if (!req.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
         console.log("msisdn:" + msisdn);
@@ -193,16 +219,7 @@ app.get('/api/getResponse', function(req, res, next) {
         req.session.onemContext = { msisdn: msisdn };
     }
 
-    if (moText.length === 0) return res.json({ mtText: undefined });
-
-    console.log("sending SMS");
-    sendSMS(req.session.onemContext.msisdn, '444100', moText);
-
-    resArray.push({
-        msisdn: req.session.onemContext.msisdn,
-        res: res,
-        req: req
-    });
+    res.json({msisdn: req.session.onemContext.msisdn});
 
 });
 
@@ -224,8 +241,6 @@ if ('development' == app.get('env')) {
 }
 
 smppServer.listen(2775);
-
-var server = http.createServer(app);
-server.listen(5000);
+http.listen(5000);
 
 module.exports = app;

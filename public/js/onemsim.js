@@ -9,20 +9,21 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'angularMoment',
     'ngFileUpload',
     'FileManagerApp',
-    'dndLists'
+    'dndLists',
+    'btford.socket-io'
 ]);
 
 ONEmSimModule.config(function(toastrConfig) {
-  angular.extend(toastrConfig, {
-    autoDismiss: false,
-    containerId: 'toast-container',
-    maxOpened: 0,
-    newestOnTop: true,
-    positionClass: 'toast-bottom-right',
-    preventDuplicates: false,
-    preventOpenDuplicates: false,
-    target: 'body'
-  });
+    angular.extend(toastrConfig, {
+        autoDismiss: false,
+        containerId: 'toast-container',
+        maxOpened: 0,
+        newestOnTop: true,
+        positionClass: 'toast-bottom-right',
+        preventDuplicates: false,
+        preventOpenDuplicates: false,
+        target: 'body'
+    });
 });
 
 ONEmSimModule.config(['$routeProvider', '$locationProvider',
@@ -91,6 +92,12 @@ ONEmSimModule.config(['$httpProvider',
     }
 ]);
 
+ONEmSimModule.factory('Socket', function(socketFactory) {
+    var mySocket = socketFactory();
+    mySocket.forward('error');
+    return mySocket;
+});
+
 ONEmSimModule.factory('SmsHandler', [
     '$resource',
     function($resource) {
@@ -101,6 +108,11 @@ ONEmSimModule.factory('SmsHandler', [
                 params: {
                     moText: '@moText'
                 },
+                isArray: false
+            },
+            start: {
+                method: 'GET',
+                url: 'api/start',
                 isArray: false
             }
         });
@@ -491,15 +503,17 @@ ONEmSimModule.controller('mainController', [
     'toastr',
     'SmsHandler',
     'DataModel',
-    function($scope, $http, toastr, SmsHandler, DataModel) {
+    'Socket',
+    function($scope, $http, toastr, SmsHandler, DataModel, Socket) {
 
         console.log("mainController initialising");
+
+        Socket.forward('MT SMS', $scope);
 
         $scope.comments = DataModel.getComments();
         $scope.results = DataModel.getResults();
         $scope.logs = DataModel.getLogs();
         $scope.responsesCount = 0;
-        $scope.msisdn = 447725419720;
 
         $scope.resetComments = function() {
             $scope.comments = DataModel.clearComments;
@@ -508,6 +522,30 @@ ONEmSimModule.controller('mainController', [
         $scope.resetlogs = function() {
             $scope.logs = DataModel.clearLogs;
         };
+
+        $scope.$on('socket:error', function(ev, data) {
+            console.log("socket error:" + ev);
+            console.log(data);
+        });
+
+        var startResponse = SmsHandler.start({}, function() {
+            $scope.msisdn = startResponse.msisdn;
+        });
+
+        $scope.$on('socket:MT SMS', function(ev, data) {
+            $scope.theData = data;
+
+            console.log("MT received:");
+            console.log(data);
+
+            var outputObj = {
+                type: "mt",
+                value: data
+            };
+
+            $scope.results = DataModel.addResult(outputObj);
+
+        });
 
         $scope.smsInput = function() {
 
@@ -519,42 +557,8 @@ ONEmSimModule.controller('mainController', [
             };
             $scope.results = DataModel.addResult(inputObj);
 
-            var response = SmsHandler.getResponse({ msisdn: $scope.msisdn, moText: $scope.smsText }, function() {
+            Socket.emit('MO SMS', $scope.smsText);
 
-                if (typeof response.mtText === 'undefined' || response.mtText.length === 0) return;
-
-                var outputObj = {
-                    type: "mt",
-                    value: response.mtText
-                };
-
-                $scope.results = DataModel.addResult(outputObj);
-
-                if (typeof response.comment !== 'undefined') {
-                    $scope.comments = DataModel.addComment(response.comment);
-                    console.log("comments.length:" + $scope.comments.length);
-                }
-
-                console.log("response.log:" + response.log);
-
-                if (typeof response.log !== 'undefined') {
-                    $scope.logs = DataModel.addLog(response.log);
-                    console.log("logs.length:" + $scope.logs.length);
-                }
-
-                if (response.skip) {
-                    console.log("skipping");
-                    var result = SmsHandler.getResponse({ skip: true }, function() {
-                        var outputObj = {
-                            type: "mt",
-                            value: result.mtText
-                        };
-
-                        DataModel.addResult(outputObj);
-                    });
-                }
-
-            });
             $scope.smsText = '';
         };
     }
@@ -600,4 +604,3 @@ ONEmSimModule.config(['fileManagerConfigProvider',
         });
     }
 ]);
-
