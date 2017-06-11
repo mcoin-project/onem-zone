@@ -190,9 +190,6 @@ io.on('connection', function(socket) {
 
     console.log("connection received");
 
-    console.log("msisdns:");
-    console.log(msisdns);
-
     socket.emit(socket.handshake.session);
 
     if (!socket.handshake.session.onemContext) { // must be first time, or expired
@@ -205,6 +202,9 @@ io.on('connection', function(socket) {
     socket.on('MO SMS', function(moText) {
         console.log('moText: ');
         console.log(moText);
+
+        console.log("msisdns:");
+        console.log(msisdns);
 
         if (msisdns.indexOf(socket.handshake.session.onemContext.msisdn) === -1) {
 
