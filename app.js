@@ -46,7 +46,7 @@ var express_middleware = session({
     cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
 });
 
-app.use(session);
+app.use(express_middleware);
 
 //Use of Express-Session as Middleware    
 io.use(function(socket, next) {
@@ -187,6 +187,8 @@ function sendSMS(from, to, text) {
 io.on('connection', function(socket) {
 
     console.log("connection received");
+
+    socket.emit(socket.handshake.session);
 
     if (!socket.handshake.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
