@@ -189,6 +189,7 @@ function sendSMS(from, to, text) {
 io.on('connection', function(socket) {
 
     console.log("connection received");
+    clients.push(socket);
 
     socket.emit(socket.handshake.session);
 
@@ -210,7 +211,6 @@ io.on('connection', function(socket) {
                 socket: socket,
                 mtText: ''
             };
-            clients.push(socket);
             resArray.push(moRecord);
 
         }
@@ -223,7 +223,7 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         console.info('Client gone (id=' + socket.id + ').');
         var index = clients.indexOf(socket);
-        clients.splice(index,1);
+        clients.splice(index, 1);
     });
 
 });
