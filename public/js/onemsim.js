@@ -509,6 +509,7 @@ ONEmSimModule.controller('mainController', [
 
         console.log("mainController initialising");
 
+        $scope.initialised = false;
         $scope.comments = DataModel.getComments();
         $scope.results = DataModel.getResults();
         $scope.logs = DataModel.getLogs();
@@ -533,20 +534,24 @@ ONEmSimModule.controller('mainController', [
             console.log("msisdn:" + $scope.msisdn);
         });
 
-        $scope.$on('socket:MT SMS', function(ev, data) {
-            $scope.theData = data;
+        if (!$scope.initialised) {
+            $scope.initialised = true;
 
-            console.log("MT received:");
-            console.log(data);
+            $scope.$on('socket:MT SMS', function(ev, data) {
+                $scope.theData = data;
 
-            var outputObj = {
-                type: "mt",
-                value: data.mtText
-            };
+                console.log("MT received:");
+                console.log(data);
 
-            $scope.results = DataModel.addResult(outputObj);
+                var outputObj = {
+                    type: "mt",
+                    value: data.mtText
+                };
 
-        });
+                $scope.results = DataModel.addResult(outputObj);
+
+            });
+        }
 
         $scope.smsInput = function() {
 
