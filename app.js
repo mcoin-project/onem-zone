@@ -126,11 +126,9 @@ var smppServer = smpp.createServer(function(session) {
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (msisdnFound && pdu.more_messages_to_send === 1) {
+            console.log("more mesages to send, so returning");
             return;
         }
-
-        console.log("resObj");
-        console.log(resObj);
 
         // if this is the last message in the sequence, we can:
         //   1) delete the session
