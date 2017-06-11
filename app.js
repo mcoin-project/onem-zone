@@ -30,6 +30,7 @@ var smppPort = process.env.SMPP_PORT || 2775;
 
 var smppSession;
 var resArray = [];
+var msisdns = [];
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -110,7 +111,7 @@ var smppServer = smpp.createServer(function(session) {
             mtText = pdu.short_message.message;
         }
 
-        console.log("mtText:"+mtText);
+        console.log("mtText:" + mtText);
 
         console.log("more messages:" + pdu.more_messages_to_send);
 
@@ -198,13 +199,17 @@ io.on('connection', function(socket) {
         socket.handshake.session.save();
     }
 
-    var moRecord = {
-        msisdn: socket.handshake.session.onemContext.msisdn,
-        socket: socket,
-        mtText: ''
-    };
+    if (msisdns.indexOf(socket.handshake.session.onemContext.msisdn) === -1) {
 
-    resArray.push(moRecord);
+        var moRecord = {
+            msisdn: socket.handshake.session.onemContext.msisdn,
+            socket: socket,
+            mtText: ''
+        };
+        msisdns.push(socket.handshake.session.onemContext.msisdn);
+        resArray.push(moRecord);
+        
+    }
 
     socket.on('MO SMS', function(moText) {
         console.log('moText: ');
