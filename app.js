@@ -190,6 +190,9 @@ io.on('connection', function(socket) {
 
     console.log("connection received");
 
+    console.log("msisdns:");
+    console.log(msisdns);
+
     socket.emit(socket.handshake.session);
 
     if (!socket.handshake.session.onemContext) { // must be first time, or expired
@@ -222,6 +225,8 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {
         console.info('Client gone (id=' + socket.id + ').');
+        var index = msisdns.indexOf(socket.handshake.session.onemContext.msisdn);
+        msisdns.splice(index);
     });
 
 });
