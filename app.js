@@ -129,6 +129,9 @@ var smppServer = smpp.createServer(function(session) {
             return;
         }
 
+        console.log("resObj");
+        console.log(resObj);
+
         // if this is the last message in the sequence, we can:
         //   1) delete the session
         //   2) retrieve the saved/concatenated message string
