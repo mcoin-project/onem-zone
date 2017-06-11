@@ -95,6 +95,7 @@ ONEmSimModule.config(['$httpProvider',
 ONEmSimModule.factory('Socket', function(socketFactory) {
     var mySocket = socketFactory();
     mySocket.forward('error');
+    mySocket.forward('MT SMS');
     return mySocket;
 });
 
@@ -508,8 +509,6 @@ ONEmSimModule.controller('mainController', [
 
         console.log("mainController initialising");
 
-        Socket.forward('MT SMS', $scope);
-
         $scope.comments = DataModel.getComments();
         $scope.results = DataModel.getResults();
         $scope.logs = DataModel.getLogs();
@@ -534,7 +533,7 @@ ONEmSimModule.controller('mainController', [
             console.log("msisdn:" + $scope.msisdn);
         });
 
-        $scope.$on('MT SMS', function(ev, data) {
+        $scope.$on('socket:MT SMS', function(ev, data) {
             $scope.theData = data;
 
             console.log("MT received:");
@@ -608,7 +607,3 @@ ONEmSimModule.config(['fileManagerConfigProvider',
         });
     }
 ]);
-
-ONEmSimModule.config(function (socketFactoryProvider) {
-  socketFactoryProvider.prefix('');
-});
