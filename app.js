@@ -211,7 +211,7 @@ io.on('connection', function(socket) {
         };
         msisdns.push(socket.handshake.session.onemContext.msisdn);
         resArray.push(moRecord);
-        
+
     }
 
     socket.on('MO SMS', function(moText) {
@@ -227,6 +227,8 @@ io.on('connection', function(socket) {
         console.info('Client gone (id=' + socket.id + ').');
         var index = msisdns.indexOf(socket.handshake.session.onemContext.msisdn);
         msisdns.splice(index);
+        console.log("msisdns:");
+        console.log(msisdns);
     });
 
 });
