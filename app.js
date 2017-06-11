@@ -137,10 +137,11 @@ var smppServer = smpp.createServer(function(session) {
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
+
                 resArray.splice(i, 1);
                 var resultText = resObj.mtText + mtText;
                 resObj.mtText = '';
-
+                console.log("trying response: "+ resultText);
                 resObj.socket.emit('SMS MT', resultText);
 
             } catch (err) {
