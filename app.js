@@ -1,7 +1,7 @@
 var express = require('express');
 var app = require('express')();
 var http = require('http').createServer(app);
-var io = require('socket.io')(http, { path: '172.16.38.98:5000/socket.io'});
+var io = require('socket.io')(http, { path: 'http://172.16.38.98:5000/socket.io'});
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
