@@ -237,13 +237,13 @@ app.get('/api/start', function(req, res, next) {
 
 });
 
-app.get('/', function(req, res, next) {
-    res.sendFile('/public/views/index.html', { root: __dirname });
-});
+// app.get('/', function(req, res, next) {
+//     res.sendFile('/public/views/index.html', { root: __dirname });
+// });
 
-app.get('*', function(req, res) {
-    res.sendFile('/public/views/index.html', { root: __dirname });
-});
+// app.get('*', function(req, res) {
+//     res.sendFile('/public/views/index.html', { root: __dirname });
+// });
 
 app.get('/*', function(req, res, next) {
     console.log("caught default route");
