@@ -202,21 +202,21 @@ io.on('connection', function(socket) {
         socket.handshake.session.save();
     }
 
-    if (msisdns.indexOf(socket.handshake.session.onemContext.msisdn) === -1) {
-
-        var moRecord = {
-            msisdn: socket.handshake.session.onemContext.msisdn,
-            socket: socket,
-            mtText: ''
-        };
-        msisdns.push(socket.handshake.session.onemContext.msisdn);
-        resArray.push(moRecord);
-
-    }
-
     socket.on('MO SMS', function(moText) {
         console.log('moText: ');
         console.log(moText);
+
+        if (msisdns.indexOf(socket.handshake.session.onemContext.msisdn) === -1) {
+
+            var moRecord = {
+                msisdn: socket.handshake.session.onemContext.msisdn,
+                socket: socket,
+                mtText: ''
+            };
+            msisdns.push(socket.handshake.session.onemContext.msisdn);
+            resArray.push(moRecord);
+
+        }
 
         console.log("sending SMS");
         sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
