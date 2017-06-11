@@ -530,6 +530,7 @@ ONEmSimModule.controller('mainController', [
 
         var startResponse = SmsHandler.start({}, function() {
             $scope.msisdn = startResponse.msisdn;
+            console.log("msisdn:"+$scope.msisdn);
         });
 
         $scope.$on('socket:MT SMS', function(ev, data) {
@@ -556,6 +557,8 @@ ONEmSimModule.controller('mainController', [
                 value: $scope.smsText
             };
             $scope.results = DataModel.addResult(inputObj);
+
+            console.log("calling emit");
 
             Socket.emit('MO SMS', $scope.smsText);
 
