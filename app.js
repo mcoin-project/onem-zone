@@ -210,7 +210,8 @@ io.on('connection', function(socket) {
             mtText: ''
         };
 
-        clients[socket].moRecord = moRecord;
+        var i = clients.indexOf(socket);
+        clients[i].moRecord = moRecord;
 
         console.log("sending SMS");
         sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
