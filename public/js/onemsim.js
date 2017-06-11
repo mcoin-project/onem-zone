@@ -93,9 +93,7 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 ONEmSimModule.factory('Socket', function(socketFactory) {
-    var mySocket = socketFactory();
-    mySocket.forward('error');
-    return mySocket;
+    return socketFactory();
 });
 
 ONEmSimModule.factory('SmsHandler', [
