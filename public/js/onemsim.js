@@ -93,7 +93,13 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 ONEmSimModule.factory('Socket', function(socketFactory) {
-    return socketFactory();
+    var myIoSocket = io.connect('http://172.16.38.98:5000');
+
+    var mySocket = socketFactory({
+        ioSocket: myIoSocket
+    });
+
+    return mySocket;
 });
 
 ONEmSimModule.factory('SmsHandler', [
@@ -529,7 +535,7 @@ ONEmSimModule.controller('mainController', [
 
         var startResponse = SmsHandler.start({}, function() {
             $scope.msisdn = startResponse.msisdn;
-            console.log("msisdn:"+$scope.msisdn);
+            console.log("msisdn:" + $scope.msisdn);
         });
 
         $scope.$on('socket:MT SMS', function(ev, data) {
