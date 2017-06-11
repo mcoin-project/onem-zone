@@ -226,7 +226,7 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         console.info('Client gone (id=' + socket.id + ').');
         var index = msisdns.indexOf(socket.handshake.session.onemContext.msisdn);
-        msisdns.splice(index);
+        msisdns.splice(index,1);
         console.log("msisdns:");
         console.log(msisdns);
     });
