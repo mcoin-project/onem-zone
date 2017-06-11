@@ -93,13 +93,9 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 ONEmSimModule.factory('Socket', function(socketFactory) {
-   // var myIoSocket = io.connect('localhost:5000');
-
-  //  var mySocket = socketFactory({
-   //     ioSocket: myIoSocket
-  //  });
-
-    return socketFactory();
+    var mySocket = socketFactory();
+    mySocket.forward('error');
+    return mySocket;
 });
 
 ONEmSimModule.factory('SmsHandler', [
@@ -527,7 +523,7 @@ ONEmSimModule.controller('mainController', [
             $scope.logs = DataModel.clearLogs;
         };
 
-        $scope.$on('socket:error', function(ev, data) {
+        $scope.$on('error', function(ev, data) {
             console.log("socket error:" + ev);
             console.log(ev);
             console.log(data);
@@ -610,5 +606,11 @@ ONEmSimModule.config(['fileManagerConfigProvider',
                 compress: false
             }),
         });
+    }
+]);
+
+ONEmSimModule.config(['socketFactoryProvider',
+    function(config) {
+        config.prefix('');
     }
 ]);
