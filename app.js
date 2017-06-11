@@ -6,13 +6,7 @@ var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
 var methodOverride = require('method-override');
-var session = require("express-session")({
-    secret: 'aut0test',
-    resave: true,
-    saveUninitialized: true,
-    store: new FileStore,
-    cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
-});
+var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var request = require('request');
@@ -43,7 +37,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session);
+app.use(session({
+    secret: 'aut0test',
+    resave: true,
+    store: new FileStore,
+    saveUninitialized: true,
+    cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
+}));
 
 // Share session with io sockets
 io.use(sharedsession(session, {
