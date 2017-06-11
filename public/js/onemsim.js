@@ -609,8 +609,6 @@ ONEmSimModule.config(['fileManagerConfigProvider',
     }
 ]);
 
-ONEmSimModule.config(['socketFactoryProvider',
-    function(socketFactoryProvider) {
-        socketFactoryProvider.prefix('');
-    }
-]);
+ONEmSimModule.config(function (socketFactoryProvider) {
+  socketFactoryProvider.prefix('');
+});
