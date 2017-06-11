@@ -110,6 +110,8 @@ var smppServer = smpp.createServer(function(session) {
             mtText = pdu.short_message.message;
         }
 
+        console.log("mtText:"+mtText);
+
         console.log("more messages:" + pdu.more_messages_to_send);
 
         var msisdnFound = false;
