@@ -1,5 +1,7 @@
-var http = require('http');
 var express = require('express');
+var app = require('express')();
+var server = require('http').createServer(app);
+var io = require('socket.io')(server);
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -12,9 +14,8 @@ var fs = require('fs');
 var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
-var app = express();
 var FileStore = require('session-file-store')(session);
-
+// var sharedsession = require("express-socket.io-session");
 
 require('dotenv').load();
 
@@ -25,9 +26,11 @@ var username = process.env.USERNAME; // used for web basic auth
 var password = process.env.PASSWORD; // used for web basic auth
 var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 var smppPassword = process.env.SMPP_PASSWORD || "password";
+var smppPort = process.env.SMPP_PORT || 2775;
 
 var smppSession;
 var resArray = [];
+var clients = [];
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -36,13 +39,20 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(session({
+var express_middleware = session({
     secret: 'aut0test',
-    resave: false,
+    resave: true,
     store: new FileStore,
     saveUninitialized: true,
-    cookie: { maxAge: 365 * 2 * 24 * 60 * 60 * 1000 } // 2 years
-}));
+    cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
+});
+
+app.use(express_middleware);
+
+//Use of Express-Session as Middleware    
+io.use(function(socket, next) {
+    express_middleware(socket.handshake, {}, next);
+});
 
 app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -101,22 +111,25 @@ var smppServer = smpp.createServer(function(session) {
             mtText = pdu.short_message.message;
         }
 
+        console.log("mtText:" + mtText);
+
         console.log("more messages:" + pdu.more_messages_to_send);
 
         var msisdnFound = false;
 
         // retrieve the session information based on the msisdn
-        for (i = 0; i < resArray.length; i++) {
-            if (resArray[i].msisdn === pdu.destination_addr) {
-                resObj = resArray[i];
+        for (i = 0; i < clients.length; i++) {
+            if (clients[i].moRecord.msisdn === pdu.destination_addr) {
+                resObj = clients[i].moRecord;
                 msisdnFound = true;
                 break;
             }
         }
+        if (msisdnFound) resObj.mtText = resObj.mtText + mtText;
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (msisdnFound && pdu.more_messages_to_send === 1) {
-            resObj.req.session.message = resObj.req.session.message + mtText;
+            console.log("more mesages to send, so returning");
             return;
         }
 
@@ -128,13 +141,10 @@ var smppServer = smpp.createServer(function(session) {
         if (msisdnFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             try {
-                resArray.splice(i, 1);
-                var resultText = resObj.req.session.message + mtText;
-                resObj.req.session.message = '';
-                resObj.res.json({
-                    mtText: resultText,
-                    skip: false
-                });
+                console.log("trying response: " + resObj.mtText);
+                resObj.socket.emit('MT SMS', { mtText: resObj.mtText });
+                resObj.mtText = '';
+
             } catch (err) {
                 console.log("oops no session:" + err);
             }
@@ -176,16 +186,49 @@ function sendSMS(from, to, text) {
     });
 }
 
-function getMsgId(min, max) {
-    return Math.floor(Math.random() * 65);
-}
+io.on('connection', function(socket) {
 
-app.get('/api/getResponse', function(req, res, next) {
+    console.log("connection received");
+    clients.push(socket);
 
-    var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
-    var skip = req.query.skip;
-    var body = { response: '', skip: false };
+    socket.emit(socket.handshake.session);
 
+    if (!socket.handshake.session.onemContext) { // must be first time, or expired
+        var msisdn = moment().format('YYMMDDHHMMSS');
+        console.log("msisdn:" + msisdn);
+        socket.handshake.session.onemContext = { msisdn: msisdn };
+        socket.handshake.session.save();
+    }
+
+    socket.on('MO SMS', function(moText) {
+        console.log('moText: ');
+        console.log(moText);
+
+        var moRecord = {
+            msisdn: socket.handshake.session.onemContext.msisdn,
+            socket: socket,
+            mtText: ''
+        };
+
+        var i = clients.indexOf(socket);
+        clients[i].moRecord = moRecord;
+
+        console.log("sending SMS");
+        sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
+
+    });
+
+    socket.on('disconnect', function() {
+        console.info('Client gone (id=' + socket.id + ').');
+        var index = clients.indexOf(socket);
+        clients.splice(index, 1);
+    });
+
+});
+
+app.get('/api/start', function(req, res, next) {
+
+    // if first time (no session) then generate a virtual MSISDN using current timestamp, which is saved in session cookie
     if (!req.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
         console.log("msisdn:" + msisdn);
@@ -193,26 +236,17 @@ app.get('/api/getResponse', function(req, res, next) {
         req.session.onemContext = { msisdn: msisdn };
     }
 
-    if (moText.length === 0) return res.json({ mtText: undefined });
-
-    console.log("sending SMS");
-    sendSMS(req.session.onemContext.msisdn, '444100', moText);
-
-    resArray.push({
-        msisdn: req.session.onemContext.msisdn,
-        res: res,
-        req: req
-    });
+    res.json({ msisdn: req.session.onemContext.msisdn });
 
 });
 
-app.get('/', function(req, res, next) {
-    res.sendFile('/public/views/index.html', { root: __dirname });
-});
+// app.get('/', function(req, res, next) {
+//     res.sendFile('/public/views/index.html', { root: __dirname });
+// });
 
-app.get('*', function(req, res) {
-    res.sendFile('/public/views/index.html', { root: __dirname });
-});
+// app.get('*', function(req, res) {
+//     res.sendFile('/public/views/index.html', { root: __dirname });
+// });
 
 app.get('/*', function(req, res, next) {
     console.log("caught default route");
@@ -223,9 +257,8 @@ if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
 
-smppServer.listen(2775);
-
-var server = http.createServer(app);
-server.listen(5000);
+smppServer.listen(smppPort);
+server.listen(theport);
+//io.listen(http);
 
 module.exports = app;
