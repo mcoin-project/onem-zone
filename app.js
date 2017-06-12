@@ -118,9 +118,8 @@ var smppServer = smpp.createServer(function(session) {
         var msisdnFound = false;
 
         // retrieve the session information based on the msisdn
-        //for (i = 0; i < clients.length; i++) {
-        for (i = 1; i < clients.length; i++) {
-            if (clients[i].moRecord.msisdn === pdu.destination_addr) {
+        for (i = 0; i < clients.length; i++) {
+            if (typeof clients[i].moRecord !== 'undefined' && clients[i].moRecord.msisdn === pdu.destination_addr) {
                 resObj = clients[i].moRecord;
                 msisdnFound = true;
                 break;
