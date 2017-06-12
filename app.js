@@ -118,7 +118,8 @@ var smppServer = smpp.createServer(function(session) {
         var msisdnFound = false;
 
         // retrieve the session information based on the msisdn
-        for (i = 0; i < clients.length; i++) {
+        //for (i = 0; i < clients.length; i++) {
+        for (i = 1; i < clients.length; i++) {
             if (clients[i].moRecord.msisdn === pdu.destination_addr) {
                 resObj = clients[i].moRecord;
                 msisdnFound = true;
@@ -262,7 +263,4 @@ server.listen(theport);
 //io.listen(http);
 
 module.exports = app;
-<<<<<<< HEAD
-=======
 
->>>>>>> 4ea7ba363e869a22ceee47bc645b63e2efa5e439
