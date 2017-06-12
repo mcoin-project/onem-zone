@@ -13,14 +13,18 @@ var moment = require('moment');
 var _ = require('underscore-node');
 var smpp = require('smpp');
 var app = express();
+var FileStore = require('session-file-store')(session);
+
 
 require('dotenv').load();
 
 var routesApi = require('./app_api/routes/index.js');
 
 var theport = process.env.PORT || 5000;
-var username = process.env.USERNAME;
-var password = process.env.PASSWORD;
+var username = process.env.USERNAME; // used for web basic auth
+var password = process.env.PASSWORD; // used for web basic auth
+var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
+var smppPassword = process.env.SMPP_PASSWORD || "password";
 
 var smppSession;
 var resArray = [];
@@ -35,8 +39,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
     secret: 'aut0test',
     resave: false,
+    store: new FileStore,
     saveUninitialized: true,
-    cookie: { maxAge: 24 * 360000 } // 24 hours
+    cookie: { maxAge: 365 * 2 * 24 * 60 * 60 * 1000 } // 2 years
 }));
 
 app.use(function(req, res, next) { //allow cross origin requests
@@ -59,7 +64,7 @@ var smppServer = smpp.createServer(function(session) {
     session.on('bind_transceiver', function(pdu) {
         console.log('Bind request received, system_id:' + pdu.system_id + ' password:' + pdu.password);
         session.pause();
-        if (!(pdu.system_id == "ONEmSim" && pdu.password == '0N3mS1mp')) {
+        if (!(pdu.system_id == smppSystemId && pdu.password == smppPassword)) {
             session.send(pdu.response({
                 command_status: smpp.ESME_RBINDFAIL
             }));
@@ -84,6 +89,7 @@ var smppServer = smpp.createServer(function(session) {
     });
 
     smppSession.on('submit_sm', function(pdu) {
+
         console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
         smppSession.send(pdu.response());
@@ -92,27 +98,48 @@ var smppServer = smpp.createServer(function(session) {
             console.log("** payload being used **");
             mtText = pdu.message_payload;
         } else {
-            mtText = mtText + pdu.short_message.message;
+            mtText = pdu.short_message.message;
         }
 
         console.log("more messages:" + pdu.more_messages_to_send);
 
+        var msisdnFound = false;
+
+        // retrieve the session information based on the msisdn
         for (i = 0; i < resArray.length; i++) {
             if (resArray[i].msisdn === pdu.destination_addr) {
-                resObj = resArray[i].res;
+                resObj = resArray[i];
+                msisdnFound = true;
                 break;
             }
         }
-        if (i < resArray.length) resArray.splice(i, 1);
 
-        if (resObj && (pdu.more_messages_to_send === 0 ||
-                typeof pdu.more_messages_to_send === 'undefined')) {
-            resObj.json({
-                mtText: mtText,
-                skip: false
-            });
-            mtText = '';
+        // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
+        if (msisdnFound && pdu.more_messages_to_send === 1) {
+            resObj.req.session.message = resObj.req.session.message + mtText;
+            return;
         }
+
+        // if this is the last message in the sequence, we can:
+        //   1) delete the session
+        //   2) retrieve the saved/concatenated message string
+        //   3) reset the message string to blank
+        //   4) send the result back to the client using the saved session
+        if (msisdnFound && (pdu.more_messages_to_send === 0 ||
+                typeof pdu.more_messages_to_send === 'undefined')) {
+            try {
+                resArray.splice(i, 1);
+                var resultText = resObj.req.session.message + mtText;
+                resObj.req.session.message = '';
+                resObj.res.json({
+                    mtText: resultText,
+                    skip: false
+                });
+            } catch (err) {
+                console.log("oops no session:" + err);
+            }
+        }
+
     });
 
     smppSession.on('deliver_sm', function(pdu) {
@@ -129,9 +156,9 @@ var smppServer = smpp.createServer(function(session) {
 function sendSMS(from, to, text) {
 
     var buffer = new Buffer(2 * text.length);
-    for (var i=0; i<text.length; i++) {
-        buffer.writeUInt16BE(text.charCodeAt(i),2*i);
-    };
+    for (var i = 0; i < text.length; i++) {
+        buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
+    }
 
     smppSession.deliver_sm({
         source_addr: from,
@@ -155,21 +182,26 @@ function getMsgId(min, max) {
 
 app.get('/api/getResponse', function(req, res, next) {
 
-    var msisdn = '447725419720' || req.query.msisdn.trim();
     var moText = (typeof req.query.moText !== 'undefined') ? req.query.moText.trim() : 'skip';
     var skip = req.query.skip;
-
     var body = { response: '', skip: false };
 
+    if (!req.session.onemContext) { // must be first time, or expired
+        var msisdn = moment().format('YYMMDDHHMMSS');
+        console.log("msisdn:" + msisdn);
+
+        req.session.onemContext = { msisdn: msisdn };
+    }
 
     if (moText.length === 0) return res.json({ mtText: undefined });
 
     console.log("sending SMS");
-    sendSMS(msisdn, '444100', moText);
+    sendSMS(req.session.onemContext.msisdn, '444100', moText);
 
     resArray.push({
-        msisdn: msisdn,
-        res: res
+        msisdn: req.session.onemContext.msisdn,
+        res: res,
+        req: req
     });
 
 });
@@ -197,4 +229,3 @@ var server = http.createServer(app);
 server.listen(5000);
 
 module.exports = app;
-
