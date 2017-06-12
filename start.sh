@@ -1,6 +1,6 @@
 #!/bin/bash
 #title          :start.sh
-#description    :This script start Node.js app.js in a loop
+#description    :This script starts Node.js app.js in a loop
 #author         :MihaiT
 #date           :20170609
 #version        :0.1
@@ -11,7 +11,7 @@
 
 
 ttime=$(date +'%d-%m-%Y %H:%M:%S')
-mesToLog="The application started at $ttime""."
+mesToLog="The application started at $ttime"" UTC."
 echo $mesToLog >> restartlog.txt
 
 while true
@@ -24,7 +24,7 @@ do
 	sleep 2
 
 	ttime=$(date +'%d-%m-%Y %H:%M:%S')
-	mesToLog="\nThe application restarted at $ttime""."
+	mesToLog="The application restarted at $ttime"" UTC."
 	echo $mesToLog >> restartlog.txt
 done
 
