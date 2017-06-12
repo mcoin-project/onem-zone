@@ -122,8 +122,8 @@
 }
 
 .img-container img {
-    width: 90%;
-    height: auto;
+    width: auto;
+    height: 80vh;
     margin: 0 auto;
     display: block;
 }
@@ -131,8 +131,8 @@
 .img-container .sms-input {
     position: absolute;
     top: 78%;
-    left: 17%;
-    width: 67%;
+    left: 39.5%;
+    width: 21.5%;
 }
 
 .img-container .sms-response {
@@ -140,8 +140,8 @@
     top: 13%;
     min-height: 65%;
     height: 75%;
-    left: 16%;
-    width: 69%;
+    left: 39%;
+    width: 22%;
 }
 
 .img-container .sms-response-pos {

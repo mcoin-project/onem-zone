@@ -1,15 +1,17 @@
 <div class="row">
-    <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1">
-        <div class="visible-lg visible-md onem-logo">
+    <div class="col-lg-12 col-md-12">
+        <div class="visible-lg visible-md">
             <a href="http://www.onem.com">
-                <img ng-src="{{'/images/onem-logo.svg'}}" alt="" />
-                <p>Simulator</p>
+                <div style="margin-top:10px" class="text-center">
+                    <img style="height:30px" ng-src="{{'/images/onem-logo.svg'}}" alt="" />
+                    Simulator
+                </div>
             </a>
         </div>
     </div>
 </div>
 <div class="row">
-    <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1">
+    <div class="col-lg-12 col-md-12">
         <div class="text-center">
             <div class="onem-label">
                 <strong>Msisdn:</strong>
@@ -22,11 +24,9 @@
 </div>
 <div class="row onem-border">
     <div class="row">
-        <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1 col-sm-6 col-xs-8">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="img-container">
-                <div class="img-responsive">
-                    <img ng-src="{{'/images/iPhone.png'}}" alt="" />
-                </div>
+                <img ng-src="{{'/images/iPhone.png'}}" alt="" />
                 <div class="sms-response">
                     <div scroll-bottom="results" class="sms-response-pos">
                         <div ng-repeat="obj in results track by $index">
