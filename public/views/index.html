@@ -1,73 +1,47 @@
 <!DOCTYPE html>
 <html lang="en" data-ng-app="ONEmSimModule">
 
-    <head>
-        <base href="/">
-        <meta charset="utf-8" />
-        <meta name="fragment" content="!" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <!-- for Bootstrap 4 -->
-        <meta property="og:title" content="ONEm Simulator" />
-        <meta property="og:description" content="ONEm Simulator" />
-        <meta name="description" content="ONEm Simulator" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>ONEm Simulation tool</title>
-        <link href="favicon.png" rel="icon" type="image/png">
-        <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
-        <!-- <link rel="stylesheet" href="/css/font-awesome.min.css"> -->
-        <!-- Latest compiled and minified CSS -->
-        <link rel="stylesheet" href="bower_components/bootstrap-3.3.7/dist/css/bootstrap.min.css">
-        <!-- angular-filemanager -->
-        <link rel="stylesheet" href="bower_components/angular-filemanager/dist/angular-filemanager.min.css" />
-        <link rel="stylesheet" href="/css/onemsim.css" />
-        <link rel="stylesheet" href="/css/builder.css" />
-    
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file://-->
-        <!--if lt IE 9-->
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-        <script type="text/javascript" src="/js/underscore-min.js"></script>
-        <!--Angular CDN-hosted module dependencies-->
-        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-strap/angular-strap.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-strap/angular-strap.tpl.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-moment/angular-moment.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-translate/angular-translate.min.js"></script>
-        <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-        <script type="text/javascript" src="bower_components/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-filemanager/dist/angular-filemanager.min.js"></script>
-        <script type="text/javascript" src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
-        <script type="text/javascript" src="bower_components/path/path.min.js"></script>
-        <script type="text/javascript" src="jssip.js"></script>
-        <script type="text/javascript" src="/js/onemsim.js"></script>
-    </head>
-    
-    <body data-ng-controller="mainController">
-
-        <div class="container">
-            <div data-ng-view></div>
-        </div>
-
-        <audio loop id="myAudio">
-            <source src="" type="audio/wav"/>
-        </audio>
-
-        <script type="text/javascript">
-            var button = document.createElement("button");
-            button.innerHTML = "Idle";
-
-            var body = document.getElementsByTagName("body")[0];
-            body.appendChild(button);
-        </script>
-
-    </body>
-
+<head>
+    <base href="/">
+    <meta charset="utf-8" />
+    <meta name="fragment" content="!" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta property="og:title" content="ONEm Simulator" />
+    <meta property="og:description" content="ONEm Simulator" />
+    <meta name="description" content="ONEm Simulator" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ONEm Simulation tool</title>
+    <link href="favicon.png" rel="icon" type="image/png">
+    <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
+    <link rel="stylesheet" href="bower_components/bootstrap-3.3.7/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="bower_components/angular-filemanager/dist/angular-filemanager.min.css" />
+    <link rel="stylesheet" href="/css/onemsim.css" />
+    <link rel="stylesheet" href="/css/builder.css" />
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.2/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="/js/underscore-min.js"></script>
+    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-route/angular-route.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-messages/angular-messages.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-strap/angular-strap.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-strap/angular-strap.tpl.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-moment/angular-moment.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-translate/angular-translate.min.js"></script>
+    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="bower_components/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="bower_components/ng-file-upload/ng-file-upload.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-filemanager/dist/angular-filemanager.min.js"></script>
+    <script type="text/javascript" src="bower_components/angular-drag-and-drop-lists/angular-drag-and-drop-lists.js"></script>
+    <script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
+    <script type="text/javascript" src="bower_components/path/path.min.js"></script>
+    <script type="text/javascript" src="/js/onemsim.js"></script>
+</head>
+<div class="container">
+    <div data-ng-view></div>
+</div>
 </html>
-
