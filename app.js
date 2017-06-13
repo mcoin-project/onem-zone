@@ -19,8 +19,14 @@ var FileStore = require('session-file-store')(session);
 
 require('dotenv').load();
 
+// Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
 
+// Bring in the data model & connect to db
+// require('./app_api/models/db');
+
+// The http server will listen to an appropriate port, or default to
+// port 5000.
 var theport = process.env.PORT || 5000;
 var username = process.env.USERNAME; // used for web basic auth
 var password = process.env.PASSWORD; // used for web basic auth
@@ -28,7 +34,7 @@ var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 var smppPassword = process.env.SMPP_PASSWORD || "password";
 var smppPort = process.env.SMPP_PORT || 2775;
 
-var smppSession;
+var smppSession; // the smpp session context saved globally.
 var resArray = [];
 var clients = [];
 
@@ -38,6 +44,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+// JsSIP is not designed to use "express" library. To be loaded we need its path:
+app.use(express.static(path.join(__dirname, 'node_modules/jssip/dist')));
 
 var express_middleware = session({
     secret: 'aut0test',
@@ -62,18 +71,24 @@ app.use(function(req, res, next) { //allow cross origin requests
 });
 
 
+// Use the API routes when path starts with /api
 app.use('/api', routesApi);
 
 var smppServer = smpp.createServer(function(session) {
 
+    // var alreadySent = false;
     var mtText = '';
     var i, resObj;
 
-    smppSession = session;
+    smppSession = session; // save the session globally
 
     session.on('bind_transceiver', function(pdu) {
         console.log('Bind request received, system_id:' + pdu.system_id + ' password:' + pdu.password);
+        // we pause the session to prevent further incoming pdu events,
+        // untill we authorize the session with some async operation.
         session.pause();
+        //     checkAsyncUserPass(pdu.system_id, pdu.password, function(err) {
+        //         if (err) {
         if (!(pdu.system_id == smppSystemId && pdu.password == smppPassword)) {
             session.send(pdu.response({
                 command_status: smpp.ESME_RBINDFAIL
@@ -99,7 +114,7 @@ var smppServer = smpp.createServer(function(session) {
     });
 
     smppSession.on('submit_sm', function(pdu) {
-
+        //  var msgid = getMsgId(); // generate a message_id for this message.
         console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
         smppSession.send(pdu.response());
@@ -180,7 +195,9 @@ function sendSMS(from, to, text) {
         data_coding: 8,
         short_message: buffer
     }, function(pdu) {
+        //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
         if (pdu.command_status === 0) {
+            // Message successfully sent
             console.log("message sent:");
         }
     });
@@ -250,9 +267,11 @@ app.get('/api/start', function(req, res, next) {
 
 app.get('/*', function(req, res, next) {
     console.log("caught default route");
+    // Just send the index.html for other files to support HTML5Mode
     res.sendFile('/public/views/index.html', { root: __dirname });
 });
 
+// error handling middleware should be loaded after the loading the routes
 if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
