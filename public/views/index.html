@@ -34,6 +34,7 @@
         <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-strap/angular-strap.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-strap/angular-strap.tpl.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular-media-queries/match-media.js"></script>
         <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
         <script type="text/javascript" src="bower_components/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
@@ -42,7 +43,7 @@
         <script type="text/javascript" src="/js/onemsim.js"></script>
     </head>
 
-    <body>
+    <body data-ng-controller="mainController">
         <div class="container">
             <div data-ng-view></div>
         </div>
