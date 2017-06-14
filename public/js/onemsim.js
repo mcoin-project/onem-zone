@@ -14,7 +14,7 @@ ONEmSimModule.config(['$routeProvider', '$locationProvider',
         $routeProvider.
         when('/', {
             templateUrl: 'views/partials/onemSim.html',
-            controller: 'mainController'{
+            controller: 'mainController'
         }).
         otherwise({
             redirectTo: '/'
