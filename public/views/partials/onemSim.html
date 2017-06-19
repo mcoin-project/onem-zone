@@ -21,13 +21,83 @@
 <div class="row onem-border">
     <div class="row">
         <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1 col-sm-4 col-xs-12">
+
+            <div class="screen">
+
+                <div class="screen_wrp">
+                    <div class="panel dialer">
+    
+                        <div class="preview">
+                            <p class="title">Who you gonna call?</p>
+                            <p class="inp">
+                                <input id="typed_no" type="text" value="" disabled="disabled">
+                                <a class="delete" href="#"><img class="clicky" src="images/icn_delete.svg" /></a>
+                            </p>
+                            <p class="msg">Type the number you want to call.</p>
+                            <p class="call_no"><a class="call" href="#"><img src="images/icn_answer.svg" /></a></p>
+                        </div><!-- /preview -->
+    
+                        <ul class="keypad dialpad nums">
+                            <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
+                            <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>
+                            <li class="clicky"><a id="num_3" class="num" data-val="3" href="#"><span class="no">3</span><span class="txt">DEF</span></a></li>
+                            <li class="clicky"><a id="num_4" class="num" data-val="4" href="#"><span class="no">4</span><span class="txt">GHI</span></a></li>
+                            <li class="clicky"><a id="num_5" class="num" data-val="5" href="#"><span class="no">5</span><span class="txt">JKL</span></a></li>
+                            <li class="clicky"><a id="num_6" class="num" data-val="6" href="#"><span class="no">6</span><span class="txt">MNO</span></a></li>
+                            <li class="clicky"><a id="num_7" class="num" data-val="7" href="#"><span class="no">7</span><span class="txt">PQRS</span></a></li>
+                            <li class="clicky"><a id="num_8" class="num" data-val="8" href="#"><span class="no">8</span><span class="txt">TUV</span></a></li>
+                            <li class="clicky"><a id="num_9" class="num" data-val="9" href="#"><span class="no">9</span><span class="txt">WXYZ</span></a></li>
+                            <li class="clicky"><a id="num_+" class="num plus" data-val="+" href="#"><span class="no">&#x2719;</span></a></li>
+                            <li class="clicky"><a id="num_0" class="num zero" data-val="0" href="#"><span class="no">0</span></a></li>
+                            <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li> -->
+                            <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>
+                        </ul><!-- /keypad dialpad nums -->
+                        <a class="close" href="#"><img src="images/icn_close.svg" /></a>
+                    </div><!-- /panel dialer -->
+    
+                    <div class="panel caller">
+                        <div class="preview">
+                            <p class="title">Who you gonna call?</p>
+                            <p class="user"><a class="answer" href=""><img src="images/icn_usr.svg" /></a></p>
+                            <p class="inp"><input id="typed_no" type="text" value="+34 567 8901" disabled="disabled"></p>
+                            <p class="msg">Unknown number</p>
+                            <p class="call_tools">
+                                <a class="clicky cancel" href="#"><img src="images/icn_reject.svg" /></a>
+                                <a class="clicky close" href="#"><img src="images/num_x.svg" /></a>
+                                <a class="clicky answer" href="#"><img src="images/icn_call_ok.svg" /></a>
+                            </p>
+                        </div><!-- /preview -->
+                        <a class="close" href="#"><img src="images/icn_close.svg" /></a>
+                    </div><!-- /panel caller -->
+    
+                    <div class="panel answer">
+                        <div class="preview">
+                            <p class="title">Current call</p>
+                            <p class="user"><img src="images/icn_usr.svg" /></p>
+                            <p class="inp"><input id="typed_no" type="text" value="+34 567 8901" disabled="disabled"></p>
+                            <p class="msg">Unknown number</p>
+                            <p class="call_tools">
+                                <a class="clicky numapad" href="#"><img src="images/icn_numpad.svg" /></a>
+                                <a class="clicky cancel" href="#"><img src="images/icn_reject.svg" /></a>
+                                <a class="clicky mute" href="#"><img src="images/icn_mute.svg" /></a>
+                            </p>
+                        </div><!-- /preview -->
+                        <a class="close" href="#"><img src="images/icn_close.svg" /></a>
+                    </div><!-- /panel answer -->
+    
+                </div><!-- /screen_wrp -->
+
+            </div><!-- /screen -->
+          
             <div class="img-container">
                 <div class="visible-sm visible-md visible-lg img-responsive">
-                    <img ng-src="{{'/images/iPhone.png'}}" alt="" />
+                    <!-- <img ng-src="{{'/images/iPhone.png'}}" alt="" /> -->
+                    <object type="image/svg+xml" data="images/img_phone.svg"></object>
                 </div>
                 <div class="visible-xs img-responsive">
                     <img ng-src="{{'/images/blank.png'}}" alt="" />
                 </div>
+
                 <div class="sms-response">
                     <div scroll-bottom="results" class="sms-response-pos">
                         <div ng-repeat="obj in results track by $index">
@@ -51,14 +121,18 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="sms-input">
                     <form ng-submit="smsInput()">
-                        <label for="sms"></label>
-                        <input ng-model="smsText" type="text" placeholder="iMessage" class="form-control" id="sms" autocomplete="off">
+                        <!-- <label for="sms"></label> -->
+                        <span class="dial"><a class="open_dialer" href="#"><img src="images/icn_dialer.svg"></a></span>
+                        <span class="input"><input ng-model="smsText" type="text" placeholder="iMessage" class="form-control" id="sms" autocomplete="off"></span>
+                        <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span>
                     </form>
                 </div>
-                <!-- <input id="CallButton" type="button" value="Idle"></input> -->
             </div>
+
         </div>
     </div>
 </div>
+

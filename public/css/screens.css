@@ -1,0 +1,355 @@
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	GENERAL
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.img-container .sms-response {
+    position: absolute;
+    top: 16%;
+    min-height: initial;
+    height: 68%;
+    left: 14%;
+    width: 72%;
+    bottom: 16%;
+}
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	SCREEN
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.screen {
+    position: absolute;
+    top: 16%;
+    min-height: initial;
+    height: 68%;
+    left: 14%;
+    width: 72%;
+    bottom: 16%;
+}
+
+.screen .screen_wrp {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    top: 0%;
+    bottom: 0%;
+    left: 0%; 
+    right: 0%;
+}
+
+.screen .panel {
+    display: block;
+    position: absolute;
+    background: #E8E8E8;
+    opacity: 0;
+    transform: scale(0);
+    transform-origin: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -webkit-transition: all 0.4s ease;
+       -moz-transition: all 0.4s ease;
+         -o-transition: all 0.4s ease;
+            transition: all 0.4s ease; 
+}
+
+.screen .panel.open {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.screen .panel.open p { text-align: center; }
+
+.screen .inp {
+    position: relative;
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 0 20px 0 0;
+    border: 1px dashed #ccc;
+}
+
+.screen .inp > a {
+    position: absolute;
+    display: block;
+    width: 60px;
+    display: flex;
+    align-items: center;
+    top: 0; right: -30px; bottom: 0;
+}
+
+.screen .inp > a img {
+    width: 60px;
+    height: auto;
+}
+
+.screen input {
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 10px;
+    font-size: 18px;
+    font-weight: 400;
+    font-family: 'Roboto', sans-serif;
+}
+
+.screen .preview input {
+    border: 0px none;
+    text-align: center;
+    background: none transparent;
+    font-weight: 500;
+    font-size: 48px;
+    letter-spacing: -2px;
+}
+
+.screen .panel > .close {
+    display: block;
+    width: 50px; height: 50px;
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.screen .call_tools { position: absolute; width: 100%; left: 0; bottom: 20px; text-align: center; display: flex; align-items: center; }
+
+.screen .call_tools > a { display: block; float: left; width: 33.333%; padding: 0 20px; text-align: center; }
+
+.screen p.user img { width: 74%; margin-left: 0%; }
+
+.screen .clicky: active { position: relative; top: 2px; }
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	SCREEN KEYPADS
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.screen .keypad {
+    display: block;
+    float: left;
+    list-style: none;
+    padding: 0;
+}
+
+.screen .keypad li { display: block; width: 33.33%; float: left; padding: 4px 20px; }
+
+.screen .keypad .num { 
+    display: block;
+    width: 100%; 
+    height: 0;
+    text-decoration: none;
+    padding: 50% 0;
+    border-radius: 50%;
+    overflow: hidden;
+    box-sizing: content-box;
+    border: 2px solid rgba(0,0,0,0.06);
+    background: rgba(0,0,0,0.03);
+}
+
+.screen .keypad .num span {
+    display: block;
+    text-align: center;
+}
+
+.screen .keypad .num .no {
+    color: #999;
+    font-size: 30px;
+    font-weight: 400;
+    font-family: 'Roboto Condensed', sans-serif;
+    width: 100%;
+    height: 0%;
+    padding: 30% 0;
+    margin-top: -50%;
+    line-height: 50%;
+}
+
+.screen .keypad .num .txt { font-size: 80%; color: #b2b2b2; }
+
+.screen .keypad .more .no { font-size: 16px; padding: 40% 0; color: #b2b2b2; }
+
+.screen .keypad .more .txt { font-size: 60%; color: #b2b2b2; margin-top: -20%; }
+
+.screen .keypad .plus .no { font-size: 26px; padding: 40% 0; color: #b2b2b2; }
+
+.screen .keypad .zero .no { padding: 40% 0; }
+
+.screen .keypad .aste .no { padding: 40% 0; font-size: 26px; color: #b2b2b2; }
+
+.screen .keypad .num.pressed {
+    -webkit-animation: numClick 0.4s;
+       -moz-animation: numClick 0.4s;
+         -o-animation: numClick 0.4s;
+            animation: numClick 0.4s;
+}
+
+@-webkit-keyframes numClick {
+    0% { background: rgba(0,0,0,0.03); } 
+    15% { background: rgba(0, 0, 0, 0.09); } 
+    100% { background: rgba(0,0,0,0.03); } 
+}
+
+@-moz-keyframes numClick {
+    0%{ background: rgba(0,0,0,0.03); } 
+    15%{ background: rgba(0, 0, 0, 0.09); } 
+    100%{ background: rgba(0,0,0,0.03); } 
+}
+
+@-o-keyframes numClick {
+    0%{ background: rgba(0,0,0,0.03); } 
+    15%{ background: rgba(0, 0, 0, 0.09); } 
+    100%{ background: rgba(0,0,0,0.03); } 
+}
+
+@keyframes numClick {
+    0%{ background: rgba(0,0,0,0.03); } 
+    15%{ background: rgba(0, 0, 0, 0.09); } 
+    100%{ background: rgba(0,0,0,0.03); } 
+}
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	BACKGROUND WIREFRAME
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.screen .wireframe {
+    display: block;
+}
+
+.screen .wireframe img, .screen .wireframe svg {
+    width: 100%;
+    height: auto;
+    display: block;
+    float: left;
+}
+
+.screen .wireframe svg text { font-family: 'Roboto Condensed'; font-weight: 400; }
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	SCREEN MESSAGES
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.sms-input {
+}
+
+.sms-input span {
+    display: block;
+    float: left;
+    width: 70px;
+}
+
+.sms-input span img {
+    display: block;
+    float: left;
+    width: 40px;
+    height: auto;
+    margin: 15px;
+}
+
+.sms-input span.input {
+    width: calc(100% - 140px);
+}
+
+.sms-input span.input input {
+    margin: 13px 0;
+    border: 1px solid #ccc;
+}
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	SCREEN DIALER
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.screen .dialer {
+    position: absolute;
+    display: block;
+    z-index: 2;
+}
+
+.screen .dialer .nums {
+    width: 80%;
+    margin: 0 10%;
+    position: absolute;
+    bottom: 20px;
+}
+
+.screen .dialer .preview {
+    display: block;
+    float: left;
+    width: 80%;
+    margin: 0 10%;
+    height: 50%;
+}
+
+.screen .dialer .preview {}
+
+.screen .dialer .call {}
+
+.screen .dialer .call: active {
+    position: relative;
+    top: 2px;
+}
+
+.screen .dialer .preview .call_no img {
+    width: 46%;
+    height: auto;
+    margin-top: -6%;
+}
+
+.screen .dialer .preview input {}
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	SCREEN DIALER
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.screen .caller {
+    position: absolute;
+    display: block;
+    z-index: 3;
+}
+
+.screen .caller .preview input {}
+
+/*-------------------------------------------------------------------------------------------
+ *
+ * 	SCREEN ANSWER
+ *
+ *---------------------------------------------------------------------------------------- */
+
+.screen div.answer {
+    position: absolute;
+    display: block;
+    z-index: 4;
+}
+
+.screen .answer .preview input {}
+
+@media (min-width: 200px) {
+    .section p.desc{ font-size: 5vw; }
+}
+
+@media (min-width: 480px) {
+    .section p.desc{ font-size: 4vw; }
+}
+
+@media (min-width: 768px) {
+    .section p.desc{ font-size: 2.8vw; }
+}
+
+@media (min-width: 992px) {
+    .section p.desc{ font-size: 2.2vw; }
+}
+
+@media (min-width: 1200px) {
+    .section p.desc{ font-size: 1.2vw; }
+}
+
