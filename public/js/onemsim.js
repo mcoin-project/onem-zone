@@ -271,6 +271,7 @@ ONEmSimModule.controller('mainController', [
                     globalSession.on("ended",function(e){
                         console.log('newRTCSession - incoming - ended');
                         audioElement.pause();
+                        $('.phone div.panel').removeClass('open');
                     });
                     globalSession.on("failed",function(e){
                         console.log('newRTCSession - incoming - failed');
@@ -287,17 +288,19 @@ ONEmSimModule.controller('mainController', [
             // For debug run this in the browser's console and reload the page:
             // JsSIP.debug.enable('JsSIP:*');
 
-            // Answer or end the call:
+            // Answer the call:
             AnswerButton.click( function(){
                 console.log('AnswerButton - click');
                 globalSession.answer(options);
+                $('.phone div.panel').removeClass('open');
                 $('.phone div.answer').toggleClass('open');
             });
 
+            // End the call or reject the call:
             RejectButton.click( function(){
                 console.log('RejectButton - click');
                 globalSession.terminate();
-                $('.phone div.answer').toggleClass('close');
+                $('.phone div.panel').removeClass('open');
             });
 
             //function IncomingEndCall() {
