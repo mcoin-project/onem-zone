@@ -69,6 +69,16 @@ ONEmSimModule.factory('Socket', function(socketFactory) {
     return mySocket;
 });
 
+ONEmSimModule.factory('UserInterface', function() {
+    $('a.open_dialer').click(function(e) {
+        e.preventDefault();
+        $(this).parents('.phone').find('div.dialer').toggleClass('open');
+        console.log('[UI]: Dialer opened!');
+        return false;
+    });
+    return false;
+});
+
 ONEmSimModule.factory('SmsHandler', [
     '$resource',
     function($resource) {
@@ -174,17 +184,16 @@ ONEmSimModule.controller('mainController', [
     'SmsHandler',
     'DataModel',
     'Socket',
-    function($scope, $http, SmsHandler, DataModel, Socket) {
+    'UserInterface',
+    function($scope, $http, SmsHandler, DataModel, Socket, UserInterface) {
 
         console.log("mainController initialising");
 
-
-        ////This should be the button that will be used to answer and end the calls:
-        //var button = document.createElement("button");
-        //button.innerHTML = "Idle";
-
-        //var body = document.getElementsByTagName("body")[0];
-        //body.appendChild(button);
+        //These are the buttons of the phone's user interface:
+        var AnswerButton = $('.call_tools a.answer');
+        var RejectButton = $('.call_tools a.cancel');
+        var CallButton = $('');
+        var ClosePanelButton = $('');
 
         var audioElement = document.getElementById('myAudio');
 
@@ -195,119 +204,107 @@ ONEmSimModule.controller('mainController', [
 
         var socket = new JsSIP.WebSocketInterface('ws://zoiper.dhq.onem');
 
-        var startResponse = SmsHandler.start({}, function() {
-          $scope.msisdn = startResponse.msisdn;
-          console.log("msisdn:" + $scope.msisdn);
-
-          //JsSIP configuration:
-          var configuration = {
-            'sockets'  : [ socket ],
-            //'uri'      : 'sip:447725419720@zoiper.dhq.onem',
-            //'password' : 'ONEmP@$$w0rd2016'
-            'uri'      : 'sip:' + $scope.msisdn + '@zoiper.dhq.onem',
-            'password' : 'ONEmP@$$w0rd2016'
-          };
-
-          var ua = new JsSIP.UA(configuration);
-
-          ua.on('newRTCSession', function(data){
-            console.log('newRTCSession');
-            //var session = data.session; //session pointer
-            globalSession = data.session; //session pointer
-  
-            isIncomingCall = 1;
-            button.innerHTML = "Answer the call!";
-  
-            //Play ring tone:
-            audioElement.src = "/sounds/old_british_phone.wav";
-            audioElement.play();
-  
-            if(globalSession.direction === "incoming"){
-              //incoming call here:
-              globalSession.on("accepted",function(){
-                console.log('newRTCSession - incoming - accepted');
-                //audioElement.src = window.URL.createObjectURL(session.connection.getRemoteStreams()[0]);
-                audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                audioElement.play();
-                isInCall = 1;
-                button.innerHTML = "End the call!";
-              });
-              globalSession.on("ended",function(e){
-                console.log('newRTCSession - incoming - ended');
-                audioElement.pause();
-              });
-              globalSession.on("failed",function(e){
-                console.log('newRTCSession - incoming - failed');
-                audioElement.pause();
-              });
-  
-              //// End call in 30 seconds:
-              //setTimeout(IncomingEndCall, 30000);
-            };
-          });
-
-          ua.start();
-
-        });
-
-        // For debug run this in the browser's console and reload the page:
-        // JsSIP.debug.enable('JsSIP:*');
-
         // Register callbacks to desired call events
         var eventHandlers = {
-          'progress'  : function(e) {
-            console.log('eventHandlers - progress');
-          },
-          'failed'    : function(e) {
-            console.log('eventHandlers - failed');
-            audioElement.pause();
-          },
-          'ended'     : function(e) {
-            console.log('eventHandlers - ended');
-            audioElement.pause();
-          },
-          'confirmed' : function(e) {
-            console.log('eventHandlers - confirmed');
-            ////audioElement is <audio> element on page
-            ////audioElement.src = window.URL.createObjectURL(stream);
-            //audioElement.src = window.URL.createObjectURL(rtp_session.connection.getRemoteStreams()[0]);
-            //audioElement.play();
-            //isInCall = 1;
-          },
-          'addstream' : function(e) {
-            console.log('eventHandlers - addstream');
-          }
+            'progress'  : function(e) {
+                console.log('eventHandlers - progress');
+            },
+            'failed'    : function(e) {
+                console.log('eventHandlers - failed');
+                audioElement.pause();
+            },
+            'ended'     : function(e) {
+                console.log('eventHandlers - ended');
+                audioElement.pause();
+            },
+            'confirmed' : function(e) {
+                console.log('eventHandlers - confirmed');
+                ////audioElement is <audio> element on page
+                ////audioElement.src = window.URL.createObjectURL(stream);
+                //audioElement.src = window.URL.createObjectURL(rtp_session.connection.getRemoteStreams()[0]);
+                //audioElement.play();
+                //isInCall = 1;
+            },
+            'addstream' : function(e) {
+                console.log('eventHandlers - addstream');
+            }
         };
 
         var options = {
-          'eventHandlers'        : eventHandlers,
-          'sessionTimersExpires' : 600,
-          'mediaConstraints'     : { 'audio' : true, 'video' : false } //,
+            'eventHandlers'        : eventHandlers,
+            'sessionTimersExpires' : 600,
+            'mediaConstraints'     : { 'audio' : true, 'video' : false } //,
         };
 
-        // Answer or end the call:
-        button.addEventListener ("click", function(){
-          if ( isInCall == 1) { 
-            globalSession.terminate();
-            console.log("Call ended!");
-            isInCall = 0;
-            isIncomingCall = 0;
-            button.innerHTML = "Idle";
-            audioElement.pause();
-          }
-          else {
-            if ( isIncomingCall == 1 ) {
-              globalSession.answer(options);
-              console.log("Call answered!");
-              button.innerHTML = "End the call!";
-              isInCall = 1;
-            };
-          };
-        });
+        var startResponse = SmsHandler.start({}, function() {
+            $scope.msisdn = startResponse.msisdn;
+            console.log("msisdn:" + $scope.msisdn);
 
-        //function IncomingEndCall() {
-        //  globalSession.terminate();
-        //};
+            //JsSIP configuration:
+            var configuration = {
+                'sockets'  : [ socket ],
+                'uri'      : 'sip:' + $scope.msisdn + '@zoiper.dhq.onem',
+                'password' : 'ONEmP@$$w0rd2016'
+            };
+
+            var ua = new JsSIP.UA(configuration);
+
+            ua.on('newRTCSession', function(data){
+                console.log('newRTCSession');
+                globalSession = data.session; //session pointer
+
+                isIncomingCall = 1;
+                $('.phone div.caller').toggleClass('open');
+
+                //Play ring tone:
+                audioElement.src = "/sounds/old_british_phone.wav";
+                audioElement.play();
+
+                if(globalSession.direction === "incoming"){
+                    //incoming call here:
+                    globalSession.on("accepted",function(){
+                        console.log('newRTCSession - incoming - accepted');
+                        audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                        audioElement.play();
+                        isInCall = 1;
+                    });
+                    globalSession.on("ended",function(e){
+                        console.log('newRTCSession - incoming - ended');
+                        audioElement.pause();
+                    });
+                    globalSession.on("failed",function(e){
+                        console.log('newRTCSession - incoming - failed');
+                        audioElement.pause();
+                    });
+
+                    //// End call in 30 seconds:
+                    //setTimeout(IncomingEndCall, 30000);
+                };
+            });
+
+            ua.start();
+
+            // For debug run this in the browser's console and reload the page:
+            // JsSIP.debug.enable('JsSIP:*');
+
+            // Answer or end the call:
+            AnswerButton.click( function(){
+                console.log('AnswerButton - click');
+                globalSession.answer(options);
+                $('.phone div.answer').toggleClass('open');
+            });
+
+            RejectButton.click( function(){
+                console.log('RejectButton - click');
+                globalSession.terminate();
+                $('.phone div.answer').toggleClass('close');
+            });
+
+            //function IncomingEndCall() {
+            //  globalSession.terminate();
+            //};
+
+        });
 
         $scope.comments = DataModel.getComments();
         $scope.results = DataModel.getResults();
@@ -361,3 +358,4 @@ ONEmSimModule.controller('mainController', [
         };
     }
 ]);
+
