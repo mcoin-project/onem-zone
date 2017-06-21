@@ -69,16 +69,6 @@ ONEmSimModule.factory('Socket', function(socketFactory) {
     return mySocket;
 });
 
-ONEmSimModule.factory('UserInterface', function() {
-    $('a.open_dialer').click(function(e) {
-        e.preventDefault();
-        $(this).parents('.phone').find('div.dialer').toggleClass('open');
-        console.log('[UI]: Dialer opened!');
-        return false;
-    });
-    return false;
-});
-
 ONEmSimModule.factory('SmsHandler', [
     '$resource',
     function($resource) {
@@ -108,11 +98,11 @@ ONEmSimModule.directive('scrollBottom', function() {
         link: function(scope, element) {
             scope.$watchCollection('scrollBottom', function(newValue) {
                 if (newValue) {
-                    //      $(element).scrollTop($(element)[0].scrollHeight);
+                    //$(element).scrollTop($(element)[0].scrollHeight);
 
                     var scrollHeight = $(element)[0].scrollHeight;
                     $(element).animate({ scrollTop: scrollHeight }, 300);
-                }
+                };
             });
         }
     };
@@ -184,22 +174,52 @@ ONEmSimModule.controller('mainController', [
     'SmsHandler',
     'DataModel',
     'Socket',
-    'UserInterface',
-    function($scope, $http, SmsHandler, DataModel, Socket, UserInterface) {
+    function($scope, $http, SmsHandler, DataModel, Socket) {
 
         console.log("mainController initialising");
+
+        var toValue = '';
+
+        $('a.open_dialer').click(function(e) {
+            e.preventDefault();
+            $(this).parents('.phone').find('div.dialer').toggleClass('open');
+            console.log('[UI]: Dialer state changed!');
+            return false;
+        });
+
+        $('a.num').click(function(e){
+            e.preventDefault();
+            var $btn = $(this);
+            toValue = toValue + $(this).data('val');
+            $btn.addClass('pressed');
+            setTimeout(function () {
+                $btn.removeClass('pressed');
+            }, 400);
+            $('#typed_no').val(toValue);
+            return false;
+        });
+
+        $('a.delete').click(function(e){
+            e.preventDefault();
+            var $btn = $(this);
+            $btn.addClass('pressed');
+            setTimeout(function () {
+                $btn.removeClass('pressed');
+            }, 400);
+            toValue = toValue.slice(0, -1);
+            $('#typed_no').val(toValue);
+            return false;
+        });
 
         //These are the buttons of the phone's user interface:
         var AnswerButton = $('.call_tools a.answer');
         var RejectButton = $('.call_tools a.cancel');
-        var CallButton = $('');
+        var CallButton = $('.screen a.call');
         var ClosePanelButton = $('');
+        var DeleteButton = $('');
 
         var audioElement = document.getElementById('myAudio');
 
-        var rtp_session = null;
-        var isInCall = 0;
-        var isIncomingCall = 0;
         var globalSession = null;
 
         var socket = new JsSIP.WebSocketInterface('ws://zoiper.dhq.onem');
@@ -212,18 +232,18 @@ ONEmSimModule.controller('mainController', [
             'failed'    : function(e) {
                 console.log('eventHandlers - failed');
                 audioElement.pause();
+                $('.phone div.panel').removeClass('open');
             },
             'ended'     : function(e) {
                 console.log('eventHandlers - ended');
                 audioElement.pause();
+                $('.phone div.panel').removeClass('open');
             },
             'confirmed' : function(e) {
                 console.log('eventHandlers - confirmed');
-                ////audioElement is <audio> element on page
-                ////audioElement.src = window.URL.createObjectURL(stream);
-                //audioElement.src = window.URL.createObjectURL(rtp_session.connection.getRemoteStreams()[0]);
-                //audioElement.play();
-                //isInCall = 1;
+                //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
+                audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                audioElement.play();
             },
             'addstream' : function(e) {
                 console.log('eventHandlers - addstream');
@@ -247,14 +267,13 @@ ONEmSimModule.controller('mainController', [
                 'password' : 'ONEmP@$$w0rd2016'
             };
 
-            var ua = new JsSIP.UA(configuration);
+            var phoneONEm = new JsSIP.UA(configuration);
 
-            ua.on('newRTCSession', function(data){
+            phoneONEm.on('newRTCSession', function(data){
                 console.log('newRTCSession');
                 globalSession = data.session; //session pointer
 
-                isIncomingCall = 1;
-                $('.phone div.caller').toggleClass('open');
+                $('.phone div.caller').addClass('open');
 
                 //Play ring tone:
                 audioElement.src = "/sounds/old_british_phone.wav";
@@ -264,9 +283,9 @@ ONEmSimModule.controller('mainController', [
                     //incoming call here:
                     globalSession.on("accepted",function(){
                         console.log('newRTCSession - incoming - accepted');
+                        //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                         audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         audioElement.play();
-                        isInCall = 1;
                     });
                     globalSession.on("ended",function(e){
                         console.log('newRTCSession - incoming - ended');
@@ -276,6 +295,7 @@ ONEmSimModule.controller('mainController', [
                     globalSession.on("failed",function(e){
                         console.log('newRTCSession - incoming - failed');
                         audioElement.pause();
+                        $('.phone div.panel').removeClass('open');
                     });
 
                     //// End call in 30 seconds:
@@ -283,7 +303,7 @@ ONEmSimModule.controller('mainController', [
                 };
             });
 
-            ua.start();
+            phoneONEm.start();
 
             // For debug run this in the browser's console and reload the page:
             // JsSIP.debug.enable('JsSIP:*');
@@ -293,14 +313,24 @@ ONEmSimModule.controller('mainController', [
                 console.log('AnswerButton - click');
                 globalSession.answer(options);
                 $('.phone div.panel').removeClass('open');
-                $('.phone div.answer').toggleClass('open');
+                $('.phone div.answer').addClass('open');
             });
 
             // End the call or reject the call:
             RejectButton.click( function(){
                 console.log('RejectButton - click');
                 globalSession.terminate();
+                //$('.phone div.panel').removeClass('open');
+            });
+
+            //Make a phone call:
+            CallButton.click( function(){
+                console.log('CallButton - click; Call to ' + toValue);
+                phoneONEm.call('sip:' + toValue + '@zoiper.dhq.onem', options);
+                toValue = '';
+                $('#typed_no').val(toValue);
                 $('.phone div.panel').removeClass('open');
+                $('.screen div.caller').addClass('open');
             });
 
             //function IncomingEndCall() {
