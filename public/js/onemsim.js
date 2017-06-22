@@ -180,6 +180,8 @@ ONEmSimModule.controller('mainController', [
 
         var toValue = '';
 
+        var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
+
         $('a.open_dialer').click(function(e) {
             e.preventDefault();
             $(this).parents('.phone').find('div.dialer').toggleClass('open');
@@ -222,7 +224,7 @@ ONEmSimModule.controller('mainController', [
 
         var globalSession = null;
 
-        var socket = new JsSIP.WebSocketInterface('ws://zoiper.dhq.onem');
+        var socket = new JsSIP.WebSocketInterface('ws://' + sipProxy);
 
         // Register callbacks to desired call events
         var eventHandlers = {
@@ -253,6 +255,14 @@ ONEmSimModule.controller('mainController', [
         var options = {
             'eventHandlers'        : eventHandlers,
             'sessionTimersExpires' : 600,
+            pcConfig               :
+                {
+                    rtcpMuxPolicy  : 'negotiate',
+                    iceServers     :
+                        [
+                            { urls : [ 'stun:stun.l.google.com:19302' ] }
+                        ]
+                },
             'mediaConstraints'     : { 'audio' : true, 'video' : false } //,
         };
 
@@ -263,7 +273,7 @@ ONEmSimModule.controller('mainController', [
             //JsSIP configuration:
             var configuration = {
                 'sockets'  : [ socket ],
-                'uri'      : 'sip:' + $scope.msisdn + '@zoiper.dhq.onem',
+                'uri'      : 'sip:' + $scope.msisdn + '@' + sipProxy,
                 'password' : 'ONEmP@$$w0rd2016'
             };
 
@@ -326,7 +336,7 @@ ONEmSimModule.controller('mainController', [
             //Make a phone call:
             CallButton.click( function(){
                 console.log('CallButton - click; Call to ' + toValue);
-                phoneONEm.call('sip:' + toValue + '@zoiper.dhq.onem', options);
+                phoneONEm.call('sip:' + toValue + '@' + sipProxy, options);
                 toValue = '';
                 $('#typed_no').val(toValue);
                 $('.phone div.panel').removeClass('open');
