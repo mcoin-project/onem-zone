@@ -178,8 +178,6 @@ ONEmSimModule.controller('mainController', [
 
         console.log("mainController initialising");
 
-        var toValue = '';
-
         $('a.open_dialer').click(function(e) {
             e.preventDefault();
             $(this).parents('.phone').find('div.dialer').toggleClass('open');
@@ -190,12 +188,12 @@ ONEmSimModule.controller('mainController', [
         $('a.num').click(function(e){
             e.preventDefault();
             var $btn = $(this);
-            toValue = toValue + $(this).data('val');
+            var val = $(this).data('val');
             $btn.addClass('pressed');
             setTimeout(function () {
                 $btn.removeClass('pressed');
             }, 400);
-            $('#typed_no').val(toValue);
+            $('#typed_no').val($('#typed_no').val() + val);
             return false;
         });
 
@@ -206,8 +204,7 @@ ONEmSimModule.controller('mainController', [
             setTimeout(function () {
                 $btn.removeClass('pressed');
             }, 400);
-            toValue = toValue.slice(0, -1);
-            $('#typed_no').val(toValue);
+            $('#typed_no').val($('#typed_no').val().slice(0,-1));
             return false;
         });
 
@@ -260,14 +257,14 @@ ONEmSimModule.controller('mainController', [
                             { urls : [ 'stun:stun.l.google.com:19302' ] }
                         ]
                 },
-            'mediaConstraints'     : { 'audio' : true, 'video' : false } //,
+            'mediaConstraints'     : { 'audio' : true, 'video' : false }
         };
 
         var startResponse = SmsHandler.start({}, function() {
             $scope.msisdn = startResponse.msisdn;
             var sipProxy = startResponse.sipproxy;
-            console.log("msisdn:" + $scope.msisdn);
-            console.log("SIP Proxy:" + sipProxy);
+            console.log("msisdn: " + $scope.msisdn);
+            console.log("SIP Proxy: " + sipProxy);
 
             var socket = new JsSIP.WebSocketInterface('ws://' + sipProxy);
 
@@ -336,12 +333,11 @@ ONEmSimModule.controller('mainController', [
 
             //Make a phone call:
             CallButton.click( function(){
-                console.log('CallButton - click; Call to ' + toValue);
-                phoneONEm.call('sip:' + toValue + '@' + sipProxy, options);
-                toValue = '';
-                $('#typed_no').val(toValue);
+                console.log('CallButton - click; Call to ' + $('#typed_no').val());
+                phoneONEm.call('sip:' + $('#typed_no').val() + '@' + sipProxy, options);
+                $('#typed_no').val('');
                 $('.phone div.panel').removeClass('open');
-                $('.screen div.caller').addClass('open');
+                $('.screen div.answer').addClass('open');
             });
 
             //function IncomingEndCall() {
