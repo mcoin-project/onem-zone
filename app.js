@@ -33,6 +33,7 @@ var password = process.env.PASSWORD; // used for web basic auth
 var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 var smppPassword = process.env.SMPP_PASSWORD || "password";
 var smppPort = process.env.SMPP_PORT || 2775;
+var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 
 var smppSession; // the smpp session context saved globally.
 var resArray = [];
@@ -69,7 +70,6 @@ app.use(function(req, res, next) { //allow cross origin requests
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
-
 
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
@@ -213,7 +213,7 @@ io.on('connection', function(socket) {
     if (!socket.handshake.session.onemContext) { // must be first time, or expired
         var msisdn = moment().format('YYMMDDHHMMSS');
         console.log("msisdn:" + msisdn);
-        socket.handshake.session.onemContext = { msisdn: msisdn };
+        socket.handshake.session.onemContext = { msisdn   : msisdn};
         socket.handshake.session.save();
     }
 
@@ -253,7 +253,8 @@ app.get('/api/start', function(req, res, next) {
         req.session.onemContext = { msisdn: msisdn };
     }
 
-    res.json({ msisdn: req.session.onemContext.msisdn });
+    res.json({ msisdn:   req.session.onemContext.msisdn,
+               sipproxy: sipProxy                       });
 
 });
 

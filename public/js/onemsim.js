@@ -180,8 +180,6 @@ ONEmSimModule.controller('mainController', [
 
         var toValue = '';
 
-        var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
-
         $('a.open_dialer').click(function(e) {
             e.preventDefault();
             $(this).parents('.phone').find('div.dialer').toggleClass('open');
@@ -224,7 +222,6 @@ ONEmSimModule.controller('mainController', [
 
         var globalSession = null;
 
-        var socket = new JsSIP.WebSocketInterface('ws://' + sipProxy);
 
         // Register callbacks to desired call events
         var eventHandlers = {
@@ -268,7 +265,11 @@ ONEmSimModule.controller('mainController', [
 
         var startResponse = SmsHandler.start({}, function() {
             $scope.msisdn = startResponse.msisdn;
+            var sipProxy = startResponse.sipproxy;
             console.log("msisdn:" + $scope.msisdn);
+            console.log("SIP Proxy:" + sipProxy);
+
+            var socket = new JsSIP.WebSocketInterface('ws://' + sipProxy);
 
             //JsSIP configuration:
             var configuration = {
