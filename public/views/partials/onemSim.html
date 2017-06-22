@@ -1,32 +1,22 @@
-<div class="row visible-lg visible-md visible-sm onem-logo">
-    <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1">
-        <a href="http://www.onem.com">
-            <img ng-src="{{'/images/onem-logo.svg'}}" alt="" />
-            <p>Desktop</p>
-        </a>
-    </div>
-</div>
-<div class="row visible-lg visible-md visible-sm onem-logo">
-    <div class="col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1">
-        <div class="text-center">
-            <div class="onem-label">
-                <strong>Msisdn:</strong>
-            </div>
-            <div class="onem-label">
-                {{msisdn}}
-            </div>
-        </div>
-    </div>
-</div>
 <div class="row onem-border">
-    <div class="row">
-        <div class="phone col-lg-4 col-md-4 col-lg-offset-1 col-md-offset-1 col-sm-4 col-xs-12">
+
+    <div class="phone_wrp col-md-4 col-sm-8 col-xs-12 col-md-offset-4 col-sm-offset-2 col-xs-offset-0">
+
+        <div class="onem-logo">
+            <a href="http://www.onem.com">
+                <img ng-src="{{'/images/onem-logo.svg'}}" alt="" />
+                <p>Desktop</p>
+            </a>
+        </div><!-- /onem-logo -->
+
+        <div class="phone">
 
             <div class="screen">
 
                 <div class="screen_wrp">
+
                     <div class="panel dialer">
-    
+
                         <div class="preview">
                             <p class="title">Who you gonna call?</p>
                             <p class="inp">
@@ -36,7 +26,7 @@
                             <p class="msg">Type the number you want to call.</p>
                             <p class="call_no"><a class="call" href="#"><img src="images/icn_answer.svg" /></a></p>
                         </div><!-- /preview -->
-    
+
                         <ul class="keypad dialpad nums">
                             <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
                             <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>
@@ -54,7 +44,7 @@
                         </ul><!-- /keypad dialpad nums -->
                         <a class="close" href="#"><img src="images/icn_close.svg" /></a>
                     </div><!-- /panel dialer -->
-    
+
                     <div class="panel caller">
                         <div class="preview">
                             <p class="title">Who you gonna call?</p>
@@ -69,7 +59,7 @@
                         </div><!-- /preview -->
                         <a class="close" href="#"><img src="images/icn_close.svg" /></a>
                     </div><!-- /panel caller -->
-    
+
                     <div class="panel answer">
                         <div class="preview">
                             <p class="title">Current call</p>
@@ -84,19 +74,21 @@
                         </div><!-- /preview -->
                         <!-- <a class="close" href="#"><img src="images/icn_close.svg" /></a> -->
                     </div><!-- /panel answer -->
-    
+
                 </div><!-- /screen_wrp -->
 
             </div><!-- /screen -->
-          
+
             <div class="img-container">
                 <div class="visible-sm visible-md visible-lg img-responsive">
                     <!-- <img ng-src="{{'/images/iPhone.png'}}" alt="" /> -->
                     <object type="image/svg+xml" data="images/img_phone.svg"></object>
-                </div>
-                <div class="visible-xs img-responsive">
-                    <img ng-src="{{'/images/blank.png'}}" alt="" />
-                </div>
+                </div> <!-- /visible-sm visible-md visible-lg img-responsive -->
+
+                <p class="onem_msisdn">
+                    <strong>MSISDN:</strong>
+                    <span>{{msisdn}}</span>
+                </p>
 
                 <div class="sms-response">
                     <div scroll-bottom="results" class="sms-response-pos">
@@ -105,34 +97,37 @@
                                 <div class="sms-placeholder">
                                     <div class="sms-mt-container">
                                         <span>{{obj.value}}</span>
-                                    </div>
+                                    </div> <!-- /sms-mt-container -->
                                     <div ng-if="smsLength" class="sms-length">
                                         <span>{{obj.value.length}}</span>
-                                    </div>
-                                </div>
-                            </div>
+                                    </div> <!-- /sms-length -->
+                                </div> <!-- /sms-placeholder -->
+                            </div> <!-- /sms-mt -->
                             <div ng-if="obj.type == 'mo'" class="sms-mo">
                                 <div class="sms-placeholder">
                                     <div class="sms-mo-container">
                                         <span>{{obj.value}}</span>
-                                    </div>
-                                </div>
-                            </div>
+                                    </div> <!-- /sms-mo-container -->
+                                </div> <!-- /sms-placeholder -->
+                            </div> <!-- /sms-mo -->
                         </div>
-                    </div>
-                </div>
+                    </div> <!-- /sms-response-pos -->
+                </div> <!-- /sms-response -->
 
                 <div class="sms-input">
                     <form ng-submit="smsInput()">
                         <!-- <label for="sms"></label> -->
                         <span class="dial"><a class="open_dialer" href="#"><img src="images/icn_dialer.svg"></a></span>
                         <span class="input"><input ng-model="smsText" type="text" placeholder="iMessage" class="form-control" id="sms" autocomplete="off"></span>
-                        <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span>
+                        <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->
                     </form>
-                </div>
-            </div>
+                </div> <!-- /sms-input -->
 
-        </div>
-    </div>
-</div>
+            </div><!-- /img-container -->
+
+        </div><!-- /phone -->
+
+    </div> <!-- /phone_wrp col-md-4 col-sm-8 col-xs-12 col-md-offset-4 col-sm-offset-2 col-xs-offset-0 -->
+
+</div> <!-- /row onem-border -->
 

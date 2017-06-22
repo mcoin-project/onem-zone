@@ -212,13 +212,11 @@ ONEmSimModule.controller('mainController', [
         var AnswerButton = $('.call_tools a.answer');
         var RejectButton = $('.call_tools a.cancel');
         var CallButton = $('.screen a.call');
-        var ClosePanelButton = $('');
-        var DeleteButton = $('');
+        var ClosePanelButton = $('.screen a.close');
 
         var audioElement = document.getElementById('myAudio');
 
         var globalSession = null;
-
 
         // Register callbacks to desired call events
         var eventHandlers = {
@@ -249,14 +247,12 @@ ONEmSimModule.controller('mainController', [
         var options = {
             'eventHandlers'        : eventHandlers,
             'sessionTimersExpires' : 600,
-            pcConfig               :
-                {
-                    rtcpMuxPolicy  : 'negotiate',
-                    iceServers     :
-                        [
-                            { urls : [ 'stun:stun.l.google.com:19302' ] }
-                        ]
-                },
+            'pcConfig'             : {
+                'rtcpMuxPolicy'    : 'negotiate',
+                'iceServers'       : [
+                    { 'urls'       : [ 'stun:stun.l.google.com:19302' ] }
+                ]
+            },
             'mediaConstraints'     : { 'audio' : true, 'video' : false }
         };
 
@@ -328,7 +324,6 @@ ONEmSimModule.controller('mainController', [
             RejectButton.click( function(){
                 console.log('RejectButton - click');
                 globalSession.terminate();
-                //$('.phone div.panel').removeClass('open');
             });
 
             //Make a phone call:
@@ -338,6 +333,11 @@ ONEmSimModule.controller('mainController', [
                 $('#typed_no').val('');
                 $('.phone div.panel').removeClass('open');
                 $('.screen div.answer').addClass('open');
+            });
+
+            ClosePanelButton.click(function(e){
+                console.log('ClosePanelButton - click');
+                $('.phone div.panel').removeClass('open');
             });
 
             //function IncomingEndCall() {

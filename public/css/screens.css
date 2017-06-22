@@ -4,14 +4,36 @@
  *
  *---------------------------------------------------------------------------------------- */
 
+.img-container {
+    position: relative;
+}
+
+.img-container .onem_msisdn {
+    position: absolute;
+    top: 5%;
+    left: 0;
+    text-align: center;
+    width: 100%;
+}
+
 .img-container .sms-response {
     position: absolute;
     top: 16%;
     min-height: initial;
     height: 68%;
     left: 14%;
-    width: 72%;
-    bottom: 16%;
+    width: 73%;
+    bottom: 8%;
+}
+
+.img-container .sms-input {
+    position: absolute;
+    /*top: 78%;  
+    width: 67%;*/
+    left: 10.5%;
+    bottom: 7%;
+    right: 9.5%;
+    background: #f0f0f0;
 }
 
 /*-------------------------------------------------------------------------------------------
@@ -22,14 +44,14 @@
 
 .screen {
     position: absolute;
-    top: 16%;
+    top: 24%;
     min-height: initial;
-    height: 68%;
-    left: 14%;
-    width: 72%;
-    bottom: 16%;
+    /*height: 68%;
+    width: 72%;*/
+    left: 13.5%;
+    bottom: 15%;
+    right: 12%;
 }
-
 .screen .screen_wrp {
     position: absolute;
     display: block;
@@ -257,11 +279,11 @@
 }
 
 .sms-input span.input {
-    width: calc(100% - 140px);
+    width: calc(100% - 90px);
 }
 
 .sms-input span.input input {
-    margin: 13px 0;
+    margin: 18px 0;
     border: 1px solid #ccc;
 }
 
