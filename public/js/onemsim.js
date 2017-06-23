@@ -99,7 +99,6 @@ ONEmSimModule.directive('scrollBottom', function() {
             scope.$watchCollection('scrollBottom', function(newValue) {
                 if (newValue) {
                     //$(element).scrollTop($(element)[0].scrollHeight);
-
                     var scrollHeight = $(element)[0].scrollHeight;
                     $(element).animate({ scrollTop: scrollHeight }, 300);
                 };
@@ -178,6 +177,14 @@ ONEmSimModule.controller('mainController', [
 
         console.log("mainController initialising");
 
+        $('a.full').click(function(e){
+            e.preventDefault();
+            $('.phone').toggleClass('full');
+            $('body').toggleClass('full');
+            $(this).toggleClass('toggled')
+            return false;
+        });
+
         $('a.open_dialer').click(function(e) {
             e.preventDefault();
             $(this).parents('.phone').find('div.dialer').toggleClass('open');
@@ -215,6 +222,7 @@ ONEmSimModule.controller('mainController', [
         var ClosePanelButton = $('.screen a.close');
 
         var audioElement = document.getElementById('myAudio');
+        console.log(audioElement);
 
         var globalSession = null;
 
@@ -259,10 +267,12 @@ ONEmSimModule.controller('mainController', [
         var startResponse = SmsHandler.start({}, function() {
             $scope.msisdn = startResponse.msisdn;
             var sipProxy = startResponse.sipproxy;
+            var wsProtocol = startResponse.wsprotocol;
             console.log("msisdn: " + $scope.msisdn);
             console.log("SIP Proxy: " + sipProxy);
+            console.log("web socket protocol: " + wsProtocol);
 
-            var socket = new JsSIP.WebSocketInterface('ws://' + sipProxy);
+            var socket = new JsSIP.WebSocketInterface(wsProtocol + '://' + sipProxy);
 
             //JsSIP configuration:
             var configuration = {

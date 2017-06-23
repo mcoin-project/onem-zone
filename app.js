@@ -34,8 +34,9 @@ var smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 var smppPassword = process.env.SMPP_PASSWORD || "password";
 var smppPort = process.env.SMPP_PORT || 2775;
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
+var wsProtocol = process.env.WS_PROTOCOL || "ws";
 
-var smppSession; // the smpp session context saved globally.
+var smppSession; // the SMPP session context saved globally.
 var resArray = [];
 var clients = [];
 
@@ -253,8 +254,10 @@ app.get('/api/start', function(req, res, next) {
         req.session.onemContext = { msisdn: msisdn };
     }
 
-    res.json({ msisdn:   req.session.onemContext.msisdn,
-               sipproxy: sipProxy                       });
+    res.json({ msisdn     : req.session.onemContext.msisdn,
+               sipproxy   : sipProxy,
+               wsprotocol : wsProtocol
+    });
 
 });
 
