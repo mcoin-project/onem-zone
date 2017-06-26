@@ -200,7 +200,7 @@ ONEmSimModule.controller('mainController', [
             setTimeout(function () {
                 $btn.removeClass('pressed');
             }, 400);
-            $('#typed_no').val($('#typed_no').val() + val);
+            $('.dialer #typed_no').val($('.dialer #typed_no').val() + val);
             return false;
         });
 
@@ -211,7 +211,7 @@ ONEmSimModule.controller('mainController', [
             setTimeout(function () {
                 $btn.removeClass('pressed');
             }, 400);
-            $('#typed_no').val($('#typed_no').val().slice(0,-1));
+            $('.dialer #typed_no').val($('.dialer #typed_no').val().slice(0,-1));
             return false;
         });
 
@@ -235,11 +235,17 @@ ONEmSimModule.controller('mainController', [
                 console.log('eventHandlers - failed');
                 audioElement.pause();
                 $('.phone div.panel').removeClass('open');
+                $('.answer #typed_no').val('');
+                $('.dialer #typed_no').val('');
+                $('.caller #typed_no').val('');
             },
             'ended'     : function(e) {
                 console.log('eventHandlers - ended');
                 audioElement.pause();
                 $('.phone div.panel').removeClass('open');
+                $('.answer #typed_no').val('');
+                $('.dialer #typed_no').val('');
+                $('.caller #typed_no').val('');
             },
             'confirmed' : function(e) {
                 console.log('eventHandlers - confirmed');
@@ -283,6 +289,8 @@ ONEmSimModule.controller('mainController', [
 
             var phoneONEm = new JsSIP.UA(configuration);
 
+            phoneONEm.start();
+
             phoneONEm.on('newRTCSession', function(data){
                 console.log('newRTCSession');
                 globalSession = data.session; //session pointer
@@ -292,6 +300,11 @@ ONEmSimModule.controller('mainController', [
                 //Play ring tone:
                 audioElement.src = "/sounds/old_british_phone.wav";
                 audioElement.play();
+             
+                //originator
+                console.log('Caller ID: ' + globalSession.remote_identity.uri.user);
+                $('.answer #typed_no').val(globalSession.remote_identity.uri.user);
+                $('.caller #typed_no').val(globalSession.remote_identity.uri.user);
 
                 if(globalSession.direction === "incoming"){
                     //incoming call here:
@@ -305,19 +318,23 @@ ONEmSimModule.controller('mainController', [
                         console.log('newRTCSession - incoming - ended');
                         audioElement.pause();
                         $('.phone div.panel').removeClass('open');
+                        $('.answer #typed_no').val('');
+                        $('.dialer #typed_no').val('');
+                        $('.caller #typed_no').val('');
                     });
                     globalSession.on("failed",function(e){
                         console.log('newRTCSession - incoming - failed');
                         audioElement.pause();
                         $('.phone div.panel').removeClass('open');
+                        $('.answer #typed_no').val('');
+                        $('.dialer #typed_no').val('');
+                        $('.caller #typed_no').val('');
                     });
 
                     //// End call in 30 seconds:
                     //setTimeout(IncomingEndCall, 30000);
                 };
             });
-
-            phoneONEm.start();
 
             // For debug run this in the browser's console and reload the page:
             // JsSIP.debug.enable('JsSIP:*');
@@ -338,9 +355,10 @@ ONEmSimModule.controller('mainController', [
 
             //Make a phone call:
             CallButton.click( function(){
-                console.log('CallButton - click; Call to ' + $('#typed_no').val());
-                phoneONEm.call('sip:' + $('#typed_no').val() + '@' + sipProxy, options);
-                $('#typed_no').val('');
+                console.log('CallButton - click; Call to ' + $('.dialer #typed_no').val());
+                phoneONEm.call('sip:' + $('.dialer #typed_no').val() + '@' + sipProxy, options);
+                $('.answer #typed_no').val( $('.dialer #typed_no').val() );
+                $('.dialer #typed_no').val('');
                 $('.phone div.panel').removeClass('open');
                 $('.screen div.answer').addClass('open');
             });
