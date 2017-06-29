@@ -87,7 +87,7 @@ body.full {
     height: auto;
 }
 
-.phone input {
+.phone input, .phone textarea {
     display: block;
     float: left;
     width: 100%;
@@ -97,16 +97,21 @@ body.full {
     font-family: 'Roboto', sans-serif;
 }
 
-.phone .preview input {
+.phone .preview input, .phone .preview textarea {
     border: 0px none;
     text-align: center;
     background: none transparent;
     font-weight: 500;
-    font-size: 44px;
+    font-size: 40px;
     letter-spacing: -2px;
 }
 
-.phone .panel > .close {
+.phone .preview textarea {
+    resize: none;
+    line-height: 0.9;
+}
+
+.phone .panel > a.closer, .phone .panel > a.minimize {
     display: block;
     width: 50px; height: 50px;
     position: absolute;
@@ -114,11 +119,15 @@ body.full {
     right: 0;
 }
 
+.phone .panel > a.minimize {
+    
+}
+
 .phone .call_tools { position: absolute; width: 100%; left: 0; bottom: 20px; text-align: center; display: flex; align-items: center; }
 
 .phone .call_tools > a { display: block; float: left; width: 33.333%; padding: 0 20px; text-align: center; }
 
-.phone p.user img { width: 74%; margin-left: 0%; }
+.phone p.user img { width: 44%; margin-left: 0%; }
 
 .phone .clicky:active { position: relative; top: 2px; }
 
@@ -255,27 +264,27 @@ body.full {
 }
 
 @-webkit-keyframes numClick {
-    0%{ background: rgba(0,0,0,0.03); }
-    15%{ background: rgba(0, 0, 0, 0.09); }
-    100%{ background: rgba(0,0,0,0.03); }
+    0% { background: rgba(0,0,0,0.03); }
+    15% { background: rgba(0, 0, 0, 0.09); }
+    100% { background: rgba(0,0,0,0.03); }
 }
    
 @-moz-keyframes numClick {
-    0%{ background: rgba(0,0,0,0.03); }
-    15%{ background: rgba(0, 0, 0, 0.09); }
-    100%{ background: rgba(0,0,0,0.03); }
+    0% { background: rgba(0,0,0,0.03); }
+    15% { background: rgba(0, 0, 0, 0.09); }
+    100% { background: rgba(0,0,0,0.03); }
 }
  
 @-o-keyframes numClick {
-    0%{ background: rgba(0,0,0,0.03); }
-    15%{ background: rgba(0, 0, 0, 0.09); }
-    100%{ background: rgba(0,0,0,0.03); }
+    0% { background: rgba(0,0,0,0.03); }
+    15% { background: rgba(0, 0, 0, 0.09); }
+    100% { background: rgba(0,0,0,0.03); }
 }
 
 @keyframes numClick {
-    0%{ background: rgba(0,0,0,0.03); }
-    15%{ background: rgba(0, 0, 0, 0.09); }
-    100%{ background: rgba(0,0,0,0.03); }
+    0% { background: rgba(0,0,0,0.03); }
+    15% { background: rgba(0, 0, 0, 0.09); }
+    100% { background: rgba(0,0,0,0.03); }
 }
 
 
@@ -301,7 +310,7 @@ body.full {
 .phone .wireframe .time {
     position: absolute;
     top: 96px;
-    left:0; right: 0;
+    left: 0; right: 0;
     text-align: center;
     font-size: 16px;
     font-family: 'Roboto Condensed', sans-serif; font-weight: 700;
@@ -320,11 +329,28 @@ body.full {
     z-index: 2;
 }
 
-.phone .dialer .nums {
+.phone .dialer .nums, .phone .answer .nums {
     width: 90%;
     margin: 0 5%;
     position: absolute;
     bottom: 20px;
+}
+
+.phone .answer .nums {
+    opacity: 0;
+    bottom: 120px;
+}
+
+.phone .answer .nums:not(on) li a {
+    pointer-events: none;
+}
+
+.phone .answer .nums.on {
+    opacity: 1;
+}
+
+.phone .answer .nums.on li a {
+    pointer-events: all;
 }
 
 .phone .dialer .preview {
@@ -335,7 +361,7 @@ body.full {
     height: 40%;
 }
 
-.phone .dialer .preview {}
+.phone .dialer .preview { }
 .phone .dialer .call { }
 .phone .dialer .call:active {
     position: relative;
@@ -373,7 +399,9 @@ body.full {
 
 .phone .caller .preview .inp { border: 0px none; padding: 0; }
 
-.phone .caller .preview input {}
+.phone .caller .preview input {
+    font-size: 26px;
+}
 
 
 /*------------------------------------------------------------------------------------------
@@ -388,7 +416,9 @@ body.full {
     z-index: 4;
 }
 
-.phone .answer .preview input {}
+.phone .answer .preview input {
+    font-size: 26px;
+}
 
 
 /*------------------------------------------------------------------------------------------
@@ -426,7 +456,7 @@ body.full {
 }
 
 .phone .sms-input span.input input {
-    margin: 13px 0;
+    margin: 16px 0;
     border: 1px solid #ccc;
 }
 
@@ -444,6 +474,7 @@ body.full {
     height: 100%;
     display: block;
     overflow: auto;
+    padding: 0 10px;
 }
 
 .phone .sms-response-pos .sms-placeholder {
@@ -455,7 +486,7 @@ body.full {
 
 .phone .sms-response-pos .sms-mt-container {
     position: relative;
-    max-width: 79%;
+    max-width: 84%;
     height: auto;
     display: inline-block;
     border-radius: 15px;
@@ -464,6 +495,7 @@ body.full {
     padding-bottom: 5px;
     padding-left: 10px;
     padding-right: 10px;
+    padding:14px;
     background-color: #e0e0e0;
     font-size: 13.5px;
     line-height: 18px;
@@ -476,7 +508,7 @@ body.full {
 
 .phone .sms-response-pos .sms-mo-container {
     position: relative;
-    max-width: 79%;
+    max-width: 84%;
     height: auto;
     display: block;
     border-radius: 15px;
@@ -536,6 +568,32 @@ body.full {
     z-index: 3;
 }
 
+.phone .call_notif {
+    position: absolute;
+    display: block;
+    top: 120px;
+    left: 42px;
+    right: 37px;
+    text-align: center;
+    margin: 0;
+    padding: 8px;
+    font-size: 14px;
+    color: #fff;
+    background: #85C06E;
+    z-index: 3;
+    transform: translateX(-100%);
+    opacity: 0;
+
+}
+
+.phone .call_notif.on { transform: translateX(0); opacity: 1; }
+
+.phone .call_notif a { color: #fff; }
+
+.phone .form-control {
+    padding: 3px 12px;
+    height: 40px; /**/
+}
 
 /*------------------------------------------------------------------------------------------
  *
@@ -605,7 +663,7 @@ body.full div.logo img { height: 40px; width: auto; }
 @media (max-width: 768px) {
     .section { display: block; padding: 0; }
     .phone { position: fixed; width: 100%; height: 100%; top: 0; left: 0; margin-top: 0; }
-    .phone .wireframe { display:none; }
+    .phone .wireframe { display: none; }
     .phone .screen_wrp {
         top: 60px;
         bottom: 80px;
@@ -631,13 +689,17 @@ body.full div.logo img { height: 40px; width: auto; }
            -moz-box-shadow: 0px 4px 20px 0px rgba(0,0,0,0.15);
                 box-shadow: 0px 4px 20px 0px rgba(0,0,0,0.15);
     }
-    .phone .msisdn:after { content:'\00a0'; }
+    .phone .msisdn:after { content: '\00a0'; }
     .phone .keypad.squared .num { padding: 20% 0; }
     .phone .preview input { font-size: 60px; padding: 20px; }
     .phone .dialer .preview .call_no img { width: 30%; margin-top: 0; }
     a.full { display: none; }
     div.logo { top: 0; left: 0; padding: 10px;float: left; width: auto; margin: 0; }
     div.logo img { height: 40px; width:auto; }
+    .phone .answer .nums {
+        bottom: 190px;
+    }
+    .phone p.user img { width: 30%; }
 }
 
 @media (max-width: 680px) {
