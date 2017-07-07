@@ -246,8 +246,8 @@ ONEmSimModule.controller('mainController', [
             'confirmed' : function(e) {
                 console.log('eventHandlers - confirmed');
                 //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
-                //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
+                audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
                 audioElement.play();
                 isInCall = 1;
             },
@@ -436,8 +436,8 @@ ONEmSimModule.controller('mainController', [
                     globalSession.on("accepted",function(){
                         console.log('newRTCSession - incoming - accepted');
                         ////RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
-                        //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                        audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
+                        audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                        //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
                         audioElement.play();
                         isInCall = 1;
                     });
