@@ -1,7 +1,7 @@
 {
-  "name": "autotest",
-  "version": "0.0.1",
-  "description": "Automatic Testing",
+  "name": "ONEmDesktop",
+  "version": "0.1.0",
+  "description": "ONEm Desktop",
   "engines": {
     "node": "5.9.1"
   },
@@ -60,3 +60,4 @@
     "protractor": "^4.0.9"
   }
 }
+

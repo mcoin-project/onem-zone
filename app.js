@@ -115,7 +115,9 @@ var smppServer = smpp.createServer(function(session) {
     });
 
     smppSession.on('submit_sm', function(pdu) {
-        //  var msgid = getMsgId(); // generate a message_id for this message.
+
+        var clientFound = false;
+
         console.log("submit_sm received, sequence_number:" + pdu.sequence_number + " isResponse:" + pdu.isResponse());
 
         smppSession.send(pdu.response());
@@ -131,20 +133,18 @@ var smppServer = smpp.createServer(function(session) {
 
         console.log("more messages:" + pdu.more_messages_to_send);
 
-        var msisdnFound = false;
-
         // retrieve the session information based on the msisdn
-        for (i = 0; i < clients.length; i++) {
+        for (var i = 0; i < clients.length; i++) {
             if (typeof clients[i].moRecord !== 'undefined' && clients[i].moRecord.msisdn === pdu.destination_addr) {
-                resObj = clients[i].moRecord;
-                msisdnFound = true;
-                break;
+                clients[i].moRecord.messageWaiting = true;
+                clients[i].moRecord.mtText = clients[i].moRecord.mtText + mtText;
+                clientFound = true;
+                console.log("client found");
             }
         }
-        if (msisdnFound) resObj.mtText = resObj.mtText + mtText;
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
-        if (msisdnFound && pdu.more_messages_to_send === 1) {
+        if (clientFound && pdu.more_messages_to_send === 1) {
             console.log("more mesages to send, so returning");
             return;
         }
@@ -154,15 +154,21 @@ var smppServer = smpp.createServer(function(session) {
         //   2) retrieve the saved/concatenated message string
         //   3) reset the message string to blank
         //   4) send the result back to the client using the saved session
-        if (msisdnFound && (pdu.more_messages_to_send === 0 ||
+        if (clientFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
-            try {
-                console.log("trying response: " + resObj.mtText);
-                resObj.socket.emit('MT SMS', { mtText: resObj.mtText });
-                resObj.mtText = '';
-
-            } catch (err) {
-                console.log("oops no session:" + err);
+            console.log("clientfound and no more messages");
+            console.log("clients.length:" + clients.length);
+            for (i = 0; i < clients.length; i++) {
+                if (typeof clients[i].moRecord !== 'undefined' && clients[i].moRecord.messageWaiting) {
+                    try {
+                        console.log("trying response: " + clients[i].moRecord.mtText);
+                        clients[i].moRecord.messageWaiting = false;
+                        clients[i].moRecord.socket.emit('MT SMS', { mtText: clients[i].moRecord.mtText });
+                        clients[i].moRecord.mtText = '';
+                    } catch (err) {
+                        console.log("oops no session:" + err);
+                    }
+                }
             }
         }
 
@@ -186,22 +192,24 @@ function sendSMS(from, to, text) {
         buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
     }
 
-    smppSession.deliver_sm({
-        source_addr: from,
-        source_addr_ton: 1,
-        source_addr_npi: 0,
-        destination_addr: to,
-        destination_addr_ton: 1,
-        destination_addr_npi: 0,
-        data_coding: 8,
-        short_message: buffer
-    }, function(pdu) {
-        //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
-        if (pdu.command_status === 0) {
-            // Message successfully sent
-            console.log("message sent:");
-        }
-    });
+    if (smppSession) {
+        smppSession.deliver_sm({
+            source_addr: from,
+            source_addr_ton: 1,
+            source_addr_npi: 0,
+            destination_addr: to,
+            destination_addr_ton: 1,
+            destination_addr_npi: 0,
+            data_coding: 8,
+            short_message: buffer
+        }, function(pdu) {
+            //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
+            if (pdu.command_status === 0) {
+                // Message successfully sent
+                console.log("message sent:");
+            }
+        });
+    }
 }
 
 io.on('connection', function(socket) {
@@ -225,7 +233,8 @@ io.on('connection', function(socket) {
         var moRecord = {
             msisdn: socket.handshake.session.onemContext.msisdn,
             socket: socket,
-            mtText: ''
+            mtText: '',
+            messageWaiting: false
         };
 
         var i = clients.indexOf(socket);
