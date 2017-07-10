@@ -37,6 +37,7 @@ var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 
 var smppSession; // the SMPP session context saved globally.
+var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
 var resArray = [];
 var clients = [];
 
@@ -187,29 +188,86 @@ var smppServer = smpp.createServer(function(session) {
 
 function sendSMS(from, to, text) {
 
-    var buffer = new Buffer(2 * text.length);
-    for (var i = 0; i < text.length; i++) {
-        buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
-    }
+    var textLength = text.length;
 
     if (smppSession) {
-        smppSession.deliver_sm({
-            source_addr: from,
-            source_addr_ton: 1,
-            source_addr_npi: 0,
-            destination_addr: to,
-            destination_addr_ton: 1,
-            destination_addr_npi: 0,
-            data_coding: 8,
-            short_message: buffer
-        }, function(pdu) {
-            //    console.log('sms pdu status', lookupPDUStatusKey(pdu.command_status));
-            if (pdu.command_status === 0) {
-                // Message successfully sent
-                console.log("message sent:");
-            }
-        });
-    }
+        if (text.length <= 70) {
+
+            var buffer = new Buffer(2 * textLength) ;
+            for (var i = 0; i < textLength; i++) {
+                buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
+            };
+
+            smppSession.deliver_sm({
+                source_addr: from,
+                source_addr_ton: 1,
+                source_addr_npi: 0,
+                destination_addr: to,
+                destination_addr_ton: 1,
+                destination_addr_npi: 0,
+                data_coding: 8,
+                short_message: buffer
+            }, function(pdu) {
+                if (pdu.command_status === 0) {
+                    // Message successfully sent
+                    console.log("message sent");
+                }
+            });
+        }
+        else {
+            var shortMessageLength = 0;
+            var messageNumber = 0;
+            var udh = new Buffer(6);
+            var messagePartsNumber = 0;
+
+            messagePartsNumber = Math.floor(textLength/70);
+            if(messagePartsNumber * 70 != textLength) messagePartsNumber++;
+
+            udh.writeUInt8(0x05,0); //Length of the UDF
+            udh.writeUInt8(0x00,1); //Indicator for concatenated message
+            udh.writeUInt8(0x03,2); //  Subheader Length ( 3 bytes)
+            udh.writeUInt8(referenceCSMS,3); //Same reference for all concatenated messages  
+            udh.writeUInt8(messagePartsNumber,4); //Number of total messages in the concatenation
+
+            while (textLength > 0) {
+                if (textLength > 70 ) {
+                    shortMessageLength = 70;
+                    textLength -= 70
+                }
+                else {
+                    shortMessageLength = textLength;
+                    textLength = 0;
+                };
+
+                udh.writeUInt8(messageNumber+1,5); //Sequence number ( used by the mobile to concatenate the split messages)
+
+                var buffer = new Buffer(2 * shortMessageLength) ;
+                for (var i = 0 ; i < shortMessageLength; i++) {
+                    buffer.writeUInt16BE(text.charCodeAt(i+(70*messageNumber)), 2 * i);
+                };
+
+                messageNumber++;
+                smppSession.deliver_sm({
+                    source_addr: from,
+                    source_addr_ton: 1,
+                    source_addr_npi: 0,
+                    destination_addr: to,
+                    destination_addr_ton: 1,
+                    destination_addr_npi: 0,
+                    data_coding: 8,
+                    short_message: {udh:udh, message:buffer}
+                }, function(pdu) {
+                    if (pdu.command_status === 0) {
+                        // Message successfully sent
+                        console.log("multipart message sent");
+                    }
+                });
+
+            };
+            referenceCSMS++;
+            if(referenceCSMS >= 256) referenceCSMS = 0;
+        };
+    };
 }
 
 io.on('connection', function(socket) {
