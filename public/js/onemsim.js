@@ -205,6 +205,93 @@ ONEmSimModule.controller('mainController', [
 
         console.log("mainController initialising");
 
+        //These are the variables needed for the code found at https://chromium.googlesource.com/chromium/src.git/+/lkgr/chrome/test/data/webrtc/adapter.js?autodive=0%2F
+        var RTCPeerConnection = null;
+        var getUserMedia = null;
+        var attachMediaStream = null;
+        var reattachMediaStream = null;
+        var webrtcDetectedBrowser = null;
+        var webrtcDetectedVersion = null;
+
+        //function trace(text) {
+        //    // This function is used for logging.
+        //    if (text[text.length - 1] == '\n') {
+        //        text = text.substring(0, text.length - 1);
+        //    };
+        //    console.log((performance.now() / 1000).toFixed(3) + ": " + text);
+        //};
+
+        if (navigator.mozGetUserMedia) {
+            console.log("This appears to be Firefox");
+            webrtcDetectedBrowser = "firefox";
+            webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
+            // The RTCPeerConnection object.
+            RTCPeerConnection = mozRTCPeerConnection;
+            // The RTCSessionDescription object.
+            RTCSessionDescription = mozRTCSessionDescription;
+            // Get UserMedia (only difference is the prefix).
+            // Code from Adam Barth.
+            getUserMedia = navigator.mozGetUserMedia.bind(navigator);
+            // Attach a media stream to an element.
+            attachMediaStream = function(element, stream) {
+                console.log("Attaching media stream");
+                element.mozSrcObject = stream;
+                element.play();
+            };
+            reattachMediaStream = function(to, from) {
+                console.log("Reattaching media stream");
+                to.mozSrcObject = from.mozSrcObject;
+                to.play();
+            };
+        } else if (navigator.webkitGetUserMedia) {
+            console.log("This appears to be Chrome");
+            webrtcDetectedBrowser = "chrome";
+            webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
+            // The RTCPeerConnection object.
+            RTCPeerConnection = webkitRTCPeerConnection;
+            // Get UserMedia (only difference is the prefix).
+            // Code from Adam Barth.
+            getUserMedia = navigator.webkitGetUserMedia.bind(navigator);
+            // Attach a media stream to an element.
+            attachMediaStream = function(element, stream) {
+                console.log("Attaching media stream");
+                if (typeof element.srcObject !== 'undefined') {
+                    element.srcObject = stream;
+                } else if (typeof element.mozSrcObject !== 'undefined') {
+                    element.mozSrcObject = stream;
+                } else if (typeof element.src !== 'undefined') {
+                    element.src = URL.createObjectURL(stream);
+                } else {
+                    console.log('Error attaching stream to element.');
+                };
+            };
+            reattachMediaStream = function(to, from) {
+                console.log("Reattaching media stream");
+                to.src = from.src;
+            };
+            // The representation of tracks in a stream is changed in M26.
+            // Unify them for earlier Chrome versions in the coexisting period.
+            if (!webkitMediaStream.prototype.getVideoTracks) {
+                webkitMediaStream.prototype.getVideoTracks = function() {
+                    return this.videoTracks;
+                };
+                webkitMediaStream.prototype.getAudioTracks = function() {
+                    return this.audioTracks;
+                };
+            };
+            // New syntax of getXXXStreams method in M26.
+            if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
+                webkitRTCPeerConnection.prototype.getLocalStreams = function() {
+                    return this.localStreams;
+                };
+                webkitRTCPeerConnection.prototype.getRemoteStreams = function() {
+                    return this.remoteStreams;
+                };
+            }
+        } else {
+            console.log("Browser does not appear to be WebRTC-capable");
+        };
+
         //These are the buttons of the phone's user interface:
         var AnswerButton = $('.call_tools a.answer');
         var RejectButton = $('.call_tools a.cancel');
@@ -212,7 +299,12 @@ ONEmSimModule.controller('mainController', [
         var ClosePanelButton = $('.screen a.closer');
 
         var audioElement = document.getElementById('myAudio');
+        audioElement.autoplay = true;
         console.log(audioElement);
+        //var videoElement = document.getElementById('myVideo');
+        var videoElement = $('#myVideo')[0];
+        videoElement.autoplay = true;
+        console.log(videoElement);
 
         var globalSession = null;
 
@@ -224,6 +316,8 @@ ONEmSimModule.controller('mainController', [
             'failed'    : function(e) {
                 console.log('eventHandlers - failed');
                 audioElement.pause();
+                videoElement.pause();
+                videoElement.hidden = true;
                 isInCall = 0;
                 $('.phone div.panel').removeClass('open');
                 $('.phone .call_notif').removeClass('on');
@@ -235,6 +329,8 @@ ONEmSimModule.controller('mainController', [
             'ended'     : function(e) {
                 console.log('eventHandlers - ended');
                 audioElement.pause();
+                videoElement.pause();
+                videoElement.hidden = true;
                 isInCall = 0;
                 $('.phone div.panel').removeClass('open');
                 $('.phone .call_notif').removeClass('on');
@@ -245,10 +341,18 @@ ONEmSimModule.controller('mainController', [
             },
             'confirmed' : function(e) {
                 console.log('eventHandlers - confirmed');
+                audioElement.pause();
                 //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
-                audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                 //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
-                audioElement.play();
+                videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                if(globalSession.connection.getRemoteStreams()[0].getVideoTracks()) videoElement.hidden = false;
+                if(webrtcDetectedBrowser == "firefox") {
+                    //audioElement.play();
+                    videoElement.play();
+                };
+                //audioElement.play();
+                //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
                 isInCall = 1;
             },
             'addstream' : function(e) {
@@ -260,7 +364,8 @@ ONEmSimModule.controller('mainController', [
             'eventHandlers'          : eventHandlers,
             'sessionTimersExpires'   : 600,
             'session_timers'         : true,
-            'use_preloaded_route'    : false,
+            'useUpdate'              : false,
+            'use_preloaded_route'    : true,
             'pcConfig'               : {
                 'rtcpMuxPolicy'      : 'negotiate',
                 'iceServers'         : // [ {
@@ -280,7 +385,11 @@ ONEmSimModule.controller('mainController', [
                     //{ 'urls'         : [ 'stun:stunserver.org' ] }
                 ]
             },
-            'mediaConstraints'       : { 'audio' : true, 'video' : false }
+            'mediaConstraints'       : { 'audio' : true, 'video' : true },
+            'rtcOfferConstraints'     : {
+                'offerToReceiveAudio' : 1,
+                'offerToReceiveVideo' : 1
+            }
         };
 
         var startResponse = SmsHandler.start({}, function() {
@@ -295,9 +404,11 @@ ONEmSimModule.controller('mainController', [
 
             //JsSIP configuration:
             var configuration = {
-                'sockets'  : [ socket ],
-                'uri'      : 'sip:' + $scope.msisdn + '@' + sipProxy,
-                'password' : 'ONEmP@$$w0rd2016'
+                'sockets'             : [ socket ],
+                'uri'                 : 'sip:' + $scope.msisdn + '@' + sipProxy,
+                'password'            : 'ONEmP@$$w0rd2016',
+                'useUpdate'           : false,
+                'use_preloaded_route' : true
             };
 
             var phoneONEm = new JsSIP.UA(configuration);
@@ -326,7 +437,7 @@ ONEmSimModule.controller('mainController', [
                     $btn.removeClass('pressed');
                 }, 400);
                 globalSession.sendDTMF(val);
-                console.log("Sending DTMF " + val);
+                console.log("[UI]: Sending DTMF " + val);
                 return false;
             });
 
@@ -413,17 +524,19 @@ ONEmSimModule.controller('mainController', [
                 //Play ring tone:
                 if(globalSession.direction === "incoming") {
                     //Incoming call; play ring
-                    console.log("Load incoming call ring:");
+                    console.log("Playing incoming call ring:");
                     audioElement.src = "/sounds/old_british_phone.wav";
                 } else {
                     //Outgoing call; play ringback tone
-                    console.log("Load outgoing callback tone:");
+                    console.log("Playing outgoing callback tone:");
                     audioElement.src = "/sounds/ringing_tone_uk_new.wav";
                 };
 
-                console.log("Play the loaded sound:");
-                audioElement.play();
-             
+                //audioElement.play();
+                if(webrtcDetectedBrowser == "firefox") {
+                    audioElement.play();
+                };
+ 
                 //originator
                 console.log('Caller ID: ' + globalSession.remote_identity.uri.user);
                 console.log('User Name: ' + globalSession.remote_identity.display_name);
@@ -433,17 +546,24 @@ ONEmSimModule.controller('mainController', [
 
                 if(globalSession.direction === "incoming"){
                     //incoming call here:
-                    globalSession.on("accepted",function(){
-                        console.log('newRTCSession - incoming - accepted');
-                        ////RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
-                        audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                        //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
-                        audioElement.play();
-                        isInCall = 1;
+                    globalSession.on("failed",function(e){
+                        console.log('newRTCSession - incoming - failed');
+                        audioElement.pause();
+                        videoElement.pause();
+                        videoElement.hidden = true;
+                        isInCall = 0;
+                        $('.phone div.panel').removeClass('open');
+                        $('.phone .call_notif').removeClass('on');
+                        $('.answer ul.nums').removeClass('on');
+                        $('.answer #typed_no').val('');
+                        $('.dialer #typed_no').val('');
+                        $('.caller #typed_no').val('');
                     });
                     globalSession.on("ended",function(e){
                         console.log('newRTCSession - incoming - ended');
                         audioElement.pause();
+                        videoElement.pause();
+                        videoElement.hidden = true;
                         isInCall = 0;
                         $('.phone div.panel').removeClass('open');
                         $('.phone .call_notif').removeClass('on');
@@ -452,19 +572,26 @@ ONEmSimModule.controller('mainController', [
                         $('.dialer #typed_no').val('');
                         $('.caller #typed_no').val('');
                     });
-                    globalSession.on("failed",function(e){
-                        console.log('newRTCSession - incoming - failed');
+                    globalSession.on("accepted",function(e){
+                        console.log('newRTCSession - incoming - accepted');
                         audioElement.pause();
-                        isInCall = 0;
-                        $('.phone div.panel').removeClass('open');
-                        $('.phone .call_notif').removeClass('on');
-                        $('.answer ul.nums').removeClass('on');
-                        $('.answer #typed_no').val('');
-                        $('.dialer #typed_no').val('');
-                        $('.caller #typed_no').val('');
+                        //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
+                        //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                        //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
+                        videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                        if(globalSession.connection.getRemoteStreams()[0].getVideoTracks()) videoElement.hidden = false;
+                        if(webrtcDetectedBrowser == "firefox") {
+                            //audioElement.play();
+                            videoElement.play();
+                        };
+                        //audioElement.play();
+                        //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
+                        isInCall = 1;
                     });
-
-                    //// End call in 30 seconds:
+                    globalSession.on("addstream",function(e) {
+                        console.log('newRTCSession - incoming - addstream');
+                    });
+                     //// End call in 30 seconds:
                     //setTimeout(IncomingEndCall, 30000);
                 };
             });

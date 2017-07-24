@@ -63,7 +63,15 @@
             <div class="panel answer">
                 <div class="preview">
                     <p class="title">Current call</p>
-                    <p class="user"><img src="images/icn_usr.svg" /></p>
+                    <p class="user off"><img src="images/icn_usr.svg" /></p>
+                    <p class="video">
+                        <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+                            <source type="video/mp4">
+                            <source type="video/ogg">
+                            <source type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                    </p><!-- /video -->
                     <p class="inp"><input id="typed_no" type="text" value="100" disabled="disabled"></p>
                     <!-- <p class="msg">Unknown number</p> -->
                     <p class="call_tools">
@@ -72,6 +80,14 @@
                         <a class="clicky mute" href="#"><img src="images/icn_mute.svg" /></a>
                     </p>
                 </div><!-- /preview -->
+                <!-- <div class="video">
+                    <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+                        <source type="video/mp4">
+                        <source type="video/ogg">
+                        <source type="video/webm">
+                        Your browser does not support the video tag.
+                    </video>
+                </div> --> <!-- /video -->
                 <ul class="keypad dialpad nums squared">
                     <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
                     <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>

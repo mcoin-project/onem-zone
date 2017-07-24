@@ -416,6 +416,27 @@ body.full {
     z-index: 4;
 }
 
+.phone .answer .user.off {
+    display: none;
+}
+
+.phone .answer .video {
+    width: 70%;
+    margin-left: 15%;
+    height: auto;
+    display: block;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.phone .answer .video video{
+    display:block;
+    width:100%;
+    height:auto;
+}
+.phone .answer .video.off {
+    display: none;
+}
+
 .phone .answer .preview input {
     font-size: 26px;
 }
