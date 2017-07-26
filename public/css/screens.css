@@ -417,7 +417,7 @@ body.full {
 }
 
 .phone .answer .user.off {
-    display: none;
+    display: block;
 }
 
 .phone .answer .video {

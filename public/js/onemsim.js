@@ -346,7 +346,11 @@ ONEmSimModule.controller('mainController', [
                 //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                 //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
                 videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                if(globalSession.connection.getRemoteStreams()[0].getVideoTracks()) videoElement.hidden = false;
+                if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
+                    videoElement.hidden = false;
+                    $('.phone div.answer').removeClass('user');
+                    //.phone .answer .user.off
+                };
                 if(webrtcDetectedBrowser == "firefox") {
                     //audioElement.play();
                     videoElement.play();
@@ -361,31 +365,30 @@ ONEmSimModule.controller('mainController', [
         };
 
         var options = {
-            'eventHandlers'          : eventHandlers,
-            'sessionTimersExpires'   : 600,
-            'session_timers'         : true,
-            'useUpdate'              : false,
-            'use_preloaded_route'    : true,
-            'pcConfig'               : {
-                'rtcpMuxPolicy'      : 'negotiate',
-                'iceServers'         : // [ {
-                //        'urls'       : 'stun:stun.l.google.com:19302'
+            'eventHandlers'           : eventHandlers,
+            'sessionTimersExpires'    : 600,
+            'useUpdate'               : false,
+            'use_preloaded_route'     : true,
+            'pcConfig'                : {
+                'rtcpMuxPolicy'       : 'negotiate',
+                'iceServers'          : // [ {
+                //        'urls'        : 'stun:stun.l.google.com:19302'
                 //    }, {
-                //        'urls'       : 'turn:192.158.29.39:3478?transport=udp',
-                //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                //        'username'   : '28224511:1379330808'
+                //        'urls'        : 'turn:192.158.29.39:3478?transport=udp',
+                //        'credential'  : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                //        'username'    : '28224511:1379330808'
                 //    }, {
-                //        'urls'       : 'turn:192.158.29.39:3478?transport=tcp',
-                //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                //        'username'   : '28224511:1379330808'
+                //        'urls'        : 'turn:192.158.29.39:3478?transport=tcp',
+                //        'credential'  : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                //        'username'    : '28224511:1379330808'
                 //    }
                 //]
                 [
-                    { 'urls'         : [ 'stun:stun.l.google.com:19302' ] }
-                    //{ 'urls'         : [ 'stun:stunserver.org' ] }
+                    { 'urls'          : [ 'stun:stun.l.google.com:19302' ] }
+                    //{ 'urls'          : [ 'stun:stunserver.org' ] }
                 ]
             },
-            'mediaConstraints'       : { 'audio' : true, 'video' : true },
+            'mediaConstraints'        : { 'audio' : true, 'video' : true },
             'rtcOfferConstraints'     : {
                 'offerToReceiveAudio' : 1,
                 'offerToReceiveVideo' : 1
@@ -404,11 +407,12 @@ ONEmSimModule.controller('mainController', [
 
             //JsSIP configuration:
             var configuration = {
-                'sockets'             : [ socket ],
-                'uri'                 : 'sip:' + $scope.msisdn + '@' + sipProxy,
-                'password'            : 'ONEmP@$$w0rd2016',
-                'useUpdate'           : false,
-                'use_preloaded_route' : true
+                sockets             : [ socket ],
+                uri                 : 'sip:' + $scope.msisdn + '@' + sipProxy,
+                password            : 'ONEmP@$$w0rd2016',
+                useUpdate           : false,
+                register            : true,
+                use_preloaded_route : true
             };
 
             var phoneONEm = new JsSIP.UA(configuration);
@@ -558,6 +562,8 @@ ONEmSimModule.controller('mainController', [
                         $('.answer #typed_no').val('');
                         $('.dialer #typed_no').val('');
                         $('.caller #typed_no').val('');
+                        ////if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                        //if(phoneONEm.isConnected()) globalSession.terminate();
                     });
                     globalSession.on("ended",function(e){
                         console.log('newRTCSession - incoming - ended');
@@ -571,6 +577,8 @@ ONEmSimModule.controller('mainController', [
                         $('.answer #typed_no').val('');
                         $('.dialer #typed_no').val('');
                         $('.caller #typed_no').val('');
+                        ////if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                        //if(phoneONEm.isConnected()) globalSession.terminate();
                     });
                     globalSession.on("accepted",function(e){
                         console.log('newRTCSession - incoming - accepted');
@@ -579,7 +587,11 @@ ONEmSimModule.controller('mainController', [
                         //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
                         videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                        if(globalSession.connection.getRemoteStreams()[0].getVideoTracks()) videoElement.hidden = false;
+                        if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
+                            videoElement.hidden = false;
+                            $('.phone div.answer').removeClass('user');
+                            //.phone .answer .user.off
+                        };
                         if(webrtcDetectedBrowser == "firefox") {
                             //audioElement.play();
                             videoElement.play();
@@ -591,7 +603,7 @@ ONEmSimModule.controller('mainController', [
                     globalSession.on("addstream",function(e) {
                         console.log('newRTCSession - incoming - addstream');
                     });
-                     //// End call in 30 seconds:
+                    //// End call in 30 seconds:
                     //setTimeout(IncomingEndCall, 30000);
                 };
             });
@@ -611,6 +623,7 @@ ONEmSimModule.controller('mainController', [
             // End the call or reject the call:
             RejectButton.click( function(){
                 console.log('RejectButton - click');
+                //phoneONEm.terminateSessions();
                 globalSession.terminate();
             });
 
@@ -628,11 +641,13 @@ ONEmSimModule.controller('mainController', [
             ClosePanelButton.click(function(e){
                 console.log('ClosePanelButton - click');
                 $('.phone div.panel').removeClass('open');
-                if(globalSession) globalSession.terminate();
+                if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                //if(phoneONEm.isConnected()) globalSession.terminate();
                 if(isInCall==1) $('.phone div.answer').toggleClass('open');
             });
 
             //function IncomingEndCall() {
+            //  //phoneONEm.terminateSessions();
             //  globalSession.terminate();
             //};
 
