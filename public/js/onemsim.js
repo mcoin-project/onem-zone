@@ -367,8 +367,9 @@ ONEmSimModule.controller('mainController', [
         var options = {
             'eventHandlers'           : eventHandlers,
             'sessionTimersExpires'    : 600,
+            'session_timers'          : true,
             'useUpdate'               : false,
-            'use_preloaded_route'     : true,
+            'use_preloaded_route'     : false,
             'pcConfig'                : {
                 'rtcpMuxPolicy'       : 'negotiate',
                 'iceServers'          : // [ {
@@ -388,11 +389,7 @@ ONEmSimModule.controller('mainController', [
                     //{ 'urls'          : [ 'stun:stunserver.org' ] }
                 ]
             },
-            'mediaConstraints'        : { 'audio' : true, 'video' : true },
-            'rtcOfferConstraints'     : {
-                'offerToReceiveAudio' : 1,
-                'offerToReceiveVideo' : 1
-            }
+            'mediaConstraints'        : { 'audio' : true, 'video' : true }
         };
 
         var startResponse = SmsHandler.start({}, function() {
@@ -412,7 +409,7 @@ ONEmSimModule.controller('mainController', [
                 password            : 'ONEmP@$$w0rd2016',
                 useUpdate           : false,
                 register            : true,
-                use_preloaded_route : true
+                use_preloaded_route : false
             };
 
             var phoneONEm = new JsSIP.UA(configuration);
