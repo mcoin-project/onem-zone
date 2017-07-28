@@ -318,6 +318,7 @@ ONEmSimModule.controller('mainController', [
                 audioElement.pause();
                 videoElement.pause();
                 videoElement.hidden = true;
+                $('.phone div.answer .user').removeClass('.off');
                 isInCall = 0;
                 $('.phone div.panel').removeClass('open');
                 $('.phone .call_notif').removeClass('on');
@@ -331,6 +332,7 @@ ONEmSimModule.controller('mainController', [
                 audioElement.pause();
                 videoElement.pause();
                 videoElement.hidden = true;
+                $('.phone div.answer .user').removeClass('.off');
                 isInCall = 0;
                 $('.phone div.panel').removeClass('open');
                 $('.phone .call_notif').removeClass('on');
@@ -348,8 +350,11 @@ ONEmSimModule.controller('mainController', [
                 videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                 if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                     videoElement.hidden = false;
-                    $('.phone div.answer').removeClass('user');
+                    $('.phone div.answer .user').addClass('.off');
                     //.phone .answer .user.off
+                } else {
+                    videoElement.hidden = true;
+                    $('.phone div.answer .user').removeClass('.off');
                 };
                 if(webrtcDetectedBrowser == "firefox") {
                     //audioElement.play();
@@ -552,6 +557,7 @@ ONEmSimModule.controller('mainController', [
                         audioElement.pause();
                         videoElement.pause();
                         videoElement.hidden = true;
+                        $('.phone div.answer .user').removeClass('.off');
                         isInCall = 0;
                         $('.phone div.panel').removeClass('open');
                         $('.phone .call_notif').removeClass('on');
@@ -567,6 +573,7 @@ ONEmSimModule.controller('mainController', [
                         audioElement.pause();
                         videoElement.pause();
                         videoElement.hidden = true;
+                        $('.phone div.answer .user').removeClass('.off');
                         isInCall = 0;
                         $('.phone div.panel').removeClass('open');
                         $('.phone .call_notif').removeClass('on');
@@ -586,8 +593,11 @@ ONEmSimModule.controller('mainController', [
                         videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                             videoElement.hidden = false;
-                            $('.phone div.answer').removeClass('user');
+                            $('.phone div.answer .user').addClass('.off');
                             //.phone .answer .user.off
+                        } else {
+                            videoElement.hidden = true;
+                            $('.phone div.answer .user').removeClass('.off');
                         };
                         if(webrtcDetectedBrowser == "firefox") {
                             //audioElement.play();

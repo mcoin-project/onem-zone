@@ -417,15 +417,15 @@ body.full {
 }
 
 .phone .answer .user.off {
-    display: block;
+    display: none;
 }
 
 .phone .answer .video {
-    width: 70%;
-    margin-left: 15%;
+    width: 72%;
+    margin-left: 14%;
     height: auto;
     display: block;
-    border-radius: 100%;
+    border-radius: 10%;
     overflow: hidden;
 }
 .phone .answer .video video{
