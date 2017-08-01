@@ -409,12 +409,13 @@ ONEmSimModule.controller('mainController', [
 
             //JsSIP configuration:
             var configuration = {
-                sockets             : [ socket ],
-                uri                 : 'sip:' + $scope.msisdn + '@' + sipProxy,
-                password            : 'ONEmP@$$w0rd2016',
-                useUpdate           : false,
-                register            : true,
-                use_preloaded_route : false
+                sockets                          : [ socket ],
+                uri                              : 'sip:' + $scope.msisdn + '@' + sipProxy,
+                password                         : 'ONEmP@$$w0rd2016',
+                useUpdate                        : false,
+                register                         : true,
+                use_preloaded_route              : false,
+                register_expires                 : 120
             };
 
             var phoneONEm = new JsSIP.UA(configuration);
@@ -613,6 +614,30 @@ ONEmSimModule.controller('mainController', [
                     //// End call in 30 seconds:
                     //setTimeout(IncomingEndCall, 30000);
                 };
+            });
+
+            phoneONEm.on('connecting', function(data){
+                console.log('connecting');
+            });
+
+            phoneONEm.on('connected', function(data){
+                console.log('connected');
+            });
+
+            phoneONEm.on('disconnected', function(data){
+                console.log('disconnected');
+            });
+
+            phoneONEm.on('registered', function(data){
+                console.log('registered');
+            });
+
+            phoneONEm.on('unregistered', function(data){
+                console.log('unregistered');
+            });
+
+            phoneONEm.on('registrationFailed', function(data){
+                console.log('registrationFailed');
             });
 
             // For debug run this in the browser's console and reload the page:
