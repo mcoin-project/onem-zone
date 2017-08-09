@@ -1,5 +1,6 @@
 var express = require('express');
-var app = require('express')();
+//var app = require('express')();
+var app = express();
 var server = require('http').createServer(app);
 var io = require('socket.io')(server);
 var logger = require('morgan');
@@ -313,18 +314,32 @@ io.on('connection', function(socket) {
 
 app.get('/api/start', function(req, res, next) {
 
-    // if first time (no session) then generate a virtual MSISDN using current timestamp, which is saved in session cookie
-    if (!req.session.onemContext) { // must be first time, or expired
-        var msisdn = moment().format('YYMMDDHHMMSS');
-        console.log("msisdn:" + msisdn);
+  // if first time (no session) then generate a virtual MSISDN using current timestamp, which is saved in session cookie
+  if (!req.session.onemContext) { // must be first time, or expired
+    var msisdn = moment().format('YYMMDDHHMMSS');
+    console.log("msisdn:" + msisdn);
 
-        req.session.onemContext = { msisdn: msisdn };
-    }
+    req.session.onemContext = { msisdn: msisdn };
+  }
 
-    res.json({ msisdn     : req.session.onemContext.msisdn,
-               sipproxy   : sipProxy,
-               wsprotocol : wsProtocol
-    });
+  var httpProtocol = req.get('Referer').split(":")[0];
+  console.log(httpProtocol);
+  console.log(wsProtocol);
+  
+  if (httpProtocol == 'https') {
+    // the used protocol is HTTPS
+    console.log('The HTTPS protocol have been used; "wss" will be used for WebRTC');
+    wsProtocol = "wss";
+  } else {
+    console.log('It appears that HTTP protocol have been used; environment provided protocol or "ws" will be used for WebRTC');
+    wsProtocol = process.env.WS_PROTOCOL || "ws";
+  };
+  console.log(wsProtocol);
+
+  res.json({ msisdn     : req.session.onemContext.msisdn,
+             sipproxy   : sipProxy,
+             wsprotocol : wsProtocol
+  });
 
 });
 
@@ -337,9 +352,9 @@ app.get('/api/start', function(req, res, next) {
 // });
 
 app.get('/*', function(req, res, next) {
-    console.log("caught default route");
-    // Just send the index.html for other files to support HTML5Mode
-    res.sendFile('/public/views/index.html', { root: __dirname });
+  console.log("caught default route");
+  // Just send the index.html for other files to support HTML5Mode
+  res.sendFile('/public/views/index.html', { root: __dirname });
 });
 
 // error handling middleware should be loaded after the loading the routes
