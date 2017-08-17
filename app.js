@@ -328,10 +328,10 @@ app.get('/api/start', function(req, res, next) {
   
   if (httpProtocol == 'https') {
     // the used protocol is HTTPS
-    console.log('The HTTPS protocol have been used; "wss" will be used for WebRTC');
+    console.log('The HTTPS protocol has been used; "wss" will be used for WebRTC');
     wsProtocol = "wss";
   } else {
-    console.log('It appears that HTTP protocol have been used; environment provided protocol or "ws" will be used for WebRTC');
+    console.log('It appears that HTTP protocol has been used; environment provided protocol or "ws" will be used for WebRTC');
     wsProtocol = process.env.WS_PROTOCOL || "ws";
   };
   console.log(wsProtocol);
