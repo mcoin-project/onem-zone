@@ -1,0 +1,83 @@
+{
+  "_args": [
+    [
+      {
+        "raw": "angular-auto-focus",
+        "scope": null,
+        "escapedName": "angular-auto-focus",
+        "name": "angular-auto-focus",
+        "rawSpec": "",
+        "spec": "latest",
+        "type": "tag"
+      },
+      "/var/simulator/public"
+    ]
+  ],
+  "_from": "angular-auto-focus@latest",
+  "_id": "angular-auto-focus@1.0.4",
+  "_inCache": true,
+  "_location": "/angular-auto-focus",
+  "_nodeVersion": "0.12.2",
+  "_npmUser": {
+    "name": "atesgoral",
+    "email": "ates@magnetiq.com"
+  },
+  "_npmVersion": "2.7.4",
+  "_phantomChildren": {},
+  "_requested": {
+    "raw": "angular-auto-focus",
+    "scope": null,
+    "escapedName": "angular-auto-focus",
+    "name": "angular-auto-focus",
+    "rawSpec": "",
+    "spec": "latest",
+    "type": "tag"
+  },
+  "_requiredBy": [
+    "#USER"
+  ],
+  "_resolved": "https://registry.npmjs.org/angular-auto-focus/-/angular-auto-focus-1.0.4.tgz",
+  "_shasum": "b0f4d3302a5346e8f3a91f598ab3dfd79a1deff1",
+  "_shrinkwrap": null,
+  "_spec": "angular-auto-focus",
+  "_where": "/var/simulator/public",
+  "author": {
+    "name": "Ates Goral",
+    "email": "ates.g@myplanet.com"
+  },
+  "bugs": {
+    "url": "https://github.com/myplanet/angular-auto-focus/issues"
+  },
+  "dependencies": {},
+  "description": "Bullet-proof auto-focusing for Angular",
+  "devDependencies": {},
+  "directories": {},
+  "dist": {
+    "shasum": "b0f4d3302a5346e8f3a91f598ab3dfd79a1deff1",
+    "tarball": "https://registry.npmjs.org/angular-auto-focus/-/angular-auto-focus-1.0.4.tgz"
+  },
+  "gitHead": "4e2ee6d5d4a7de62439280a795f9cc9dfe5299e4",
+  "homepage": "https://github.com/myplanet/angular-auto-focus",
+  "keywords": [
+    "angular",
+    "autofocus",
+    "focus"
+  ],
+  "license": "MIT",
+  "main": "angular-auto-focus.js",
+  "maintainers": [
+    {
+      "name": "atesgoral",
+      "email": "ates@magnetiq.com"
+    }
+  ],
+  "name": "angular-auto-focus",
+  "optionalDependencies": {},
+  "readme": "ERROR: No README data found!",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/myplanet/angular-auto-focus.git"
+  },
+  "scripts": {},
+  "version": "1.0.4"
+}

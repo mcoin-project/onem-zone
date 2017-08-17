@@ -5,7 +5,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'ngRoute',
     'ngResource',
     'matchMedia',
-    'btford.socket-io'
+    'btford.socket-io',
+    'mp.autoFocus'
 ]);
 
 ONEmSimModule.config(['$routeProvider', '$locationProvider',
@@ -132,6 +133,22 @@ ONEmSimModule.directive('myClock', function($interval, dateFilter) {
         }
     };
 });
+
+ONEmSimModule.directive('focusMe', function($timeout) {
+  return {
+    scope: { trigger: '@focusMe' },
+    link: function(scope, element) {
+      scope.$watch('trigger', function(value) {
+        if(value === "true") { 
+          $timeout(function() {
+            element[0].focus(); 
+          });
+        }
+      });
+    }
+  };
+});
+
 
 ONEmSimModule.factory('DataModel', function() {
     var data = {
