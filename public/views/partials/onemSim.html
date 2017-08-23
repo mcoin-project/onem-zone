@@ -6,7 +6,7 @@
         <div my-clock class="time">
             <p my-clock clock="HH:mm:ss"></p>
         </div> <!-- /time -->
-    </div><!-- /wireframe -->
+    </div> <!-- /wireframe -->
 
     <div class="screen">
 
@@ -23,7 +23,7 @@
                     </p>
                     <p class="msg">Type the number you want to call.</p>
                     <p class="call_no"><a class="call" href="#"><img src="images/icn_answer.svg" /></a></p>
-                </div><!-- /preview -->
+                </div> <!-- /preview -->
 
                 <ul class="keypad dialpad nums squared">
                     <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
@@ -39,10 +39,10 @@
                     <li class="clicky"><a id="num_0" class="num zero" data-val="0" href="#"><span class="no">0</span></a></li>
                     <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li> -->
                     <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>
-                </ul><!-- /keypad dialpad nums squared-->
+                </ul> <!-- /keypad dialpad nums squared-->
                 <a class="closer" href="#"><img src="images/icn_close.svg" /></a>
 
-            </div><!-- /panel dialer -->
+            </div> <!-- /panel dialer -->
 
             <div class="panel caller">
                 <div class="preview">
@@ -56,16 +56,13 @@
                         <a class="clicky closer" href="#"><img src="images/num_x.svg" /></a>
                         <a class="clicky answer" href="#"><img src="images/icn_call_ok.svg" /></a>
                     </p>
-                </div><!-- /preview -->
+                </div> <!-- /preview -->
                 <a class="closer" href="#"><img src="images/icn_close.svg" /></a>
-            </div><!-- /panel caller -->
+            </div> <!-- /panel caller -->
 
             <div class="panel answer">
                 <div class="preview">
-                    <!-- <p class="title">Current call<ttime="Mumu"/p> -->
-                    <div my-talk-clock class="title">
-                        <p my-talk-clock ttime="HH:mm:ss"></p>
-                    </div> <!-- /title -->
+                    <p class="title talktime"></p>
                     <p class="user off"><img src="images/icn_usr.svg" /></p>
                     <p class="video">
                         <video loop id="myVideo" width="320" height="240" src="" hidden=true>
@@ -74,15 +71,15 @@
                             <source type="video/webm">
                             Your browser does not support the video tag.
                         </video>
-                    </p><!-- /video -->
+                    </p> <!-- /video -->
                     <p class="inp"><input id="typed_no" type="text" value="100" disabled="disabled"></p>
                     <!-- <p class="msg">Unknown number</p> -->
                     <p class="call_tools">
                         <a class="clicky numpad" href="#"><img src="images/icn_numpad.svg" /></a>
                         <a class="clicky cancel" href="#"><img src="images/icn_reject.svg" /></a>
                         <a class="clicky mute" href="#"><img src="images/icn_mute.svg" /></a>
-                    </p>
-                </div><!-- /preview -->
+                    </p> <!-- /call_tools -->
+                </div> <!-- /preview -->
                 <!-- <div class="video">
                     <video loop id="myVideo" width="320" height="240" src="" hidden=true>
                         <source type="video/mp4">
@@ -105,49 +102,52 @@
                     <li class="clicky"><a id="num_0" class="num zero" data-val="0" href="#"><span class="no">0</span></a></li>
                     <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li> -->
                     <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>
-                </ul><!-- /keypad dialpad nums squared-->
+                </ul> <!-- /keypad dialpad nums squared-->
                 <a class="minimize" href="#"><img src="images/icn_mini.svg" /></a>
-            </div><!-- /panel answer -->
+            </div> <!-- /panel answer -->
 
-            <div class="sms-response">
-                <div scroll-bottom="results" class="sms-response-pos">
-                    <div ng-repeat="obj in results track by $index">
-                        <div ng-if="obj.type == 'mt'" class="sms-mt">
-                            <div class="sms-placeholder">
-                                <div class="sms-mt-container">
-                                    <span>{{obj.value}}</span>
-                                </div> <!-- /sms-mt-container -->
-                                <div ng-if="smsLength" class="sms-length">
-                                    <span>{{obj.value.length}}</span>
-                                </div> <!-- /sms-length -->
-                            </div> <!-- /sms-placeholder -->
-                        </div> <!-- /sms-mt -->
-                        <div ng-if="obj.type == 'mo'" class="sms-mo">
-                            <div class="sms-placeholder">
-                                <div class="sms-mo-container">
-                                    <span>{{obj.value}}</span>
-                                </div> <!-- /sms-mo-container -->
-                            </div> <!-- /sms-placeholder -->
-                        </div> <!-- /sms-mo -->
-                    </div>
-                </div> <!-- /sms-response-pos -->
-            </div> <!-- /sms-response -->
+        </div> <!-- /screen_wrp -->
 
-        </div><!-- /screen_wrp -->
+        <div class="sms-response">
+            <div scroll-bottom="results" class="sms-response-pos">
+                <div ng-repeat="obj in results track by $index">
+                    <div ng-if="obj.type == 'mt'" class="sms-mt">
+                        <div class="sms-placeholder">
+                            <div class="sms-mt-container">
+                                <span>{{obj.value}}</span>
+                            </div> <!-- /sms-mt-container -->
+                            <div ng-if="smsLength" class="sms-length">
+                                <span>{{obj.value.length}}</span>
+                            </div> <!-- /sms-length -->
+                        </div> <!-- /sms-placeholder -->
+                    </div> <!-- /sms-mt -->
+                    <div ng-if="obj.type == 'mo'" class="sms-mo">
+                        <div class="sms-placeholder">
+                            <div class="sms-mo-container">
+                                <span>{{obj.value}}</span>
+                            </div> <!-- /sms-mo-container -->
+                        </div> <!-- /sms-placeholder -->
+                    </div> <!-- /sms-mo -->
+                </div> <!-- /obj in results track by $index -->
+            </div> <!-- /sms-response-pos -->
+        </div> <!-- /sms-response -->
 
         <div class="sms-input">
             <form ng-submit="smsInput()">
                 <!-- <label for="sms"></label> -->
                 <span class="dial"><a class="open_dialer" href="#"><img src="images/icn_dialer.svg"></a></span>
-                <span class="input"><input ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus></span>
+                <span class="input">
+                    <!-- <input ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus> -->
+                    <textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea>
+                </span> <!-- /input -->
                 <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->
-            </form>
+            </form> <!-- /smsInput() -->
         </div> <!-- /sms-input -->
 
         <p class="onem_msisdn">
             <strong>MSISDN:</strong>
             <span>{{msisdn}}</span>
-        </p>
+        </p> <!-- /onem_msisdn -->
 
         <p class="call_notif"><a href="#" class="resume">Click here to resume the call</a></p>
 
@@ -155,11 +155,11 @@
             <a href="http://www.onem.com">
                 <img class="enter" src="images/logo_onem.svg" />
             </a>              
-        </div><!-- /logo -->
+        </div> <!-- /logo -->
 
-    </div><!-- /screen -->
+    </div> <!-- /screen -->
 
-</div><!-- /phone -->
+</div> <!-- /phone -->
 
 <a class="full" href="#"><img class="enter" src="images/icn_fs_enter.svg" /><img class="exit" src="images/icn_fs_exit.svg" /></a>
 

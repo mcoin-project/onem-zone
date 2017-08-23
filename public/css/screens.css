@@ -34,8 +34,7 @@ body.full {
     bottom: 126px;
     left: 41px;
     right: 37px;
-    border: 1px solid #ccc;
-    z-index: 2;
+    z-index: 3;
 }
 
 .phone .panel {
@@ -87,7 +86,7 @@ body.full {
     height: auto;
 }
 
-.phone input, .phone textarea {
+.phone .panel input, .phone .panel textarea {
     display: block;
     float: left;
     width: 100%;
@@ -120,7 +119,6 @@ body.full {
 }
 
 .phone .panel > a.minimize {
-    
 }
 
 .phone .call_tools { position: absolute; width: 100%; left: 0; bottom: 20px; text-align: center; display: flex; align-items: center; }
@@ -417,8 +415,9 @@ body.full {
 }
 
 .phone .answer .title {
-    padding-left: 32px;
+    padding: 14px 0px 10px 32px;
     font-size: 16px;
+    text-align: left !important;
 }
 
 .phone .answer .user.off {
@@ -460,7 +459,7 @@ body.full {
     left: 42px;
     right: 37px;
     background: #f0f0f0;
-    z-index: 1;
+    z-index: 2;
 }
 
 .phone .sms-input span {
@@ -478,7 +477,7 @@ body.full {
 }
 
 .phone .sms-input span.input {
-    width: calc(100% - 100px);
+    width: calc(100% - 85px);
 }
 
 .phone .sms-input span.input input {
@@ -486,13 +485,26 @@ body.full {
     border: 1px solid #ccc;
 }
 
+.phone .sms-input textarea {
+    display: block;
+    float: left;
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 18px;
+    font-weight: 400;
+    resize: none;
+    margin:10px 0;
+    font-family: 'Roboto', sans-serif;
+}
+
 .phone .sms-response {
     position: absolute;
-    /*overflow-y: scroll;*/
-    top: 0;
-    height: 100%;
-    left: 0;
-    width: 100%;
+    display: block;
+    top: 124px;
+    bottom: 126px;
+    left: 41px;
+    right: 37px;
+    z-index: 1;
 }
 
 .phone .sms-response-pos {
@@ -500,7 +512,7 @@ body.full {
     height: 100%;
     display: block;
     overflow: auto;
-    padding: 0 10px;
+    padding:10px;
 }
 
 .phone .sms-response-pos .sms-placeholder {
@@ -609,7 +621,6 @@ body.full {
     z-index: 3;
     transform: translateX(-100%);
     opacity: 0;
-
 }
 
 .phone .call_notif.on { transform: translateX(0); opacity: 1; }
@@ -620,6 +631,7 @@ body.full {
     padding: 3px 12px;
     height: 40px; /**/
 }
+
 
 /*------------------------------------------------------------------------------------------
  *

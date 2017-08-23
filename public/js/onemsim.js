@@ -1,12 +1,11 @@
 'use strict';
 
 var ONEmSimModule = angular.module('ONEmSimModule', [
-    'ui.bootstrap',
     'ngRoute',
     'ngResource',
     'matchMedia',
     'btford.socket-io',
-    'mp.autoFocus'
+    'ONEmSimUIModule'
 ]);
 
 ONEmSimModule.config(['$routeProvider', '$locationProvider',
@@ -151,106 +150,14 @@ ONEmSimModule.factory('DataModel', function() {
     };
 });
 
-ONEmSimModule.directive('scrollBottom', function() {
-    return {
-        scope: {
-            scrollBottom: "="
-        },
-        link: function(scope, element) {
-            scope.$watchCollection('scrollBottom', function(newValue) {
-                if (newValue) {
-                    //$(element).scrollTop($(element)[0].scrollHeight);
-                    var scrollHeight = $(element)[0].scrollHeight;
-                    $(element).animate({ scrollTop: scrollHeight }, 300);
-                };
-            });
-        }
-    };
-});
-
-ONEmSimModule.directive('myClock', function($interval, dateFilter) {
-    return {
-        restrict:   "A",
-        transclude: true,
-        scope: {
-            format: "@"
-        },
-        link: function(scope, element, attrs) {
-            var format = scope.clock || 'HH:mm:ss';
-
-            var updateTime = function() {
-                element.text(dateFilter(new Date(),format));
-            };
-
-            //Schedule update every second:
-            var timer = $interval(updateTime, 1000);
-
-            //Listen on DOM destroy (removal) event and cancel the next UI update
-            //to prevent updating time after the DOM element was removed:
-            element.on('$destroy', function() {
-                $interval.cancel(timer);
-            });
-        }
-    };
-});
-
-ONEmSimModule.directive('myTalkClock', function($interval, dateFilter) {
-    return {
-        restrict:    "A",
-        transclude:  true,
-        scope: {
-            tformat: "@",
-        },
-        link: function(scope, element, attrs) {
-            var tformat  = scope.ttime || 'HH:mm:ss';
-            var nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
-
-            var updateTalkTime = function() {
-                element.text('Current call: ' + dateFilter(nowMoment,tformat));
-                nowMoment.setSeconds(nowMoment.getSeconds() + 1);
-            };
-
-            //Schedule update every second:
-            var ttimer  = $interval(updateTalkTime, 1000);
-
-            scope.$on('CALL_STARTED', function(e, data){
-                console.log('In directive "myTalkClock": received call started!');
-                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
-            });
-
-            //Listen on DOM destroy (removal) event and cancel the next UI update
-            //to prevent updating time after the DOM element was removed:
-            element.on('$destroy', function() {
-                $interval.cancel(ttimer);
-                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
-            });
-        }
-    };
-});
-
-ONEmSimModule.directive('focusMe', function($timeout) {
-  return {
-    scope: { trigger: '@focusMe' },
-    link: function(scope, element) {
-      scope.$watch('trigger', function(value) {
-        if(value === "true") { 
-          $timeout(function() {
-            element[0].focus(); 
-          });
-        }
-      });
-    }
-  };
-});
-
-
 ONEmSimModule.controller('mainController', [
     '$scope',
     '$http',
     'SmsHandler',
     'DataModel',
     'Socket',
-    function($scope, $http, SmsHandler, DataModel, Socket) {
+    'dateFilter',
+    function($scope, $http, SmsHandler, DataModel, Socket, dateFilter) {
 
         var isInCall = 0;
 
@@ -348,6 +255,7 @@ ONEmSimModule.controller('mainController', [
         var RejectButton = $('.call_tools a.cancel');
         var CallButton = $('.screen a.call');
         var ClosePanelButton = $('.screen a.closer');
+        var TalkTimer = $('.answer .talktime');
 
         var audioElement = document.getElementById('myAudio');
         audioElement.autoplay = true;
@@ -356,6 +264,13 @@ ONEmSimModule.controller('mainController', [
         var videoElement = $('#myVideo')[0];
         videoElement.autoplay = true;
         console.log(videoElement);
+
+        var nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+        function updateTalkTime() {
+            TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
+            nowMoment.setSeconds(nowMoment.getSeconds() + 1);
+        };
+        var talkTime = null;
 
         var globalSession = null;
 
@@ -371,6 +286,9 @@ ONEmSimModule.controller('mainController', [
                 videoElement.hidden = true;
                 $('.phone div.answer .user').removeClass('.off');
                 isInCall = 0;
+                clearInterval(talkTime);
+                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                 $('.phone div.panel').removeClass('open');
                 $('.phone .call_notif').removeClass('on');
                 $('.answer ul.nums').removeClass('on');
@@ -385,6 +303,9 @@ ONEmSimModule.controller('mainController', [
                 videoElement.hidden = true;
                 $('.phone div.answer .user').removeClass('.off');
                 isInCall = 0;
+                clearInterval(talkTime);
+                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                 $('.phone div.panel').removeClass('open');
                 $('.phone .call_notif').removeClass('on');
                 $('.answer ul.nums').removeClass('on');
@@ -395,7 +316,10 @@ ONEmSimModule.controller('mainController', [
             'confirmed' : function(e) {
                 console.log('eventHandlers - confirmed');
                 audioElement.pause();
-                $scope.$emit('CALL_STARTED', e);
+
+                //Schedule update of talk time every second:
+                talkTime = setInterval(updateTalkTime, 1000);
+
                 //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                 //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                 //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
@@ -404,9 +328,11 @@ ONEmSimModule.controller('mainController', [
                     videoElement.hidden = false;
                     $('.phone div.answer .user').addClass('.off');
                     //.phone .answer .user.off
+                    console.log("with video");
                 } else {
                     videoElement.hidden = true;
                     $('.phone div.answer .user').removeClass('.off');
+                    console.log("no video");
                 };
                 if(webrtcDetectedBrowser == "firefox") {
                     //audioElement.play();
@@ -422,31 +348,31 @@ ONEmSimModule.controller('mainController', [
         };
 
         var options = {
-            'eventHandlers'           : eventHandlers,
-            'sessionTimersExpires'    : 600,
-            'session_timers'          : true,
-            'useUpdate'               : false,
-            'use_preloaded_route'     : false,
-            'pcConfig'                : {
-                'rtcpMuxPolicy'       : 'negotiate',
-                'iceServers'          : // [ {
-                //        'urls'        : 'stun:stun.l.google.com:19302'
+            'eventHandlers'          : eventHandlers,
+            'sessionTimersExpires'   : 600,
+            'session_timers'         : true,
+            'useUpdate'              : false,
+            'use_preloaded_route'    : false,
+            'pcConfig'               : {
+                'rtcpMuxPolicy'      : 'negotiate',
+                'iceServers'         : // [ {
+                //        'urls'       : 'stun:stun.l.google.com:19302'
                 //    }, {
-                //        'urls'        : 'turn:192.158.29.39:3478?transport=udp',
-                //        'credential'  : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                //        'username'    : '28224511:1379330808'
+                //        'urls'       : 'turn:192.158.29.39:3478?transport=udp',
+                //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                //        'username'   : '28224511:1379330808'
                 //    }, {
-                //        'urls'        : 'turn:192.158.29.39:3478?transport=tcp',
-                //        'credential'  : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                //        'username'    : '28224511:1379330808'
+                //        'urls'       : 'turn:192.158.29.39:3478?transport=tcp',
+                //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                //        'username'   : '28224511:1379330808'
                 //    }
                 //]
                 [
-                    { 'urls'          : [ 'stun:stun.l.google.com:19302' ] }
-                    //{ 'urls'          : [ 'stun:stunserver.org' ] }
+                    { 'urls'         : [ 'stun:stun.l.google.com:19302' ] }
+                    //{ 'urls'         : [ 'stun:stunserver.org' ] }
                 ]
             },
-            'mediaConstraints'        : { 'audio' : true, 'video' : true }
+            'mediaConstraints'       : { 'audio' : true, 'video' : true }
         };
 
         var startResponse = SmsHandler.start({}, function() {
@@ -461,13 +387,13 @@ ONEmSimModule.controller('mainController', [
 
             //JsSIP configuration:
             var configuration = {
-                sockets                          : [ socket ],
-                uri                              : 'sip:' + $scope.msisdn + '@' + sipProxy,
-                password                         : 'ONEmP@$$w0rd2016',
-                useUpdate                        : false,
-                register                         : true,
-                use_preloaded_route              : false,
-                register_expires                 : 120
+                sockets             : [ socket ],
+                uri                 : 'sip:' + $scope.msisdn + '@' + sipProxy,
+                password            : 'ONEmP@$$w0rd2016',
+                useUpdate           : false,
+                register            : true,
+                use_preloaded_route : false,
+                register_expires    : 120
             };
 
             var phoneONEm = new JsSIP.UA(configuration);
@@ -528,7 +454,7 @@ ONEmSimModule.controller('mainController', [
                 return false;
             });
 
-            $.each($('textarea[data-autoresize]'), function() {
+            $.each($('.panel textarea[data-autoresize]'), function() {
                 var offset = this.offsetHeight - this.clientHeight;
                 var resizeTextarea = function(el) {
                     $(el).css('height', 'auto').css('height', el.scrollHeight + offset);
@@ -538,7 +464,7 @@ ONEmSimModule.controller('mainController', [
                 }).removeAttr('data-autoresize');
             });
 
-            $('textarea').keypress(function(e) {
+            $('.panel textarea').keypress(function(e) {
                 var a = [];
                 var k = e.which;
                 a.push(8);
@@ -612,6 +538,9 @@ ONEmSimModule.controller('mainController', [
                         videoElement.hidden = true;
                         $('.phone div.answer .user').removeClass('.off');
                         isInCall = 0;
+                        clearInterval(talkTime);
+                        nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                        TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                         $('.phone div.panel').removeClass('open');
                         $('.phone .call_notif').removeClass('on');
                         $('.answer ul.nums').removeClass('on');
@@ -628,6 +557,9 @@ ONEmSimModule.controller('mainController', [
                         videoElement.hidden = true;
                         $('.phone div.answer .user').removeClass('.off');
                         isInCall = 0;
+                        clearInterval(talkTime);
+                        nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                        TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                         $('.phone div.panel').removeClass('open');
                         $('.phone .call_notif').removeClass('on');
                         $('.answer ul.nums').removeClass('on');
@@ -640,7 +572,10 @@ ONEmSimModule.controller('mainController', [
                     globalSession.on("accepted",function(e){
                         console.log('newRTCSession - incoming - accepted');
                         audioElement.pause();
-                        $scope.$emit('CALL_STARTED', e);
+
+                        //Schedule update of talk time every second:
+                        talkTime = setInterval(updateTalkTime, 1000);
+
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                         //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
@@ -649,9 +584,11 @@ ONEmSimModule.controller('mainController', [
                             videoElement.hidden = false;
                             $('.phone div.answer .user').addClass('.off');
                             //.phone .answer .user.off
+                            console.log("with video");
                         } else {
                             videoElement.hidden = true;
                             $('.phone div.answer .user').removeClass('.off');
+                            console.log("no video");
                         };
                         if(webrtcDetectedBrowser == "firefox") {
                             //audioElement.play();
