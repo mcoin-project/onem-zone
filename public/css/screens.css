@@ -416,6 +416,11 @@ body.full {
     z-index: 4;
 }
 
+.phone .answer .title {
+    padding-left: 32px;
+    font-size: 16px;
+}
+
 .phone .answer .user.off {
     display: none;
 }

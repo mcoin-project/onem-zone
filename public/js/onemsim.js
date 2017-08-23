@@ -15,7 +15,7 @@ ONEmSimModule.config(['$routeProvider', '$locationProvider',
         $routeProvider.
         when('/', {
             templateUrl: 'views/partials/onemSim.html',
-            controller: 'mainController'
+            controller:  'mainController'
         }).
         otherwise({
             redirectTo: '/'
@@ -91,65 +91,6 @@ ONEmSimModule.factory('SmsHandler', [
     }
 ]);
 
-ONEmSimModule.directive('scrollBottom', function() {
-    return {
-        scope: {
-            scrollBottom: "="
-        },
-        link: function(scope, element) {
-            scope.$watchCollection('scrollBottom', function(newValue) {
-                if (newValue) {
-                    //$(element).scrollTop($(element)[0].scrollHeight);
-                    var scrollHeight = $(element)[0].scrollHeight;
-                    $(element).animate({ scrollTop: scrollHeight }, 300);
-                };
-            });
-        }
-    };
-});
-
-ONEmSimModule.directive('myClock', function($interval, dateFilter) {
-    return {
-        restrict: "A",
-        transclude: true,
-        scope: {
-            format: "@"
-        },
-        link: function(scope, element, attrs) {
-            var format = scope.clock || 'HH:mm:ss';
-
-            var updateTime = function() {
-                element.text(dateFilter(new Date(),format));
-            };
-
-            //Schedule update every second:
-            var timer = $interval(updateTime, 1000);
-
-            //Listen on DOM destroy (removal) event and cancel the next UI update
-            //to prevent updating time after the DOM element was removed:
-            element.on('$destroy', function() {
-                $interval.cancel(timer);
-            });
-        }
-    };
-});
-
-ONEmSimModule.directive('focusMe', function($timeout) {
-  return {
-    scope: { trigger: '@focusMe' },
-    link: function(scope, element) {
-      scope.$watch('trigger', function(value) {
-        if(value === "true") { 
-          $timeout(function() {
-            element[0].focus(); 
-          });
-        }
-      });
-    }
-  };
-});
-
-
 ONEmSimModule.factory('DataModel', function() {
     var data = {
         tabs: [
@@ -209,6 +150,99 @@ ONEmSimModule.factory('DataModel', function() {
         }
     };
 });
+
+ONEmSimModule.directive('scrollBottom', function() {
+    return {
+        scope: {
+            scrollBottom: "="
+        },
+        link: function(scope, element) {
+            scope.$watchCollection('scrollBottom', function(newValue) {
+                if (newValue) {
+                    //$(element).scrollTop($(element)[0].scrollHeight);
+                    var scrollHeight = $(element)[0].scrollHeight;
+                    $(element).animate({ scrollTop: scrollHeight }, 300);
+                };
+            });
+        }
+    };
+});
+
+ONEmSimModule.directive('myClock', function($interval, dateFilter) {
+    return {
+        restrict:   "A",
+        transclude: true,
+        scope: {
+            format: "@"
+        },
+        link: function(scope, element, attrs) {
+            var format = scope.clock || 'HH:mm:ss';
+
+            var updateTime = function() {
+                element.text(dateFilter(new Date(),format));
+            };
+
+            //Schedule update every second:
+            var timer = $interval(updateTime, 1000);
+
+            //Listen on DOM destroy (removal) event and cancel the next UI update
+            //to prevent updating time after the DOM element was removed:
+            element.on('$destroy', function() {
+                $interval.cancel(timer);
+            });
+        }
+    };
+});
+
+ONEmSimModule.directive('myTalkClock', function($interval, dateFilter) {
+    return {
+        restrict:    "A",
+        transclude:  true,
+        scope: {
+            tformat: "@",
+        },
+        link: function(scope, element, attrs) {
+            var tformat  = scope.ttime || 'HH:mm:ss';
+            var nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+
+            var updateTalkTime = function() {
+                element.text('Current call: ' + dateFilter(nowMoment,tformat));
+                nowMoment.setSeconds(nowMoment.getSeconds() + 1);
+            };
+
+            //Schedule update every second:
+            var ttimer  = $interval(updateTalkTime, 1000);
+
+            scope.$on('CALL_STARTED', function(e, data){
+                console.log('In directive "myTalkClock": received call started!');
+                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+            });
+
+            //Listen on DOM destroy (removal) event and cancel the next UI update
+            //to prevent updating time after the DOM element was removed:
+            element.on('$destroy', function() {
+                $interval.cancel(ttimer);
+                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+            });
+        }
+    };
+});
+
+ONEmSimModule.directive('focusMe', function($timeout) {
+  return {
+    scope: { trigger: '@focusMe' },
+    link: function(scope, element) {
+      scope.$watch('trigger', function(value) {
+        if(value === "true") { 
+          $timeout(function() {
+            element[0].focus(); 
+          });
+        }
+      });
+    }
+  };
+});
+
 
 ONEmSimModule.controller('mainController', [
     '$scope',
@@ -361,6 +395,7 @@ ONEmSimModule.controller('mainController', [
             'confirmed' : function(e) {
                 console.log('eventHandlers - confirmed');
                 audioElement.pause();
+                $scope.$emit('CALL_STARTED', e);
                 //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                 //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                 //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
@@ -605,6 +640,7 @@ ONEmSimModule.controller('mainController', [
                     globalSession.on("accepted",function(e){
                         console.log('newRTCSession - incoming - accepted');
                         audioElement.pause();
+                        $scope.$emit('CALL_STARTED', e);
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                         //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
