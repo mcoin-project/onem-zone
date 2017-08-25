@@ -320,6 +320,7 @@ app.get('/api/start', function(req, res, next) {
     console.log("msisdn:" + msisdn);
 
     req.session.onemContext = { msisdn: msisdn };
+    //Should I save it here, also??????
   }
 
   var httpProtocol = req.get('Referer').split(":")[0];
