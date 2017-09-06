@@ -159,221 +159,7 @@ ONEmSimModule.controller('mainController', [
     'dateFilter',
     function($scope, $http, SmsHandler, DataModel, Socket, dateFilter) {
 
-        var isInCall = 0;
-
         console.log("mainController initialising");
-
-        //These are the variables needed for the code found at https://chromium.googlesource.com/chromium/src.git/+/lkgr/chrome/test/data/webrtc/adapter.js?autodive=0%2F
-        var RTCPeerConnection = null;
-        var getUserMedia = null;
-        var attachMediaStream = null;
-        var reattachMediaStream = null;
-        var webrtcDetectedBrowser = null;
-        var webrtcDetectedVersion = null;
-
-        //function trace(text) {
-        //    // This function is used for logging.
-        //    if (text[text.length - 1] == '\n') {
-        //        text = text.substring(0, text.length - 1);
-        //    };
-        //    console.log((performance.now() / 1000).toFixed(3) + ": " + text);
-        //};
-
-        if (navigator.mozGetUserMedia) {
-            console.log("This appears to be Firefox");
-            webrtcDetectedBrowser = "firefox";
-            webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
-            // The RTCPeerConnection object.
-            RTCPeerConnection = mozRTCPeerConnection;
-            // The RTCSessionDescription object.
-            RTCSessionDescription = mozRTCSessionDescription;
-            // Get UserMedia (only difference is the prefix).
-            // Code from Adam Barth.
-            getUserMedia = navigator.mozGetUserMedia.bind(navigator);
-            // Attach a media stream to an element.
-            attachMediaStream = function(element, stream) {
-                console.log("Attaching media stream");
-                element.mozSrcObject = stream;
-                element.play();
-            };
-            reattachMediaStream = function(to, from) {
-                console.log("Reattaching media stream");
-                to.mozSrcObject = from.mozSrcObject;
-                to.play();
-            };
-        } else if (navigator.webkitGetUserMedia) {
-            console.log("This appears to be Chrome");
-            webrtcDetectedBrowser = "chrome";
-            webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
-            // The RTCPeerConnection object.
-            RTCPeerConnection = webkitRTCPeerConnection;
-            // Get UserMedia (only difference is the prefix).
-            // Code from Adam Barth.
-            getUserMedia = navigator.webkitGetUserMedia.bind(navigator);
-            // Attach a media stream to an element.
-            attachMediaStream = function(element, stream) {
-                console.log("Attaching media stream");
-                if (typeof element.srcObject !== 'undefined') {
-                    element.srcObject = stream;
-                } else if (typeof element.mozSrcObject !== 'undefined') {
-                    element.mozSrcObject = stream;
-                } else if (typeof element.src !== 'undefined') {
-                    element.src = URL.createObjectURL(stream);
-                } else {
-                    console.log('Error attaching stream to element.');
-                };
-            };
-            reattachMediaStream = function(to, from) {
-                console.log("Reattaching media stream");
-                to.src = from.src;
-            };
-            // The representation of tracks in a stream is changed in M26.
-            // Unify them for earlier Chrome versions in the coexisting period.
-            if (!webkitMediaStream.prototype.getVideoTracks) {
-                webkitMediaStream.prototype.getVideoTracks = function() {
-                    return this.videoTracks;
-                };
-                webkitMediaStream.prototype.getAudioTracks = function() {
-                    return this.audioTracks;
-                };
-            };
-            // New syntax of getXXXStreams method in M26.
-            if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
-                webkitRTCPeerConnection.prototype.getLocalStreams = function() {
-                    return this.localStreams;
-                };
-                webkitRTCPeerConnection.prototype.getRemoteStreams = function() {
-                    return this.remoteStreams;
-                };
-            }
-        } else {
-            console.log("Browser does not appear to be WebRTC-capable");
-        };
-
-        //These are the buttons of the phone's user interface:
-        var AnswerButton = $('.call_tools a.answer');
-        var RejectButton = $('.call_tools a.cancel');
-        var CallButton = $('.screen a.call');
-        var ClosePanelButton = $('.screen a.closer');
-        var TalkTimer = $('.answer .talktime');
-
-        var audioElement = document.getElementById('myAudio');
-        audioElement.autoplay = true;
-        console.log(audioElement);
-        //var videoElement = document.getElementById('myVideo');
-        var videoElement = $('#myVideo')[0];
-        videoElement.autoplay = true;
-        console.log(videoElement);
-
-        var nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
-        function updateTalkTime() {
-            TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
-            nowMoment.setSeconds(nowMoment.getSeconds() + 1);
-        };
-        var talkTime = null;
-
-        var globalSession = null;
-
-        // Register callbacks to desired call events
-        var eventHandlers = {
-            'progress'  : function(e) {
-                console.log('eventHandlers - progress');
-            },
-            'failed'    : function(e) {
-                console.log('eventHandlers - failed');
-                audioElement.pause();
-                videoElement.pause();
-                videoElement.hidden = true;
-                $('.phone div.answer .user').removeClass('.off');
-                isInCall = 0;
-                clearInterval(talkTime);
-                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
-                TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
-                $('.phone div.panel').removeClass('open');
-                $('.phone .call_notif').removeClass('on');
-                $('.answer ul.nums').removeClass('on');
-                $('.answer #typed_no').val('');
-                $('.dialer #typed_no').val('');
-                $('.caller #typed_no').val('');
-            },
-            'ended'     : function(e) {
-                console.log('eventHandlers - ended');
-                audioElement.pause();
-                videoElement.pause();
-                videoElement.hidden = true;
-                $('.phone div.answer .user').removeClass('.off');
-                isInCall = 0;
-                clearInterval(talkTime);
-                nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
-                TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
-                $('.phone div.panel').removeClass('open');
-                $('.phone .call_notif').removeClass('on');
-                $('.answer ul.nums').removeClass('on');
-                $('.answer #typed_no').val('');
-                $('.dialer #typed_no').val('');
-                $('.caller #typed_no').val('');
-            },
-            'confirmed' : function(e) {
-                console.log('eventHandlers - confirmed');
-                audioElement.pause();
-
-                //Schedule update of talk time every second:
-                talkTime = setInterval(updateTalkTime, 1000);
-
-                //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
-                //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
-                videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
-                    videoElement.hidden = false;
-                    $('.phone div.answer .user').addClass('.off');
-                    //.phone .answer .user.off
-                    console.log("with video");
-                } else {
-                    videoElement.hidden = true;
-                    $('.phone div.answer .user').removeClass('.off');
-                    console.log("no video");
-                };
-                if(webrtcDetectedBrowser == "firefox") {
-                    //audioElement.play();
-                    videoElement.play();
-                };
-                //audioElement.play();
-                //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
-                isInCall = 1;
-            },
-            'addstream' : function(e) {
-                console.log('eventHandlers - addstream');
-            }
-        };
-
-        var options = {
-            'eventHandlers'          : eventHandlers,
-            'sessionTimersExpires'   : 600,
-            'session_timers'         : true,
-            'useUpdate'              : false,
-            'use_preloaded_route'    : false,
-            'pcConfig'               : {
-                'rtcpMuxPolicy'      : 'negotiate',
-                'iceServers'         : // [ {
-                //        'urls'       : 'stun:stun.l.google.com:19302'
-                //    }, {
-                //        'urls'       : 'turn:192.158.29.39:3478?transport=udp',
-                //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                //        'username'   : '28224511:1379330808'
-                //    }, {
-                //        'urls'       : 'turn:192.158.29.39:3478?transport=tcp',
-                //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
-                //        'username'   : '28224511:1379330808'
-                //    }
-                //]
-                [
-                    { 'urls'         : [ 'stun:stun.l.google.com:19302' ] }
-                    //{ 'urls'         : [ 'stun:stunserver.org' ] }
-                ]
-            },
-            'mediaConstraints'       : { 'audio' : true, 'video' : true }
-        };
 
         var startResponse = SmsHandler.start({}, function() {
             $scope.msisdn = startResponse.msisdn;
@@ -382,6 +168,234 @@ ONEmSimModule.controller('mainController', [
             console.log("msisdn: " + $scope.msisdn);
             console.log("SIP Proxy: " + sipProxy);
             console.log("web socket protocol: " + wsProtocol);
+
+            var isInCall = 0;
+
+            //These are the variables needed for the code found at https://chromium.googlesource.com/chromium/src.git/+/lkgr/chrome/test/data/webrtc/adapter.js?autodive=0%2F
+            var RTCPeerConnection = null;
+            var getUserMedia = null;
+            var attachMediaStream = null;
+            var reattachMediaStream = null;
+            var webrtcDetectedBrowser = null;
+            var webrtcDetectedVersion = null;
+
+            //function trace(text) {
+            //    // This function is used for logging.
+            //    if (text[text.length - 1] == '\n') {
+            //        text = text.substring(0, text.length - 1);
+            //    };
+            //    console.log((performance.now() / 1000).toFixed(3) + ": " + text);
+            //};
+
+            if (navigator.mozGetUserMedia) {
+                console.log("This appears to be Firefox");
+                webrtcDetectedBrowser = "firefox";
+                webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
+                // The RTCPeerConnection object.
+                RTCPeerConnection = mozRTCPeerConnection;
+                // The RTCSessionDescription object.
+                RTCSessionDescription = mozRTCSessionDescription;
+                // Get UserMedia (only difference is the prefix).
+                // Code from Adam Barth.
+                getUserMedia = navigator.mozGetUserMedia.bind(navigator);
+                // Attach a media stream to an element.
+                attachMediaStream = function(element, stream) {
+                    console.log("Attaching media stream");
+                    element.mozSrcObject = stream;
+                    element.play();
+                };
+                reattachMediaStream = function(to, from) {
+                    console.log("Reattaching media stream");
+                    to.mozSrcObject = from.mozSrcObject;
+                    to.play();
+                };
+            } else if (navigator.webkitGetUserMedia) {
+                console.log("This appears to be Chrome");
+                webrtcDetectedBrowser = "chrome";
+                webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
+                // The RTCPeerConnection object.
+                RTCPeerConnection = webkitRTCPeerConnection;
+                // Get UserMedia (only difference is the prefix).
+                // Code from Adam Barth.
+                getUserMedia = navigator.webkitGetUserMedia.bind(navigator);
+                // Attach a media stream to an element.
+                attachMediaStream = function(element, stream) {
+                    console.log("Attaching media stream");
+                    if (typeof element.srcObject !== 'undefined') {
+                        element.srcObject = stream;
+                    } else if (typeof element.mozSrcObject !== 'undefined') {
+                        element.mozSrcObject = stream;
+                    } else if (typeof element.src !== 'undefined') {
+                        element.src = URL.createObjectURL(stream);
+                    } else {
+                        console.log('Error attaching stream to element.');
+                    };
+                };
+                reattachMediaStream = function(to, from) {
+                    console.log("Reattaching media stream");
+                    to.src = from.src;
+                };
+                // The representation of tracks in a stream is changed in M26.
+                // Unify them for earlier Chrome versions in the coexisting period.
+                if (!webkitMediaStream.prototype.getVideoTracks) {
+                    webkitMediaStream.prototype.getVideoTracks = function() {
+                        return this.videoTracks;
+                    };
+                    webkitMediaStream.prototype.getAudioTracks = function() {
+                        return this.audioTracks;
+                    };
+                };
+                // New syntax of getXXXStreams method in M26.
+                if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
+                    webkitRTCPeerConnection.prototype.getLocalStreams = function() {
+                        return this.localStreams;
+                    };
+                    webkitRTCPeerConnection.prototype.getRemoteStreams = function() {
+                        return this.remoteStreams;
+                    };
+                }
+            } else {
+                console.log("Browser does not appear to be WebRTC-capable");
+            };
+
+            //These are the buttons of the phone's user interface:
+            var AnswerButton = $('.call_tools a.answer');
+            var RejectButton = $('.call_tools a.cancel');
+            var CallButton = $('.screen a.call');
+            var ClosePanelButton = $('.screen a.closer');
+            var TalkTimer = $('.answer .talktime');
+
+            var audioElement = document.getElementById('myAudio');
+            //var audioElement = $('#myAudio')[0];
+            audioElement.autoplay = true;
+            console.log(audioElement);
+            var videoElement = document.getElementById('myVideo');
+            //var videoElement = $('#myVideo')[0];
+            videoElement.autoplay = true;
+            console.log(videoElement);
+
+            var nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+            function updateTalkTime() {
+                TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
+                nowMoment.setSeconds(nowMoment.getSeconds() + 1);
+            };
+            var talkTime = null;
+
+            var globalSession = null;
+
+            // Register callbacks to desired call events
+            var eventHandlers = {
+                'progress'  : function(e) {
+                    console.log('eventHandlers - progress');
+                    //Outgoing call; play ringback tone
+                    console.log("Playing outgoing callback tone:");
+                    audioElement.src = "/sounds/ringing_tone_uk_new.wav";
+
+                    //audioElement.play();
+                    if(webrtcDetectedBrowser == "firefox") {
+                        audioElement.play();
+                    };
+                },
+                'failed'    : function(e) {
+                    console.log('eventHandlers - failed');
+                    audioElement.pause();
+                    videoElement.pause();
+                    videoElement.hidden = true;
+                    videoElement.style.visibility = 'hidden';
+                    $('.phone div.answer .user').removeClass('.off');
+                    isInCall = 0;
+                    clearInterval(talkTime);
+                    nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                    TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
+                    $('.phone div.panel').removeClass('open');
+                    $('.phone .call_notif').removeClass('on');
+                    $('.answer ul.nums').removeClass('on');
+                    $('.answer #typed_no').val('');
+                    $('.dialer #typed_no').val('');
+                    $('.caller #typed_no').val('');
+                },
+                'ended'     : function(e) {
+                    console.log('eventHandlers - ended');
+                    audioElement.pause();
+                    videoElement.pause();
+                    videoElement.hidden = true;
+                    videoElement.style.visibility = 'hidden';
+                    $('.phone div.answer .user').removeClass('.off');
+                    isInCall = 0;
+                    clearInterval(talkTime);
+                    nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                    TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
+                    $('.phone div.panel').removeClass('open');
+                    $('.phone .call_notif').removeClass('on');
+                    $('.answer ul.nums').removeClass('on');
+                    $('.answer #typed_no').val('');
+                    $('.dialer #typed_no').val('');
+                    $('.caller #typed_no').val('');
+                },
+                'confirmed' : function(e) {
+                    console.log('eventHandlers - confirmed');
+                    audioElement.pause();
+
+                    //Schedule update of talk time every second:
+                    talkTime = setInterval(updateTalkTime, 1000);
+
+                    //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
+                    //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                    //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
+                    videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                    //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
+                    if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
+                        videoElement.hidden = false;
+                        videoElement.style.visibility = 'visible';
+                        $('.phone div.answer .user').addClass('.off');
+                        //.phone .answer .user.off
+                        console.log("with video");
+                    } else {
+                        videoElement.hidden = true;
+                        videoElement.style.visibility = 'hidden';
+                        $('.phone div.answer .user').removeClass('.off');
+                        console.log("no video");
+                    };
+                    if(webrtcDetectedBrowser == "firefox") {
+                        //audioElement.play();
+                        videoElement.play();
+                    };
+                    //audioElement.play();
+                    isInCall = 1;
+                },
+                'addstream' : function(e) {
+                    console.log('eventHandlers - addstream');
+                }
+            };
+
+            var options = {
+                'eventHandlers'          : eventHandlers,
+                'sessionTimersExpires'   : 600,
+                'session_timers'         : true,
+                'useUpdate'              : false,
+                'use_preloaded_route'    : false,
+                'extraHeaders'           : [ 'X-WEBRTC-UA: zoiper' ],
+                'pcConfig'               : {
+                    'rtcpMuxPolicy'      : 'negotiate',
+                    'iceServers'         : // [ {
+                    //        'urls'       : 'stun:stun.l.google.com:19302'
+                    //    }, {
+                    //        'urls'       : 'turn:192.158.29.39:3478?transport=udp',
+                    //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                    //        'username'   : '28224511:1379330808'
+                    //    }, {
+                    //        'urls'       : 'turn:192.158.29.39:3478?transport=tcp',
+                    //        'credential' : 'JZEOEt2V3Qb0y27GRntt2u2PAYA=',
+                    //        'username'   : '28224511:1379330808'
+                    //    }
+                    //]
+                    [
+                        { 'urls'         : [ 'stun:stun.l.google.com:19302' ] }
+                        //{ 'urls'         : [ 'stun:stunserver.org' ] }
+                    ]
+                },
+                'mediaConstraints'       : { 'audio' : true, 'video' : true }
+            };
 
             var socket = new JsSIP.WebSocketInterface(wsProtocol + '://' + sipProxy);
 
@@ -397,6 +411,10 @@ ONEmSimModule.controller('mainController', [
             };
 
             var phoneONEm = new JsSIP.UA(configuration);
+
+            phoneONEm.registrator().setExtraHeaders([
+                'X-WEBRTC-UA: sweb'
+            ]);
 
             $('a.full').click(function(e){
                 e.preventDefault();
@@ -511,10 +529,6 @@ ONEmSimModule.controller('mainController', [
                     //Incoming call; play ring
                     console.log("Playing incoming call ring:");
                     audioElement.src = "/sounds/old_british_phone.wav";
-                } else {
-                    //Outgoing call; play ringback tone
-                    console.log("Playing outgoing callback tone:");
-                    audioElement.src = "/sounds/ringing_tone_uk_new.wav";
                 };
 
                 //audioElement.play();
@@ -529,13 +543,14 @@ ONEmSimModule.controller('mainController', [
                 $('.caller #typed_no').val(globalSession.remote_identity.uri.user);
                 $scope.usr_name = globalSession.remote_identity.display_name;
 
-                if(globalSession.direction === "incoming"){
+                if(globalSession.direction === "incoming"){ // Isn't it bogus?
                     //incoming call here:
                     globalSession.on("failed",function(e){
                         console.log('newRTCSession - incoming - failed');
                         audioElement.pause();
                         videoElement.pause();
                         videoElement.hidden = true;
+                        videoElement.style.visibility = 'hidden';
                         $('.phone div.answer .user').removeClass('.off');
                         isInCall = 0;
                         clearInterval(talkTime);
@@ -555,6 +570,7 @@ ONEmSimModule.controller('mainController', [
                         audioElement.pause();
                         videoElement.pause();
                         videoElement.hidden = true;
+                        videoElement.style.visibility = 'hidden';
                         $('.phone div.answer .user').removeClass('.off');
                         isInCall = 0;
                         clearInterval(talkTime);
@@ -580,13 +596,16 @@ ONEmSimModule.controller('mainController', [
                         //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
                         videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                        //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
                         if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                             videoElement.hidden = false;
+                            videoElement.style.visibility = 'visible';
                             $('.phone div.answer .user').addClass('.off');
                             //.phone .answer .user.off
                             console.log("with video");
                         } else {
                             videoElement.hidden = true;
+                            videoElement.style.visibility = 'hidden';
                             $('.phone div.answer .user').removeClass('.off');
                             console.log("no video");
                         };
@@ -595,7 +614,6 @@ ONEmSimModule.controller('mainController', [
                             videoElement.play();
                         };
                         //audioElement.play();
-                        //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
                         isInCall = 1;
                     });
                     globalSession.on("addstream",function(e) {
@@ -672,6 +690,12 @@ ONEmSimModule.controller('mainController', [
             //  //phoneONEm.terminateSessions();
             //  globalSession.terminate();
             //};
+
+            window.onunload = function () {
+                if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                phoneONEm.stop();
+                phoneONEm.unregister();
+            };
 
         });
 
