@@ -313,6 +313,9 @@ ONEmSimModule.controller('mainController', [
                     $('.answer #typed_no').val('');
                     $('.dialer #typed_no').val('');
                     $('.caller #typed_no').val('');
+                    options = jQuery.extend(true, {}, optionsMask);
+                    ////if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                    //if(phoneONEm.isConnected()) globalSession.terminate();
                 },
                 'ended'     : function(e) {
                     console.log('eventHandlers - ended');
@@ -331,6 +334,9 @@ ONEmSimModule.controller('mainController', [
                     $('.answer #typed_no').val('');
                     $('.dialer #typed_no').val('');
                     $('.caller #typed_no').val('');
+                    options = jQuery.extend(true, {}, optionsMask);
+                    ////if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                    //if(phoneONEm.isConnected()) globalSession.terminate();
                 },
                 'confirmed' : function(e) {
                     console.log('eventHandlers - confirmed');
@@ -339,11 +345,16 @@ ONEmSimModule.controller('mainController', [
                     //Schedule update of talk time every second:
                     talkTime = setInterval(updateTalkTime, 1000);
 
+                    console.log("options:");
+                    console.log(options);
+                    console.log("optionsMask:");
+                    console.log(optionsMask);
                     //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                     //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                     //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
-                    videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                    //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
+                    //URL.createObjectURL(stream) is deprecated! Use elem.srcObject = stream instead!
+                    //videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                    attachMediaStream(videoElement,globalSession.connection.getRemoteStreams()[0]);
                     if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                         videoElement.hidden = false;
                         videoElement.style.visibility = 'visible';
@@ -356,10 +367,10 @@ ONEmSimModule.controller('mainController', [
                         $('.phone div.answer .user').removeClass('.off');
                         console.log("no video");
                     };
-                    if(webrtcDetectedBrowser == "firefox") {
-                        //audioElement.play();
-                        videoElement.play();
-                    };
+                    //if(webrtcDetectedBrowser == "firefox") {
+                    //    //audioElement.play();
+                    //    videoElement.play();
+                    //};
                     //audioElement.play();
                     isInCall = 1;
                 },
@@ -368,7 +379,7 @@ ONEmSimModule.controller('mainController', [
                 }
             };
 
-            var options = {
+            var optionsMask = {
                 'eventHandlers'          : eventHandlers,
                 'sessionTimersExpires'   : 600,
                 'session_timers'         : true,
@@ -397,6 +408,9 @@ ONEmSimModule.controller('mainController', [
                 'mediaConstraints'       : { 'audio' : true, 'video' : true }
             };
 
+            //var options = { ...optionsMask };
+            var options = jQuery.extend(true, {}, optionsMask);
+
             var socket = new JsSIP.WebSocketInterface(wsProtocol + '://' + sipProxy);
 
             //JsSIP configuration:
@@ -405,7 +419,7 @@ ONEmSimModule.controller('mainController', [
                 uri                 : 'sip:' + $scope.msisdn + '@' + sipProxy,
                 password            : 'ONEmP@$$w0rd2016',
                 useUpdate           : false,
-                register            : true,
+                register            : false,
                 use_preloaded_route : false,
                 register_expires    : 120
             };
@@ -413,7 +427,7 @@ ONEmSimModule.controller('mainController', [
             var phoneONEm = new JsSIP.UA(configuration);
 
             phoneONEm.registrator().setExtraHeaders([
-                'X-WEBRTC-UA: sweb'
+                'X-WEBRTC-UA: zoiper'
             ]);
 
             $('a.full').click(function(e){
@@ -516,6 +530,36 @@ ONEmSimModule.controller('mainController', [
             });
 
             phoneONEm.start();
+            phoneONEm.register();
+
+            phoneONEm.on('connecting', function(data){
+                console.log('connecting');
+            });
+
+            phoneONEm.on('connected', function(data){
+                console.log('connected');
+            });
+
+            phoneONEm.on('disconnected', function(data){
+                console.log('disconnected');
+            });
+
+            phoneONEm.on('registered', function(data){
+                console.log('registered');
+            });
+
+            phoneONEm.on('unregistered', function(data){
+                console.log('unregistered');
+            });
+
+            phoneONEm.on('registrationFailed', function(data){
+                console.log('registrationFailed');
+            });
+
+            //phoneONEm.on('registrationExpiring', function(data){ //If the application subscribes to this event,
+            //    console.log('registrationExpiring');             //it’s responsible of calling ua.register() within the registrationExpiring event
+            //    console.log('registrationExpiring');             //(otherwise the registration will expire).
+            //});
 
             phoneONEm.on('newRTCSession', function(data){
                 console.log('newRTCSession');
@@ -562,6 +606,7 @@ ONEmSimModule.controller('mainController', [
                         $('.answer #typed_no').val('');
                         $('.dialer #typed_no').val('');
                         $('.caller #typed_no').val('');
+                        options = jQuery.extend(true, {}, optionsMask);
                         ////if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
                         //if(phoneONEm.isConnected()) globalSession.terminate();
                     });
@@ -582,6 +627,7 @@ ONEmSimModule.controller('mainController', [
                         $('.answer #typed_no').val('');
                         $('.dialer #typed_no').val('');
                         $('.caller #typed_no').val('');
+                        options = jQuery.extend(true, {}, optionsMask);
                         ////if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
                         //if(phoneONEm.isConnected()) globalSession.terminate();
                     });
@@ -592,11 +638,16 @@ ONEmSimModule.controller('mainController', [
                         //Schedule update of talk time every second:
                         talkTime = setInterval(updateTalkTime, 1000);
 
+                        console.log("options:");
+                        console.log(options);
+                        console.log("optionsMask:");
+                        console.log(optionsMask);
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.
                         //audioElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
                         //audioElement.srcObject = globalSession.connection.getRemoteStreams()[0];
-                        videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
-                        //attachMediaStream(audioElement,globalSession.connection.getRemoteStreams()[0]);
+                        //URL.createObjectURL(stream) is deprecated! Use elem.srcObject = stream instead!
+                        //videoElement.src = window.URL.createObjectURL(globalSession.connection.getRemoteStreams()[0]);
+                        attachMediaStream(videoElement,globalSession.connection.getRemoteStreams()[0]);
                         if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                             videoElement.hidden = false;
                             videoElement.style.visibility = 'visible';
@@ -609,10 +660,10 @@ ONEmSimModule.controller('mainController', [
                             $('.phone div.answer .user').removeClass('.off');
                             console.log("no video");
                         };
-                        if(webrtcDetectedBrowser == "firefox") {
-                            //audioElement.play();
-                            videoElement.play();
-                        };
+                        //if(webrtcDetectedBrowser == "firefox") {
+                        //    //audioElement.play();
+                        //    videoElement.play();
+                        //};
                         //audioElement.play();
                         isInCall = 1;
                     });
@@ -624,28 +675,8 @@ ONEmSimModule.controller('mainController', [
                 };
             });
 
-            phoneONEm.on('connecting', function(data){
-                console.log('connecting');
-            });
-
-            phoneONEm.on('connected', function(data){
-                console.log('connected');
-            });
-
-            phoneONEm.on('disconnected', function(data){
-                console.log('disconnected');
-            });
-
-            phoneONEm.on('registered', function(data){
-                console.log('registered');
-            });
-
-            phoneONEm.on('unregistered', function(data){
-                console.log('unregistered');
-            });
-
-            phoneONEm.on('registrationFailed', function(data){
-                console.log('registrationFailed');
+            phoneONEm.on('newMessage', function(data){ 
+                console.log('newMessage: ' + data.message);
             });
 
             // For debug run this in the browser's console and reload the page:
