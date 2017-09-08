@@ -274,7 +274,7 @@ ONEmSimModule.controller('mainController', [
             videoElement.autoplay = true;
             console.log(videoElement);
 
-            var nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+            var nowMoment = new Date(1970,0);
             function updateTalkTime() {
                 TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                 nowMoment.setSeconds(nowMoment.getSeconds() + 1);
@@ -536,7 +536,7 @@ ONEmSimModule.controller('mainController', [
                     $('.phone div.answer .user').removeClass('.off');
                     isInCall = 0;
                     clearInterval(talkTime);
-                    nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                    nowMoment = new Date(1970,0);
                     TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                     $('.phone div.panel').removeClass('open');
                     $('.phone .call_notif').removeClass('on');
@@ -555,7 +555,7 @@ ONEmSimModule.controller('mainController', [
                     $('.phone div.answer .user').removeClass('.off');
                     isInCall = 0;
                     clearInterval(talkTime);
-                    nowMoment = new Date(Date.parse('1970-01-01T00:00:00.000'));
+                    nowMoment = new Date(1970,0);
                     TalkTimer.text('Current call: ' + dateFilter(nowMoment,'HH:mm:ss'));
                     $('.phone div.panel').removeClass('open');
                     $('.phone .call_notif').removeClass('on');
