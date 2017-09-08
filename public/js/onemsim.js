@@ -509,6 +509,7 @@ ONEmSimModule.controller('mainController', [
                     //Schedule update of talk time every second:
                     talkTime = setInterval(updateTalkTime, 1000);
 
+                    //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
                     attachMediaStream(videoElement,globalSession.connection.getRemoteStreams()[0]);
                     if(globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                         videoElement.hidden = false;
