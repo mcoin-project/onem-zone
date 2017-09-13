@@ -67,9 +67,10 @@ app.use(function(req, res, next) { //allow cross origin requests
     res.header("Access-Control-Allow-Origin", "http://localhost");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-    var httpToken = req.originalUrl.substr(1,req.originalUrl.length);
-    console.log("httpToken");
-    console.log(httpToken);
+    //I need to identify the clients by path; it looks like is not a task for the server!
+    //var httpToken = req.originalUrl.substr(1,req.originalUrl.length);
+    //console.log("httpToken");
+    //console.log(httpToken);
 
     next();
 });
@@ -157,7 +158,7 @@ var smppServer = smpp.createServer(function(session) {
         //   4) send the result back to the client using the saved session
         if (clientFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
-            console.log("clientfound and no more messages");
+            console.log("client found and no more messages");
             console.log("clients.length:" + clients.length);
             for (i = 0; i < clients.length; i++) {
                 if (typeof clients[i].moRecord !== 'undefined' && clients[i].moRecord.messageWaiting) {
@@ -239,7 +240,7 @@ function sendSMS(from, to, text) {
                     textLength = 0;
                 };
 
-                udh.writeUInt8(messageNumber+1,5); //Sequence number ( used by the mobile to concatenate the split messages)
+                udh.writeUInt8(messageNumber+1,5); //Sequence number (used by the mobile to concatenate the split messages)
 
                 var buffer = new Buffer(2 * shortMessageLength) ;
                 for (var i = 0 ; i < shortMessageLength; i++) {
@@ -301,6 +302,11 @@ io.on('connection', function(socket) {
         console.log("sending SMS");
         sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
 
+    });
+
+    socket.on('thePath', function(pathText) {
+        console.log('User path is: ');
+        console.log(pathText);
     });
 
     socket.on('disconnect', function() {

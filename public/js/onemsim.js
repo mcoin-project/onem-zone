@@ -17,7 +17,9 @@ ONEmSimModule.config(['$routeProvider', '$locationProvider',
             controller:  'mainController'
         }).
         otherwise({
-            redirectTo: '/'
+            //redirectTo: '/'
+            templateUrl: 'views/partials/onemSim.html',
+            controller:  'mainController'
         });
 
         $locationProvider.html5Mode(true);
@@ -36,6 +38,13 @@ ONEmSimModule.config(['$httpProvider',
             '$window',
             '$location',
             function($rootScope, $q, $window, $location) {
+                
+                //console.log("Location path:");
+                //console.log($location.path()); 
+                $rootScope.myLocation = $location.path().substr(1,$location.path().length);
+                if($rootScope.myLocation.indexOf("/")>0) $rootScope.myLocation = $rootScope.myLocation.substr(0,$rootScope.myLocation.indexOf("/"));
+                $location.path('/'+$rootScope.myLocation);
+
                 return {
                     request: function(config) {
                         if ($window.localStorage.token) {
@@ -157,7 +166,8 @@ ONEmSimModule.controller('mainController', [
     'DataModel',
     'Socket',
     'dateFilter',
-    function($scope, $http, SmsHandler, DataModel, Socket, dateFilter) {
+    '$rootScope',
+    function($scope, $http, SmsHandler, DataModel, Socket, dateFilter, $rootScope) {
 
         console.log("mainController initialising");
 
@@ -721,6 +731,11 @@ ONEmSimModule.controller('mainController', [
 
             $scope.smsText = '';
         };
+
+        //console.log("Location path in controller:");
+        //console.log($rootScope.myLocation); 
+        Socket.emit('thePath',$rootScope.myLocation);
+
     }
 ]);
 
