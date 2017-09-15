@@ -43,7 +43,7 @@ ONEmSimModule.config(['$httpProvider',
                 //console.log($location.path()); 
                 $rootScope.myLocation = $location.path().substr(1,$location.path().length);
                 if($rootScope.myLocation.indexOf("/")>0) $rootScope.myLocation = $rootScope.myLocation.substr(0,$rootScope.myLocation.indexOf("/"));
-                $location.path('/'+$rootScope.myLocation);
+                $location.path('/'+$rootScope.myLocation); // re-write the URL to keep its path
 
                 return {
                     request: function(config) {
@@ -472,8 +472,7 @@ ONEmSimModule.controller('mainController', [
 
             //phoneONEm.on('registrationExpiring', function(data){ //If the application subscribes to this event,
             //    console.log('registrationExpiring');             //it’s responsible of calling ua.register() within the registrationExpiring event
-            //    console.log('registrationExpiring');             //(otherwise the registration will expire).
-            //});
+            //});                                                  //(otherwise the registration will expire).
 
             phoneONEm.on('newRTCSession', function(data){
                 console.log('newRTCSession');
@@ -628,10 +627,12 @@ ONEmSimModule.controller('mainController', [
 
                 //// End call in 30 seconds:
                 //setTimeout(IncomingEndCall, 30000);
+
                 //function IncomingEndCall() {
                 //  //phoneONEm.terminateSessions();
                 //  globalSession.terminate();
                 //};
+
             });
 
             phoneONEm.on('newMessage', function(data){ 

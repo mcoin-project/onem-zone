@@ -66,12 +66,6 @@ app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
     res.header("Access-Control-Allow-Origin", "http://localhost");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
-    //I need to identify the clients by path; it looks like is not a task for the server!
-    //var httpToken = req.originalUrl.substr(1,req.originalUrl.length);
-    //console.log("httpToken");
-    //console.log(httpToken);
-
     next();
 });
 
@@ -169,10 +163,10 @@ var smppServer = smpp.createServer(function(session) {
                         clients[i].moRecord.mtText = '';
                     } catch (err) {
                         console.log("oops no session:" + err);
-                    }
-                }
-            }
-        }
+                    };
+                };
+            };
+        };
 
     });
 
