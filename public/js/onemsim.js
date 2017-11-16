@@ -716,6 +716,14 @@ ONEmSimModule.controller('mainController', [
             console.log(data);
         });
 
+        ////Check if the language is left-to-rigt or rigth-to-left:
+        //// A message "#account settings" sent to server will reply with the language as the last word on the 4th line.
+        //console.log("Acu' testez limbaaaaaaa: ");
+        //Socket.emit('MO SMS', '#account settings', function(sett) {
+        //    var mtAnswer = sett.mtText;
+        //    console.log("mtAnswer");
+        //});
+
         $scope.$on('socket:MT SMS', function(ev, data) {
             $scope.theData = data;
 
