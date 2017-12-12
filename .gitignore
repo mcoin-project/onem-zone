@@ -8,6 +8,7 @@ sessions/
 *.dev
 .DS_Store
 restartlog.txt
+npm-debug.log.3419865986
 
 # Docker
 Dockerfile
