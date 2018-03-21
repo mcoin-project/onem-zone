@@ -30,8 +30,10 @@ body.full {
 .phone .screen_wrp {
     position: absolute;
     display: none;
-    top: 124px;
-    bottom: 126px;
+/*    top: 124px;
+    bottom: 126px;*/
+    top: 80px;
+    bottom: 100px;
     left: 41px;
     right: 37px;
     z-index: 1;
