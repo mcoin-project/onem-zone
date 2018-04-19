@@ -32,7 +32,7 @@ var smppPort = process.env.SMPP_PORT || 2775;
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var shortNumber = process.env.SHORT_NUMBER || "444100";
-var dlrFeatureEnabled = (process.env.DLR.toLowerCase() === "on");
+var dlrFeatureEnabled = process.env.DLR;
 
 var smppSession; // the SMPP session context saved globally.
 var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
@@ -221,7 +221,7 @@ var smppServer = smpp.createServer(function(session) {
            dlvrdMsg = '000'; // No message was delivered
         };
 
-        if((pdu.registered_delivery & 0x01) == 0x01 && dlrFeatureEnabled) { //If the submitted message requested a delivery receipt we build and send back the delivery request.
+        if((pdu.registered_delivery & 0x01) == 0x01 && dlrFeatureEnabled.toLowerCase() === 'on') { //If the submitted message requested a delivery receipt we build and send back the delivery request.
         //if((pdu.registered_delivery & pdu.REGISTERED_DELIVERY.FINAL) == pdu.REGISTERED_DELIVERY.FINAL){
             var dlReceipt = '';
 
