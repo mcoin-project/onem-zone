@@ -225,9 +225,12 @@ var smppServer = smpp.createServer(function(session) {
         //if((pdu.registered_delivery & pdu.REGISTERED_DELIVERY.FINAL) == pdu.REGISTERED_DELIVERY.FINAL){
             var dlReceipt = '';
 
+            var pos = msgText.length <= 10 ? msgText.length : 10;
+            var dlrText = msgText.substr(0, pos); 
+
             //This is the text to be sent in the message text of the delivery receipt:
             dlReceipt = 'id:' + hexidMsg + ' sub:001 dlvrd:' + dlvrdMsg +
-                ' submit date:' + submitDate + ' done date:' + doneDate + ' stat:' + statMsg + ' err:' + errMsg + ' text:' + msgText;
+                ' submit date:' + submitDate + ' done date:' + doneDate + ' stat:' + statMsg + ' err:' + errMsg + ' text:' + dlrText;
 
             smppSession.deliver_sm({
                 source_addr: pdu.destination_addr, //Send back the delivery receipt to the submitter as if it was sent by the recipient of the message
