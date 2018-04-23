@@ -32,7 +32,7 @@ var smppPort = process.env.SMPP_PORT || 2775;
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var shortNumber = process.env.SHORT_NUMBER || "444100";
-var dlrFeatureEnabled = process.env.DLR;
+var dlrFeature = process.env.DLR;
 
 var smppSession; // the SMPP session context saved globally.
 var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
@@ -221,16 +221,25 @@ var smppServer = smpp.createServer(function(session) {
            dlvrdMsg = '000'; // No message was delivered
         };
 
-        if((pdu.registered_delivery & 0x01) == 0x01 && dlrFeatureEnabled.toLowerCase() === 'on') { //If the submitted message requested a delivery receipt we build and send back the delivery request.
+        if((pdu.registered_delivery & 0x01) == 0x01 && dlrFeature.toLowerCase() !== 'off') { //If the submitted message requested a delivery receipt we build and send back the delivery request.
         //if((pdu.registered_delivery & pdu.REGISTERED_DELIVERY.FINAL) == pdu.REGISTERED_DELIVERY.FINAL){
             var dlReceipt = '';
 
             var pos = msgText.length <= 10 ? msgText.length : 10;
             var dlrText = msgText.substr(0, pos); 
 
+            if (dlrFeature.toLowerCase() === 'fail') {
+                statMsg = stateMsg.REJECTED.Status; // 
+                statMsgValue = stateMsg.REJECTED.Value;
+                errMsg = '001'; // Error sending the message
+                dlvrdMsg = '000'; // No message was delivered
+            }
+
             //This is the text to be sent in the message text of the delivery receipt:
             dlReceipt = 'id:' + hexidMsg + ' sub:001 dlvrd:' + dlvrdMsg +
                 ' submit date:' + submitDate + ' done date:' + doneDate + ' stat:' + statMsg + ' err:' + errMsg + ' text:' + dlrText;
+
+            console.log("sending DLR: " + dlReceipt);
 
             smppSession.deliver_sm({
                 source_addr: pdu.destination_addr, //Send back the delivery receipt to the submitter as if it was sent by the recipient of the message
