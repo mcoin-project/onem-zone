@@ -32,7 +32,7 @@ var smppPort = process.env.SMPP_PORT || 2775;
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var shortNumber = process.env.SHORT_NUMBER || "444100";
-var dlrFeature = process.env.DLR;
+var dlrFeature = process.env.DLR || 'on';
 
 var smppSession; // the SMPP session context saved globally.
 var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
