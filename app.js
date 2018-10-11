@@ -369,7 +369,7 @@ app.post('/api/mosms', function(req, res) {
     }
 
     console.log("/api/mosms - sending SMS to Short Number " + shortNumber);
-    sendSMS(source, shortNumber, text);
+    sendSMS(req.body.source, shortNumber, req.body.text);
 
     res.status(200).send();
 
