@@ -19,7 +19,6 @@ var FileStore = require('session-file-store')(session);
 var sms = require('./app_api/common/sms.js')
 const shortNumber = process.env.SHORT_NUMBER || "444100";
 
-
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
 
@@ -31,23 +30,9 @@ var password = process.env.PASSWORD; // used for web basic auth
 
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
-var dlrFeature = process.env.DLR || 'on';
-
-var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
-var resArray = [];
 var clients = [];
-var idMsg = 0;
+
 //The message state to be used in receipts:
-var stateMsg = {
-    'ENROUTE': { 'Value': 1, 'Status': 'ENROUTE' },
-    'DELIVERED': { 'Value': 2, 'Status': 'DELIVRD' },
-    'EXPIRED': { 'Value': 3, 'Status': 'EXPIRED' },
-    'DELETED': { 'Value': 4, 'Status': 'DELETED' },
-    'UNDELIVERABLE': { 'Value': 5, 'Status': 'UNDELIV' },
-    'ACCEPTED': { 'Value': 6, 'Status': 'ACCEPTD' },
-    'UNKNOWN': { 'Value': 7, 'Status': 'UNKNOWN' },
-    'REJECTED': { 'Value': 8, 'Status': 'REJECTD' }
-};
 
 app.use(logger('dev'));
 app.use(methodOverride());

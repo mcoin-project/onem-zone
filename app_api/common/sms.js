@@ -4,6 +4,20 @@ const smppPort = process.env.SMPP_PORT || 2775;
 const shortNumber = process.env.SHORT_NUMBER || "444100";
 var smpp = require('smpp');
 
+var stateMsg = {
+    'ENROUTE': { 'Value': 1, 'Status': 'ENROUTE' },
+    'DELIVERED': { 'Value': 2, 'Status': 'DELIVRD' },
+    'EXPIRED': { 'Value': 3, 'Status': 'EXPIRED' },
+    'DELETED': { 'Value': 4, 'Status': 'DELETED' },
+    'UNDELIVERABLE': { 'Value': 5, 'Status': 'UNDELIV' },
+    'ACCEPTED': { 'Value': 6, 'Status': 'ACCEPTD' },
+    'UNKNOWN': { 'Value': 7, 'Status': 'UNKNOWN' },
+    'REJECTED': { 'Value': 8, 'Status': 'REJECTD' }
+};
+var dlrFeature = process.env.DLR || 'on';
+var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
+var idMsg = 0;
+
 var smppSession; // the SMPP session context saved globally.
 
 var smppServer = smpp.createServer(function(session) {
