@@ -30,7 +30,6 @@ var password = process.env.PASSWORD; // used for web basic auth
 
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
-var clients = [];
 
 //The message state to be used in receipts:
 
@@ -72,7 +71,7 @@ app.use('/api', routesApi);
 io.on('connection', function(socket) {
 
     console.log("Connection received!");
-    clients.push(socket);
+    sms.clients.push(socket);
 
     socket.emit(socket.handshake.session);
 
@@ -94,8 +93,8 @@ io.on('connection', function(socket) {
             messageWaiting: false
         };
 
-        var i = clients.indexOf(socket);
-        clients[i].moRecord = moRecord;
+        var i = sms.clients.indexOf(socket);
+        sms.clients.i].moRecord = moRecord;
 
         console.log("sending SMS to Short Number " + shortNumber);
         // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
@@ -105,8 +104,8 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function() {
         console.info('Client gone (id=' + socket.id + ').');
-        var index = clients.indexOf(socket);
-        clients.splice(index, 1);
+        var index = sms.clients.indexOf(socket);
+        sms.clients.splice(index, 1);
     });
 
 });

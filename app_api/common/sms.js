@@ -21,6 +21,8 @@ var idMsg = 0;
 
 var smppSession; // the SMPP session context saved globally.
 
+exports.clients = [];
+
 var smppServer = smpp.createServer(function(session) {
 
     // var alreadySent = false;
@@ -100,10 +102,10 @@ var smppServer = smpp.createServer(function(session) {
         console.log("more messages: " + pdu.more_messages_to_send);
 
         // Retrieve the session information based on the MSISDN:
-        for (var i = 0; i < clients.length; i++) {
-            if (typeof clients[i].moRecord !== 'undefined' && clients[i].moRecord.msisdn === pdu.destination_addr) {
-                clients[i].moRecord.messageWaiting = true;
-                clients[i].moRecord.mtText = clients[i].moRecord.mtText + mtText; // build up the text to be sent to the web client.
+        for (var i = 0; i < exports.clients.length; i++) {
+            if (typeof exports.clients[i].moRecord !== 'undefined' && exports.clients[i].moRecord.msisdn === pdu.destination_addr) {
+                exports.clients[i].moRecord.messageWaiting = true;
+                exports.clients[i].moRecord.mtText = clients[i].moRecord.mtText + mtText; // build up the text to be sent to the web client.
                 clientFound = true;
                 console.log("Client found!");
             }
@@ -123,21 +125,21 @@ var smppServer = smpp.createServer(function(session) {
         if (clientFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             console.log("Client found and there are no more messages to be received for it!");
-            console.log("clients.length: " + clients.length);
-            for (i = 0; i < clients.length; i++) {
-                if (typeof clients[i].moRecord !== 'undefined' && clients[i].moRecord.messageWaiting) {
+            console.log("exports.clients.length: " + exports.clients.length);
+            for (i = 0; i < exports.clients.length; i++) {
+                if (typeof exports.clients.i].moRecord !== 'undefined' && exports.clients.i].moRecord.messageWaiting) {
                     try {
-                        console.log("trying response: " + clients[i].moRecord.mtText);
-                        clients[i].moRecord.messageWaiting = false;
-                        clients[i].moRecord.socket.emit('MT SMS', { mtText: clients[i].moRecord.mtText }); //Send the whole message at once to the web clients.
+                        console.log("trying response: " + exports.clients.i].moRecord.mtText);
+                        exports.clients.i].moRecord.messageWaiting = false;
+                        exports.clients.i].moRecord.socket.emit('MT SMS', { mtText: exports.clients.i].moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                         doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
-                        if (clients[i].moRecord.mtText.length < 20) {
-                            endmsgText = clients[i].moRecord.mtText.length;
+                        if (exports.clients.i].moRecord.mtText.length < 20) {
+                            endmsgText = exports.clients.i].moRecord.mtText.length;
                         };
-                        msgText = clients[i].moRecord.mtText.substring(0, endmsgText);
+                        msgText = exports.clients.i].moRecord.mtText.substring(0, endmsgText);
 
-                        clients[i].moRecord.mtText = '';
+                        exports.clients.i].moRecord.mtText = '';
                     } catch (err) {
                         console.log("oops no session: " + err);
                         doneDate = moment().format('YYMMDDHHmm');
@@ -150,7 +152,7 @@ var smppServer = smpp.createServer(function(session) {
             };
         } else {
             doneDate = moment().format('YYMMDDHHmm');
-            statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no clients found to send this message to, this message is undeliverable.
+            statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no exports.clients.found to send this message to, this message is undeliverable.
             statMsgValue = stateMsg.UNDELIVERABLE.Value;
             errMsg = '001'; // Error sending the message
             dlvrdMsg = '000'; // No message was delivered
