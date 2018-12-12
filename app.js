@@ -94,7 +94,7 @@ io.on('connection', function(socket) {
         };
 
         var i = sms.clients.indexOf(socket);
-        sms.clients.i].moRecord = moRecord;
+        sms.clients[i].moRecord = moRecord;
 
         console.log("sending SMS to Short Number " + shortNumber);
         // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
