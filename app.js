@@ -17,6 +17,7 @@ var moment = require('moment');
 var _ = require('underscore-node');
 var FileStore = require('session-file-store')(session);
 var sms = require('./app_api/common/sms.js')
+const shortNumber = process.env.SHORT_NUMBER || "444100";
 
 
 // Bring in the routes for the API (delete the default routes)
