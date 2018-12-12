@@ -105,7 +105,7 @@ var smppServer = smpp.createServer(function(session) {
         for (var i = 0; i < exports.clients.length; i++) {
             if (typeof exports.clients[i].moRecord !== 'undefined' && exports.clients[i].moRecord.msisdn === pdu.destination_addr) {
                 exports.clients[i].moRecord.messageWaiting = true;
-                exports.clients[i].moRecord.mtText = clients[i].moRecord.mtText + mtText; // build up the text to be sent to the web client.
+                exports.clients[i].moRecord.mtText = exports.clients[i].moRecord.mtText + mtText; // build up the text to be sent to the web client.
                 clientFound = true;
                 console.log("Client found!");
             }
