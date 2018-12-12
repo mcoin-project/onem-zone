@@ -127,19 +127,19 @@ var smppServer = smpp.createServer(function(session) {
             console.log("Client found and there are no more messages to be received for it!");
             console.log("exports.clients.length: " + exports.clients.length);
             for (i = 0; i < exports.clients.length; i++) {
-                if (typeof exports.clients.i].moRecord !== 'undefined' && exports.clients.i].moRecord.messageWaiting) {
+                if (typeof exports.clients[i].moRecord !== 'undefined' && exports.clients[i].moRecord.messageWaiting) {
                     try {
-                        console.log("trying response: " + exports.clients.i].moRecord.mtText);
-                        exports.clients.i].moRecord.messageWaiting = false;
-                        exports.clients.i].moRecord.socket.emit('MT SMS', { mtText: exports.clients.i].moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                        console.log("trying response: " + exports.clients[i].moRecord.mtText);
+                        exports.clients[i].moRecord.messageWaiting = false;
+                        exports.clients[i].moRecord.socket.emit('MT SMS', { mtText: exports.clients[i].moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                         doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
-                        if (exports.clients.i].moRecord.mtText.length < 20) {
-                            endmsgText = exports.clients.i].moRecord.mtText.length;
+                        if (exports.clients[i].moRecord.mtText.length < 20) {
+                            endmsgText = exports.clients[i].moRecord.mtText.length;
                         };
-                        msgText = exports.clients.i].moRecord.mtText.substring(0, endmsgText);
+                        msgText = exports.clients[i].moRecord.mtText.substring(0, endmsgText);
 
-                        exports.clients.i].moRecord.mtText = '';
+                        exports.clients[i].moRecord.mtText = '';
                     } catch (err) {
                         console.log("oops no session: " + err);
                         doneDate = moment().format('YYMMDDHHmm');
