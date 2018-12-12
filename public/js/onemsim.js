@@ -782,10 +782,6 @@ ONEmSimModule.controller('mainController', [
             $scope.smsText = '';
         };
 
-        //console.log("[MN]: Location path in controller:");
-        //console.log($rootScope.myLocation); 
-        Socket.emit('thePath',$rootScope.myLocation);
-
     }
 ]);
 

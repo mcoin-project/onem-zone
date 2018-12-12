@@ -409,11 +409,6 @@ io.on('connection', function(socket) {
 
     });
 
-    socket.on('thePath', function(pathText) {
-        console.log('User path is: ');
-        console.log(pathText);
-    });
-
     socket.on('disconnect', function() {
         console.info('Client gone (id=' + socket.id + ').');
         var index = clients.indexOf(socket);
