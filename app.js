@@ -41,14 +41,14 @@ var clients = [];
 var idMsg = 0;
 //The message state to be used in receipts:
 var stateMsg = {
-    'ENROUTE'       : {'Value': 1, 'Status': 'ENROUTE'},
-    'DELIVERED'     : {'Value': 2, 'Status': 'DELIVRD'},
-    'EXPIRED'       : {'Value': 3, 'Status': 'EXPIRED'},
-    'DELETED'       : {'Value': 4, 'Status': 'DELETED'},
-    'UNDELIVERABLE' : {'Value': 5, 'Status': 'UNDELIV'},
-    'ACCEPTED'      : {'Value': 6, 'Status': 'ACCEPTD'},
-    'UNKNOWN'       : {'Value': 7, 'Status': 'UNKNOWN'},
-    'REJECTED'      : {'Value': 8, 'Status': 'REJECTD'}
+    'ENROUTE': { 'Value': 1, 'Status': 'ENROUTE' },
+    'DELIVERED': { 'Value': 2, 'Status': 'DELIVRD' },
+    'EXPIRED': { 'Value': 3, 'Status': 'EXPIRED' },
+    'DELETED': { 'Value': 4, 'Status': 'DELETED' },
+    'UNDELIVERABLE': { 'Value': 5, 'Status': 'UNDELIV' },
+    'ACCEPTED': { 'Value': 6, 'Status': 'ACCEPTD' },
+    'UNKNOWN': { 'Value': 7, 'Status': 'UNKNOWN' },
+    'REJECTED': { 'Value': 8, 'Status': 'REJECTD' }
 };
 
 app.use(logger('dev'));
@@ -135,12 +135,12 @@ var smppServer = smpp.createServer(function(session) {
         //    so multi part messages will get a single delivery receipt, when the last part is received and the message is sent to the web client.
         //Various fields are used in delivery reports:
         var submitDate = moment().format('YYMMDDHHmm'); //The submitting moment is the moment when 'submit_sm' event is fired.
-        var doneDate = moment().format('YYMMDDHHmm');   //The delivering moment will be updated later on, when the message will be sent over Socket.IO connection.
+        var doneDate = moment().format('YYMMDDHHmm'); //The delivering moment will be updated later on, when the message will be sent over Socket.IO connection.
         var statMsg = stateMsg.DELIVERED.Status; //'DELIVRD'; // \_The state of the message is encoded with both letters and numbers
-        var statMsgValue = stateMsg.DELIVERED.Value;          // / The default state of the message is "delivered"
+        var statMsgValue = stateMsg.DELIVERED.Value; // / The default state of the message is "delivered"
         var errMsg = '000'; //No error in message delivery.
         var dlvrdMsg = '001'; //One message delivered. This is a constant for our server since we do not support multiple recipients. Actually it does support multiple messages!
-        var endmsgText = 20;  //The snippet of message to be transmitted back in delivery report will be of maximum 20 characters.
+        var endmsgText = 20; //The snippet of message to be transmitted back in delivery report will be of maximum 20 characters.
         var msgText = 'Message acknowledged';
 
         var clientFound = false;
@@ -148,10 +148,10 @@ var smppServer = smpp.createServer(function(session) {
         console.log("submit_sm received, sequence_number: " + pdu.sequence_number + " isResponse: " + pdu.isResponse());
 
         var hexidMsg = idMsg.toString(16); //idMsg is a global identifier, at the server level. It will be sent back to submitter
-                                           //in both the submit response and in the delivery reports; it is the same for a certain message.
-        var pad = '00000000000000000000';  //idMsg should be sent as 20 hex digits zero padded.
+        //in both the submit response and in the delivery reports; it is the same for a certain message.
+        var pad = '00000000000000000000'; //idMsg should be sent as 20 hex digits zero padded.
         hexidMsg = pad.substring(0, pad.length - hexidMsg.length) + hexidMsg; //TODO: If hexidMsg longer than 20 digits (!!!) display its last 20 digits
-        smppSession.send(pdu.response({message_id: hexidMsg})); //submit_response; we've received the submit from the ESME and we confirm it with the message_id
+        smppSession.send(pdu.response({ message_id: hexidMsg })); //submit_response; we've received the submit from the ESME and we confirm it with the message_id
 
         if (pdu.short_message.length === 0) {
             console.log("** payload being used **");
@@ -214,19 +214,19 @@ var smppServer = smpp.createServer(function(session) {
                 };
             };
         } else {
-           doneDate = moment().format('YYMMDDHHmm');
-           statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no clients found to send this message to, this message is undeliverable.
-           statMsgValue = stateMsg.UNDELIVERABLE.Value;
-           errMsg = '001'; // Error sending the message
-           dlvrdMsg = '000'; // No message was delivered
+            doneDate = moment().format('YYMMDDHHmm');
+            statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no clients found to send this message to, this message is undeliverable.
+            statMsgValue = stateMsg.UNDELIVERABLE.Value;
+            errMsg = '001'; // Error sending the message
+            dlvrdMsg = '000'; // No message was delivered
         };
 
-        if((pdu.registered_delivery & 0x01) == 0x01 && dlrFeature.toLowerCase() !== 'off') { //If the submitted message requested a delivery receipt we build and send back the delivery request.
-        //if((pdu.registered_delivery & pdu.REGISTERED_DELIVERY.FINAL) == pdu.REGISTERED_DELIVERY.FINAL){
+        if ((pdu.registered_delivery & 0x01) == 0x01 && dlrFeature.toLowerCase() !== 'off') { //If the submitted message requested a delivery receipt we build and send back the delivery request.
+            //if((pdu.registered_delivery & pdu.REGISTERED_DELIVERY.FINAL) == pdu.REGISTERED_DELIVERY.FINAL){
             var dlReceipt = '';
 
             var pos = msgText.length <= 10 ? msgText.length : 10;
-            var dlrText = msgText.substr(0, pos); 
+            var dlrText = msgText.substr(0, pos);
 
             if (dlrFeature.toLowerCase() === 'fail') {
                 statMsg = stateMsg.REJECTED.Status; // 
@@ -251,8 +251,8 @@ var smppServer = smpp.createServer(function(session) {
                 esm_class: 4, //This is a delivery receipt
                 data_coding: 0,
                 short_message: dlReceipt,
-                message_state: statMsgValue,    // \_ These two message options should be added to a delivery receipt
-                receipted_message_id: hexidMsg  // /
+                message_state: statMsgValue, // \_ These two message options should be added to a delivery receipt
+                receipted_message_id: hexidMsg // /
             }, function(pdu) {
                 if (pdu.command_status === 0) {
                     // Message successfully sent
@@ -283,7 +283,7 @@ function sendSMS(from, to, text) {
     if (smppSession) {
         if (text.length <= 70) {
 
-            var buffer = new Buffer(2 * textLength) ;
+            var buffer = new Buffer(2 * textLength);
             for (var i = 0; i < textLength; i++) {
                 buffer.writeUInt16BE(text.charCodeAt(i), 2 * i);
             };
@@ -303,37 +303,35 @@ function sendSMS(from, to, text) {
                     console.log("Message sent!");
                 }
             });
-        }
-        else {
+        } else {
             var shortMessageLength = 0;
             var messageNumber = 0;
             var udh = new Buffer(6);
             var messagePartsNumber = 0;
 
-            messagePartsNumber = Math.floor(textLength/70);
-            if(messagePartsNumber * 70 != textLength) messagePartsNumber++;
+            messagePartsNumber = Math.floor(textLength / 70);
+            if (messagePartsNumber * 70 != textLength) messagePartsNumber++;
 
-            udh.writeUInt8(0x05,0);               //Length of the UDF
-            udh.writeUInt8(0x00,1);               //Indicator for concatenated message
-            udh.writeUInt8(0x03,2);               //Subheader Length ( 3 bytes)
-            udh.writeUInt8(referenceCSMS,3);      //Same reference for all concatenated messages  
-            udh.writeUInt8(messagePartsNumber,4); //Number of total messages in the concatenation
+            udh.writeUInt8(0x05, 0); //Length of the UDF
+            udh.writeUInt8(0x00, 1); //Indicator for concatenated message
+            udh.writeUInt8(0x03, 2); //Subheader Length ( 3 bytes)
+            udh.writeUInt8(referenceCSMS, 3); //Same reference for all concatenated messages  
+            udh.writeUInt8(messagePartsNumber, 4); //Number of total messages in the concatenation
 
             while (textLength > 0) {
-                if (textLength > 70 ) {
+                if (textLength > 70) {
                     shortMessageLength = 70;
                     textLength -= 70
-                }
-                else {
+                } else {
                     shortMessageLength = textLength;
                     textLength = 0;
                 };
 
-                udh.writeUInt8(messageNumber+1,5); //Sequence number (used by the mobile to concatenate the split messages)
+                udh.writeUInt8(messageNumber + 1, 5); //Sequence number (used by the mobile to concatenate the split messages)
 
-                var buffer = new Buffer(2 * shortMessageLength) ;
-                for (var i = 0 ; i < shortMessageLength; i++) {
-                    buffer.writeUInt16BE(text.charCodeAt(i+(70*messageNumber)), 2 * i);
+                var buffer = new Buffer(2 * shortMessageLength);
+                for (var i = 0; i < shortMessageLength; i++) {
+                    buffer.writeUInt16BE(text.charCodeAt(i + (70 * messageNumber)), 2 * i);
                 };
 
                 messageNumber++;
@@ -345,7 +343,7 @@ function sendSMS(from, to, text) {
                     destination_addr_ton: 1,
                     destination_addr_npi: 0,
                     data_coding: 8,
-                    short_message: {udh:udh, message:buffer}
+                    short_message: { udh: udh, message: buffer }
                 }, function(pdu) {
                     if (pdu.command_status === 0) {
                         // Message successfully sent
@@ -355,10 +353,27 @@ function sendSMS(from, to, text) {
 
             };
             referenceCSMS++;
-            if(referenceCSMS >= 256) referenceCSMS = 0;
+            if (referenceCSMS >= 256) referenceCSMS = 0;
         };
     };
 }
+
+app.post('/api/mosms', function(req, res) {
+
+    if (!req.body.source) {
+        return res.status(500).send({ error: 'missing source param' });
+    }
+
+    if (!req.body.text) {
+        return res.status(500).send({ error: 'missing text param' });
+    }
+
+    console.log("/api/mosms - sending SMS to Short Number " + shortNumber);
+    sendSMS(req.body.source, shortNumber, req.body.text);
+
+    res.status(200).send();
+
+});
 
 io.on('connection', function(socket) {
 
@@ -368,9 +383,9 @@ io.on('connection', function(socket) {
     socket.emit(socket.handshake.session);
 
     if (!socket.handshake.session.onemContext) { //must be first time, or expired
-        var msisdn = moment().format('YYMMDDHHmmSS');
+        var msisdn = moment().format('YYMMDDHHmmss');
         console.log("msisdn:" + msisdn);
-        socket.handshake.session.onemContext = { msisdn : msisdn};
+        socket.handshake.session.onemContext = { msisdn: msisdn };
         socket.handshake.session.save();
     }
 
@@ -411,7 +426,7 @@ app.get('/api/start', function(req, res, next) {
 
     // if first time (no session) then generate a virtual MSISDN using current timestamp, which is saved in session cookie
     if (!req.session.onemContext) { //must be first time, or expired
-        var msisdn = moment().format('YYMMDDHHmmSS');
+        var msisdn = moment().format('YYMMDDHHmmss');
         console.log("msisdn:" + msisdn);
 
         req.session.onemContext = { msisdn: msisdn };
@@ -421,7 +436,7 @@ app.get('/api/start', function(req, res, next) {
     var httpProtocol = req.get('Referer').split(":")[0];
     console.log(httpProtocol);
     console.log(wsProtocol);
-  
+
     if (httpProtocol == 'https') {
         // the used protocol is HTTPS
         console.log('The HTTPS protocol has been used; "wss" will be used for WebRTC');
@@ -432,9 +447,10 @@ app.get('/api/start', function(req, res, next) {
     };
     console.log(wsProtocol);
 
-    res.json({ msisdn     : req.session.onemContext.msisdn,
-               sipproxy   : sipProxy,
-               wsprotocol : wsProtocol
+    res.json({
+        msisdn: req.session.onemContext.msisdn,
+        sipproxy: sipProxy,
+        wsprotocol: wsProtocol
     });
 
 });
@@ -462,4 +478,3 @@ smppServer.listen(smppPort);
 server.listen(theport);
 
 module.exports = app;
-
