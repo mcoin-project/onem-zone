@@ -1,3 +1,5 @@
+require('dotenv').load();
+
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -16,7 +18,6 @@ var _ = require('underscore-node');
 var FileStore = require('session-file-store')(session);
 var sms = require('./app_api/common/sms.js')
 
-require('dotenv').load();
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
