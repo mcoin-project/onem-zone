@@ -1,3 +1,4 @@
+const moment = require('moment');
 const smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 const smppPassword = process.env.SMPP_PASSWORD || "password";
 const smppPort = process.env.SMPP_PORT || 2775;
