@@ -14,9 +14,12 @@ var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
 var moment = require('moment');
+const jwt = require('jwt-simple');
+
 var _ = require('underscore-node');
 var FileStore = require('session-file-store')(session);
-var sms = require('./app_api/common/sms.js')
+var sms = require('./app_api/common/sms.js');
+
 const shortNumber = process.env.SHORT_NUMBER || "444100";
 
 // Bring in the routes for the API (delete the default routes)
@@ -25,13 +28,13 @@ var routesApi = require('./app_api/routes/index.js');
 // The http server will listen to an appropriate port, or default to
 // port 5000.
 var theport = process.env.PORT || 5000;
-var username = process.env.USERNAME; // used for web basic auth
-var password = process.env.PASSWORD; // used for web basic auth
 
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 
 //The message state to be used in receipts:
+// Bring in the data model & connect to db
+require('./app_api/models/db');
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -67,6 +70,53 @@ app.use(function(req, res, next) { //allow cross origin requests
 
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
+
+/*
+ |--------------------------------------------------------------------------
+ | Login Required Middleware
+ |--------------------------------------------------------------------------
+ */
+function ensureAuthenticated(req, res, next) {
+    if (!req.header('Authorization')) {
+      return res.status(401).send({ message: 'Unauthorized request' });
+    }
+    var token = req.header('Authorization').split(' ')[1];
+  
+    var payload = null;
+    try {
+      payload = jwt.decode(token, process.env.TOKEN_SECRET);
+    }
+    catch (err) {
+      return res.status(401).send({ message: err.message });
+    }
+  
+    if (payload.exp <= moment().unix()) {
+      return res.status(401).send({ message: 'Unauthorized Request' });
+    }
+    req.user = payload.sub;
+    next();
+  }
+
+io.use(function(socket, next){
+    if (socket.handshake.query && socket.handshake.query.token){
+        console.log("query.token:")
+        console.log(socket.handshake.query.token);
+        var payload = null;
+        try {
+            payload = jwt.decode(socket.handshake.query.token, process.env.TOKEN_SECRET);
+            socket.payload = payload;
+            console.log("payload");
+            console.log(payload);
+            next();
+        }
+        catch (err) {
+            console.log(err);
+            next(new Error('Authentication error'));
+        }
+    } else {
+        next(new Error('Authentication error'));
+    }    
+  })
 
 io.on('connection', function(socket) {
 

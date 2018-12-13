@@ -1,11 +1,15 @@
 'use strict';
 
+const GOOGLE_CLIENT_ID = '785326362402-co8gkpjf1rcfmiur67pggp4mkersm4mi.apps.googleusercontent.com';
+
 var ONEmSimModule = angular.module('ONEmSimModule', [
-    'ngRoute',
     'ngResource',
     'matchMedia',
     'btford.socket-io',
     'ngSanitize',
+    'toastr',
+    'satellizer',
+    'ui.router',
     'ONEmSimUIModule'
 ]).filter('nl2br', ['$sanitize', function($sanitize) {
         var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
@@ -16,25 +20,65 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
         };
     }]);
 
-ONEmSimModule.config(['$routeProvider', '$locationProvider',
-    function($routeProvider, $locationProvider) {
+ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider', '$authProvider',
+    function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider) {
 
-        $routeProvider.
-        when('/', {
-            templateUrl: 'views/partials/onemSim.html',
-            controller:  'mainController'
-        }).
-        otherwise({
-            //redirectTo: '/'
-            templateUrl: 'views/partials/onemSim.html',
-            controller:  'mainController'
-        });
+        /**
+         * Helper auth functions
+         */
+        var skipIfLoggedIn = ['$q', '$auth', function($q, $auth) {
+            var deferred = $q.defer();
+            if ($auth.isAuthenticated()) {
+            deferred.reject();
+            } else {
+            deferred.resolve();
+            }
+            return deferred.promise;
+        }];
+    
+        var loginRequired = ['$q', '$location', '$auth', function($q, $location, $auth) {
+            var deferred = $q.defer();
+            if ($auth.isAuthenticated()) {
+            deferred.resolve();
+            } else {
+            $location.path('/login');
+            }
+            return deferred.promise;
+        }];
 
+        $stateProvider.
+            state('home', {
+                url: '/', 
+                templateUrl: 'views/partials/onemSim.html',
+                controller:  'mainController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
+            state('login', {
+                url: '/login', 
+                templateUrl: 'views/partials/login.html',
+                controller:  'loginController',
+                resolve: {
+                    skipIfLoggedIn: skipIfLoggedIn
+                }
+            }).
+            state('logout', {
+                url: '/logout',
+                template: null,
+                controller: 'logoutController'
+            });
+
+        $urlRouterProvider.otherwise('/');
         $locationProvider.html5Mode(true);
 
-        String.prototype.startsWith = function(needle) {
-            return (this.indexOf(needle) === 0);
-        };
+        /**
+         *  Satellizer config
+         */
+        $authProvider.baseUrl = '/api';
+        $authProvider.google({
+            clientId: GOOGLE_CLIENT_ID
+        });
     }
 ]);
 
@@ -79,12 +123,32 @@ ONEmSimModule.config(['$httpProvider',
     }
 ]);
 
-ONEmSimModule.factory('Socket', function(socketFactory) {
-    var mySocket = socketFactory();
-    mySocket.forward('error');
-    mySocket.forward('MT SMS');
-    return mySocket;
-});
+ONEmSimModule.factory('Socket', [
+    '$window',
+    '$auth',
+    'socketFactory',
+    function($window, $auth, socketFactory) {
+
+        //debugger;
+
+        var token = $auth.getToken();
+        var myIoSocket = io.connect($window.location.href, {
+            query: {token: token}
+        });
+
+console.log("token:");
+console.log(token);
+
+        var mySocket = socketFactory({
+            ioSocket: myIoSocket
+        });
+
+        //var mySocket = socketFactory();
+        mySocket.forward('error');
+        mySocket.forward('MT SMS');
+        return mySocket;
+    }
+]);
 
 ONEmSimModule.factory('SmsHandler', [
     '$resource',
@@ -180,6 +244,7 @@ ONEmSimModule.controller('mainController', [
         console.log("[MN]: mainController initialising");
 
         var startResponse = SmsHandler.start({}, function() {
+
             $scope.msisdn = startResponse.msisdn;
             var sipProxy = startResponse.sipproxy;
             var wsProtocol = startResponse.wsprotocol;

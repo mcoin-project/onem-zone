@@ -1,6 +1,12 @@
 var express = require('express');
-var sms = require('../common/sms.js')
+var mongoose = require('mongoose');
+
+var sms = require('../common/sms.js');
+var auth = require('../controllers/auth');
 var api = express.Router();
+
+var UserSchema = require('../models/Model').UserSchema;
+var User = mongoose.model('users', UserSchema);
 
 api.post('/mosms', function(req, res) {
 
@@ -18,5 +24,7 @@ api.post('/mosms', function(req, res) {
     res.status(200).send();
 
 });
+
+api.post('/auth/google', auth.googleAuth(User));
 
 module.exports = api;
