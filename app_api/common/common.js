@@ -6,6 +6,9 @@ var ObjectId = require('mongoose').Types.ObjectId;
 
 var UserSchema = require('../models/Model').UserSchema;
 var User = mongoose.model('users', UserSchema);
+
+exports.shortNumber = process.env.SHORT_NUMBER || "444100";
+
 /*
  |--------------------------------------------------------------------------
  | Generate JSON Web Token

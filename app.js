@@ -3,7 +3,6 @@ require('dotenv').load();
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
-var io = require('socket.io')(server);
 var logger = require('morgan');
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -17,13 +16,12 @@ var moment = require('moment');
 
 var _ = require('underscore-node');
 var FileStore = require('session-file-store')(session);
-var sms = require('./app_api/common/sms.js');
 var common = require('./app_api/common/common.js');
-
-const shortNumber = process.env.SHORT_NUMBER || "444100";
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
+var io = require('./app_api/common/io.js');
+
 
 // The http server will listen to an appropriate port, or default to
 // port 5000.
@@ -56,10 +54,7 @@ var express_middleware = session({
 
 app.use(express_middleware);
 
-//Use of Express-Session as Middleware    
-io.use(function(socket, next) {
-    express_middleware(socket.handshake, {}, next);
-});
+io.initialize(server, express_middleware);
 
 app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
@@ -96,77 +91,6 @@ function ensureAuthenticated(req, res, next) {
         return next(new Error('User not found'));
     });
   }
-
-io.use(function(socket, next){
-    if (socket.handshake.query && socket.handshake.query.token){
-        console.log("query.token:")
-        console.log(socket.handshake.query.token);
-        var user;
-        var payload = common.decodeJWT(socket.handshake.query.token);
-        if (!payload) {
-            console.log("invalid jwt");
-            next(new Error('Authentication error'));       
-        }
-        socket.jwtPayload = payload;
-
-        common.getUser(payload.sub).then(function(user) {
-            socket.msisdn = user.msisdn;
-            next();
-        }).catch(function(error) {
-            console.log(error);
-            console.log("user not found!!");
-            return next(new Error('User not found'));
-        });
-        //console.log("payload");
-        //console.log(payload);
-    } else {
-        console.log("missing jwt");
-        next(new Error('Authentication error'));
-    }    
-}).on('connection', function(socket) {
-
-    console.log("Connection received!");
-    sms.clients.push(socket);    
-
-    socket.on('MO SMS', function(moText) {
-        console.log('moText: ');
-        console.log(moText);
-
-        console.log("socket.id");
-        console.log(socket.id);
-
-        //console.log("socket");
-        //console.log(socket);
-
-        //socket.to(socket.handshake.session).emit('MT SMS', { mtText: 'test response'});
-        io.to(socket.id).emit('MT SMS', { mtText: 'test response'});
-        io.of('/').to(socket.id).emit('MT SMS', { mtText: 'test response'});
-        //socket.emit('MT SMS', { mtText: 'test response'});
-
-
-        var moRecord = {
-            msisdn: socket.handshake.session.onemContext.msisdn,
-            socket: socket,
-            mtText: '',
-            messageWaiting: false
-        };
-
-        var i = sms.clients.indexOf(socket);
-        sms.clients[i].moRecord = moRecord;
-
-        console.log("sending SMS to Short Number " + shortNumber);
-        // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
-        sms.sendSMS(socket.msisdn, shortNumber, moText);
-
-    });
-
-    socket.on('disconnect', function() {
-        console.log('Client gone (id=' + socket.id + ').');
-        var index = sms.clients.indexOf(socket);
-        sms.clients.splice(index, 1);
-    });
-
-});
 
 app.get('/api/start', ensureAuthenticated, function(req, res, next) {
 

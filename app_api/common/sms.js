@@ -3,6 +3,8 @@ const smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 const smppPassword = process.env.SMPP_PASSWORD || "password";
 const smppPort = process.env.SMPP_PORT || 2775;
 const shortNumber = process.env.SHORT_NUMBER || "444100";
+var socket = require('../common/io.js').io();
+
 var smpp = require('smpp');
 
 var stateMsg = {
