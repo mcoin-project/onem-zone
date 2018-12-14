@@ -28,20 +28,24 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
          */
         var skipIfLoggedIn = ['$q', '$auth', function($q, $auth) {
             var deferred = $q.defer();
+            console.log("skipIfLoggedIn:" + $auth.isAuthenticated());
+
             if ($auth.isAuthenticated()) {
-            deferred.reject();
+                deferred.reject();
             } else {
-            deferred.resolve();
+                deferred.resolve();
             }
             return deferred.promise;
         }];
     
         var loginRequired = ['$q', '$location', '$auth', function($q, $location, $auth) {
+            console.log("loginRequired:" + $auth.isAuthenticated());
+
             var deferred = $q.defer();
             if ($auth.isAuthenticated()) {
-            deferred.resolve();
+                deferred.resolve();
             } else {
-            $location.path('/login');
+                $location.path('/login');
             }
             return deferred.promise;
         }];
@@ -93,9 +97,9 @@ ONEmSimModule.config(['$httpProvider',
 
                 //console.log("[MN]: Location path:");
                 //console.log($location.path()); 
-                $rootScope.myLocation = $location.path().substr(1,$location.path().length);
-                if($rootScope.myLocation.indexOf("/")>0) $rootScope.myLocation = $rootScope.myLocation.substr(0,$rootScope.myLocation.indexOf("/"));
-                $location.path('/'+$rootScope.myLocation); // re-write the URL to keep its path
+                //$rootScope.myLocation = $location.path().substr(1,$location.path().length);
+                //if($rootScope.myLocation.indexOf("/")>0) $rootScope.myLocation = $rootScope.myLocation.substr(0,$rootScope.myLocation.indexOf("/"));
+                //$location.path('/'+$rootScope.myLocation); // re-write the URL to keep its path
 
                 return {
                     request: function(config) {
@@ -110,7 +114,7 @@ ONEmSimModule.config(['$httpProvider',
                             case 401:
                             case 403:
                             case 404:
-                                $location.path('/');
+                                $location.path('/error');
                                 break;
                             default:
                                 break;
@@ -129,24 +133,35 @@ ONEmSimModule.factory('Socket', [
     'socketFactory',
     function($window, $auth, socketFactory) {
 
+        var mySocket, myIoSocket;
         //debugger;
+        return {
+            connect: function() {
+                var token = $auth.getToken();
 
-        var token = $auth.getToken();
-        var myIoSocket = io.connect($window.location.href, {
-            query: {token: token}
-        });
-
-console.log("token:");
-console.log(token);
-
-        var mySocket = socketFactory({
-            ioSocket: myIoSocket
-        });
-
-        //var mySocket = socketFactory();
-        mySocket.forward('error');
-        mySocket.forward('MT SMS');
-        return mySocket;
+                if (!token) {
+                    console.log("could not locate jwt token")
+                    return false;
+                }
+                console.log("making connection")
+                myIoSocket = io.connect($window.location.href, { query: {token: token } });
+        
+                console.log("token:");
+                console.log(token);
+        
+                mySocket = socketFactory({
+                    ioSocket: myIoSocket
+                });
+        
+                //var mySocket = socketFactory();
+                mySocket.forward('error');
+                mySocket.forward('MT SMS');
+                return mySocket;
+            },
+            emit: function(param1, param2) {
+                return myIoSocket.emit(param1, param2);
+            }
+        }
     }
 ]);
 
@@ -244,6 +259,9 @@ ONEmSimModule.controller('mainController', [
         console.log("[MN]: mainController initialising");
 
         var startResponse = SmsHandler.start({}, function() {
+
+            console.log("got start response");
+            Socket.connect();
 
             $scope.msisdn = startResponse.msisdn;
             var sipProxy = startResponse.sipproxy;

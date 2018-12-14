@@ -1,59 +1,5 @@
 const request = require('request');
-const jwt = require('jwt-simple');
-const moment = require('moment');
-/*
- |--------------------------------------------------------------------------
- | Generate JSON Web Token
- |--------------------------------------------------------------------------
- */
-function createJWT(user) {
-    var payload = {
-      sub: user._id,
-      iat: moment().unix(),
-      exp: moment().add(14, 'days').unix()
-    };
-    return jwt.encode(payload, process.env.TOKEN_SECRET);
-}
-
-exports.signUp = function(User) {
-    return function(req, res) {
-
-        User.findOne({ email: req.body.email.toLowerCase() }, function(err, existingUser) {
-
-            if (existingUser) {
-                return res.status(409).send({ message: 'User already exists, try logging in' });
-            }
-
-            // TODO sanitize the body
-
-            var user = new User({
-                firstName: req.body.firstName,
-                lastName: req.body.lastName,
-                email: req.body.email.toLowerCase(),
-                mobile: req.body.mobile,
-                country: req.body.country,
-                language: req.body.language,
-                campaign: req.body.campaign
-            });
-
-            user.lastLogin = new Date().toUTCString();
-            user.password = Math.random().toString(36).substr(2, 20); // the mongodb preschema will execute brcrypt with salt!
-
-            user.referralCode = Math.random().toString(36).substr(2, 5).toUpperCase();
-
-            user.save(function(err, user) {
-
-                if (err) {
-                    console.log("/signup")
-                    console.log(err);
-                    return res.status(409).send({ message: err });
-                }
-                common.generatePasswordToken(user._id, 'signup');
-                res.status(200).send({ message: "success" });
-            });
-        });
-    };
-};
+const common = require('../common/common.js');
 
 exports.googleAuth = function(User) {
     return function(req, res) {
@@ -75,6 +21,8 @@ exports.googleAuth = function(User) {
       
           // Step 2. Retrieve profile information about the current user.
           request.get({ url: peopleApiUrl, headers: headers, json: true }, function(err, response, profile) {
+            console.log("got response from google");
+            console.log(profile);
             if (profile.error) {
               return res.status(500).send({message: profile.error.message});
             }
@@ -85,16 +33,18 @@ exports.googleAuth = function(User) {
                   return res.status(409).send({ message: 'There is already a Google account that belongs to you' });
                 }
                 var token = req.header('Authorization').split(' ')[1];
-                var payload = jwt.decode(token, config.TOKEN_SECRET);
+                var payload = common.decodeJWT(token);
                 User.findById(payload.sub, function(err, user) {
                   if (!user) {
                     return res.status(400).send({ message: 'User not found' });
                   }
+
                   user.google = profile.sub;
-                  user.picture = user.picture || profile.picture.replace('sz=50', 'sz=200');
-                  user.displayName = user.displayName || profile.name;
+                  user.firstName = user.firstName || profile.given_name;
+                  user.lastName = user.lastName || profile.family_name;
+                  user.email = user.email || profile.email;
                   user.save(function() {
-                    var token = createJWT(user);
+                    var token = common.createJWT(user);
                     res.send({ token: token });
                   });
                 });
@@ -103,14 +53,15 @@ exports.googleAuth = function(User) {
               // Step 3b. Create a new user account or return an existing one.
               User.findOne({ google: profile.sub }, function(err, existingUser) {
                 if (existingUser) {
-                  return res.send({ token: createJWT(existingUser) });
+                  return res.send({ token: common.createJWT(existingUser) });
                 }
                 var user = new User();
                 user.google = profile.sub;
-                user.picture = profile.picture.replace('sz=50', 'sz=200');
-                user.displayName = profile.name;
+                user.firstName = user.firstName || profile.given_name;
+                user.lastName = user.lastName || profile.family_name;
+                user.email = user.email || profile.email;
                 user.save(function(err) {
-                  var token = createJWT(user);
+                  var token = common.createJWT(user);
                   res.send({ token: token });
                 });
               });

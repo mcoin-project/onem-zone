@@ -14,11 +14,11 @@ var errorHandler = require('errorhandler');
 var request = require('request');
 var fs = require('fs');
 var moment = require('moment');
-const jwt = require('jwt-simple');
 
 var _ = require('underscore-node');
 var FileStore = require('session-file-store')(session);
 var sms = require('./app_api/common/sms.js');
+var common = require('./app_api/common/common.js');
 
 const shortNumber = process.env.SHORT_NUMBER || "444100";
 
@@ -82,59 +82,67 @@ function ensureAuthenticated(req, res, next) {
     }
     var token = req.header('Authorization').split(' ')[1];
   
-    var payload = null;
-    try {
-      payload = jwt.decode(token, process.env.TOKEN_SECRET);
+    var payload = common.decodeJWT(token);
+    if (!payload) {
+        return res.status(401).send({ message: 'Unauthorized Request' });
     }
-    catch (err) {
-      return res.status(401).send({ message: err.message });
-    }
-  
-    if (payload.exp <= moment().unix()) {
-      return res.status(401).send({ message: 'Unauthorized Request' });
-    }
-    req.user = payload.sub;
-    next();
+    common.getUser(payload.sub).then(function(user) {
+        req.msisdn = user.msisdn;
+        req.user = payload.sub;
+        next();
+    }).catch(function(error) {
+        console.log(error);
+        console.log("user not found!!");
+        return next(new Error('User not found'));
+    });
   }
 
 io.use(function(socket, next){
     if (socket.handshake.query && socket.handshake.query.token){
         console.log("query.token:")
         console.log(socket.handshake.query.token);
-        var payload = null;
-        try {
-            payload = jwt.decode(socket.handshake.query.token, process.env.TOKEN_SECRET);
-            socket.payload = payload;
-            console.log("payload");
-            console.log(payload);
+        var user;
+        var payload = common.decodeJWT(socket.handshake.query.token);
+        if (!payload) {
+            console.log("invalid jwt");
+            next(new Error('Authentication error'));       
+        }
+        socket.jwtPayload = payload;
+
+        common.getUser(payload.sub).then(function(user) {
+            socket.msisdn = user.msisdn;
             next();
-        }
-        catch (err) {
-            console.log(err);
-            next(new Error('Authentication error'));
-        }
+        }).catch(function(error) {
+            console.log(error);
+            console.log("user not found!!");
+            return next(new Error('User not found'));
+        });
+        //console.log("payload");
+        //console.log(payload);
     } else {
+        console.log("missing jwt");
         next(new Error('Authentication error'));
     }    
-  })
-
-io.on('connection', function(socket) {
+}).on('connection', function(socket) {
 
     console.log("Connection received!");
-    sms.clients.push(socket);
-
-    socket.emit(socket.handshake.session);
-
-    if (!socket.handshake.session.onemContext) { //must be first time, or expired
-        var msisdn = moment().format('YYMMDDHHmmss');
-        console.log("msisdn:" + msisdn);
-        socket.handshake.session.onemContext = { msisdn: msisdn };
-        socket.handshake.session.save();
-    }
+    sms.clients.push(socket);    
 
     socket.on('MO SMS', function(moText) {
         console.log('moText: ');
         console.log(moText);
+
+        console.log("socket.id");
+        console.log(socket.id);
+
+        //console.log("socket");
+        //console.log(socket);
+
+        //socket.to(socket.handshake.session).emit('MT SMS', { mtText: 'test response'});
+        io.to(socket.id).emit('MT SMS', { mtText: 'test response'});
+        io.of('/').to(socket.id).emit('MT SMS', { mtText: 'test response'});
+        //socket.emit('MT SMS', { mtText: 'test response'});
+
 
         var moRecord = {
             msisdn: socket.handshake.session.onemContext.msisdn,
@@ -148,28 +156,20 @@ io.on('connection', function(socket) {
 
         console.log("sending SMS to Short Number " + shortNumber);
         // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
-        sms.sendSMS(socket.handshake.session.onemContext.msisdn, shortNumber, moText);
+        sms.sendSMS(socket.msisdn, shortNumber, moText);
 
     });
 
     socket.on('disconnect', function() {
-        console.info('Client gone (id=' + socket.id + ').');
+        console.log('Client gone (id=' + socket.id + ').');
         var index = sms.clients.indexOf(socket);
         sms.clients.splice(index, 1);
     });
 
 });
 
-app.get('/api/start', function(req, res, next) {
+app.get('/api/start', ensureAuthenticated, function(req, res, next) {
 
-    // if first time (no session) then generate a virtual MSISDN using current timestamp, which is saved in session cookie
-    if (!req.session.onemContext) { //must be first time, or expired
-        var msisdn = moment().format('YYMMDDHHmmss');
-        console.log("msisdn:" + msisdn);
-
-        req.session.onemContext = { msisdn: msisdn };
-        //Should I save it here, also??????
-    }
 
     var httpProtocol = req.get('Referer').split(":")[0];
     console.log(httpProtocol);
@@ -186,7 +186,7 @@ app.get('/api/start', function(req, res, next) {
     console.log(wsProtocol);
 
     res.json({
-        msisdn: req.session.onemContext.msisdn,
+        msisdn: req.msisdn,
         sipproxy: sipProxy,
         wsprotocol: wsProtocol
     });

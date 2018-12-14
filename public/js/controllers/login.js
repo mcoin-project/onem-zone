@@ -5,10 +5,15 @@ ONEmSimModule.controller('loginController', [
     'toastr',
     function($scope, $location, $auth, toastr) {
         $scope.authenticate = function(provider) {
+            console.log("inside authenticate");
+           // debugger;
             $auth.authenticate(provider).then(function() {
+                console.log("called authenticate");
                 toastr.success('You have successfully signed in with ' + provider + '!');
                 $location.path('/');
             }).catch(function(error) {
+                console.log("authentication error");
+                console.log(error);
                 if (error.message) {
                     // Satellizer promise reject error.
                     toastr.error(error.message);
