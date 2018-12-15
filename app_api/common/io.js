@@ -45,11 +45,13 @@ exports.initialize = function(server, express_middleware, handshake) {
     }).on('connection', function(socket) {
 
         console.log("Connection received!");
-        sms.clients.push(socket);    
+        //sms.clients.push(socket);    
 
         socket.on('MO SMS', function(moText) {
             console.log('moText: ');
             console.log(moText);
+
+            // todo santizie the moText
 
             console.log("socket.id");
             console.log(socket.id);
@@ -58,31 +60,35 @@ exports.initialize = function(server, express_middleware, handshake) {
             //console.log(socket);
 
             //socket.to(socket.handshake.session).emit('MT SMS', { mtText: 'test response'});
-            io.to(socket.id).emit('MT SMS', { mtText: 'test response'});
-            io.of('/').to(socket.id).emit('MT SMS', { mtText: 'test response'});
+            //io.to(socket.id).emit('MT SMS', { mtText: 'test response'});
+            //io.of('/').to(socket.id).emit('MT SMS', { mtText: 'test response'});
             //socket.emit('MT SMS', { mtText: 'test response'});
 
 
             var moRecord = {
-                msisdn: socket.handshake.session.onemContext.msisdn,
+             //   msisdn: socket.handshake.session.onemContext.msisdn,
                 socket: socket,
                 mtText: '',
                 messageWaiting: false
             };
 
-            var i = sms.clients.indexOf(socket);
-            sms.clients[i].moRecord = moRecord;
+            //var i = sms.clients.indexOf(socket);
+            //sms.clients[i].moRecord = moRecord;
 
-            console.log("sending SMS to Short Number " + common.shortNumber);
-            // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
-            sms.sendSMS(socket.msisdn, common.shortNumber, moText);
+            if (socket.msisdn) {
+                sms.clients[socket.msisdn] = moRecord;               
+                console.log("sending SMS to Short Number " + common.shortNumber);
+                // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
+                sms.sendSMS(socket.msisdn, common.shortNumber, moText);
+            } else {
+                console.log("can't locate msisdn for user");
+            }
 
         });
 
         socket.on('disconnect', function() {
             console.log('Client gone (id=' + socket.id + ').');
-            var index = sms.clients.indexOf(socket);
-            sms.clients.splice(index, 1);
+            if (socket.msisdn) delete sms.clients[socket.msisdn];
         });
 
     });

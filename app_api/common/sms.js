@@ -23,7 +23,7 @@ var idMsg = 0;
 
 var smppSession; // the SMPP session context saved globally.
 
-exports.clients = [];
+exports.clients = {};
 
 var smppServer = smpp.createServer(function(session) {
 
@@ -104,13 +104,11 @@ var smppServer = smpp.createServer(function(session) {
         console.log("more messages: " + pdu.more_messages_to_send);
 
         // Retrieve the session information based on the MSISDN:
-        for (var i = 0; i < exports.clients.length; i++) {
-            if (typeof exports.clients[i].moRecord !== 'undefined' && exports.clients[i].moRecord.msisdn === pdu.destination_addr) {
-                exports.clients[i].moRecord.messageWaiting = true;
-                exports.clients[i].moRecord.mtText = exports.clients[i].moRecord.mtText + mtText; // build up the text to be sent to the web client.
-                clientFound = true;
-                console.log("Client found!");
-            }
+        if (exports.clients[pdu.destination_addr]) {
+            console.log("Client found!");
+            clientFound = true;
+            exports.clients[pdu.destination_addr].moRecord.messageWaiting = true;
+            exports.clients[pdu.destination_addr].moRecord.mtText = exports.clients[pdu.destination_addr].moRecord.mtText + mtText; // build up the text to be sent to the web client.
         }
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
@@ -127,29 +125,26 @@ var smppServer = smpp.createServer(function(session) {
         if (clientFound && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             console.log("Client found and there are no more messages to be received for it!");
-            console.log("exports.clients.length: " + exports.clients.length);
-            for (i = 0; i < exports.clients.length; i++) {
-                if (typeof exports.clients[i].moRecord !== 'undefined' && exports.clients[i].moRecord.messageWaiting) {
-                    try {
-                        console.log("trying response: " + exports.clients[i].moRecord.mtText);
-                        exports.clients[i].moRecord.messageWaiting = false;
-                        exports.clients[i].moRecord.socket.emit('MT SMS', { mtText: exports.clients[i].moRecord.mtText }); //Send the whole message at once to the web exports.clients.
-                        doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
+            if (typeof exports.clients[pdu.destination_addr].moRecord !== 'undefined' && exports.clients[pdu.destination_addr].moRecord.messageWaiting) {
+                try {
+                    console.log("trying response: " + exports.clients[pdu.destination_addr].moRecord.mtText);
+                    exports.clients[pdu.destination_addr].moRecord.messageWaiting = false;
+                    exports.clients[pdu.destination_addr].moRecord.socket.emit('MT SMS', { mtText: exports.clients[pdu.destination_addr].moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                    doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
-                        if (exports.clients[i].moRecord.mtText.length < 20) {
-                            endmsgText = exports.clients[i].moRecord.mtText.length;
-                        };
-                        msgText = exports.clients[i].moRecord.mtText.substring(0, endmsgText);
-
-                        exports.clients[i].moRecord.mtText = '';
-                    } catch (err) {
-                        console.log("oops no session: " + err);
-                        doneDate = moment().format('YYMMDDHHmm');
-                        statMsg = stateMsg.DELETED.Status; //'DELETED'; // If the socket emit fails, we lose this message. It is in deleted state.
-                        statMsgValue = stateMsg.DELETED.Value;
-                        errMsg = '001'; // Error sending the message
-                        dlvrdMsg = '000'; // No message was delivered
+                    if (exports.clients[pdu.destination_addr].moRecord.mtText.length < 20) {
+                        endmsgText = exports.clients[pdu.destination_addr].moRecord.mtText.length;
                     };
+                    msgText = exports.clients[pdu.destination_addr].moRecord.mtText.substring(0, endmsgText);
+
+                    exports.clients[pdu.destination_addr].moRecord.mtText = '';
+                } catch (err) {
+                    console.log("oops no session: " + err);
+                    doneDate = moment().format('YYMMDDHHmm');
+                    statMsg = stateMsg.DELETED.Status; //'DELETED'; // If the socket emit fails, we lose this message. It is in deleted state.
+                    statMsgValue = stateMsg.DELETED.Value;
+                    errMsg = '001'; // Error sending the message
+                    dlvrdMsg = '000'; // No message was delivered
                 };
             };
         } else {
