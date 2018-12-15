@@ -76,10 +76,7 @@ exports.initialize = function(server, express_middleware, handshake) {
             //sms.clients[i].moRecord = moRecord;
 
             if (socket.msisdn) {
-                sms.clients[socket.msisdn] = moRecord;
-                
-                console.log("msisdn=" + socket.msisdn);
-                console.log(sms.clients[socket.msisdn]);
+                sms.clients[socket.msisdn].moRecord = moRecord;
                 
                 console.log("sending SMS to Short Number " + common.shortNumber);
                 // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
