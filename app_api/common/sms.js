@@ -3,6 +3,7 @@ const smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 const smppPassword = process.env.SMPP_PASSWORD || "password";
 const smppPort = process.env.SMPP_PORT || 2775;
 const shortNumber = process.env.SHORT_NUMBER || "444100";
+const clients = require('../common/clients.js');
 var socket = require('../common/io.js').io();
 
 var smpp = require('smpp');
@@ -22,8 +23,6 @@ var referenceCSMS = 0; // CSMS reference number that uniquely identify a split s
 var idMsg = 0;
 
 var smppSession; // the SMPP session context saved globally.
-
-exports.clients = {};
 
 var smppServer = smpp.createServer(function(session) {
 
@@ -81,16 +80,15 @@ var smppServer = smpp.createServer(function(session) {
         var dlvrdMsg = '001'; //One message delivered. This is a constant for our server since we do not support multiple recipients. Actually it does support multiple messages!
         var endmsgText = 20; //The snippet of message to be transmitted back in delivery report will be of maximum 20 characters.
         var msgText = 'Message acknowledged';
-
-        var clientFound = false;
-
-        console.log("submit_sm received, sequence_number: " + pdu.sequence_number + " isResponse: " + pdu.isResponse());
-
         var hexidMsg = idMsg.toString(16); //idMsg is a global identifier, at the server level. It will be sent back to submitter
         //in both the submit response and in the delivery reports; it is the same for a certain message.
         var pad = '00000000000000000000'; //idMsg should be sent as 20 hex digits zero padded.
+        var client = clients.clients[pdu.destination_addr];
+
         hexidMsg = pad.substring(0, pad.length - hexidMsg.length) + hexidMsg; //TODO: If hexidMsg longer than 20 digits (!!!) display its last 20 digits
         smppSession.send(pdu.response({ message_id: hexidMsg })); //submit_response; we've received the submit from the ESME and we confirm it with the message_id
+
+        console.log("submit_sm received, sequence_number: " + pdu.sequence_number + " isResponse: " + pdu.isResponse());
 
         if (pdu.short_message.length === 0) {
             console.log("** payload being used **");
@@ -100,19 +98,17 @@ var smppServer = smpp.createServer(function(session) {
         }
 
         console.log("mtText: " + mtText);
-
         console.log("more messages: " + pdu.more_messages_to_send);
 
         // Retrieve the session information based on the MSISDN:
-        if (exports.clients[pdu.destination_addr]) {
+        if (client) {
             console.log("Client found!");
-            clientFound = true;
-            exports.clients[pdu.destination_addr].moRecord.messageWaiting = true;
-            exports.clients[pdu.destination_addr].moRecord.mtText = exports.clients[pdu.destination_addr].moRecord.mtText + mtText; // build up the text to be sent to the web client.
+            client.moRecord.messageWaiting = true;
+            client.moRecord.mtText = client.moRecord.mtText + mtText; // build up the text to be sent to the web client.
         }
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
-        if (clientFound && pdu.more_messages_to_send === 1) {
+        if (client && pdu.more_messages_to_send === 1) {
             console.log("More mesages to send, so returning!");
             return;
         }
@@ -122,22 +118,21 @@ var smppServer = smpp.createServer(function(session) {
         //   2) retrieve the saved/concatenated message string
         //   3) reset the message string to blank
         //   4) send the result back to the client using the saved session
-        if (clientFound && (pdu.more_messages_to_send === 0 ||
+        if (client && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             console.log("Client found and there are no more messages to be received for it!");
-            if (typeof exports.clients[pdu.destination_addr].moRecord !== 'undefined' && exports.clients[pdu.destination_addr].moRecord.messageWaiting) {
+            if (typeof client.moRecord !== 'undefined' && client.moRecord.messageWaiting) {
                 try {
-                    console.log("trying response: " + exports.clients[pdu.destination_addr].moRecord.mtText);
-                    exports.clients[pdu.destination_addr].moRecord.messageWaiting = false;
-                    exports.clients[pdu.destination_addr].moRecord.socket.emit('MT SMS', { mtText: exports.clients[pdu.destination_addr].moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                    console.log("trying response: " + client.moRecord.mtText);
+                    client.moRecord.messageWaiting = false;
+                    client.moRecord.socket.emit('MT SMS', { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
-                    if (exports.clients[pdu.destination_addr].moRecord.mtText.length < 20) {
-                        endmsgText = exports.clients[pdu.destination_addr].moRecord.mtText.length;
+                    if (client.moRecord.mtText.length < 20) {
+                        endmsgText = client.moRecord.mtText.length;
                     };
-                    msgText = exports.clients[pdu.destination_addr].moRecord.mtText.substring(0, endmsgText);
-
-                    exports.clients[pdu.destination_addr].moRecord.mtText = '';
+                    msgText = client.moRecord.mtText.substring(0, endmsgText);
+                    client.moRecord.mtText = '';
                 } catch (err) {
                     console.log("oops no session: " + err);
                     doneDate = moment().format('YYMMDDHHmm');

@@ -1,5 +1,6 @@
 var common = require('../common/common.js');
 var sms = require('../common/sms.js');
+var clients = require('../common/clients.js');
 
 var sio = require('socket.io');
 var io = null;
@@ -76,8 +77,8 @@ exports.initialize = function(server, express_middleware, handshake) {
             //sms.clients[i].moRecord = moRecord;
 
             if (socket.msisdn) {
-                sms.clients[socket.msisdn] = {};
-                sms.clients[socket.msisdn].moRecord = moRecord;
+                clients.clients[socket.msisdn] = {};
+                clients.clients[socket.msisdn].moRecord = moRecord;
                 
                 console.log("sending SMS to Short Number " + common.shortNumber);
                 // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
@@ -90,7 +91,8 @@ exports.initialize = function(server, express_middleware, handshake) {
 
         socket.on('disconnect', function() {
             console.log('Client gone (id=' + socket.id + ').');
-            if (socket.msisdn) delete sms.clients[socket.msisdn];
+            if (socket.msisdn) delete clients.clients[socket.msisdn];
+            delete socket.msisdn;
         });
 
     });
