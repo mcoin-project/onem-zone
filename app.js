@@ -44,17 +44,17 @@ app.use(express.static(path.join(__dirname, 'node_modules'))); //TODO: Adapt thi
 // JsSIP is not designed to use "express" library. To be loaded we need its path:
 //app.use(express.static(path.join(__dirname, 'node_modules/jssip/dist')));
 
-var express_middleware = session({
-    secret: 'aut0test',
-    resave: true,
-    store: new FileStore,
-    saveUninitialized: true,
-    cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
-});
+// var express_middleware = session({
+//     secret: 'aut0test',
+//     resave: true,
+//     store: new FileStore,
+//     saveUninitialized: true,
+//     cookie: { maxAge: 365 * 4 * 24 * 60 * 60 * 1000 } // 4 years
+// });
 
-app.use(express_middleware);
+//app.use(express_middleware);
 
-io.initialize(server, express_middleware);
+io.initialize(server);
 
 app.use(function(req, res, next) { //allow cross origin requests
     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");

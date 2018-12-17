@@ -9,13 +9,13 @@ exports.io = function () {
   return io;
 };
 
-exports.initialize = function(server, express_middleware, handshake) {
+exports.initialize = function(server) {
 
     io = sio(server);
     
-    io.use(function(socket, next) {
-        express_middleware(socket.handshake, {}, next);
-    });
+    // io.use(function(socket, next) {
+    //     express_middleware(socket.handshake, {}, next);
+    // });
 
     io.use(function(socket, next){
         if (socket.handshake.query && socket.handshake.query.token){
