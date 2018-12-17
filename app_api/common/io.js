@@ -1,8 +1,10 @@
+var sio = require('socket.io');
+
 var common = require('../common/common.js');
+var user = require('../controllers/user.js');
 var sms = require('../common/sms.js');
 var clients = require('../common/clients.js');
 
-var sio = require('socket.io');
 var io = null;
 
 exports.io = function () {
@@ -21,7 +23,6 @@ exports.initialize = function(server) {
         if (socket.handshake.query && socket.handshake.query.token){
             console.log("query.token:")
             console.log(socket.handshake.query.token);
-            var user;
             var payload = common.decodeJWT(socket.handshake.query.token);
             if (!payload) {
                 console.log("invalid jwt");
@@ -29,8 +30,8 @@ exports.initialize = function(server) {
             }
             socket.jwtPayload = payload;
 
-            common.getUser(payload.sub).then(function(user) {
-                socket.msisdn = user.msisdn;
+            user.getUser(payload.sub).then(function(u) {
+                socket.msisdn = u.msisdn;
                 next();
             }).catch(function(error) {
                 console.log(error);

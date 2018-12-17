@@ -1,9 +1,11 @@
 ONEmSimModule.controller('loginController', [
     '$scope',
+    '$rootScope',
+    '$timeout',
     '$location',
     '$auth',
     'toastr',
-    function($scope, $location, $auth, toastr) {
+    function($scope, $rootScope, $timeout, $location, $auth, toastr) {
         $scope.authenticate = function(provider) {
             console.log("inside authenticate");
            // debugger;
@@ -11,6 +13,10 @@ ONEmSimModule.controller('loginController', [
                 console.log("called authenticate");
                 toastr.success('You have successfully signed in with ' + provider + '!');
                 $location.path('/');
+                $timeout(function() {
+                    // anything you want can go here and will safely be run on the next digest.
+                    $rootScope.$apply();
+                });
             }).catch(function(error) {
                 console.log("authentication error");
                 console.log(error);

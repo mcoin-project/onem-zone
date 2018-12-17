@@ -1,11 +1,6 @@
 const moment = require('moment');
 const jwt = require('jwt-simple');
 const tokenValidity = process.env.TOKEN_VALIDITY || 14 * 24 * 3600;
-var mongoose = require('mongoose');
-var ObjectId = require('mongoose').Types.ObjectId;
-
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
 
 exports.shortNumber = process.env.SHORT_NUMBER || "444100";
 
@@ -52,17 +47,3 @@ exports.verifyJWT = function(token) {
   return payload;
 }
 
-exports.getUser = function(id) {
-    return new Promise(function(resolve, reject) {
-        console.log("querying:"+id);
-        User.findOne({ _id: id }).then(function(user) {
-            if (!user) {
-                reject("user not found");
-            } else {
-                resolve(user);
-            }
-        }).catch(function(error) {
-            reject(error);
-        });
-    });
-}
