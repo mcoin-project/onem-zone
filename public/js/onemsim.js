@@ -78,6 +78,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
                     skipIfLoggedIn: skipIfLoggedIn
                 }
             }).
+            state('loginredirect', {
+                url: '/login?state',
+                templateUrl: 'views/partials/login.html',
+                controller:  'loginController',
+                resolve: {
+                    skipIfLoggedIn: skipIfLoggedIn
+                }
+            }).
             state('captureMsisdn', {
                 url: '/login',
                 templateUrl: 'views/partials/msisdn.html',
