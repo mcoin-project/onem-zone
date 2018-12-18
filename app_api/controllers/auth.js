@@ -63,7 +63,8 @@ exports.googleAuth = function(User) {
                 user.firstName = user.firstName || profile.given_name;
                 user.lastName = user.lastName || profile.family_name;
                 user.email = user.email || profile.email;
-                user.save(function(err) {
+                user.save(function(err, user) {
+                  if (err) console.log(err);
                   console.log("creating jwt");
                   console.log(user);
                   var token = common.createJWT(user);
