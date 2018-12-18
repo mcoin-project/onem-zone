@@ -24,6 +24,7 @@
     "angular-socket-io": "^0.7.0",
     "angular-toastr": "^2.1.1",
     "satellizer": "^0.15.5",
-    "path": "^3.46.1"
+    "path": "^3.46.1",
+    "ng-intl-tel-input": "^2.0.0"
   }
 }

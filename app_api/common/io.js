@@ -81,7 +81,7 @@ exports.initialize = function(server) {
                 clients.clients[socket.msisdn] = {};
                 clients.clients[socket.msisdn].moRecord = moRecord;
                 
-                console.log("sending SMS to Short Number " + common.shortNumber + "from:" + socket.msisdn);
+                console.log("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
                 // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
                 sms.sendSMS(socket.msisdn, common.shortNumber, moText);
             } else {

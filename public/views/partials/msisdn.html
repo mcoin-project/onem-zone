@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="col-md-6">
+    <form name="form2">
+      <div class="form-group" ng-class="{'has-error': form2.tel.$invalid && form2.tel.$touched, 'has-success': form2.tel.$valid}">
+        <label for="tel">Telephone number</label>
+        <input type="tel" class="form-control" id="tel-dc" name="tel" ng-model="tel2" ng-intl-tel-input data-initial-country="gb" data-selected-country="selected.country">
+        <span class="help-block" ng-show="form2.tel.$pristine && form2.tel.$untouched">Please type a telephone number</span>
+        <span class="help-block" ng-show="form2.tel.$invalid && form2.tel.$touched">Invalid :(</span>
+        <span class="help-block" ng-show="form2.tel.$valid && form2.tel.$touched">Valid :)</span>
+      </div>
+    </form>
+  </div>
+  <div class="col-md-6">
+    <p><strong>Model value</strong></p>
+    <blockquote>{{tel2}}<span ng-if="!tel2">N/A</span></blockquote>
+    <blockquote id="selectedCountry">{{selected.country}}</blockquote>
+  </div>
+</div>

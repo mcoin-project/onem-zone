@@ -10,7 +10,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'toastr',
     'satellizer',
     'ui.router',
-    'ONEmSimUIModule'
+    'ONEmSimUIModule',
+    'ngIntlTelInput',
 ]).filter('nl2br', ['$sanitize', function($sanitize) {
         var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
         return function(msg) {
@@ -20,10 +21,15 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
         };
     }]);
 
-ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider', '$authProvider',
-    function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider) {
+ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider', '$authProvider', 'ngIntlTelInputProvider',
+    function($stateProvider, $urlRouterProvider, $locationProvider, $authProvider, ngIntlTelInputProvider) {
 
-        /**
+        ngIntlTelInputProvider.set({
+            initialCountry: 'gb',
+            utilsScript: 'bower_components/intl-tel-input/build/js/utils.js'
+          });
+
+          /**
          * Helper auth functions
          */
         var skipIfLoggedIn = ['$q', '$auth', function($q, $auth) {
@@ -65,6 +71,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
                 controller:  'loginController',
                 resolve: {
                     skipIfLoggedIn: skipIfLoggedIn
+                }
+            }).
+            state('captureMsisdn', {
+                url: '/login',
+                templateUrl: 'views/partials/msisdn.html',
+                controller: 'captureMsisdnController',
+                resolve: {
+                    loginRequired: loginRequired
                 }
             }).
             state('logout', {
@@ -815,19 +829,17 @@ ONEmSimModule.factory('Setupphone', [
 
 ONEmSimModule.controller('mainController', [
     '$scope',
-    '$http',
+    '$state',
     'SmsHandler',
     'DataModel',
     'Socket',
-    'dateFilter',
-    '$rootScope',
     'User',
-    '$auth',
     'Setupphone',
-    function($scope, $http, SmsHandler, DataModel, Socket, dateFilter, $rootScope, User, $auth, Setupphone) {
+    function($scope, $state, SmsHandler, DataModel, Socket, User, Setupphone) {
+
+        $scope.selected = {country: ''};
 
         console.log("[MN]: mainController initialising");
-        var token = $auth.getToken();
 
         $scope.$on('error', function(ev, data) {
             console.log("[MN]: socket error:" + ev);
@@ -843,45 +855,47 @@ ONEmSimModule.controller('mainController', [
         //    console.log("[MN]: mtAnswer");
         //});
 
-        $scope.$on('socket:MT SMS', function(ev, data) {
-            $scope.theData = data;
-
-            console.log("[MN]: MT received:");
-            console.log(data);
-
-            var outputObj = {
-                type: "mt",
-                value: data.mtText
-            };
-
-            $scope.results = DataModel.addResult(outputObj);
-
-        });
-
-        $scope.smsInput = function() {
-
-            if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;
-
-            var inputObj = {
-                type: "mo",
-                value: $scope.smsText
-            };
-            $scope.results = DataModel.addResult(inputObj);
-            console.log("[MN]: calling emit");
-            Socket.emit('MO SMS', $scope.smsText);
-            $scope.smsText = '';
-        };
-
         User.getMsisdn().$promise.then(function(response) {
             console.log("got response:");
             console.log(response);
             $scope.msisdn = response.msisdn;
             return SmsHandler.start().$promise;
         }).then(function(response) {
+
+            $scope.$on('socket:MT SMS', function(ev, data) {
+                $scope.theData = data;
+    
+                console.log("[MN]: MT received:");
+                console.log(data);
+    
+                var outputObj = {
+                    type: "mt",
+                    value: data.mtText
+                };
+    
+                $scope.results = DataModel.addResult(outputObj);
+    
+            });
+    
+            $scope.smsInput = function() {
+    
+                if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;
+    
+                var inputObj = {
+                    type: "mo",
+                    value: $scope.smsText
+                };
+                $scope.results = DataModel.addResult(inputObj);
+                console.log("[MN]: calling emit");
+                Socket.emit('MO SMS', $scope.smsText);
+                $scope.smsText = '';
+            };
+
             Setupphone.start(response);
         }).catch(function(error) {
             console.log("error:" + error);
             // no msisdn found for this user, need to capture msisdn first
+            $state.go('captureMsisdn');
         });
 
     }

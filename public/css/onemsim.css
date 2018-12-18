@@ -1,3 +1,16 @@
+
+/* for telephone number input*/
+.iti-flag {background-image: url("/bower_components/intl-tel-input/build/img/flags.png");}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .iti-flag {background-image: url("/bower_components/intl-tel-input/build/img/flags@2x.png");}
+  }
+
+.intl-tel-input {
+    display: table-cell;
+}
+/* end telephone number input */
+
 #context-menu {
     position: absolute;
     left: 150px !important;
