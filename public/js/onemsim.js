@@ -90,13 +90,10 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
                 url: '/login',
                 templateUrl: 'views/partials/msisdn.html',
                 controller: 'captureMsisdnController',
-                resolve: {
-                    loginRequired: loginRequired
-                }
             }).
             state('logout', {
                 url: '/logout',
-                templateUrl: 'views/partials/login.html',
+                templateUrl: null,
                 controller: 'logoutController'
             });
 
@@ -131,7 +128,6 @@ ONEmSimModule.config(['$httpProvider',
                     responseError: function(response) {
                         switch (response.status) {
                             case 400:
-                            case 401:
                             case 403:
                             case 404:
                                 $location.path('/error');

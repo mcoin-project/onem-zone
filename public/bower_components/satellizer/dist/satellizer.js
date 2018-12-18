@@ -821,6 +821,7 @@
         OAuth.prototype.authenticate = function (name, userData) {
             debugger;
             var _this = this;
+            console.log("calling this.$q");
             return this.$q(function (resolve, reject) {
                 var provider = _this.SatellizerConfig.providers[name];
                 var oauth = null;
@@ -834,12 +835,19 @@
                     default:
                         return reject(new Error('Invalid OAuth Type'));
                 }
+                console.log("oauth");
+                console.log(oauth);
+
                 return oauth.init(provider, userData).then(function (response) {
+                    console.log("got response");
+                    console.log(response);
                     if (provider.url) {
                         _this.SatellizerShared.setToken(response);
                     }
                     resolve(response);
                 }).catch(function (error) {
+                    console.log("error:");
+                    console.log(error);
                     reject(error);
                 });
             });
