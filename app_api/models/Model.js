@@ -5,7 +5,7 @@ var crypto = require('crypto');
 Mongoose.Promise = require('bluebird');
 
 exports.UserSchema = new Mongoose.Schema({
-    email: { type: String, unique: true, lowercase: true, minlength: 6, maxlength: 254 },
+    email: { type: String, lowercase: true, minlength: 6, maxlength: 254 },
     password: { type: String, select: false, required: false },
     firstName: { type: String }, // required: true, minlength: 2, maxlength: 50 },
     lastName: { type: String }, // required: true, minlength: 2, maxlength: 50 },
