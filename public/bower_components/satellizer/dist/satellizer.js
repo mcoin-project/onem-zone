@@ -742,7 +742,6 @@
                         return resolve(oauth);
                     }
                     if (oauth.state && oauth.state !== _this.SatellizerStorage.get(stateName)) {
-                        alert("oauth.state: " + oauth.state + " vs " +  _this.SatellizerStorage.get(stateName));
                         return reject(new Error('The value returned in the state parameter does not match the state value from your original ' +
                             'authorization code request.'));
                     }

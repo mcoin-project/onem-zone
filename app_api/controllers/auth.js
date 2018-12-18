@@ -29,9 +29,9 @@ exports.googleAuth = function(User) {
             // Step 3a. Link user accounts.
             if (req.header('Authorization')) {
               User.findOne({ google: profile.sub }, function(err, existingUser) {
-                // if (existingUser) {
-                //   return res.status(409).send({ message: 'There is already a Google account that belongs to you' });
-                // }
+                if (existingUser) {
+                  return res.status(409).send({ message: 'There is already a Google account that belongs to you' });
+                }
                 var token = req.header('Authorization').split(' ')[1];
                 var payload = common.decodeJWT(token);
                 User.findById(payload.sub, function(err, user) {
