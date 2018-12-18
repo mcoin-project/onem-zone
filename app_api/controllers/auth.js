@@ -38,12 +38,13 @@ exports.googleAuth = function(User) {
                   if (!user) {
                     return res.status(400).send({ message: 'User not found' });
                   }
-
                   user.google = profile.sub;
                   user.firstName = user.firstName || profile.given_name;
                   user.lastName = user.lastName || profile.family_name;
                   user.email = user.email || profile.email;
                   user.save(function() {
+                    console.log("creating jwt (existing token)");
+                    console.log(user);
                     var token = common.createJWT(user);
                     res.send({ token: token });
                   });
@@ -53,6 +54,8 @@ exports.googleAuth = function(User) {
               // Step 3b. Create a new user account or return an existing one.
               User.findOne({ google: profile.sub }, function(err, existingUser) {
                 if (existingUser) {
+                  console.log("creating jwt (no token)");
+                  console.log(user);
                   return res.send({ token: common.createJWT(existingUser) });
                 }
                 var user = new User();
@@ -61,6 +64,8 @@ exports.googleAuth = function(User) {
                 user.lastName = user.lastName || profile.family_name;
                 user.email = user.email || profile.email;
                 user.save(function(err) {
+                  console.log("creating jwt");
+                  console.log(user);
                   var token = common.createJWT(user);
                   res.send({ token: token });
                 });

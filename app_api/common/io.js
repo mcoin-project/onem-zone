@@ -29,7 +29,7 @@ exports.initialize = function(server) {
                 next(new Error('Authentication error'));       
             }
             socket.jwtPayload = payload;
-
+            console.log("socket: querying user: " + payload.sub);
             user.getUser(payload.sub).then(function(u) {
                 socket.msisdn = u.msisdn;
                 next();
