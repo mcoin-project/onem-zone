@@ -56,14 +56,19 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
             return deferred.promise;
         }];
 
+         /**
+         *  Satellizer config
+         */
+        $authProvider.baseUrl = '/api';
+        $authProvider.google({
+            clientId: GOOGLE_CLIENT_ID
+        });
+
         $stateProvider.
             state('home', {
                 url: '/', 
                 templateUrl: 'views/partials/onemSim.html',
-                controller:  'mainController',
-                resolve: {
-                    loginRequired: loginRequired
-                }
+                controller:  'mainController'
             }).
             state('login', {
                 url: '/login', 
@@ -90,13 +95,6 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
         $urlRouterProvider.otherwise('/');
         $locationProvider.html5Mode(true);
 
-        /**
-         *  Satellizer config
-         */
-        $authProvider.baseUrl = '/api';
-        $authProvider.google({
-            clientId: GOOGLE_CLIENT_ID
-        });
     }
 ]);
 

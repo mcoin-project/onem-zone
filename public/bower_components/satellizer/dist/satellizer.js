@@ -819,6 +819,7 @@
             this.SatellizerOAuth2 = SatellizerOAuth2;
         }
         OAuth.prototype.authenticate = function (name, userData) {
+            debugger;
             var _this = this;
             return this.$q(function (resolve, reject) {
                 var provider = _this.SatellizerConfig.providers[name];
