@@ -55,11 +55,13 @@ exports.initialize = function(server) {
         // check for existing connection from msisdn already logged in (on another device) and kick them off
         if (socket.msisdn) {
             console.log("found existing user");
-            try {
-                clients.clients[socket.msisdn].moRecord.socket.emit('LOGOUT'); //Send the whole message at once to the web exports.clients.
-            } catch (error) {
-                console.log(error);
-                console.log("could not kill client");
+            if (typeof clients.clients[socket.msisdn] !== 'undefined') {
+                try {
+                    clients.clients[socket.msisdn].moRecord.socket.emit('LOGOUT'); //Send the whole message at once to the web exports.clients.
+                } catch (error) {
+                    console.log(error);
+                    console.log("could not kill client");
+                }
             }
             clients.clients[socket.msisdn] = {};
             var moRecord = {

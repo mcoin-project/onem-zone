@@ -131,7 +131,6 @@ var smppServer = smpp.createServer(function(session) {
                         endmsgText = client.moRecord.mtText.length;
                     };
                     msgText = client.moRecord.mtText.substring(0, endmsgText);
-                    client.moRecord.mtText = '';
                 } catch (err) {
                     console.log("oops no session: " + err);
                     doneDate = moment().format('YYMMDDHHmm');
@@ -139,8 +138,12 @@ var smppServer = smpp.createServer(function(session) {
                     statMsgValue = stateMsg.DELETED.Value;
                     errMsg = '001'; // Error sending the message
                     dlvrdMsg = '000'; // No message was delivered
+                    common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
                 };
+                client.moRecord.mtText = '';
             };
+        } else if (!client && pdu.more_messages_to_send === 0) {
+            common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
         } else {
             doneDate = moment().format('YYMMDDHHmm');
             statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no exports.clients.found to send this message to, this message is undeliverable.
