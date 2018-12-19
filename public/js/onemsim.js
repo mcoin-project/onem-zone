@@ -167,6 +167,13 @@ ONEmSimModule.factory('Socket', [
         var mySocket, myIoSocket;
         //debugger;
         return {
+            disconnect: function() {
+                if (!mySocket) {
+                    console.log("mySocket undefined");
+                    return;
+                }
+                return myIoSocket.disconnect();
+            },
             connect: function() {
                 var token = $auth.getToken();
 
@@ -309,7 +316,19 @@ ONEmSimModule.factory('Setupphone', [
     'Socket',
     '$rootScope',
     function(Socket, $rootScope) {
+
+        var phoneONEm;
+        
         return {
+            stop: function() {
+                if (!phoneONEm) {
+                    console.log("phoneONEm not defined") 
+                    return;
+                }
+                if(phoneONEm.isConnected()) phoneONEm.terminateSessions();
+                phoneONEm.stop();
+                phoneONEm.unregister();
+            },
             start: function(response) {
                 console.log("got start response");
                 Socket.connect();
@@ -329,7 +348,7 @@ ONEmSimModule.factory('Setupphone', [
                 var attachMediaStream = null;
                 var reattachMediaStream = null;
                 var webrtcDetectedBrowser = null;
-                var webrtcDetectedVersion = null;
+                //var webrtcDetectedVersion = null;
             
                 //function trace(text) {
                 //    // This function is used for logging.
@@ -342,7 +361,7 @@ ONEmSimModule.factory('Setupphone', [
                 if (navigator.mozGetUserMedia) {
                     console.log("[WS]: This appears to be Firefox");
                     webrtcDetectedBrowser = "firefox";
-                    webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
+                 //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
                     // The RTCPeerConnection object.
                     RTCPeerConnection = mozRTCPeerConnection;
                     // The RTCSessionDescription object.
@@ -364,7 +383,7 @@ ONEmSimModule.factory('Setupphone', [
                 } else if (navigator.webkitGetUserMedia) {
                     console.log("[WS]: This appears to be Chrome");
                     webrtcDetectedBrowser = "chrome";
-                    webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
+                 //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
                     // The RTCPeerConnection object.
                     RTCPeerConnection = webkitRTCPeerConnection;
                     // Get UserMedia (only difference is the prefix).
@@ -500,7 +519,7 @@ ONEmSimModule.factory('Setupphone', [
                 // For debug run this in the browser's console and reload the page:
                 // JsSIP.debug.enable('JsSIP:*');
             
-                var phoneONEm = new JsSIP.UA(configuration);
+                phoneONEm = new JsSIP.UA(configuration);
             
                 phoneONEm.registrator().setExtraHeaders([
                     'X-WEBRTC-UA: zoiper'
