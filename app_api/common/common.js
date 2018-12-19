@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const moment = require('moment');
 const jwt = require('jwt-simple');
+const postmark = require("postmark");
+
 const tokenValidity = process.env.TOKEN_VALIDITY || 14 * 24 * 3600;
 
 exports.shortNumber = process.env.SHORT_NUMBER || "444100";
