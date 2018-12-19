@@ -4,6 +4,7 @@ const smppPassword = process.env.SMPP_PASSWORD || "password";
 const smppPort = process.env.SMPP_PORT || 2775;
 const shortNumber = process.env.SHORT_NUMBER || "444100";
 const clients = require('../common/clients.js');
+const common = require('../common/common.js');
 
 var smpp = require('smpp');
 
