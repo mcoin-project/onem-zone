@@ -98,6 +98,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
                     loginRequired: loginRequired
                 }
             }).
+            state('captureToken', {
+                url: '/login',
+                templateUrl: 'views/partials/token.html',
+                controller: 'captureTokenController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
             state('logout', {
                 url: '/logout',
                 templateUrl: null,
@@ -194,7 +202,7 @@ ONEmSimModule.factory('User', [
         return $resource('/api', {}, {
             getMsisdn: {
                 method: 'GET',
-                url: 'api/user',
+                url: 'api/user/msisdn',
                 isArray: false
             },
             updateMsisdn: {
@@ -205,6 +213,11 @@ ONEmSimModule.factory('User', [
             sendToken: {
                 method: 'GET',
                 url: 'api/user/sendToken',
+                isArray: false
+            },
+            verifyToken: {
+                method: 'GET',
+                url: 'api/user/verifyToken',
                 isArray: false
             }
         });
