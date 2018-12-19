@@ -142,7 +142,9 @@ var smppServer = smpp.createServer(function(session) {
                 };
                 client.moRecord.mtText = '';
             };
-        } else if (!client && pdu.more_messages_to_send === 0) {
+        } else if (!client && pdu.more_messages_to_send === 0 ||
+            typeof pdu.more_messages_to_send === 'undefined') {
+            console.log("sending email");
             common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
         } else {
             doneDate = moment().format('YYMMDDHHmm');
