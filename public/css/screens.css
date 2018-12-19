@@ -610,7 +610,7 @@ body.full {
     right: 37px;
     text-align: center;
     margin: 0;
-    padding: 14px;
+    padding: 0;
     z-index: 3;
 }
 
@@ -753,7 +753,7 @@ body.full div.logo img { height: 40px; width: auto; }
     .phone .dialer .preview .call_no img { width: 30%; margin-top: 0; }
     a.full { display: none; }
     div.logo { top: 0; left: 0; padding: 10px;float: left; width: auto; margin: 0; }
-    div.logo img { height: 40px; width:auto; }
+    div.logo img { height: auto; width:100px; padding-top: 5px;}
     .phone .answer .nums {
         bottom: 190px;
     }

@@ -8,7 +8,6 @@ ONEmSimModule.controller('loginController', [
     function($scope, $rootScope, $timeout, $location, $auth, toastr) {
         $scope.authenticate = function(provider) {
             console.log("inside authenticate");
-            debugger;
             $auth.authenticate(provider).then(function() {
                 console.log("called authenticate");
                 toastr.success('You have successfully signed in with ' + provider + '!');

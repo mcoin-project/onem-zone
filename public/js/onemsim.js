@@ -307,13 +307,14 @@ ONEmSimModule.factory('DataModel', function() {
 
 ONEmSimModule.factory('Setupphone', [
     'Socket',
-    function(Socket) {
+    '$rootScope',
+    function(Socket, $rootScope) {
         return {
             start: function(response) {
                 console.log("got start response");
                 Socket.connect();
             
-                var msisdn = response.msisdn;
+                var msisdn = $rootScope.msisdn;
                 var sipProxy = response.sipproxy;
                 var wsProtocol = response.wsprotocol;
                 console.log("[WS]: msisdn: " + msisdn);
@@ -861,13 +862,14 @@ ONEmSimModule.factory('Setupphone', [
 
 ONEmSimModule.controller('mainController', [
     '$scope',
+    '$rootScope',
     '$state',
     'SmsHandler',
     'DataModel',
     'Socket',
     'User',
     'Setupphone',
-    function($scope, $state, SmsHandler, DataModel, Socket, User, Setupphone) {
+    function($scope, $rootScope, $state, SmsHandler, DataModel, Socket, User, Setupphone) {
 
         $scope.selected = {country: ''};
 
@@ -887,13 +889,21 @@ ONEmSimModule.controller('mainController', [
         //    console.log("[MN]: mtAnswer");
         //});
 
-        User.getMsisdn().$promise.then(function(response) {
-            console.log("got response:");
-            console.log(response);
-            $scope.msisdn = response.msisdn;
-            return SmsHandler.start().$promise;
-        }).then(function(response) {
-
+        // User.getMsisdn().$promise.then(function(response) {
+        //     console.log("got response:");
+        //     console.log(response);
+        //     $scope.msisdn = response.msisdn;
+        //     return SmsHandler.start().$promise;
+        // }).then(function(response) {
+        if (!$rootScope.msisdn) {
+            User.getMsisdn().$promise.then(function(response) {
+                $rootScope.msisdn = response.msisdn;
+            }).catch(function(error) {
+                return $state.go('captureMsisdn');
+            });
+            console.log("msisdn:" + $rootScope.msisdn);
+        }
+        SmsHandler.start().$promise.then(function(response) {
             $scope.$on('socket:MT SMS', function(ev, data) {
                 $scope.theData = data;
     
@@ -924,10 +934,9 @@ ONEmSimModule.controller('mainController', [
             };
 
             Setupphone.start(response);
+
         }).catch(function(error) {
-            console.log("error:" + error);
-            // no msisdn found for this user, need to capture msisdn first
-            $state.go('captureMsisdn');
+            console.log(error);
         });
 
     }
