@@ -64,6 +64,10 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
             clientId: GOOGLE_CLIENT_ID
         });
 
+        console.log("auth header:");
+        console.log($authProvider.tokenHeader);
+        console.log($authProvider.tokenType);
+
         $stateProvider.
             state('home', {
                 url: '/', 
@@ -90,6 +94,9 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider','$locationProvider'
                 url: '/login',
                 templateUrl: 'views/partials/msisdn.html',
                 controller: 'captureMsisdnController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
             }).
             state('logout', {
                 url: '/logout',
@@ -188,6 +195,16 @@ ONEmSimModule.factory('User', [
             getMsisdn: {
                 method: 'GET',
                 url: 'api/user',
+                isArray: false
+            },
+            updateMsisdn: {
+                method: 'PUT',
+                url: 'api/user/msisdn',
+                isArray: false
+            },
+            sendToken: {
+                method: 'GET',
+                url: 'api/user/sendToken',
                 isArray: false
             }
         });

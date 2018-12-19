@@ -18,35 +18,40 @@ var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
  */
 function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
-      return res.status(401).send({ message: 'Unauthorized request' });
+        console.log("missing ");
+        return res.status(401).send({ message: 'Unauthorized request' });
     }
     var token = req.header('Authorization').split(' ')[1];
-  
+
     var payload = common.decodeJWT(token);
+    console.log("decoded payload");
+    console.log(payload);
     if (!payload) {
         return res.status(401).send({ message: 'Unauthorized Request' });
     }
-    user.getUser(payload.sub).then(function(user) {
+    user.getUser(payload.sub).then(function (user) {
         req.msisdn = user.msisdn;
-        req.user = user;
+        req.user = user._id;
         next();
-    }).catch(function(error) {
+    }).catch(function (error) {
         console.log(error);
         console.log("user not found!!");
         return res.status(401).send({ message: 'Unauthorized request' });
     });
-  }
+}
 
-api.get('/user', ensureAuthenticated, function(req, res) {
+api.get('/user', ensureAuthenticated, function (req, res) {
     if (req.msisdn) {
         res.status(200).send({ msisdn: req.msisdn, user: req.user });
     } else {
-        res.status(500).send({error: "Server error"});
-   
+        res.status(500).send({ error: "Server error" });
     }
 });
 
-api.get('/start', ensureAuthenticated, function(req, res) {
+api.get('/user/sendToken', ensureAuthenticated, user.sendToken(User));
+api.put('/user/msisdn', ensureAuthenticated, user.updateMsisdn(User));
+
+api.get('/start', ensureAuthenticated, function (req, res) {
     var httpProtocol = req.get('Referer').split(":")[0];
     console.log(httpProtocol);
     console.log(wsProtocol);

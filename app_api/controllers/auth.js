@@ -1,5 +1,6 @@
 const request = require('request');
 const common = require('../common/common.js');
+const speakeasy = require('speakeasy');
 
 exports.googleAuth = function(User) {
     return function(req, res) {
@@ -38,11 +39,16 @@ exports.googleAuth = function(User) {
                   if (!user) {
                     return res.status(400).send({ message: 'User not found' });
                   }
+                  user.secret = speakeasy.generateSecret({length: 20}).base32;;
                   user.google = profile.sub;
                   user.firstName = user.firstName || profile.given_name;
                   user.lastName = user.lastName || profile.family_name;
                   user.email = user.email || profile.email;
-                  user.save(function() {
+                  user.save(function(err, user) {
+                    if (err) {
+                      console.log(err);
+                      return res.status(400).send({ message: 'User not saved' });
+                    }
                     console.log("creating jwt (existing token)");
                     console.log(user);
                     var token = common.createJWT(user);
@@ -59,12 +65,16 @@ exports.googleAuth = function(User) {
                   return res.send({ token: common.createJWT(existingUser) });
                 }
                 var user = new User();
+                user.secret = speakeasy.generateSecret({length: 20}).base32;
                 user.google = profile.sub;
                 user.firstName = user.firstName || profile.given_name;
                 user.lastName = user.lastName || profile.family_name;
                 user.email = user.email || profile.email;
                 user.save(function(err, user) {
-                  if (err) console.log(err);
+                  if (err) {
+                    console.log(err);
+                    return res.status(400).send({ message: 'User not saved' });
+                  }
                   console.log("creating jwt");
                   console.log(user);
                   var token = common.createJWT(user);

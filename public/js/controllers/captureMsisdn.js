@@ -1,34 +1,34 @@
+ONEmSimModule.controller('captureTokenController', [
+    '$scope',
+    'User',
+    'toastr',
+    '$state',
+    function($scope, User, toastr, $state) {
+        $scope.submit = function() {
+            var msisdn = $scope.msisdn.slice(1); // remove +
+            User.sendToken( {msisdn: msisdn} ). $promise.then(function(response) {
+                $state.go('captureToken');
+                //return updateMsisdn( {msisdn: msisdn} ).$promise.then(function(response) {
+            }).catch(function(error) {
+                toastr.error("Couldn't update mobile number - please try again");
+            });
+        }
+    }
+]);
+
 ONEmSimModule.controller('captureMsisdnController', [
     '$scope',
-    '$rootScope',
-    '$timeout',
-    '$location',
-    '$auth',
+    'User',
     'toastr',
-    function($scope, $rootScope, $timeout, $location, $auth, toastr) {
-        $scope.authenticate = function(provider) {
-            console.log("inside authenticate");
-           // debugger;
-            $auth.authenticate(provider).then(function() {
-                console.log("called authenticate");
-                toastr.success('You have successfully signed in with ' + provider + '!');
-                $location.path('/');
-                $timeout(function() {
-                    // anything you want can go here and will safely be run on the next digest.
-                    $rootScope.$apply();
-                });
+    '$state',
+    function($scope, User, toastr, $state) {
+        $scope.submit = function() {
+            var msisdn = $scope.msisdn.slice(1); // remove +
+            User.sendToken( {msisdn: msisdn} ). $promise.then(function(response) {
+            //    $state.go('captureToken');
+                //return updateMsisdn( {msisdn: msisdn} ).$promise.then(function(response) {
             }).catch(function(error) {
-                console.log("authentication error");
-                console.log(error);
-                if (error.message) {
-                    // Satellizer promise reject error.
-                    toastr.error(error.message);
-                } else if (error.data) {
-                    // HTTP response error from server
-                    toastr.error(error.data.message, error.status);
-                } else {
-                    toastr.error(error);
-                }
+                toastr.error("Couldn't update mobile number - please try again");
             });
         }
     }

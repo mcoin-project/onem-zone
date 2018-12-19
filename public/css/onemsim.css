@@ -11,17 +11,23 @@
 }
 /* end telephone number input */
 
+.col-centered{
+    float: none;
+    margin: 0 auto;
+}
+
 #context-menu {
     position: absolute;
     left: 150px !important;
 }
 
+/*
 .panel > .panel-heading {
     background-image: none;
     background-color: black;
     color: white;
     font-size: 16px;
-}
+}*/
 
 .breadcrumb {
     margin-top: 10px;

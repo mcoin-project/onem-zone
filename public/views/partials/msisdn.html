@@ -1,18 +1,26 @@
-<div class="row">
-  <div class="col-md-6">
-    <form name="form2">
-      <div class="form-group" ng-class="{'has-error': form2.tel.$invalid && form2.tel.$touched, 'has-success': form2.tel.$valid}">
-        <label for="tel">Telephone number</label>
-        <input type="tel" class="form-control" id="tel-dc" name="tel" ng-model="tel2" ng-intl-tel-input data-initial-country="gb" data-selected-country="selected.country">
-        <span class="help-block" ng-show="form2.tel.$pristine && form2.tel.$untouched">Please type a telephone number</span>
-        <span class="help-block" ng-show="form2.tel.$invalid && form2.tel.$touched">Invalid :(</span>
-        <span class="help-block" ng-show="form2.tel.$valid && form2.tel.$touched">Valid :)</span>
+<div class="container">
+  <div style="padding-top:100px" class="row">
+    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 col-centered">
+      <div class="center-form panel panel-default text-center">
+        <div class="panel-heading">
+          <h3 class="panel-title">Register Mobile</h3>
+        </div>
+        <div class="panel-body">
+          <p style="text-align: left">Provide your mobie number below so we can link it with your account.</p>
+          <form class="form-horizontal" ng-submit="submit()" name="msisdnForm">
+            <div class="form-group" ng-class="{'has-error': msisdnForm.tel.$invalid && msisdnForm.tel.$touched, 'has-success': msisdnForm.tel.$valid}">
+              <label class="control-label col-sm-2" for="tel">Mobile:</label>
+              <div class="col-sm-10">
+                <input type="tel" class="form-control" id="tel-dc" name="tel" ng-model="msisdn" ng-intl-tel-input
+                  data-initial-country="gb" data-selected-country="selected.country">
+                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="msisdnForm.tel.$invalid && msisdnForm.tel.$touched"></span>
+                <span class="glyphicon glyphicon-ok form-control-feedback" ng-show="msisdn && msisdnForm.tel.$valid && msisdnForm.tel.$touched"></span>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-block btn-primary" ng-disabled="msisdnForm.$invalid" class="btn btn-block btn-primary">Submit</button>
+          </form>
+        </div>
       </div>
-    </form>
-  </div>
-  <div class="col-md-6">
-    <p><strong>Model value</strong></p>
-    <blockquote>{{tel2}}<span ng-if="!tel2">N/A</span></blockquote>
-    <blockquote id="selectedCountry">{{selected.country}}</blockquote>
+    </div>
   </div>
 </div>
