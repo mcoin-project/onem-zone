@@ -4,17 +4,19 @@ ONEmSimModule.controller('logoutController', [
     'toastr',
     '$state',
     '$rootScope',
-    'Setupphone',
+    'Phone',
     'Socket',
-    function($location, $auth, toastr, $state, $rootScope, Setupphone, Socket) {
+    'DataModel',
+    function($location, $auth, toastr, $state, $rootScope, Phone, Socket, DataModel) {
         if ($auth.isAuthenticated()) { 
             $auth.logout().then(function() {
                 toastr.info('You have been logged out');
             });
         }
-        Setupphone.stop();
+        Phone.stop();
         Socket.disconnect();
         $rootScope.msisdn = undefined;
+        DataModel.clearResults();
         $state.go('home');
     }
 ]);

@@ -194,6 +194,8 @@ ONEmSimModule.factory('Socket', [
                 //var mySocket = socketFactory();
                 mySocket.forward('error');
                 mySocket.forward('MT SMS');
+                mySocket.forward('LOGOUT');
+
                 return mySocket;
             },
             emit: function(param1, param2) {
@@ -253,66 +255,28 @@ ONEmSimModule.factory('SmsHandler', [
 ]);
 
 ONEmSimModule.factory('DataModel', function() {
+
     var data = {
-        tabs: [
-            { name: "Files", isActive: true, refId: "#file-manager-tab" },
-            { name: "Log", isActive: false, refId: "#log-tab" },
-            { name: "Develop", isActive: false, refId: "#develop-tab" },
-            { name: "Help", isActive: false, refId: "#help-tab" }
-        ],
-        results: [],
-        logs: [],
-        comments: []
+        results: []
     };
 
     return {
         data: data,
-        clearComments: function() {
-            data.comments = [];
-            return data.comments;
-        },
-        getTabs: function() {
-            return data.tabs;
-        },
         getResults: function() {
             return data.results;
-        },
-        getComments: function() {
-            return data.comments;
-        },
-        getLogs: function() {
-            return data.logs;
-        },
-        selectTab: function(tab) {
-            for (var i = 0; i < data.tabs.length; i++) {
-                if (tab.refId === data.tabs[i].refId) {
-                    data.tabs[i].isActive = true;
-                } else {
-                    data.tabs[i].isActive = false;
-                }
-            }
-            return data.tabs;
         },
         addResult: function(result) {
             data.results.push(result);
             return data.results;
         },
-        addComment: function(comment) {
-            data.comments.push(comment);
-            return data.comments;
-        },
-        addLog: function(log) {
-            data.logs.push(log);
-            return data.logs;
-        },
-        clearLogs: function() {
-            data.logs = [];
-            return data.logs;
+        clearResults: function() {
+            data.results = [];
+            return data.results;
         }
     };
 });
 
-ONEmSimModule.factory('Setupphone', [
+ONEmSimModule.factory('Phone', [
     'Socket',
     '$rootScope',
     function(Socket, $rootScope) {
@@ -887,8 +851,10 @@ ONEmSimModule.controller('mainController', [
     'DataModel',
     'Socket',
     'User',
-    'Setupphone',
-    function($scope, $rootScope, $state, SmsHandler, DataModel, Socket, User, Setupphone) {
+    'Phone',
+    '$location',
+    '$timeout',
+    function($scope, $rootScope, $state, SmsHandler, DataModel, Socket, User, Phone, $location, $timeout) {
 
         $scope.selected = {country: ''};
 
@@ -898,6 +864,14 @@ ONEmSimModule.controller('mainController', [
             console.log("[MN]: socket error:" + ev);
             console.log(ev);
             console.log(data);
+        });
+
+        $scope.$on('socket:LOGOUT', function(ev, data) {
+            $location.path('/logout');
+            $timeout(function() {
+                // anything you want can go here and will safely be run on the next digest.
+                $rootScope.$apply();
+            });
         });
 
         ////Check if the language is left-to-rigt or rigth-to-left:
@@ -952,7 +926,7 @@ ONEmSimModule.controller('mainController', [
                 $scope.smsText = '';
             };
 
-            Setupphone.start(response);
+            Phone.start(response);
 
         }).catch(function(error) {
             console.log(error);

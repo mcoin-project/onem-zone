@@ -46,8 +46,29 @@ exports.initialize = function(server) {
         }    
     }).on('connection', function(socket) {
 
-        console.log("Connection received!");
+        console.log("Connection received: " + socket.id);
         //sms.clients.push(socket);    
+
+        console.log(socket.msisdn);
+        console.log(clients.clients[socket.msisdn]);
+
+        // check for existing connection from msisdn already logged in (on another device) and kick them off
+        if (socket.msisdn) {
+            console.log("found existing user");
+            try {
+                clients.clients[socket.msisdn].moRecord.socket.emit('LOGOUT'); //Send the whole message at once to the web exports.clients.
+            } catch (error) {
+                console.log(error);
+                console.log("could not kill client");
+            }
+            clients.clients[socket.msisdn] = {};
+            var moRecord = {
+                socket: socket,
+                mtText: '',
+                messageWaiting: false
+            };
+            clients.clients[socket.msisdn].moRecord = moRecord;
+        }        
 
         socket.on('MO SMS', function(moText) {
             console.log('moText: ');
@@ -67,17 +88,15 @@ exports.initialize = function(server) {
             //socket.emit('MT SMS', { mtText: 'test response'});
 
 
-            var moRecord = {
-             //   msisdn: socket.handshake.session.onemContext.msisdn,
-                socket: socket,
-                mtText: '',
-                messageWaiting: false
-            };
-
             //var i = sms.clients.indexOf(socket);
             //sms.clients[i].moRecord = moRecord;
 
             if (socket.msisdn) {
+                var moRecord = {
+                    socket: socket,
+                    mtText: '',
+                    messageWaiting: false
+                };
                 clients.clients[socket.msisdn] = {};
                 clients.clients[socket.msisdn].moRecord = moRecord;
                 
