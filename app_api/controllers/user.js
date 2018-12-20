@@ -4,8 +4,8 @@ const speakeasy = require('speakeasy');
 const Nexmo = require('nexmo')
 
 const nexmo = new Nexmo({
-  apiKey: process.env.NEXMO_API_KEY,
-  apiSecret: process.env.NEXMO_API_SECRET
+    apiKey: process.env.NEXMO_API_KEY,
+    apiSecret: process.env.NEXMO_API_SECRET
 })
 
 const smsVerify = process.env.NEXMO_ENABLED || "false";
@@ -15,43 +15,43 @@ const from = 'ONEm';
 var UserSchema = require('../models/Model').UserSchema;
 var User = mongoose.model('users', UserSchema);
 
-exports.getMsisdn = function(User) {
-    return function(req, res) {
+exports.getMsisdn = function (User) {
+    return function (req, res) {
         if (req.user) {
-            User.findById({_id: req.user}).then(function(user) {
+            User.findById({ _id: req.user }).then(function (user) {
                 if (!user || !user.msisdn) {
                     console.log("/getMsisdn - user not found");
-                    return res.status(401).send({error: "msisdn not found"});
+                    return res.status(401).send({ error: "msisdn not found" });
                 }
                 res.status(200).send({ msisdn: user.msisdn, user: req.user });
-            }).catch(function(error) {
+            }).catch(function (error) {
                 console.log("/user - user not found");
                 console.log(error);
                 res.status(500).send({ error: "server error" });
             });
         } else {
             res.status(401).send({ error: "not authorized" });
-        }        
+        }
     }
 }
 
-exports.getUser = function(id) {
-    return new Promise(function(resolve, reject) {
-        console.log("querying:"+id);
-        User.findOne({ _id: id }).then(function(user) {
+exports.getUser = function (id) {
+    return new Promise(function (resolve, reject) {
+        console.log("querying:" + id);
+        User.findOne({ _id: id }).then(function (user) {
             if (!user) {
                 reject("user not found");
             } else {
                 resolve(user);
             }
-        }).catch(function(error) {
+        }).catch(function (error) {
             reject(error);
         });
     });
 }
 
-exports.verifyToken = function(User) {
-    return function(req, res) {
+exports.verifyToken = function (User) {
+    return function (req, res) {
         if (!req.user) {
             console.log("/verifyToken");
             console.log("user not found");
@@ -64,13 +64,13 @@ exports.verifyToken = function(User) {
             console.log("user missing token");
             return res.status(400).send({
                 message: "Malformed request"
-            });         
+            });
         }
-        User.findById({_id: req.user}).then(function(user) {
+        User.findById({ _id: req.user }).then(function (user) {
             if (!user) {
                 return res.status(401).send({
                     message: "User profile error"
-                });            
+                });
             }
             var tokenOK = speakeasy.totp.verify({
                 secret: user.secret,
@@ -79,16 +79,16 @@ exports.verifyToken = function(User) {
                 window: 6
             });
             if (tokenOK) {
-                res.json({status: true});
+                res.json({ status: true });
             } else {
-                res.json({status: false});
+                res.json({ status: false });
             }
         });
     }
 }
 
-exports.sendToken = function(User) {
-    return function(req, res) {
+exports.sendToken = function (User) {
+    return function (req, res) {
         if (!req.user) {
             console.log("/sendToken");
             console.log("user not found");
@@ -101,13 +101,13 @@ exports.sendToken = function(User) {
             console.log("user missing msisdn");
             return res.status(400).send({
                 message: "Malformed request"
-            });         
+            });
         }
-        User.findById({_id: req.user}).then(function(user) {
+        User.findById({ _id: req.user }).then(function (user) {
             if (!user) {
                 return res.status(401).send({
                     message: "User profile error"
-                });            
+                });
             }
             var token = speakeasy.totp({
                 secret: user.secret,
@@ -118,15 +118,21 @@ exports.sendToken = function(User) {
             console.log("smsVerify:" + smsVerify);
             if (smsVerify.toLowerCase() == "true") {
                 console.log("sending sms");
-                nexmo.message.sendSms(from, req.query.msisdn, text);
+                nexmo.message.sendSms(from, req.query.msisdn, text, function (err, response) {
+                    if (err) {
+                        console.log(err);
+                    } else {
+                        console.dir(responseData);
+                    }
+                });
             }
-            res.status(200).send({status: true});
+            res.status(200).send({ status: true });
         });
     }
 }
 
-exports.updateMsisdn = function(User) {
-    return function(req, res) {
+exports.updateMsisdn = function (User) {
+    return function (req, res) {
 
         if (!req.user) {
             console.log("/updateMsisdn");
@@ -141,14 +147,14 @@ exports.updateMsisdn = function(User) {
             console.log("user not found");
             return res.status(400).send({
                 message: "Malformed request"
-            });  
+            });
         }
 
         User.findOneAndUpdate({ _id: ObjectId(req.user) }, {
             $set: {
                 msisdn: req.body.msisdn,
             }
-        }, { new: true }, function(error, user) {
+        }, { new: true }, function (error, user) {
             if (error || !user) {
                 console.log("/update");
                 console.log(error);
