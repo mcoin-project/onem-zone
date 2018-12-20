@@ -8,6 +8,8 @@ const nexmo = new Nexmo({
   apiSecret: process.env.NEXMO_API_SECRET
 })
 
+const smsVerify = process.env.NEXMO_ENABLED || "false";
+
 const from = 'ONEm';
 
 var UserSchema = require('../models/Model').UserSchema;
@@ -113,7 +115,7 @@ exports.sendToken = function(User) {
             });
             var text = "ONEm verification code: " + token;
             console.log(text);
-//            nexmo.message.sendSms(from, req.query.msisdn, text);
+            if (smsVerify.toLowerCase() == "true") nexmo.message.sendSms(from, req.query.msisdn, text);
             res.status(200).send({status: true});
         });
     }
