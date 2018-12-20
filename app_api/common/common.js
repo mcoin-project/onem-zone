@@ -38,7 +38,8 @@ exports.decodeJWT = function (token) {
 
 exports.getUser = function (msisdn) {
     return new Promise(function (resolve, reject) {
-        User.find({ msisdn: msisdn }).then(function (user) {
+        console.log("looking up user:" + msisdn);
+        User.findOne({ msisdn: msisdn }).then(function (user) {
             if (!user) {
                 resolve(undefined);
             } else {
