@@ -29,32 +29,38 @@ exports.googleAuth = function(User) {
             }
             // Step 3a. Link user accounts.
             if (req.header('Authorization')) {
+              console.log("*** request header ***");
               User.findOne({ google: profile.sub }, function(err, existingUser) {
-                if (existingUser) {
-                  return res.status(409).send({ message: 'There is already a Google account that belongs to you' });
-                }
-                var token = req.header('Authorization').split(' ')[1];
-                var payload = common.decodeJWT(token);
-                User.findById(payload.sub, function(err, user) {
-                  if (!user) {
-                    return res.status(400).send({ message: 'User not found' });
-                  }
-                  user.secret = speakeasy.generateSecret({length: 20}).base32;;
-                  user.google = profile.sub;
-                  user.firstName = user.firstName || profile.given_name;
-                  user.lastName = user.lastName || profile.family_name;
-                  user.email = user.email || profile.email;
-                  user.save(function(err, user) {
+                console.log("found existing user - creating jwt token");
+                // if (existingUser) {
+                //   return res.status(409).send({ message: 'There is already a Google account that belongs to you' });
+                // }
+                //var token = req.header('Authorization').split(' ')[1];
+                ///var payload = common.decodeJWT(token);
+                // User.findById(payload.sub, function(err, user) {
+                //   if (!user) {
+                //     return res.status(400).send({ message: 'User not found' });
+                //   }
+                //   user.secret = speakeasy.generateSecret({length: 20}).base32;;
+                //   user.google = profile.sub;
+                //   user.firstName = user.firstName || profile.given_name;
+                //   user.lastName = user.lastName || profile.family_name;
+                //   user.email = user.email || profile.email;
+                //   user.save(function(err, user) {
+                //     if (err) {
+                //       console.log(err);
+                //       return res.status(400).send({ message: 'User not saved' });
+                //     }
+                //     console.log("creating jwt (existing token)");
+                //     console.log(user);
                     if (err) {
                       console.log(err);
-                      return res.status(400).send({ message: 'User not saved' });
+                      return res.status(400).send({ message: 'User not found' });
                     }
-                    console.log("creating jwt (existing token)");
-                    console.log(user);
-                    var token = common.createJWT(user);
+                    var token = common.createJWT(existingUser);
                     res.send({ token: token });
-                  });
-                });
+                 // });
+               // });
               });
             } else {
               // Step 3b. Create a new user account or return an existing one.

@@ -32,12 +32,24 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         /**
        * Helper auth functions
        */
-        var skipIfLoggedIn = ['$q', '$auth', function ($q, $auth) {
+        var landingRedirect = ['$q', '$location', '$auth', function ($q, $location, $auth) {
+            var deferred = $q.defer();
+            console.log("landingRedirect:" + $auth.isAuthenticated());
+
+            if ($auth.isAuthenticated()) {
+                $location.path('/home');
+            } else {
+                $location.path('/login');
+            }
+            return deferred.promise;
+        }];
+        
+        var skipIfLoggedIn = ['$q', '$location', '$auth', function ($q, $location, $auth) {
             var deferred = $q.defer();
             console.log("skipIfLoggedIn:" + $auth.isAuthenticated());
 
             if ($auth.isAuthenticated()) {
-                deferred.reject();
+                $location.path('/');
             } else {
                 deferred.resolve();
             }
@@ -56,12 +68,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             return deferred.promise;
         }];
 
+        const redirectUri = window.location.origin + '/auth-endpoint';
         /**
         *  Satellizer config
         */
         $authProvider.baseUrl = '/api';
         $authProvider.google({
-            clientId: GOOGLE_CLIENT_ID
+            clientId: GOOGLE_CLIENT_ID,
+            redirectUri
         });
 
         console.log("auth header:");
@@ -69,21 +83,27 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         console.log($authProvider.tokenType);
 
         $stateProvider.
-            state('home', {
+            state('landing', {
                 url: '/',
-                templateUrl: 'views/partials/onemSim.html',
-                controller: 'mainController'
-            }).
-            state('login', {
-                url: '/login',
                 templateUrl: 'views/partials/login.html',
                 controller: 'loginController',
                 resolve: {
-                    skipIfLoggedIn: skipIfLoggedIn
+                    landingRedirect: landingRedirect
                 }
             }).
-            state('loginredirect', {
-                url: '/login?state',
+            state('authEndpoint', {
+                url: '/auth-endpoint'
+            }).
+            state('home', {
+                url: '/home',
+                templateUrl: 'views/partials/onemSim.html',
+                controller: 'mainController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
+            state('login', {
+                url: '/login',
                 templateUrl: 'views/partials/login.html',
                 controller: 'loginController',
                 resolve: {
@@ -933,8 +953,8 @@ ONEmSimModule.controller('mainController', [
             console.log("finished call to phone.start");
             console.log(response);
         }).catch(function (error) {
-                console.log("no msisdn, going to capture");
-                $state.go('captureMsisdn',{}, { reload: true });
+            console.log("no msisdn, going to capture");
+            $location.path('/');
         });
     }
 ]);
