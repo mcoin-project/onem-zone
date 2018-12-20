@@ -7,9 +7,12 @@
         </div>
         <div class="panel-body">
           <br>
-          <button class="btn btn-block btn-primary" ng-click="authenticate('google')">
-            <span class="ion-social-googleplus"></span>Sign in with Google
-          </button>
+          <div ng-click="authenticate('google')">
+            <div id="customBtn" class="customGPlusSignIn">
+              <img style="padding:10px;vertical-align: middle" src="/images/g-logo.png" width="auto" height="40px" />
+              <span class="buttonText">Sign in with Google</span>
+            </div>
+          </div>
           <br>
         </div>
       </div>
