@@ -201,8 +201,9 @@ ONEmSimModule.factory('Socket', [
                     console.log("could not locate jwt token")
                     return false;
                 }
+                var path = window.location.protocol + "//" + window.location.host;
                 console.log("making connection")
-                myIoSocket = io.connect($window.location.href, { query: { token: token } });
+                myIoSocket = io.connect(path, { query: { token: token } });
 
                 console.log("token:");
                 console.log(token);
@@ -894,6 +895,34 @@ ONEmSimModule.controller('mainController', [
             });
         });
 
+        $scope.$on('socket:MT SMS', function (ev, data) {
+            $scope.theData = data;
+
+            console.log("[MN]: MT received:");
+            console.log(data);
+
+            var outputObj = {
+                type: "mt",
+                value: data.mtText
+            };
+
+            $scope.results = DataModel.addResult(outputObj);
+
+        });
+
+        $scope.smsInput = function () {
+
+            if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;
+
+            var inputObj = {
+                type: "mo",
+                value: $scope.smsText
+            };
+            $scope.results = DataModel.addResult(inputObj);
+            console.log("[MN]: calling emit");
+            Socket.emit('MO SMS', $scope.smsText);
+            $scope.smsText = '';
+        };
         ////Check if the language is left-to-rigt or rigth-to-left:
         //// A message "#account settings" sent to server will reply with the language as the last word on the 4th line.
         //console.log("[MN]: Acu' testez limbaaaaaaa: ");
@@ -921,33 +950,6 @@ ONEmSimModule.controller('mainController', [
         }).then(function(response) {
             console.log("response fom smshandler.start");
             console.log(response);
-            $scope.$on('socket:MT SMS', function (ev, data) {
-                $scope.theData = data;
-
-                console.log("[MN]: MT received:");
-                console.log(data);
-
-                var outputObj = {
-                    type: "mt",
-                    value: data.mtText
-                };
-
-                $scope.results = DataModel.addResult(outputObj);
-
-            });
-            $scope.smsInput = function () {
-
-                if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;
-
-                var inputObj = {
-                    type: "mo",
-                    value: $scope.smsText
-                };
-                $scope.results = DataModel.addResult(inputObj);
-                console.log("[MN]: calling emit");
-                Socket.emit('MO SMS', $scope.smsText);
-                $scope.smsText = '';
-            };
             return Phone.start(response);
         }).then(function(response) {
             console.log("finished call to phone.start");
