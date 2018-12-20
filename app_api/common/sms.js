@@ -101,6 +101,7 @@ var smppServer = smpp.createServer(function(session) {
         console.log("more messages: " + pdu.more_messages_to_send);
 
         if (!client) {
+            client = {};
             client.moRecord = {
                 mtText: ''
             }
