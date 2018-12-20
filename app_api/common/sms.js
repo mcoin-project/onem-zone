@@ -120,10 +120,9 @@ var smppServer = smpp.createServer(function(session) {
         //   2) retrieve the saved/concatenated message string
         //   3) reset the message string to blank
         //   4) send the result back to the client using the saved session
-        if (client && (pdu.more_messages_to_send === 0 ||
-                typeof pdu.more_messages_to_send === 'undefined')) {
-            console.log("Client found and there are no more messages to be received for it!");
-            if (typeof client.moRecord !== 'undefined') {
+        if (pdu.more_messages_to_send === 0 || typeof pdu.more_messages_to_send === 'undefined') {
+            console.log("There are no more messages to be received for it!");
+            if (typeof client.moRecord.socket !== 'undefined') {
                 try {
                     console.log("trying response: " + client.moRecord.mtText);
                     client.moRecord.socket.emit('MT SMS', { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
