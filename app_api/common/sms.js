@@ -141,8 +141,10 @@ var smppServer = smpp.createServer(function(session) {
                     dlvrdMsg = '000'; // No message was delivered
                     common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
                 };
-                client.moRecord.mtText = '';
-            };
+            } else {
+                common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
+            }
+            client.moRecord.mtText = '';
         } else {
             doneDate = moment().format('YYMMDDHHmm');
             statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no exports.clients.found to send this message to, this message is undeliverable.
