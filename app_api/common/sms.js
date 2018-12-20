@@ -100,11 +100,13 @@ var smppServer = smpp.createServer(function(session) {
         console.log("mtText: " + mtText);
         console.log("more messages: " + pdu.more_messages_to_send);
 
-        // Retrieve the session information based on the MSISDN:
-        if (client) {
-            console.log("Client found!");
-            client.moRecord.mtText = client.moRecord.mtText + mtText; // build up the text to be sent to the web client.
+        if (!client) {
+            client.moRecord = {
+                mtText: '';
+            }
         }
+        console.log("Client found!");
+        client.moRecord.mtText = client.moRecord.mtText + mtText; // build up the text to be sent to the web client.
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (pdu.more_messages_to_send === 1) {
