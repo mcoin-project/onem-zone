@@ -115,7 +115,11 @@ exports.sendToken = function(User) {
             });
             var text = "ONEm verification code: " + token;
             console.log(text);
-            if (smsVerify.toLowerCase() == "true") nexmo.message.sendSms(from, req.query.msisdn, text);
+            console.log("smsVerify:" + smsVerify);
+            if (smsVerify.toLowerCase() == "true") {
+                console.log("sending sms");
+                nexmo.message.sendSms(from, req.query.msisdn, text);
+            }
             res.status(200).send({status: true});
         });
     }
