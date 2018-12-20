@@ -934,7 +934,7 @@ ONEmSimModule.controller('mainController', [
             console.log(response);
         }).catch(function (error) {
                 console.log("no msisdn, going to capture");
-                $state.go('captureMsisdn');
+                $state.go('captureMsisdn',{}, { reload: true });
         });
     }
 ]);
