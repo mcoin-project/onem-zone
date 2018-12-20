@@ -102,7 +102,7 @@ var smppServer = smpp.createServer(function(session) {
 
         if (!client) {
             client.moRecord = {
-                mtText: '';
+                mtText: ''
             }
         }
         console.log("Client found!");
