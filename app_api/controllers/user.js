@@ -122,7 +122,7 @@ exports.sendToken = function (User) {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.dir(responseData);
+                        console.dir(response);
                     }
                 });
             }
