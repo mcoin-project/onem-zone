@@ -103,12 +103,11 @@ var smppServer = smpp.createServer(function(session) {
         // Retrieve the session information based on the MSISDN:
         if (client) {
             console.log("Client found!");
-            client.moRecord.messageWaiting = true;
             client.moRecord.mtText = client.moRecord.mtText + mtText; // build up the text to be sent to the web client.
         }
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
-        if (client && pdu.more_messages_to_send === 1) {
+        if (pdu.more_messages_to_send === 1) {
             console.log("More mesages to send, so returning!");
             return;
         }
@@ -121,10 +120,9 @@ var smppServer = smpp.createServer(function(session) {
         if (client && (pdu.more_messages_to_send === 0 ||
                 typeof pdu.more_messages_to_send === 'undefined')) {
             console.log("Client found and there are no more messages to be received for it!");
-            if (typeof client.moRecord !== 'undefined' && client.moRecord.messageWaiting) {
+            if (typeof client.moRecord !== 'undefined') {
                 try {
                     console.log("trying response: " + client.moRecord.mtText);
-                    client.moRecord.messageWaiting = false;
                     client.moRecord.socket.emit('MT SMS', { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 

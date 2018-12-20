@@ -67,7 +67,6 @@ exports.initialize = function(server) {
             var moRecord = {
                 socket: socket,
                 mtText: '',
-                messageWaiting: false
             };
             clients.clients[socket.msisdn].moRecord = moRecord;
         }        
@@ -95,9 +94,8 @@ exports.initialize = function(server) {
 
             if (socket.msisdn) {
                 var moRecord = {
-                    socket: socket,
-                    mtText: '',
-                    messageWaiting: false
+                    socket: socket, // presence of this indicates that client is connected
+                    mtText: '', // the pending sms text - built up if more-messages-to-send
                 };
                 clients.clients[socket.msisdn] = {};
                 clients.clients[socket.msisdn].moRecord = moRecord;
@@ -113,7 +111,7 @@ exports.initialize = function(server) {
 
         socket.on('disconnect', function() {
             console.log('Client gone (id=' + socket.id + ').');
-            if (socket.msisdn) delete clients.clients[socket.msisdn];
+            if (socket.msisdn) delete clients.clients[socket.msisdn].moRecord.socket;
             delete socket.msisdn;
         });
 
