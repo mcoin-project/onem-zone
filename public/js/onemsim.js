@@ -956,7 +956,7 @@ ONEmSimModule.controller('mainController', [
             console.log(response);
         }).catch(function (error) {
             console.log("no msisdn, going to capture");
-            $location.path('/');
+            $state.go('captureMsisdn');
         });
     }
 ]);
