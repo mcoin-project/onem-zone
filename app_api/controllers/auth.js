@@ -38,8 +38,9 @@ exports.googleAuth = function(User) {
                 var token = req.header('Authorization').split(' ')[1];
                 var payload = common.decodeJWT(token);
                 User.findById(payload.sub, function(err, user) {
-                  if (!user) {
-                    return res.status(400).send({ message: 'User not found' });
+                  if (err) {
+                    console.log(err);
+                    return res.status(500).send({ message: 'Server error' });
                   }
                   user.secret = speakeasy.generateSecret({length: 20}).base32;;
                   user.google = profile.sub;
