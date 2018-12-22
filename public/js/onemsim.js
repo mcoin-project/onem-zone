@@ -656,6 +656,8 @@ ONEmSimModule.factory('Phone', [
                     $('.phone .screen_wrp').addClass('open');
                     $('.answer #typed_no').val(globalSession.remote_identity.uri.user);
                     $('.caller #typed_no').val(globalSession.remote_identity.uri.user);
+                    console.log("remote_identity:");
+                    console.log(JSON.stringify(globalSession.remote_identity));
                     if (globalSession.remote_identity.display_name) {
                         document.getElementById("user_name").innerHTML = globalSession.remote_identity.display_name;
                     }
