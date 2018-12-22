@@ -300,8 +300,7 @@ ONEmSimModule.factory('DataModel', function () {
 ONEmSimModule.factory('Phone', [
     'Socket',
     '$rootScope',
-    '$scope',
-    function (Socket, $rootScope, $scope) {
+    function (Socket, $rootScope) {
 
         var phoneONEm;
 
