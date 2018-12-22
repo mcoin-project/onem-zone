@@ -656,7 +656,7 @@ ONEmSimModule.factory('Phone', [
                     $('.phone .screen_wrp').addClass('open');
                     $('.answer #typed_no').val(globalSession.remote_identity.uri.user);
                     $('.caller #typed_no').val(globalSession.remote_identity.uri.user);
-                    $scope.usr_name = globalSession.remote_identity.display_name;
+                    //$scope.usr_name = globalSession.remote_identity.display_name;
 
                     globalSession.on("peerconnection", function (e) {
                         console.log("[WS]: newRTCSession - peerconnection");
