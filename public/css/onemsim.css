@@ -62,13 +62,13 @@ span.buttonText {
     left: 150px !important;
 }
 
-/*
+
 .panel > .panel-heading {
     background-image: none;
-    background-color: black;
+    background-color: red;
     color: white;
     font-size: 16px;
-}*/
+}
 
 .breadcrumb {
     margin-top: 10px;
