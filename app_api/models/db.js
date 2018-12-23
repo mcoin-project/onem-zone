@@ -7,7 +7,10 @@ var dbURI = process.env.MONGODB_URI ||  'mongodb://127.0.0.1:27017/onem-zone';
 
 console.log("dbURI:"+dbURI);
 
-mongoose.connect(dbURI, { useNewUrlParser: true }, function (err, res) {
+mongoose.connect(dbURI, { 
+    useNewUrlParser: true,
+    useCreateIndex: true
+ }, function (err, res) {
   if (err) { 
     console.log ('ERROR connecting to: ' + dbURI + '. ' + err);
   } else {
