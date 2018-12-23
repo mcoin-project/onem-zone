@@ -144,7 +144,7 @@ var smppServer = smpp.createServer(function(session) {
                     message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
                 };
             } else {
-                common.sendEmail(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+                common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
                 message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
             }
             client.moRecord.mtText = '';
