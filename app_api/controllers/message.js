@@ -9,6 +9,8 @@ var MessageSchema = require('../models/Model').MessageSchema;
 var Message = mongoose.model('messages', MessageSchema);
 
 exports.save = function(from, to, text) {
+    console.log("messages.save");
+    console.log("from: " + from + ' to:' + to);
     common.getUser(from).then(function(user) {
         var message = new Message();
         message._user = user._id;
