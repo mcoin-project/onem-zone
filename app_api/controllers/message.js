@@ -36,9 +36,14 @@ exports.deliverPending = function (socket) {
         }
         common.getUser(socket.msisdn).then(function (user) {
             Message.updateMany({ _user: user._id, delivered: false }, { $set: { delivered: true } }).then(function (users) {
-                users.map(function (user) {
-                    socket.emit('MT SMS', { mtText: user.text });
-                });
+                if (users && users.length > 0) {
+                    users.map(function (user) {
+                        socket.emit('MT SMS', { mtText: user.text });
+                    });
+                } else {
+                    console.log("no messages to deliver");
+                }
+                resolve(users);
             }).catch(function (error) {
                 reject(error);
             })
