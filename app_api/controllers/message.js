@@ -38,7 +38,7 @@ exports.deliverPending = function (socket) {
         common.getUser(socket.msisdn).then(function (user) {
             console.log("got user:");
             console.log(user);
-            var savedUser = user;
+            savedUser = user;
             return Message.find({ _user: user._id, delivered: false});
         }).then(function(users) {
             if (users && users.length > 0) {
