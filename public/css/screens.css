@@ -584,7 +584,7 @@ body.full {
     padding: 8px 15px;
     margin-top: 5px;
     margin-bottom: 5px;
-    background: blue;
+    background:#00bfff;
     color: white;
     font-size: 13.5px;
 }
@@ -597,7 +597,7 @@ body.full {
     right: -8px;
     height: 20px;
     width: 20px;
-    background: blue;
+    background: #00bfff;
     background-attachment: fixed;
     border-bottom-left-radius: 15px;
   }
