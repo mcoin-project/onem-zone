@@ -5,6 +5,7 @@ const smppPort = process.env.SMPP_PORT || 2775;
 const shortNumber = process.env.SHORT_NUMBER || "444100";
 const clients = require('../common/clients.js');
 const common = require('../common/common.js');
+const message = require('../controllers/message.js');
 
 var smpp = require('smpp');
 
@@ -140,9 +141,11 @@ var smppServer = smpp.createServer(function(session) {
                     errMsg = '001'; // Error sending the message
                     dlvrdMsg = '000'; // No message was delivered
                     common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
+                    message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
                 };
             } else {
-                common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
+                common.sendEmail(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+                message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
             }
             client.moRecord.mtText = '';
         } else {

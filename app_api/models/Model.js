@@ -1,8 +1,4 @@
 var Mongoose = require('mongoose');
-var bcrypt = require('bcrypt');
-var crypto = require('crypto');
-
-Mongoose.Promise = require('bluebird');
 
 exports.UserSchema = new Mongoose.Schema({
     email: { type: String, lowercase: true, minlength: 6, maxlength: 254 },
@@ -35,21 +31,16 @@ exports.UserSchema = new Mongoose.Schema({
     timestamps: true
 });
 
-exports.UserSchema.pre('save', function(next) {
-    var user = this;
-    if (!user.isModified('password')) {
-        return next();
-    }
-    bcrypt.genSalt(10, function(err, salt) {
-        bcrypt.hash(user.password, salt, function(err, hash) {
-            user.password = hash;
-            next();
-        });
-    });
+exports.MessageSchema = new Mongoose.Schema({
+    _user: { // the one to whom the bonus is due
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
+    },
+    from: { type: String, required: true },
+    to: { type: String, required: true },
+    text: { type: String, required: true },
+    delivered: { type: Boolean, required: true }
+}, {
+    timestamps: true
 });
-
-exports.UserSchema.methods.comparePassword = function(password, done) {
-    bcrypt.compare(password, this.password, function(err, isMatch) {
-        done(err, isMatch);
-    });
-};
