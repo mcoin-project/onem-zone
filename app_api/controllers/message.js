@@ -37,16 +37,19 @@ exports.deliverPending = function (socket) {
         common.getUser(socket.msisdn).then(function (user) {
             console.log("got user:");
             console.log(user);
-            return Message.updateMany({ _user: user._id, delivered: false }, { $set: { delivered: true } });
-        }).then(function (users) {
+            return Message.find({ _user: user._id, delivered: false});
+        }).then(function(users) {
             if (users && users.length > 0) {
+                console.log("there are pending messages to deliver");
                 users.map(function (user) {
                     socket.emit('MT SMS', { mtText: user.text });
                 });
+                return Message.updateMany({ _user: user._id, delivered: false }, { $set: { delivered: true } });
             } else {
-                console.log("no messages to deliver");
+                return true;
             }
-            resolve(users);
+        }).then(function () {
+            resolve(true);
         }).catch(function (error) {
             console.log(error);
             reject(error);
