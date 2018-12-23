@@ -30,6 +30,7 @@ exports.save = function (from, to, text) {
 
 exports.deliverPending = function (socket) {
     return new Promise(function (resolve, reject) {
+        var savedUser;
         if (!socket.msisdn) {
             console.log("msisdn missing");
             return reject("msisdn missing");
@@ -37,6 +38,7 @@ exports.deliverPending = function (socket) {
         common.getUser(socket.msisdn).then(function (user) {
             console.log("got user:");
             console.log(user);
+            var savedUser = user;
             return Message.find({ _user: user._id, delivered: false});
         }).then(function(users) {
             if (users && users.length > 0) {
@@ -44,7 +46,7 @@ exports.deliverPending = function (socket) {
                 users.map(function (user) {
                     socket.emit('MT SMS', { mtText: user.text });
                 });
-                return Message.updateMany({ _user: user._id, delivered: false }, { $set: { delivered: true } });
+                return Message.updateMany({ _user: savedUser._id, delivered: false }, { $set: { delivered: true } });
             } else {
                 return true;
             }
