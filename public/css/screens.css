@@ -5,7 +5,6 @@ body {
     font-weight: 300; 
     font-family: 'Merriweather', serif;
     font-family: 'Open Sans', sans-serif;
-    background: #f1f1f1;
 }
 
 body.full {
@@ -556,7 +555,6 @@ body.full {
     left: -7px;
     height: 20px;
     width: 20px;
-    background: #eee;
     border-bottom-right-radius: 15px;
   }
   .phone .sms-response-pos .sms-mt-container:after {
