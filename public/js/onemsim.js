@@ -240,6 +240,11 @@ ONEmSimModule.factory('User', [
                 url: 'api/user/msisdn',
                 isArray: false
             },
+            checkMsisdn: {
+                method: 'GET',
+                url: 'api/user/checkMsisdn',
+                isArray: false
+            },
             sendToken: {
                 method: 'GET',
                 url: 'api/user/sendToken',

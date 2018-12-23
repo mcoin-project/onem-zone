@@ -15,6 +15,26 @@ const from = 'ONEm';
 var UserSchema = require('../models/Model').UserSchema;
 var User = mongoose.model('users', UserSchema);
 
+exports.checkMsisdn = function (User) {
+    return function (req, res) {
+        if (req.query.msisdn) {
+            User.find({ msisdn: req.query.msisdn }).then(function (user) {
+                if (user && user.length > 0) {
+                    console.log("/checkMsisdn - msisdn found");
+                    return res.status(401).send({ status: false, error: "msisdn found" });
+                }
+                res.status(200).send({ status: true });
+            }).catch(function (error) {
+                console.log("/user - user not found");
+                console.log(error);
+                res.status(500).send({ error: "server error" });
+            });
+        } else {
+            res.status(400).send({ error: "bad request" });
+        }
+    }
+}
+
 exports.getMsisdn = function (User) {
     return function (req, res) {
         if (req.user) {

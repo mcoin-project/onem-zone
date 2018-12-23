@@ -60,6 +60,7 @@ api.get('/user', ensureAuthenticated, function (req, res) {
 api.get('/user/sendToken', ensureAuthenticated, user.sendToken(User));
 api.get('/user/verifyToken', ensureAuthenticated, user.verifyToken(User));
 api.get('/user/msisdn', ensureAuthenticated, user.getMsisdn(User));
+api.get('/user/checkMsisdn', ensureAuthenticated, user.checkMsisdn(User));
 
 api.put('/user/msisdn', ensureAuthenticated, user.updateMsisdn(User));
 

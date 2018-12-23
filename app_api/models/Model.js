@@ -2,12 +2,11 @@ var Mongoose = require('mongoose');
 
 exports.UserSchema = new Mongoose.Schema({
     email: { type: String, lowercase: true, minlength: 6, maxlength: 254 },
-    password: { type: String, select: false, required: false },
     firstName: { type: String }, // required: true, minlength: 2, maxlength: 50 },
     lastName: { type: String }, // required: true, minlength: 2, maxlength: 50 },
     blocked: { type: Boolean, default: false },
     secret: { type: String, select: false }, // totp secret
-    msisdn: { type: String, minlength: 6, maxlength: 20 },
+    msisdn: { type: String, unique: true, minlength: 6, maxlength: 20 },
     //   picture: String,
     //   bitbucket: String,
     facebook: String,
@@ -23,10 +22,7 @@ exports.UserSchema = new Mongoose.Schema({
     //    twitch: String,
     //    spotify: String
     lastLogin: { type: Date, default: Date.now },
-    tokenTimestamp: Date,
     invalidLoginCount: { type: Number, default: 0 },
-    emailToken: { type: String, select: false, default: null },
-    emailTokenTime: { type: Date, select: false, default: null }
 }, {
     timestamps: true
 });

@@ -42,12 +42,18 @@ ONEmSimModule.controller('captureMsisdnController', [
     function ($scope, User, toastr, $state, $rootScope, $timeout) {
         $scope.submit = function () {
             var msisdn = $scope.msisdn.slice(1); // remove  +
-            User.sendToken({ msisdn: msisdn }).$promise.then(function (response) {
+            User.checkMsisdn({ msisdn: msisdn }).$promise.then(function (response) {
+                return User.sendToken({ msisdn: msisdn }).$promise;
+            }).then(function (response) {
                 $rootScope.msisdn = msisdn;
                 $state.go('captureToken');
                 //return updateMsisdn( {msisdn: msisdn} ).$promise.then(function(response) {
             }).catch(function (error) {
-                toastr.error("Couldn't update mobile number - please try again");
+                if (error.status == 401) {
+                    toastr.error("Mobile already linked - try a different number or logout");
+                } else {
+                    toastr.error("Couldn't update mobile number - please try again");
+                }
             });
         }
     }
