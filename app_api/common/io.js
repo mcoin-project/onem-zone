@@ -2,6 +2,8 @@ var sio = require('socket.io');
 
 var common = require('../common/common.js');
 var user = require('../controllers/user.js');
+var message = require('../controllers/message.js');
+
 var sms = require('../common/sms.js');
 var clients = require('../common/clients.js');
 
@@ -69,6 +71,8 @@ exports.initialize = function(server) {
                 mtText: '',
             };
             clients.clients[socket.msisdn].moRecord = moRecord;
+            // deliver any saved messages for this user
+            message.deliverPending(socket);
         }        
 
         socket.on('MO SMS', function(moText) {
