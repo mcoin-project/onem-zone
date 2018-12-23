@@ -35,18 +35,21 @@ exports.deliverPending = function (socket) {
             return reject("msisdn missing");
         }
         common.getUser(socket.msisdn).then(function (user) {
-            Message.updateMany({ _user: user._id, delivered: false }, { $set: { delivered: true } }).then(function (users) {
-                if (users && users.length > 0) {
-                    users.map(function (user) {
-                        socket.emit('MT SMS', { mtText: user.text });
-                    });
-                } else {
-                    console.log("no messages to deliver");
-                }
-                resolve(users);
-            }).catch(function (error) {
-                reject(error);
-            })
+            console.log("got user:");
+            console.log(user);
+            return Message.updateMany({ _user: user._id, delivered: false }, { $set: { delivered: true } });
+        }).then(function (users) {
+            if (users && users.length > 0) {
+                users.map(function (user) {
+                    socket.emit('MT SMS', { mtText: user.text });
+                });
+            } else {
+                console.log("no messages to deliver");
+            }
+            resolve(users);
+        }).catch(function (error) {
+            console.log(error);
+            reject(error);
         })
     });
 }
