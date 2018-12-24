@@ -6,7 +6,7 @@ exports.UserSchema = new Mongoose.Schema({
     lastName: { type: String }, // required: true, minlength: 2, maxlength: 50 },
     blocked: { type: Boolean, default: false },
     secret: { type: String, select: false }, // totp secret
-    msisdn: { type: String, unique: true, minlength: 6, maxlength: 20 },
+    msisdn: { type: String, minlength: 6, maxlength: 20 },
     //   picture: String,
     //   bitbucket: String,
     facebook: String,
