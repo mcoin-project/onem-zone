@@ -42,10 +42,6 @@ exports.googleAuth = function(User) {
                     console.log(err);
                     return res.status(500).send({ message: 'Server error' });
                   }
-                  if (!user) {
-                    console.log('user not found');
-                    return res.status(400).send({ message: 'User not found' });
-                  }
                   user.secret = speakeasy.generateSecret({length: 20}).base32;;
                   user.google = profile.sub;
                   user.firstName = user.firstName || profile.given_name;
