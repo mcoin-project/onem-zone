@@ -72,7 +72,7 @@ exports.googleAuth = function(User) {
                       console.log(err);
                       return res.status(400).send({ message: 'User not found' });
                     }
-                    var token = common.createJWT(existingUser);
+                    var token = common.createJWT(newUser);
                     res.send({ token: token });
                  });
                });
