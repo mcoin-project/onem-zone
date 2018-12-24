@@ -1,6 +1,12 @@
+const mongoose = require('mongoose');
+const ObjectId = require('mongoose').Types.ObjectId;
+
 const request = require('request');
 const common = require('../common/common.js');
 const speakeasy = require('speakeasy');
+
+var UserSchema = require('../models/Model').UserSchema;
+var User = mongoose.model('users', UserSchema);
 
 exports.googleAuth = function(User) {
     return function(req, res) {
@@ -42,12 +48,20 @@ exports.googleAuth = function(User) {
                     console.log(err);
                     return res.status(500).send({ message: 'Server error' });
                   }
-                  user.secret = speakeasy.generateSecret({length: 20}).base32;;
-                  user.google = profile.sub;
-                  user.firstName = user.firstName || profile.given_name;
-                  user.lastName = user.lastName || profile.family_name;
-                  user.email = user.email || profile.email;
-                  user.save(function(err, user) {
+                  var newUser;
+                  if (!user) {
+                    newUser = new User();
+                    console.log('user not found');
+                    //return res.status(400).send({ message: 'User not found' });
+                  } else {
+                    newUser = user;
+                  }
+                  newUser.secret = speakeasy.generateSecret({length: 20}).base32;;
+                  newUser.google = profile.sub;
+                  newUser.firstName = newUser.firstName || profile.given_name;
+                  newUser.lastName = newUser.lastName || profile.family_name;
+                  newUser.email = newUser.email || profile.email;
+                  newUser.save(function(err, user) {
                     if (err) {
                       console.log(err);
                       return res.status(500).send({ message: 'Server error' });
