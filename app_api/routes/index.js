@@ -88,5 +88,6 @@ api.get('/start', ensureAuthenticated, function (req, res) {
 });
 
 api.post('/auth/google', auth.googleAuth(User));
+api.post('/auth/facebook', auth.facebookAuth(User));
 
 module.exports = api;

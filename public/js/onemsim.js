@@ -1,6 +1,7 @@
 'use strict';
 
 const GOOGLE_CLIENT_ID = '785326362402-co8gkpjf1rcfmiur67pggp4mkersm4mi.apps.googleusercontent.com';
+const FACEBOOK_CLIENT_ID = '280049366235647';
 
 var ONEmSimModule = angular.module('ONEmSimModule', [
     'ngResource',
@@ -77,6 +78,11 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             clientId: GOOGLE_CLIENT_ID,
             redirectUri
         });
+
+        $authProvider.facebook({
+            clientId: FACEBOOK_CLIENT_ID,
+            redirectUri
+          });
 
         console.log("auth header:");
         console.log($authProvider.tokenHeader);
