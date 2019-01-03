@@ -13,7 +13,7 @@
 
 /* Google signin */
 
-#customBtn {
+.customBtn {
   display: inline-block;
   text-align: center;
   background: white;
@@ -24,8 +24,16 @@
   border: thin solid #888;
   /*box-shadow: 1px 1px 1px grey;*/
   white-space: nowrap;
+  margin-top: 15px;
 }
-#customBtn:hover {
+
+.fbblue {
+    background: #4267B2;
+    color: white;
+    border-radius: 5px;
+    border: thin solid #4267B2;   
+}
+.customBtn:hover {
   cursor: pointer;
 }
 span.label {

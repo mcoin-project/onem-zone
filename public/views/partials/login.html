@@ -9,9 +9,15 @@
           <img src="/images/onem_zone_logo_thumb.png" class="img-responsive center-block"/>
           <br>
           <div ng-click="authenticate('google')">
-            <div id="customBtn" class="customGPlusSignIn">
+            <div class="customBtn">
               <img style="padding:10px;vertical-align: middle" src="/images/g-logo.png" width="auto" height="40px" />
               <span class="buttonText">Sign in with Google</span>
+            </div>
+          </div>
+          <div ng-click="authenticate('facebook')">
+            <div class="customBtn fbblue">
+              <img style="padding:10px;vertical-align: middle" src="/images/fb-logo.png" width="auto" height="40px" />
+              <span class="buttonText">Continue with Facebook</span>
             </div>
           </div>
           <br>
