@@ -13,6 +13,9 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'ui.router',
     'ONEmSimUIModule',
     'ngIntlTelInput',
+    'ui.bootstrap',
+    'mp.autoFocus',
+    'monospaced.elastic'
 ]).filter('nl2br', ['$sanitize', function ($sanitize) {
     var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
     return function (msg) {

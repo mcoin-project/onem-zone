@@ -5,7 +5,8 @@ console.log('ONEmSimUIModule -------------------------------------------');
 var ONEmSimUIModule = angular.module('ONEmSimUIModule', [
     'ui.bootstrap',
     'mp.autoFocus',
-    'monospaced.elastic'
+    'monospaced.elastic',
+    'ngSanitize'
 ]);
 
 ONEmSimUIModule.directive('focusMe', function($timeout) {

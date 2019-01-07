@@ -1,12 +1,11 @@
 {
-  "name": "public",
-  "homepage": "https://github.com/chrishornmem/autotest",
+  "name": "ONEm Zone",
+  "homepage": "https://github.com/mcoin-project/onem-zone",
   "authors": [
     "Chris Horn <chrishornuk@gmail.com>"
   ],
   "description": "",
   "main": "",
-  "license": "MIT",
   "private": true,
   "ignore": [
     "**/.*",
@@ -25,6 +24,7 @@
     "angular-toastr": "^2.1.1",
     "satellizer": "^0.15.5",
     "path": "^3.46.1",
-    "ng-intl-tel-input": "^2.0.0"
+    "ng-intl-tel-input": "^2.0.0",
+    "angular-elastic": "^2.5.1"
   }
 }
