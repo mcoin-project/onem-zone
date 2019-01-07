@@ -50,7 +50,7 @@
                     <p class="user"><a class="answer" href=""><img src="images/icn_usr.svg" /></a></p>
                     <p class="inp"><input id="typed_no" type="text" value="100" disabled="disabled"></p>
                     <!-- <p class="msg">Unknown number</p> -->
-                    <p class="msg" id="user_name">{{usr_name}}</p>
+                    <p class="msg" id="user_name"></p>
                     <p class="call_tools">
                         <a class="clicky cancel" href="#"><img src="images/icn_reject.svg" /></a>
                         <a class="clicky closer" href="#"><img src="images/num_x.svg" /></a>
@@ -144,16 +144,16 @@
             </form> <!-- /smsInput() -->
         </div> <!-- /sms-input -->
 
-        <p class="onem_msisdn">
-            <strong>MSISDN:</strong>
-            <span>{{msisdn}}</span>
-        </p> <!-- /onem_msisdn -->
+        <div class="onem_msisdn">
+            <a href="/logout">Logout</a>
+            <p>{{msisdn}}</p>
+        </div> <!-- /onem_msisdn -->
 
         <p class="call_notif"><a href="#" class="resume">Click here to resume the call</a></p>
 
         <div class="logo">
             <a href="http://www.onem.com">
-                <img class="enter" src="images/logo_onem.svg" />
+                <img class="enter" src="images/onem-logo.svg" />
             </a>              
         </div> <!-- /logo -->
 
