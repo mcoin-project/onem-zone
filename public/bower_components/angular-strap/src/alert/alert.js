@@ -1,8 +1,6 @@
 'use strict';
 
 // @BUG: following snippet won't compile correctly
-// @TODO: submit issue to core
-// '<span ng-if="title"><strong ng-bind="title"></strong>&nbsp;</span><span ng-bind-html="content"></span>' +
 
 angular.module('mgcrea.ngStrap.alert', ['mgcrea.ngStrap.modal'])
 
@@ -80,6 +78,14 @@ angular.module('mgcrea.ngStrap.alert', ['mgcrea.ngStrap.modal'])
         var falseValueRegExp = /^(false|0|)$/i;
         angular.forEach(['keyboard', 'html', 'container', 'dismissable'], function (key) {
           if (angular.isDefined(attr[key]) && falseValueRegExp.test(attr[key])) options[key] = false;
+        });
+
+        // bind functions from the attrs to the show and hide events
+        angular.forEach(['onBeforeShow', 'onShow', 'onBeforeHide', 'onHide'], function (key) {
+          var bsKey = 'bs' + key.charAt(0).toUpperCase() + key.slice(1);
+          if (angular.isDefined(attr[bsKey])) {
+            options[key] = scope.$eval(attr[bsKey]);
+          }
         });
 
         // overwrite inherited title value when no value specified

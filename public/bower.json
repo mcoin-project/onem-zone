@@ -1,5 +1,5 @@
 {
-  "name": "ONEm Zone",
+  "name": "onem-zone",
   "homepage": "https://github.com/mcoin-project/onem-zone",
   "authors": [
     "Chris Horn <chrishornuk@gmail.com>"
@@ -25,6 +25,7 @@
     "satellizer": "^0.15.5",
     "path": "^3.46.1",
     "ng-intl-tel-input": "^2.0.0",
-    "angular-elastic": "^2.5.1"
+    "angular-elastic": "^2.5.1",
+    "jquery": "2.1.4"
   }
 }

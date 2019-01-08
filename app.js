@@ -9,6 +9,7 @@ var methodOverride = require('method-override');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
+var helmet = require('hemlet');
 
 var common = require('./app_api/common/common.js');
 
@@ -20,9 +21,8 @@ var io = require('./app_api/common/io.js');
 // port 5000.
 var theport = process.env.PORT || 5000;
 
-//The message state to be used in receipts:
-// Bring in the data model & connect to db
-require('./app_api/models/db');
+app.use(helmet());  
+app.use(helmet.noCache())
 
 app.use(logger('dev'));
 app.use(methodOverride());
@@ -30,6 +30,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+//The message state to be used in receipts:
+// Bring in the data model & connect to db
+require('./app_api/models/db');
 
 io.initialize(server);
 
