@@ -52,6 +52,11 @@ gulp.task('useref', function() {
     .pipe(gulp.dest('public'));
 });
 
+gulp.task('copy-sounds', function () {
+  gulp.src('./app_client/sounds/*')
+      .pipe(gulp.dest('./public/sounds/'));
+});
+
 // Optimizing Images 
 gulp.task('images', function() {
   return gulp.src('app_client/images/**/*.+(png|jpg|jpeg|gif|svg)')
@@ -92,7 +97,7 @@ gulp.task('build', function(callback) {
   runSequence(
     'clean:public',
     'sass',
-    ['useref', 'images', 'fonts'],
+    ['useref', 'images', 'fonts', 'copy-sounds'],
     callback
   )
 })

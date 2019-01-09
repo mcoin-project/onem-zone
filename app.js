@@ -19,6 +19,10 @@ var io = require('./app_api/common/io.js');
 // The http server will listen to an appropriate port, or default to
 // port 5000.
 var theport = process.env.PORT || 5000;
+var param = process.argv[2] || 'dev';
+var public_folder = param.toLowerCase() == 'prod' ? 'public' : 'app_client';
+
+console.log("public_folder:" + public_folder);
 
 app.use(helmet());  
 app.use(helmet.noCache())
@@ -28,7 +32,7 @@ app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, public_folder)));
 
 //The message state to be used in receipts:
 // Bring in the data model & connect to db
@@ -47,17 +51,17 @@ io.initialize(server);
 app.use('/api', routesApi);
 
 app.get('/', function(req, res, next) {
-    res.sendFile('/public/index.html', { root: __dirname });
+    res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
 });
 
 app.get('*', function(req, res) {
-    res.sendFile('/public/index.html', { root: __dirname });
+    res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
 });
 
 app.get('/*', function(req, res, next) {
     console.log("caught default route");
     // Just send the index.html for other files to support HTML5Mode
-    res.sendFile('/public/index.html', { root: __dirname });
+    res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
 });
 
 // error handling middleware should be loaded after the loading the routes
