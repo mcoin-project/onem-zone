@@ -6,10 +6,9 @@ var server = require('http').createServer(app);
 var logger = require('morgan');
 var path = require('path');
 var methodOverride = require('method-override');
-var session = require('express-session');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
-var helmet = require('hemlet');
+var helmet = require('helmet');
 
 var common = require('./app_api/common/common.js');
 
@@ -48,17 +47,17 @@ io.initialize(server);
 app.use('/api', routesApi);
 
 app.get('/', function(req, res, next) {
-    res.sendFile('/public/views/index.html', { root: __dirname });
+    res.sendFile('/public/index.html', { root: __dirname });
 });
 
 app.get('*', function(req, res) {
-    res.sendFile('/public/views/index.html', { root: __dirname });
+    res.sendFile('/public/index.html', { root: __dirname });
 });
 
 app.get('/*', function(req, res, next) {
     console.log("caught default route");
     // Just send the index.html for other files to support HTML5Mode
-    res.sendFile('/public/views/index.html', { root: __dirname });
+    res.sendFile('/public/index.html', { root: __dirname });
 });
 
 // error handling middleware should be loaded after the loading the routes
