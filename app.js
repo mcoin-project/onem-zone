@@ -9,6 +9,7 @@ var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var helmet = require('helmet');
+var xssFilter = require('x-xss-protection');
 
 var common = require('./app_api/common/common.js');
 
@@ -30,6 +31,7 @@ if (mode == 'prod') {
     app.use(helmet());  
     app.use(helmet.noCache());
     app.use(helmet.xssFilter());
+    app.use(xssFilter());
 }
 app.use(logger('dev'));
 app.use(methodOverride());
