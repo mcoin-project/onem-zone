@@ -11,6 +11,11 @@
 
 /* end telephone number input */
 /* Google signin */
+@media only screen and (max-width: 320px) {
+  .container.small {
+    padding-left: 0;
+    padding-right: 0; } }
+
 .customBtn {
   display: inline-block;
   text-align: center;
@@ -44,7 +49,7 @@ span.icon {
   width: 42px;
   height: 42px; }
 
-span.buttonText {
+.buttonText {
   display: inline-block;
   vertical-align: middle;
   padding-left: 5px;
