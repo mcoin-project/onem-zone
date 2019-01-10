@@ -9,7 +9,7 @@ var methodOverride = require('method-override');
 var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var helmet = require('helmet');
-var xssFilter = require('x-xss-protection');
+var compression = require('compression');
 
 var common = require('./app_api/common/common.js');
 
@@ -26,19 +26,30 @@ var public_folder = mode == 'prod' ? 'public' : 'app_client';
 
 console.log("public_folder:" + public_folder);
 
-console.log("mode:"+mode);
-if (mode == 'prod') {
-    app.use(helmet());  
-    app.use(helmet.noCache());
-    app.use(helmet.xssFilter());
-    app.use(xssFilter());
-}
+app.use(helmet({
+    xssFilter: {
+      setOnOldIE: true
+    }
+}));
+app.use(helmet.noCache());
+
+// compress all responses
+app.use(compression());   
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, public_folder)));
+
+// Force HTTPS on Heroku
+// if (app.get('env') === 'production') {
+if (process.env.HTTPS === 'ON') {
+    app.use(function(req, res, next) {
+        var protocol = req.get('x-forwarded-proto');
+        protocol == 'https' ? next() : res.redirect('https://' + req.hostname + req.url);
+    });
+}
 
 //The message state to be used in receipts:
 // Bring in the data model & connect to db
