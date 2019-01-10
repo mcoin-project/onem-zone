@@ -29,6 +29,7 @@ console.log("mode:"+mode);
 if (mode == 'prod') {
     app.use(helmet());  
     app.use(helmet.noCache());
+    app.use(helmet.xssFilter());
 }
 app.use(logger('dev'));
 app.use(methodOverride());
