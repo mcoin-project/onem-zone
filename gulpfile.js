@@ -10,9 +10,14 @@ var cache = require('gulp-cache');
 var del = require('del');
 var runSequence = require('run-sequence');
 var stripDebug = require('gulp-strip-debug');
+var path = require('path');
 
 // Development Tasks 
 // -----------------
+
+browserSync.init(null, {
+  proxy: "http://localhost:5000", // port of node server
+});
 
 // Start browserSync server
 gulp.task('browserSync', function() {
@@ -35,7 +40,7 @@ gulp.task('sass', function() {
 // Watchers
 gulp.task('watch', function() {
   gulp.watch('app_client/scss/**/*.scss', ['sass']);
-  gulp.watch('app_client/*.html', browserSync.reload);
+  gulp.watch('app_client/**/*.html', browserSync.reload);
   gulp.watch('app_client/js/**/*.js', browserSync.reload);
 })
 

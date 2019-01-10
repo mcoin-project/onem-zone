@@ -19,14 +19,17 @@ var io = require('./app_api/common/io.js');
 // The http server will listen to an appropriate port, or default to
 // port 5000.
 var theport = process.env.PORT || 5000;
-var param = process.argv[2] || 'dev';
-var public_folder = param.toLowerCase() == 'prod' ? 'public' : 'app_client';
+var mode = process.argv[2] || 'dev';
+mode = mode.toLowerCase();
+var public_folder = mode == 'prod' ? 'public' : 'app_client';
 
 console.log("public_folder:" + public_folder);
 
-app.use(helmet());  
-app.use(helmet.noCache())
-
+console.log("mode:"+mode);
+if (mode == 'prod') {
+    app.use(helmet());  
+    app.use(helmet.noCache());
+}
 app.use(logger('dev'));
 app.use(methodOverride());
 app.use(bodyParser.json());
