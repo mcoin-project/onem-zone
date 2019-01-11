@@ -54,8 +54,9 @@ Folder structure:
 
 * `/app_api...`  Node backend server files
 * `/app_client...`  Client front end files.  ONEm Zone is written in AngularJS
+* `/bower_components...`    It's recommended to install third party javascript dependencies with `bower`.  Execure `bower install` commands from inside `app_client` folder.  And modify `index.html` to include the installed dependencies.
 
-Gulp and browsersync are used to facilitate development and testing.  To start a development session on your local machine open two terminal sessions.
+Gulp and BrowserSync are used to facilitate development and testing.  To start a development session on your local machine open two terminal sessions.
 
 Ensure mongo is running in background.  Then from first terminal window:
 
