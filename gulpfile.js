@@ -15,17 +15,17 @@ var path = require('path');
 // Development Tasks 
 // -----------------
 
-browserSync.init(null, {
-  proxy: "http://localhost:5000", // port of node server
-});
-
 // Start browserSync server
 gulp.task('browserSync', function() {
   browserSync({
-    server: {
-      baseDir: 'app_client'
-    }
+    proxy: "http://localhost:5000" // port of node server
   })
+})
+
+gulp.task('sass-build', function() {
+  return gulp.src('app_client/scss/**/*.scss') // Gets all files ending with .scss in app_client/scss and children dirs
+    .pipe(sass().on('error', sass.logError)) // Passes it through a gulp-sass, log errors to console
+    .pipe(gulp.dest('app_client/css')) // Outputs it in the css folder
 })
 
 gulp.task('sass', function() {
@@ -101,7 +101,7 @@ gulp.task('default', function(callback) {
 gulp.task('build', function(callback) {
   runSequence(
     'clean:public',
-    'sass',
+    'sass-build',
     ['useref', 'images', 'fonts', 'copy-sounds'],
     callback
   )
