@@ -5,10 +5,10 @@ ONEm Zone provides an emulation of the SMS interface to ONEm's Interactive Servi
 
 ## Installation
 
-`$ git clone https://github.com/mcoin-project/onem-zone.git`  
-`$ cd onem-zone`  
-`$ git checkout master`  
-`$ npm install`  
+`$ git clone https://github.com/mcoin-project/onem-zone.git  
+$ cd onem-zone  
+$ git checkout master  
+$ npm install`  
 
 ## Setup the environment
 
