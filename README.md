@@ -9,6 +9,8 @@ ONEm Zone provides an emulation of the SMS interface to ONEm's Interactive Servi
 * Node 9.0.0 or higher
 * MongoDB v3.4.13 or higher
 
+For IP communication, ensure that the backend server where the NodeJS app is running has access to the internet to make HTTP and HTTPS requests.  Ensure also that the same server is able to communicate via SMPP on internal network using the configured SMPP port (see below).
+
 ## Installation
 
 `$ git clone https://github.com/mcoin-project/onem-zone.git`  
