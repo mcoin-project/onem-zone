@@ -48,7 +48,7 @@ The following command will execute in production mode and serve the files from t
 ```
 $ npm start
 ```
-## Developing and contribiting
+## Developing and contributing
 ```
 $ git checkout develop
 ```
