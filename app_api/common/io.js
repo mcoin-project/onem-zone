@@ -89,15 +89,6 @@ exports.initialize = function(server) {
             //debug("socket");
             //debug(socket);
 
-            //socket.to(socket.handshake.session).emit('MT SMS', { mtText: 'test response'});
-            //io.to(socket.id).emit('MT SMS', { mtText: 'test response'});
-            //io.of('/').to(socket.id).emit('MT SMS', { mtText: 'test response'});
-            //socket.emit('MT SMS', { mtText: 'test response'});
-
-
-            //var i = sms.clients.indexOf(socket);
-            //sms.clients[i].moRecord = moRecord;
-
             if (socket.msisdn) {
                 var moRecord = {
                     socket: socket, // presence of this indicates that client is connected
@@ -107,7 +98,6 @@ exports.initialize = function(server) {
                 clients.clients[socket.msisdn].moRecord = moRecord;
                 
                 debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
-                // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
                 sms.sendSMS(socket.msisdn, common.shortNumber, moText);
             } else {
                 debug("can't locate msisdn for user");
