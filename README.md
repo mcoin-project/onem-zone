@@ -52,9 +52,11 @@ $ npm start
 ## Server Side Debug
 
 Either:
+
 Use `DEBUG` parameter in `.env` (see above).
 
 Or:
+
 to enable debug in production mode:
 ```
 $ DEBUG=onem-zone node app prod
