@@ -1,3 +1,5 @@
+const debug = require('debug')('onem-zone');
+
 var sio = require('socket.io');
 
 var common = require('../common/common.js');
@@ -23,46 +25,46 @@ exports.initialize = function(server) {
 
     io.use(function(socket, next){
         if (socket.handshake.query && socket.handshake.query.token){
-            console.log("query.token:")
-            console.log(socket.handshake.query.token);
+            debug("query.token:")
+            debug(socket.handshake.query.token);
             var payload = common.decodeJWT(socket.handshake.query.token);
             if (!payload) {
-                console.log("invalid jwt");
+                debug("invalid jwt");
                 next(new Error('Authentication error'));       
             }
             socket.jwtPayload = payload;
-            console.log("socket: querying user: " + payload.sub);
+            debug("socket: querying user: " + payload.sub);
             user.getUser(payload.sub).then(function(u) {
                 socket.msisdn = u.msisdn;
                 next();
             }).catch(function(error) {
-                console.log(error);
-                console.log("user not found!!");
+                debug(error);
+                debug("user not found!!");
                 return next(new Error('User not found'));
             });
-            //console.log("payload");
-            //console.log(payload);
+            //debug("payload");
+            //debug(payload);
         } else {
-            console.log("missing jwt");
+            debug("missing jwt");
             next(new Error('Authentication error'));
         }    
     }).on('connection', function(socket) {
 
-        console.log("Connection received: " + socket.id);
+        debug("Connection received: " + socket.id);
         //sms.clients.push(socket);    
 
-        console.log(socket.msisdn);
-        console.log(clients.clients[socket.msisdn]);
+        debug(socket.msisdn);
+        debug(clients.clients[socket.msisdn]);
 
         // check for existing connection from msisdn already logged in (on another device) and kick them off
         if (socket.msisdn) {
-            console.log("found existing user");
+            debug("found existing user");
             if (typeof clients.clients[socket.msisdn] !== 'undefined' && clients.clients[socket.msisdn].moRecord.socket) {
                 try {
                     clients.clients[socket.msisdn].moRecord.socket.emit('LOGOUT'); //Send the whole message at once to the web exports.clients.
                 } catch (error) {
-                    console.log(error);
-                    console.log("could not kill client");
+                    debug(error);
+                    debug("could not kill client");
                 }
             }
             clients.clients[socket.msisdn] = {};
@@ -76,16 +78,16 @@ exports.initialize = function(server) {
         }        
 
         socket.on('MO SMS', function(moText) {
-            console.log('moText: ');
-            console.log(moText);
+            debug('moText: ');
+            debug(moText);
 
             // todo santizie the moText
 
-            console.log("socket.id");
-            console.log(socket.id);
+            debug("socket.id");
+            debug(socket.id);
 
-            //console.log("socket");
-            //console.log(socket);
+            //debug("socket");
+            //debug(socket);
 
             //socket.to(socket.handshake.session).emit('MT SMS', { mtText: 'test response'});
             //io.to(socket.id).emit('MT SMS', { mtText: 'test response'});
@@ -104,17 +106,17 @@ exports.initialize = function(server) {
                 clients.clients[socket.msisdn] = {};
                 clients.clients[socket.msisdn].moRecord = moRecord;
                 
-                console.log("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
+                debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
                 // sendSMS(socket.handshake.session.onemContext.msisdn, '444100', moText);
                 sms.sendSMS(socket.msisdn, common.shortNumber, moText);
             } else {
-                console.log("can't locate msisdn for user");
+                debug("can't locate msisdn for user");
             }
 
         });
 
         socket.on('disconnect', function() {
-            console.log('Client gone (id=' + socket.id + ').');
+            debug('Client gone (id=' + socket.id + ').');
             if (socket.msisdn) delete clients.clients[socket.msisdn].moRecord.socket;
             delete socket.msisdn;
         });

@@ -1,3 +1,4 @@
+const debug = require('debug')('onem-zone');
 const moment = require('moment');
 const smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 const smppPassword = process.env.SMPP_PASSWORD || "password";
@@ -34,7 +35,7 @@ var smppServer = smpp.createServer(function(session) {
     smppSession = session; // save the session globally
 
     session.on('bind_transceiver', function(pdu) {
-        console.log('Bind request received, system_id:' + pdu.system_id + ' password:' + pdu.password);
+        debug('Bind request received, system_id:' + pdu.system_id + ' password:' + pdu.password);
         // we pause the session to prevent further incoming pdu events,
         // untill we authorize the session with some async operation.
         session.pause();
@@ -43,22 +44,22 @@ var smppServer = smpp.createServer(function(session) {
             session.send(pdu.response({
                 command_status: smpp.ESME_RBINDFAIL
             }));
-            console.log('Error binding');
+            debug('Error binding');
             session.close();
             return;
         }
-        console.log('Successfully bound');
+        debug('Successfully bound');
         session.send(pdu.response());
         session.resume();
     });
 
     session.on('enquire_link', function(pdu) {
-        console.log('enquire_link received');
+        debug('enquire_link received');
         session.send(pdu.response());
     });
 
     session.on('unbind', function(pdu) {
-        console.log('unbind received, closing session');
+        debug('unbind received, closing session');
         session.send(pdu.response());
         session.close();
     });
@@ -89,17 +90,17 @@ var smppServer = smpp.createServer(function(session) {
         hexidMsg = pad.substring(0, pad.length - hexidMsg.length) + hexidMsg; //TODO: If hexidMsg longer than 20 digits (!!!) display its last 20 digits
         smppSession.send(pdu.response({ message_id: hexidMsg })); //submit_response; we've received the submit from the ESME and we confirm it with the message_id
 
-        console.log("submit_sm received, sequence_number: " + pdu.sequence_number + " isResponse: " + pdu.isResponse());
+        debug("submit_sm received, sequence_number: " + pdu.sequence_number + " isResponse: " + pdu.isResponse());
 
         if (pdu.short_message.length === 0) {
-            console.log("** payload being used **");
+            debug("** payload being used **");
             mtText = pdu.message_payload;
         } else {
             mtText = pdu.short_message.message;
         }
 
-        console.log("mtText: " + mtText);
-        console.log("more messages: " + pdu.more_messages_to_send);
+        debug("mtText: " + mtText);
+        debug("more messages: " + pdu.more_messages_to_send);
 
         if (!client) {
             client = {};
@@ -107,12 +108,12 @@ var smppServer = smpp.createServer(function(session) {
                 mtText: ''
             }
         }
-        console.log("Client found!");
+        debug("Client found!");
         client.moRecord.mtText = client.moRecord.mtText + mtText; // build up the text to be sent to the web client.
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (pdu.more_messages_to_send === 1) {
-            console.log("More mesages to send, so returning!");
+            debug("More mesages to send, so returning!");
             return;
         }
 
@@ -122,10 +123,10 @@ var smppServer = smpp.createServer(function(session) {
         //   3) reset the message string to blank
         //   4) send the result back to the client using the saved session
         if (pdu.more_messages_to_send === 0 || typeof pdu.more_messages_to_send === 'undefined') {
-            console.log("There are no more messages to be received for it!");
+            debug("There are no more messages to be received for it!");
             if (typeof client.moRecord.socket !== 'undefined') {
                 try {
-                    console.log("trying response: " + client.moRecord.mtText);
+                    debug("trying response: " + client.moRecord.mtText);
                     client.moRecord.socket.emit('MT SMS', { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
@@ -134,7 +135,7 @@ var smppServer = smpp.createServer(function(session) {
                     };
                     msgText = client.moRecord.mtText.substring(0, endmsgText);
                 } catch (err) {
-                    console.log("oops no session: " + err);
+                    debug("oops no session: " + err);
                     doneDate = moment().format('YYMMDDHHmm');
                     statMsg = stateMsg.DELETED.Status; //'DELETED'; // If the socket emit fails, we lose this message. It is in deleted state.
                     statMsgValue = stateMsg.DELETED.Value;
@@ -174,7 +175,7 @@ var smppServer = smpp.createServer(function(session) {
             dlReceipt = 'id:' + hexidMsg + ' sub:001 dlvrd:' + dlvrdMsg +
                 ' submit date:' + submitDate + ' done date:' + doneDate + ' stat:' + statMsg + ' err:' + errMsg + ' text:' + dlrText;
 
-            console.log("sending DLR: " + dlReceipt);
+            debug("sending DLR: " + dlReceipt);
 
             smppSession.deliver_sm({
                 source_addr: pdu.destination_addr, //Send back the delivery receipt to the submitter as if it was sent by the recipient of the message
@@ -191,7 +192,7 @@ var smppServer = smpp.createServer(function(session) {
             }, function(pdu) {
                 if (pdu.command_status === 0) {
                     // Message successfully sent
-                    console.log("Delivery receipt sent!");
+                    debug("Delivery receipt sent!");
                 }
             });
         };
@@ -201,10 +202,10 @@ var smppServer = smpp.createServer(function(session) {
     });
 
     smppSession.on('deliver_sm', function(pdu) {
-        console.log("deliver_sm received: " + pdu);
+        debug("deliver_sm received: " + pdu);
         if (pdu.esm_class == 4) {
             var shortMessage = pdu.short_message;
-            console.log('Received DR: %s', shortMessage.trim());
+            debug('Received DR: %s', shortMessage.trim());
             smppSession.send(pdu.response());
         }
     });
@@ -235,7 +236,7 @@ exports.sendSMS = function(from, to, text) {
             }, function(pdu) {
                 if (pdu.command_status === 0) {
                     // Message successfully sent
-                    console.log("Message sent!");
+                    debug("Message sent!");
                 }
             });
         } else {
@@ -282,7 +283,7 @@ exports.sendSMS = function(from, to, text) {
                 }, function(pdu) {
                     if (pdu.command_status === 0) {
                         // Message successfully sent
-                        console.log("Multipart message sent!");
+                        debug("Multipart message sent!");
                     }
                 });
 

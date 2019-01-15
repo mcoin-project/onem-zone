@@ -1,5 +1,6 @@
 require('dotenv').load();
 
+var debug = require('debug')('onem-zone');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
@@ -24,7 +25,7 @@ var mode = process.argv[2] || 'dev';
 mode = mode.toLowerCase();
 var public_folder = mode == 'prod' ? 'public' : 'app_client';
 
-console.log("public_folder:" + public_folder);
+debug("public_folder:" + public_folder);
 
 app.use(helmet({
     xssFilter: {
@@ -69,7 +70,7 @@ app.get('*', function(req, res) {
 });
 
 app.get('/*', function(req, res, next) {
-    console.log("caught default route");
+    debug("caught default route");
     // Just send the index.html for other files to support HTML5Mode
     res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
 });
@@ -79,6 +80,6 @@ if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
 server.listen(theport);
-console.log("listening on port:" + theport)
+debug("listening on port:" + theport)
 
 module.exports = app;

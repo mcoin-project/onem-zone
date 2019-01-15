@@ -1,3 +1,4 @@
+const debug = require('debug')('onem-zone');
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const common = require('../common/common.js');
@@ -11,8 +12,8 @@ var Message = mongoose.model('messages', MessageSchema);
 var bluebird = require('bluebird');
 
 exports.save = function (from, to, text) {
-    console.log("messages.save");
-    console.log("from: " + from + ' to:' + to);
+    debug("messages.save");
+    debug("from: " + from + ' to:' + to);
     common.getUser(to).then(function (user) {
         var message = new Message();
         message._user = user._id;
@@ -22,8 +23,8 @@ exports.save = function (from, to, text) {
         message.delivered = false;
         return message.save();
     }).catch(function (error) {
-        console.log("/message.save");
-        console.log(error);
+        debug("/message.save");
+        debug(error);
         return new Error(error);
     });
 }
@@ -32,17 +33,17 @@ exports.deliverPending = function (socket) {
     return new Promise(function (resolve, reject) {
         var savedUser;
         if (!socket.msisdn) {
-            console.log("msisdn missing");
+            debug("msisdn missing");
             return reject("msisdn missing");
         }
         common.getUser(socket.msisdn).then(function (user) {
-            console.log("got user:");
-            console.log(user);
+            debug("got user:");
+            debug(user);
             savedUser = user;
             return Message.find({ _user: user._id, delivered: false});
         }).then(function(users) {
             if (users && users.length > 0) {
-                console.log("there are pending messages to deliver");
+                debug("there are pending messages to deliver");
                 users.map(function (user) {
                     socket.emit('MT SMS', { mtText: user.text });
                 });
@@ -53,7 +54,7 @@ exports.deliverPending = function (socket) {
         }).then(function () {
             resolve(true);
         }).catch(function (error) {
-            console.log(error);
+            debug(error);
             reject(error);
         })
     });

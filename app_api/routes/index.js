@@ -1,3 +1,5 @@
+const debug = require('debug')('onem-zone');
+
 var express = require('express');
 var mongoose = require('mongoose');
 
@@ -18,14 +20,14 @@ var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
  */
 function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
-        console.log("missing header");
+        debug("missing header");
         return res.status(401).send({ message: 'Unauthorized request' });
     }
     var token = req.header('Authorization').split(' ')[1];
 
     var payload = common.decodeJWT(token);
-    console.log("decoded payload");
-    console.log(payload);
+    debug("decoded payload");
+    debug(payload);
     if (!payload) {
         return res.status(401).send({ message: 'Unauthorized Request' });
     }
@@ -33,8 +35,8 @@ function ensureAuthenticated(req, res, next) {
         req.user = user._id;
         next();
     }).catch(function (error) {
-        console.log(error);
-        console.log("user not found!!");
+        debug(error);
+        debug("user not found!!");
         return res.status(401).send({ message: 'Unauthorized request' });
     });
 }
@@ -43,13 +45,13 @@ api.get('/user', ensureAuthenticated, function (req, res) {
     if (req.user) {
         User.findById({_id: req.user}).then(function(user) {
             if (!user) {
-                console.log("/user - user not found");
+                debug("/user - user not found");
                 return res.status(401).send({error: "user not found"});
             }
             res.status(200).send({ msisdn: user.msisdn, user: req.user });
         }).catch(function(error) {
-            console.log("/user - user not found");
-            console.log(error);
+            debug("/user - user not found");
+            debug(error);
             res.status(500).send({ error: "server error" });
         });
     } else {
@@ -66,18 +68,18 @@ api.put('/user/msisdn', ensureAuthenticated, user.updateMsisdn(User));
 
 api.get('/start', ensureAuthenticated, function (req, res) {
     var httpProtocol = req.get('Referer').split(":")[0];
-    console.log(httpProtocol);
-    console.log(wsProtocol);
+    debug(httpProtocol);
+    debug(wsProtocol);
 
     if (httpProtocol == 'https') {
         // the used protocol is HTTPS
-        console.log('The HTTPS protocol has been used; "wss" will be used for WebRTC');
+        debug('The HTTPS protocol has been used; "wss" will be used for WebRTC');
         wsProtocol = "wss";
     } else {
-        console.log('It appears that HTTP protocol has been used; environment provided protocol or "ws" will be used for WebRTC');
+        debug('It appears that HTTP protocol has been used; environment provided protocol or "ws" will be used for WebRTC');
         wsProtocol = process.env.WS_PROTOCOL || "ws";
     };
-    console.log(wsProtocol);
+    debug(wsProtocol);
 
     res.json({
         msisdn: req.msisdn,
