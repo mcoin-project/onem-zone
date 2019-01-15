@@ -57,13 +57,6 @@ require('./app_api/models/db');
 
 io.initialize(server);
 
-// app.use(function(req, res, next) { //allow cross origin requests
-//     res.setHeader("Access-Control-Allow-Methods", "POST, PUT, OPTIONS, DELETE, GET");
-//     res.header("Access-Control-Allow-Origin", "http://localhost");
-//     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-//     next();
-// });
-
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
 
