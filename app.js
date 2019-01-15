@@ -35,8 +35,8 @@ app.use(helmet({
 app.use(helmet.noCache());
 
 // compress all responses
-app.use(compression());   
-app.use(logger('dev'));
+app.use(compression());
+if (mode === 'dev') app.use(logger('dev'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
