@@ -9,7 +9,7 @@
   "scripts": {
     "start": "node app prod",
     "start-prod": "node app prod",
-    "start-dev": "node app"
+    "start-dev": "DEBUG=onem-zone node app"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
