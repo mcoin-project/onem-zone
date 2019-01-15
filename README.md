@@ -12,19 +12,19 @@ ONEm Zone provides an emulation of the SMS interface to ONEm's Interactive Servi
 For IP communication, ensure that the backend server where the NodeJS app is running has access to the internet to make HTTP and HTTPS requests.  Ensure also that the same server is able to communicate via SMPP on internal network using the configured SMPP port (see below).
 
 ## Installation
-
-`$ git clone https://github.com/mcoin-project/onem-zone.git`  
-`$ cd onem-zone`  
-`$ git checkout master`  
-`$ npm install`  
-
+```
+$ git clone https://github.com/mcoin-project/onem-zone.git
+$ cd onem-zone
+$ git checkout master
+$ npm install
+```
 ## Setup the environment
 
 Create a .env file in the root directory with your favourite editor with the following syntax:
-
-`<parameter 1>=<value>`  
-`<parameter 2>=<value>`  
-
+```
+<parameter 1>=<value>
+<parameter 2>=<value>
+```
 | Parameter  | Default  | Description |
 | ------------- | -------  | ------------- |
 | `SMPP_SYSTEMID` | `autotest` | SMPP system Id, get this from your system admin  |
@@ -45,13 +45,13 @@ Create a .env file in the root directory with your favourite editor with the fol
 ## Running in production mode
 
 The following command will execute in production mode and serve the files from the `public` folder.
-
-`$ npm start`
-
-## Developing and contribiting
-
-`$ git checkout develop`
-
+```
+$ npm start
+```
+## Developing and contributing
+```
+$ git checkout develop
+```
 Folder structure:
 
 * `/app_api...`  Node backend server files
@@ -61,21 +61,21 @@ Folder structure:
 Gulp and BrowserSync are used to facilitate development and testing.  To start a development session on your local machine open two terminal sessions.
 
 Ensure mongo is running in background.  Then from first terminal window:
-
-`$ npm run start-dev`
-
+```
+$ npm run start-dev
+```
 From second terminal window:
-
-`$ gulp`
-
+```
+$ gulp
+```
 The above command executes in dev mode and the server serves the files from `app_client`.  Browser should launch automatically.  Any changes you make to the scss files in `app_client/scss` are automatically compiled to css and the browser refreshes automatically.  Similarly, any changes to the html files in `index.html` or in `/partials` will also cause browser to refresh.
 
 When you want to make a production build:
-
-`$ gulp build`
-
+```
+$ gulp build
+```
 To execute the app in production mode:
-
-`$ npm start`
-
+```
+$ npm start
+```
 Please make pull requests towards `develop` branch.
