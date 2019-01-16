@@ -84,6 +84,11 @@ gulp.task('images', function() {
     .pipe(gulp.dest('public/images'))
 });
 
+gulp.task('copy-flags', function() {
+  return gulp.src('app_client/bower_components/intl-tel-input/build/img/**/*.*')
+    .pipe(gulp.dest('public/bower_components/intl-tel-input/build/img'));
+});
+
 // Copying fonts 
 gulp.task('fonts', function() {
   return gulp.src('app_client/fonts/**/*')
@@ -114,7 +119,7 @@ gulp.task('build', function(callback) {
   runSequence(
     'clean:public',
     'sass-build',
-    ['useref', 'images', 'fonts', 'copy-sounds'],
+    ['useref', 'images', 'fonts', 'copy-sounds', 'copy-flags'],
     callback
   )
 })
