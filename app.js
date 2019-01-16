@@ -1,6 +1,7 @@
 require('dotenv').load();
 
-var debug = require('debug')('onem-zone');
+var debug = require('debug')('onemzone');
+var supportsColor = require('supports-color');
 var express = require('express');
 var app = express();
 var server = require('http').createServer(app);
