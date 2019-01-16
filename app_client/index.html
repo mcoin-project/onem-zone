@@ -1,92 +1,116 @@
 <!DOCTYPE html>
 <html lang="en" data-ng-app="ONEmSimModule">
 
-    <head>
-        <base href="/">
-        <meta charset="utf-8" />
-        <meta name="fragment" content="!" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <base href="/">
+    <meta charset="utf-8" />
+    <meta name="fragment" content="!" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-        <!-- for Bootstrap 4 -- >
+    <!-- for Bootstrap 4 -- >
         <meta property="og:title" content="ONEm Zone" />
         <meta property="og:description" content="ONEm Zone" />
         <meta name="description" content="ONEm Zone" />
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <title>ONEm Zone</title>
         <!-- <link rel="stylesheet" href="/css/font-awesome.min.css"> -->
-        <link rel="icon" href="./images/favicon.ico?v1.1">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
-        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="icon" href="./images/favicon.ico?v1.1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese" rel="stylesheet">
-        <!-- font-family: 'Roboto', sans-serif; font-family: 'Roboto Condensed', sans-serif; font-family: 'Noto Sans', sans-serif; font-family: 'Noto Serif', serif; -->
-        <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
-        <!-- CSS Files -->
-        <!--build:css css/plugins.min.css -->
-        <link rel="stylesheet" href="css/materialize-src/sass/materialize.css">
-        <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
-        <link rel="stylesheet" href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
-        <!-- endbuild -->
-        <!--build:css css/app.min.css -->
-        <link rel="stylesheet" href="css/onemsim.css" />
-        <link rel="stylesheet" href="css/screens.css" />
-         <!-- endbuild -->
-
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
-        <!--if lt IE 9-->
-        <!-- JS Files -->
-        <!--build:js js/plugins.min.js -->
-        <script src="js/vendor/html5shiv.min.js"></script>
-        <script src="js/vendor/respond.min.js"></script>
-        <script src="js/vendor/materialize.js"></script>
-        <!-- endbuild -->
-
-    </head>
-
-    <body class="homepage container-fluid" name="body">
-
-        <div class="container">
-            <div ui-view></div>
-        </div>
-
-        <audio loop id="myAudio" src="" hidden=true>
-            <source type="audio/wav"/>
-        </audio>
-
-        <video loop id="myVideo" width="320" height="240" src="" hidden=true>
-            <source type="video/mp4">
-            <source type="video/ogg">
-            <source type="video/webm">
-            Your browser does not support the video tag.
-        </video>
-
-    </body>
-    <!--build:js js/app.min.js -->
-    <script type="text/javascript" src="js/vendor/socket.io.js"></script>
-    <script type="text/javascript" src="bower_components/jssip/dist/jssip.min.js"></script>
-    <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-media-queries/match-media.js"></script>
-    <script type="text/javascript" src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
-    <script type="text/javascript" src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
-    <script type="text/javascript" src="bower_components/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
-    <script type="text/javascript" src="bower_components/path/path.min.js"></script>
-    <script type="text/javascript" src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
-    <script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-    <script type="text/javascript" src="bower_components/satellizer/dist/satellizer.js"></script>
-    <script type="text/javascript" src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
-    <script type="text/javascript" src="bower_components/angular-elastic/elastic.js"></script>
-    <script type="text/javascript" src="js/onemsim.js"></script>
-    <script type="text/javascript" src="js/onemsim_ui.js"></script>
-    <script type="text/javascript" src="js/controllers/login.js"></script>
-    <script type="text/javascript" src="js/controllers/captureMsisdn.js"></script>
-    <script type="text/javascript" src="js/controllers/logout.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+        rel="stylesheet">
+    <!-- font-family: 'Roboto', sans-serif; font-family: 'Roboto Condensed', sans-serif; font-family: 'Noto Sans', sans-serif; font-family: 'Noto Serif', serif; -->
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900"
+        rel="stylesheet">
+    <!-- CSS Files -->
+    <!--build:css css/plugins.min.css -->
+    <link rel="stylesheet" href="css/materialize-src/sass/materialize.css">
+    <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
+    <link rel="stylesheet" href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
     <!-- endbuild -->
-</html>
+    <!--build:css css/app.min.css -->
+    <link rel="stylesheet" href="css/onemsim.css" />
+    <link rel="stylesheet" href="css/screens.css" />
+    <!-- endbuild -->
 
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
+    <!--if lt IE 9-->
+    <!-- JS Files -->
+    <!--build:js js/plugins.min.js -->
+    <script src="js/vendor/html5shiv.min.js"></script>
+    <script src="js/vendor/respond.min.js"></script>
+    <!-- endbuild -->
+
+</head>
+
+<body ng-controller="navController" class="homepage container-fluid" name="body">
+    <div class="ng-cloak" ng-show="isAuthenticated()">
+        <nav>
+            <div class="nav-wrapper">
+                <a href="#!" class="brand-logo">Logo</a>
+                <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="sass.html">Sass</a></li>
+                    <li><a href="badges.html">Components</a></li>
+                    <li><a href="collapsible.html">Javascript</a></li>
+                    <li><a href="mobile.html">Mobile</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <ul class="sidenav" id="mobile-demo">
+            <li><a href="sass.html">Sass</a></li>
+            <li><a href="badges.html">Components</a></li>
+            <li><a href="collapsible.html">Javascript</a></li>
+            <li><a href="mobile.html">Mobile</a></li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <div ui-view></div>
+    </div>
+
+    <audio loop id="myAudio" src="" hidden=true>
+        <source type="audio/wav" />
+    </audio>
+
+    <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+        <source type="video/mp4">
+        <source type="video/ogg">
+        <source type="video/webm">
+        Your browser does not support the video tag.
+    </video>
+
+</body>
+<!--build:js js/app.min.js -->
+<script type="text/javascript" src="js/vendor/socket.io.js"></script>
+<script type="text/javascript" src="bower_components/jssip/dist/jssip.min.js"></script>
+<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script type="text/javascript" src="js/vendor/materialize.js"></script>
+
+<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-media-queries/match-media.js"></script>
+<script type="text/javascript" src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
+<script type="text/javascript" src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput.js"></script>
+<script type="text/javascript" src="bower_components/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
+<script type="text/javascript" src="bower_components/path/path.min.js"></script>
+<script type="text/javascript" src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
+<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script type="text/javascript" src="bower_components/satellizer/dist/satellizer.js"></script>
+<script type="text/javascript" src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
+<script type="text/javascript" src="bower_components/angular-elastic/elastic.js"></script>
+<script type="text/javascript" src="js/onemsim.js"></script>
+<script type="text/javascript" src="js/onemsim_ui.js"></script>
+<script type="text/javascript" src="js/controllers/login.js"></script>
+<script type="text/javascript" src="js/controllers/captureMsisdn.js"></script>
+<script type="text/javascript" src="js/controllers/logout.js"></script>
+<!-- endbuild -->
+
+</html>
