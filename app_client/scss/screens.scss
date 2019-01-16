@@ -488,7 +488,9 @@ body.full {
 
 .phone .sms-input span.input input {
     margin: 16px 0;
-    border: 1px solid #ccc;
+    /*border: 1px solid #ccc;*/
+    background-color: white;
+    border-bottom: none;
 }
 
 .phone .sms-input textarea {
