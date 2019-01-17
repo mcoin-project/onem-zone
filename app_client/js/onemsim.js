@@ -3,15 +3,6 @@
 const GOOGLE_CLIENT_ID = '785326362402-co8gkpjf1rcfmiur67pggp4mkersm4mi.apps.googleusercontent.com';
 const FACEBOOK_CLIENT_ID = '280049366235647';
 
-
-  // Or with jQuery
-
-  $(document).ready(function(){
-      console.log("doc ready");
-    $('.sidenav').sidenav();
-  });
-       
-
 var ONEmSimModule = angular.module('ONEmSimModule', [
     'ngResource',
     'matchMedia',
@@ -989,6 +980,7 @@ ONEmSimModule.controller('mainController', [
         }).then(function (response) {
             console.log("setting msisdn:" + response.msisdn);
             $rootScope.msisdn = response.msisdn;
+            $rootScope.user = response.user;
             return SmsHandler.start().$promise;
         }).then(function(response) {
             console.log("response fom smshandler.start");
@@ -1004,3 +996,5 @@ ONEmSimModule.controller('mainController', [
     }
 ]);
 
+
+     

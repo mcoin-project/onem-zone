@@ -44,7 +44,12 @@ exports.getMsisdn = function (User) {
                     debug("/getMsisdn - user not found");
                     return res.status(401).send({ error: "msisdn not found" });
                 }
-                res.status(200).send({ msisdn: user.msisdn, user: req.user });
+                var userObj = {};
+                userObj.firstName = user.firstName;
+                userObj.lastName = user.lastName;
+                userObj.email = user.email;
+
+                res.status(200).send({ msisdn: user.msisdn, user: userObj });
             }).catch(function (error) {
                 debug("/user - user not found");
                 debug(error);

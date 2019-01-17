@@ -45,7 +45,16 @@
 </head>
 
 <body ng-controller="navController" class="homepage container-fluid" name="body">
-    <div class="ng-cloak" ng-show="isAuthenticated()">
+
+    <div class="ng-cloak" ng-show="msisdn">
+        <!-- Dropdown Structure -->
+        <ul id="dropdown1" class="dropdown-content">
+            <p>{{user.firstName}} {{user.lastName}}</p>
+            <p>{{msisdn}}</p>
+            <p>{{user.email}}</p>
+            <li class="divider"></li>
+            <li><a href="/logout">Logout</a></li>
+        </ul>
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
@@ -57,10 +66,8 @@
                     <div class="nav-wrapper">
                         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
                         <ul class="right hide-on-med-and-down">
-                            <li><a href="sass.html">Sass</a></li>
-                            <li><a href="badges.html">Components</a></li>
-                            <li><a href="collapsible.html">Javascript</a></li>
-                            <li><a href="mobile.html">Mobile</a></li>
+                            <!-- Dropdown Trigger -->
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">My Profile<i class="material-icons right">arrow_drop_down</i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -69,10 +76,12 @@
     </div>
 
     <ul class="sidenav" id="mobile-demo">
-        <li><a href="sass.html">Sass</a></li>
-        <li><a href="badges.html">Components</a></li>
-        <li><a href="collapsible.html">Javascript</a></li>
-        <li><a href="mobile.html">Mobile</a></li>
+        <h6>My Profile</h6>
+        <p>{{user.firstName}} {{user.lastName}}</p>
+        <p>{{msisdn}}</p>
+        <p>{{user.email}}</p>
+        <li class="divider"></li>
+        <li><a href="/logout">Logout</a></li>
     </ul>
     </div>
 
@@ -96,7 +105,6 @@
 <script type="text/javascript" src="js/vendor/socket.io.js"></script>
 <script type="text/javascript" src="bower_components/jssip/dist/jssip.min.js"></script>
 <script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
-<script type="text/javascript" src="js/vendor/materialize.js"></script>
 
 <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
@@ -120,6 +128,8 @@
 <script type="text/javascript" src="js/controllers/login.js"></script>
 <script type="text/javascript" src="js/controllers/captureMsisdn.js"></script>
 <script type="text/javascript" src="js/controllers/logout.js"></script>
+<script type="text/javascript" src="js/vendor/materialize.js"></script>
+<script type="text/javascript" src="js/init.js"></script>
 <!-- endbuild -->
 
 </html>
