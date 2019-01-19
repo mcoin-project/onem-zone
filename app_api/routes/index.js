@@ -59,6 +59,8 @@ api.get('/user', ensureAuthenticated, function (req, res) {
     }
 });
 
+api.delete('/user', ensureAuthenticated, user.delete(User));
+
 api.get('/user/sendToken', ensureAuthenticated, user.sendToken(User));
 api.get('/user/verifyToken', ensureAuthenticated, user.verifyToken(User));
 api.get('/user/msisdn', ensureAuthenticated, user.getMsisdn(User));

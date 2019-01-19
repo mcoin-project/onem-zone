@@ -36,28 +36,46 @@ exports.checkMsisdn = function (User) {
     }
 }
 
+exports.delete = function (User) {
+    return function (req, res) {
+        if (!req.user) {
+            return res.status(401).send({ error: "not authorized" });
+        }
+        User.remove({ _id: req.user }).then(function (result) {
+            if (!result.ok) throw "Error deleting";
+            debug("/user delete ok");
+            debug(result);
+            res.status(200).send({ result: 'Success'});
+        }).catch(function (error) {
+            debug("/user delete");
+            debug(error);
+            res.status(500).send({ result: 'Fail', error: "Error deleting" });
+        });
+    }
+}
+
 exports.getMsisdn = function (User) {
     return function (req, res) {
-        if (req.user) {
-            User.findById({ _id: req.user }).then(function (user) {
-                if (!user || !user.msisdn) {
-                    debug("/getMsisdn - user not found");
-                    return res.status(401).send({ error: "msisdn not found" });
-                }
-                var userObj = {};
-                userObj.firstName = user.firstName;
-                userObj.lastName = user.lastName;
-                userObj.email = user.email;
-
-                res.status(200).send({ msisdn: user.msisdn, user: userObj });
-            }).catch(function (error) {
-                debug("/user - user not found");
-                debug(error);
-                res.status(500).send({ error: "server error" });
-            });
-        } else {
-            res.status(401).send({ error: "not authorized" });
+        if (!req.user) {
+            return res.status(401).send({ error: "not authorized" });
         }
+        User.findById({ _id: req.user }).then(function (user) {
+            if (!user || !user.msisdn) {
+                debug("/getMsisdn - user not found");
+                return res.status(401).send({ error: "msisdn not found" });
+            }
+            var userObj = {};
+            userObj.firstName = user.firstName;
+            userObj.lastName = user.lastName;
+            userObj.email = user.email;
+
+            res.status(200).send({ msisdn: user.msisdn, user: userObj });
+        }).catch(function (error) {
+            debug("/user - user not found");
+            debug(error);
+            res.status(500).send({ error: "server error" });
+        });
+
     }
 }
 
@@ -186,7 +204,12 @@ exports.updateMsisdn = function (User) {
                 debug(error);
                 res.status(500).send({ error: error });
             } else {
-                res.json({ user: user });
+                var userObj = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName
+                };
+                res.json({ user: userObj });
             }
         });
     }
