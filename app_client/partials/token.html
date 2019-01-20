@@ -24,7 +24,7 @@
             <div class="row">
               <div class="col s6 offset-s3">
                 <div class="input-field col s11" ng-class="{'has-error': tokenForm.token.$invalid && tokenForm.token.$touched, 'has-success': tokenForm.token.$valid}">
-                  <input required type="tel" id="token" name="token" ng-model="token">
+                  <input required type="tel" id="token" name="token" autocomplete="off" ng-model="token">
                   <label for="token">Token:</label>
                 </div>
               </div>

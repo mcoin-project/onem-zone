@@ -1,24 +1,40 @@
 <div class="container">
-  <div style="padding-top:100px" class="row">
-    <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12 col-centered">
-      <div class="center-form panel panel-default text-center">
-        <div class="panel-heading">
-          <h3 class="panel-title">Register Mobile (1 of 2)<span class="pull-right"><a href="/logout" style="text-decoration: underline">Logout</a></span></h3>
-        </div>
-        <div class="panel-body">
-          <p style="text-align: left">Provide your mobile number below so we can link it with your account.</p>
-          <form class="form-horizontal" ng-submit="submit()" name="msisdnForm">
-            <div class="form-group" ng-class="{'has-error': msisdnForm.tel.$invalid && msisdnForm.tel.$touched, 'has-success': msisdnForm.tel.$valid}">
-              <label class="control-label col-sm-2" for="tel">Mobile:</label>
-              <div class="col-sm-10">
-                <input type="tel" class="form-control" id="tel-dc" name="tel" ng-model="msisdn" ng-intl-tel-input
-                  data-initial-country="gb" data-selected-country="selected.country">
-                <span class="glyphicon glyphicon-remove form-control-feedback" ng-show="msisdnForm.tel.$invalid && msisdnForm.tel.$touched"></span>
-                <span class="glyphicon glyphicon-ok form-control-feedback" ng-show="msisdn && msisdnForm.tel.$valid && msisdnForm.tel.$touched"></span>
+  <div style="padding-top:50px" class="row">
+    <div class="col s12">
+      <div class="card">
+        <div class="card-content">
+          <img src="/images/onem_zone_logo_thumb.png" class="responsive-img center-block" />
+          <h5 class="center-align">Register Mobile<span class="pull-right"></h5>
+          <div class="row">
+            <div class="col s8 offset-s2">
+              <div class="progress">
+                <div class="determinate blue" style="width: 50%"></div>
               </div>
             </div>
-            <button type="submit" class="btn btn-block btn-primary" ng-disabled="msisdnForm.$invalid" class="btn btn-block btn-primary">Submit</button>
-          </form>
+          </div>
+          <br>
+          <p class="center-align">Provide your mobile number below so we can link it with your account.</p>
+          <div class="row">
+            <form name="msisdnForm">
+              <div class="row">
+                <div class="col l10 offset-l2 m10 offset-m2 s10">
+                  <div class="input-field" ng-class="{'has-error': msisdnForm.tel.$invalid && msisdnForm.tel.$touched, 'has-success': msisdnForm.tel.$valid}">
+                    <div class="col s1">
+                      <i class="material-icons prefix">phone</i>
+                    </div>
+                    <div class="col s11">
+                      <input required type="tel" id="phone" name="phone" autocomplete="tel" ng-model="msisdn" ng-intl-tel-input
+                        data-initial-country="gb" data-selected-country="selected.country">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card-action">
+          <a style="margin-right:0" ng-href="/logout"><button class="btn red">Logout</button></a>
+          <button ng-click="submit()" class="btn right" ng-disabled="msisdnForm.$invalid">Submit</button>
         </div>
       </div>
     </div>

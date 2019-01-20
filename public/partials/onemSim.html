@@ -1,3 +1,4 @@
+
 <div class="phone">
 
     <div class="wireframe">
@@ -137,25 +138,14 @@
                 <!-- <label for="sms"></label> -->
                 <span class="dial"><a class="open_dialer" href="#"><img src="images/icn_dialer.svg"></a></span>
                 <span class="input">
-                    <input ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
+                    <input close-keyboard ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
                     <!-- <textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea> -->
                 </span> <!-- /input -->
                 <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->
             </form> <!-- /smsInput() -->
         </div> <!-- /sms-input -->
 
-        <div class="onem_msisdn">
-            <a href="/logout">Logout</a>
-            <p>{{msisdn}}</p>
-        </div> <!-- /onem_msisdn -->
-
         <p class="call_notif"><a href="#" class="resume">Click here to resume the call</a></p>
-
-        <div class="logo">
-            <a href="http://www.onem.com">
-                <img class="enter" src="images/onem_zone_logo_thumb.png" />
-            </a>              
-        </div> <!-- /logo -->
 
     </div> <!-- /screen -->
 
