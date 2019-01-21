@@ -1,4 +1,4 @@
-const debug = require('debug')('onem-zone');
+const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 

@@ -1,4 +1,4 @@
-const debug = require('debug')('onem-zone');
+const debug = require('debug')('onemzone');
 const moment = require('moment');
 const smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
 const smppPassword = process.env.SMPP_PASSWORD || "password";

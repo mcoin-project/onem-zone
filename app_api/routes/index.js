@@ -1,4 +1,4 @@
-const debug = require('debug')('onem-zone');
+const debug = require('debug')('onemzone');
 
 var express = require('express');
 var mongoose = require('mongoose');
@@ -58,6 +58,8 @@ api.get('/user', ensureAuthenticated, function (req, res) {
         res.status(401).send({ error: "not authorized" });
     }
 });
+
+api.delete('/user', ensureAuthenticated, user.delete(User));
 
 api.get('/user/sendToken', ensureAuthenticated, user.sendToken(User));
 api.get('/user/verifyToken', ensureAuthenticated, user.verifyToken(User));

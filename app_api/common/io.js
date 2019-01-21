@@ -1,4 +1,4 @@
-const debug = require('debug')('onem-zone');
+const debug = require('debug')('onemzone');
 
 var sio = require('socket.io');
 

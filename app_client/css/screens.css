@@ -15,11 +15,12 @@ body.full {
  *
  *----------------------------------------------------------------------------------------*/
 .phone {
+  z-index: -1;
   position: relative;
   display: block;
   width: 400px;
   margin: 0px auto;
-  margin-top: 100px; }
+  margin-top: 20px; }
 
 .phone .screen_wrp {
   position: absolute;
@@ -496,7 +497,9 @@ body.full {
 
 .phone .sms-input span.input input {
   margin: 16px 0;
-  border: 1px solid #ccc; }
+  /*border: 1px solid #ccc;*/
+  background-color: white;
+  border-bottom: none; }
 
 .phone .sms-input textarea {
   display: block;
@@ -714,6 +717,8 @@ a.full:hover img {
   transform: rotate(90deg); }
 
 a.full img.exit {
+  position: relative;
+  z-index: 999;
   display: none; }
 
 a.full.toggled img.enter {
@@ -818,9 +823,7 @@ body.full div.logo img {
     width: auto;
     margin: 0; }
   div.logo img {
-    height: auto;
-    width: 100px;
-    padding-top: 5px; }
+    display: none; }
   .phone .answer .nums {
     bottom: 190px; }
   .phone p.user img {
