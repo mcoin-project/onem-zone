@@ -23,6 +23,8 @@ ONEmSimModule.directive('closeKeyboard', [
         return {
             restrict: 'A',
             link: function(scope, elem, attrs) {
+                var textFields = element.find('input');
+
                 elem.bind('keyup', function(event) {
                     if (event.keyCode === 13) {
                         /* To dismiss onscreen keyboard */
