@@ -19,7 +19,7 @@ body.full {
  *----------------------------------------------------------------------------------------*/
 
 .phone {
-    z-index: -1;
+/*    z-index: -1;*/
     position: relative;
     display: block;
     width: 400px;
@@ -731,7 +731,7 @@ a.full:hover img {
     transform: rotate(90deg);
 }
 
-a.full img.exit { position:relative; z-index:999; display: none; }
+a.full img.exit { position:relative; z-index:1000; display: none; }
 
 a.full.toggled img.enter { display: none; }
 

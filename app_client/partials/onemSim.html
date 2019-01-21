@@ -139,7 +139,7 @@
                 <span class="dial"><a class="open_dialer" href="#"><img src="images/icn_dialer.svg"></a></span>
                 <span class="input">
                     <input close-keyboard ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
-                    <!-- <textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea> -->
+                    <!---<textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea>-->
                 </span> <!-- /input -->
                 <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->
             </form> <!-- /smsInput() -->
@@ -151,5 +151,5 @@
 
 </div> <!-- /phone -->
 
-<a class="full" href="#"><img class="enter" src="images/icn_fs_enter.svg" /><img class="exit" src="images/icn_fs_exit.svg" /></a>
+<a class="full" style="z-index: 1000" href="#"><img class="enter" src="images/icn_fs_enter.svg" /><img class="exit" src="images/icn_fs_exit.svg" /></a>
 
