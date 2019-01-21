@@ -29,12 +29,12 @@ ONEmSimModule.directive('closeKeyboard', [
                     if (event.keyCode === 13) {
                         /* To dismiss onscreen keyboard */
                         // In some cases, focus was needed before blur to dismiss onscreen keyboard
-                        textFields[0].focus();
+                        //textFields[0].focus();
                         textFields[0].blur();
         
                         /* To ensure status messages are visible on small screens */
-                        $window.scrollTo(0, 0);
-                        return false;
+                        //$window.scrollTo(0, 0);
+                        //return false;
                     }
                 });
             }
