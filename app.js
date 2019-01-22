@@ -13,8 +13,6 @@ var errorHandler = require('errorhandler');
 var helmet = require('helmet');
 var compression = require('compression');
 
-var common = require('./app_api/common/common.js');
-
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
 var io = require('./app_api/common/io.js');

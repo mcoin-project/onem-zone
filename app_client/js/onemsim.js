@@ -71,8 +71,10 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             }
             return deferred.promise;
         }];
-
         const redirectUri = window.location.origin + '/auth-endpoint';
+        console.log("redirectUri");
+        console.log(redirectUri);
+
         /**
         *  Satellizer config
         */
