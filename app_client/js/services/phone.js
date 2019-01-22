@@ -542,12 +542,16 @@ ONEmSimModule.factory('Phone', [
                 RejectButton.click(function () {
                     console.log("[UI]: RejectButton - click");
                     //phoneONEm.terminateSessions();
-                    navigator.mediaDevices.getUserMedia({video: true}).then(mediaStream => {
-                        mediaStream.getVideoTracks()[0].stop();
-                    });
-                    navigator.mediaDevices.getUserMedia({audio: true}).then(mediaStream => {
-                        mediaStream.getAudioTracks()[0].stop();
-                    });
+                    navigator.getUserMedia({audio: true, video: true},
+                        function(stream) {
+                            var audioTrack = stream.getAudioTracks()[0];  // if only one media track
+                            audioTrack.stop();
+                            var videoTrack = stream.getVideoTracks()[0];  // if only one media track
+                            videoTrack.stop();
+                        },
+                        function(error){
+                            console.log('getUserMedia() error', error);
+                        });
                     globalSession.terminate();
                 });
 
