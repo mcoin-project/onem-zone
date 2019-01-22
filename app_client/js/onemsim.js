@@ -172,7 +172,7 @@ ONEmSimModule.config(['$httpProvider',
                     responseError: function (response) {
                         switch (response.status) {
                             case 400:
-                            case 403:
+                            case 401:
                             case 404:
                                 console.log("404");
                                 $location.path('/');

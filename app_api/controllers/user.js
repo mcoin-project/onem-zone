@@ -22,7 +22,7 @@ exports.checkMsisdn = function (User) {
             User.find({ msisdn: req.query.msisdn }).then(function (user) {
                 if (user && user.length > 0) {
                     debug("/checkMsisdn - msisdn found");
-                    return res.status(401).send({ status: false, error: "msisdn found" });
+                    return res.status(403).send({ status: false, error: "msisdn found" });
                 }
                 res.status(200).send({ status: true });
             }).catch(function (error) {
