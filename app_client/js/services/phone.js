@@ -350,8 +350,6 @@ ONEmSimModule.factory('Phone', [
                             // The representation of tracks in a stream is changed in M26.
                             // Unify them for earlier Chrome versions in the coexisting period.
                             navigator.mediaDevices.getUserMedia({video: true}).then(mediaStream => {
-                                debugger;
-                                a=mediaStream.getVideoTracks();
                                 return mediaStream.getVideoTracks();
                             });
                             navigator.mediaDevices.getUserMedia({audio: true}).then(mediaStream => {
@@ -544,8 +542,12 @@ ONEmSimModule.factory('Phone', [
                 RejectButton.click(function () {
                     console.log("[UI]: RejectButton - click");
                     //phoneONEm.terminateSessions();
-                    mediaStream.getAudioTracks()[0].stop();
-                    mediaStream.getAudioTracks()[0].stop();
+                    navigator.mediaDevices.getUserMedia({video: true}).then(mediaStream => {
+                        mediaStream.getVideoTracks()[0].stop();
+                    });
+                    navigator.mediaDevices.getUserMedia({audio: true}).then(mediaStream => {
+                        mediaStream.getAudioTracks()[0].stop();
+                    });
                     globalSession.terminate();
                 });
 
