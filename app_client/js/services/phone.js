@@ -423,6 +423,8 @@ ONEmSimModule.factory('Phone', [
                         console.log("[WS]: newRTCSession - ended by " + e.originator);
                         audioElement.pause();
                         videoElement.pause();
+                        mediaStream.getAudioTracks()[0].stop();
+                        mediaStream.getAudioTracks()[0].stop();
                         videoElement.hidden = true;
                         videoElement.style.visibility = 'hidden';
                         isInCall = 0;
