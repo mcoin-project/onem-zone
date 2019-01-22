@@ -359,14 +359,14 @@ ONEmSimModule.factory('Phone', [
                             });
         
                             // New syntax of getXXXStreams method in M26.
-                            if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
-                                webkitRTCPeerConnection.prototype.getLocalStreams = function () {
-                                    return this.localStreams;
-                                };
-                                webkitRTCPeerConnection.prototype.getRemoteStreams = function () {
-                                    return this.remoteStreams;
-                                };
-                            }
+                            // if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
+                            //     webkitRTCPeerConnection.prototype.getLocalStreams = function () {
+                            //         return this.localStreams;
+                            //     };
+                            //     webkitRTCPeerConnection.prototype.getRemoteStreams = function () {
+                            //         return this.remoteStreams;
+                            //     };
+                            // }
                         } else {
                             console.log("[WS]: Browser does not appear to be WebRTC-capable");
                         };
