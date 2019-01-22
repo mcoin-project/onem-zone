@@ -96,14 +96,19 @@ ONEmSimModule.factory('Phone', [
 
                     // The representation of tracks in a stream is changed in M26.
                     // Unify them for earlier Chrome versions in the coexisting period.
-                    if (!webkitMediaStream.prototype.getVideoTracks) {
-                        webkitMediaStream.prototype.getVideoTracks = function () {
-                            return this.videoTracks;
+                    try {
+                        if (!webkitMediaStream.prototype.getVideoTracks) {
+                            webkitMediaStream.prototype.getVideoTracks = function () {
+                                return this.videoTracks;
+                            };
+                            webkitMediaStream.prototype.getAudioTracks = function () {
+                                return this.audioTracks;
+                            };
                         };
-                        webkitMediaStream.prototype.getAudioTracks = function () {
-                            return this.audioTracks;
-                        };
-                    };
+                    } catch (err) {
+                        console.log(err);
+                    }
+
                     // New syntax of getXXXStreams method in M26.
                     if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
                         webkitRTCPeerConnection.prototype.getLocalStreams = function () {
