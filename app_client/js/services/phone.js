@@ -376,7 +376,7 @@ ONEmSimModule.factory('Phone', [
 
                         navigator.mediaDevices.getUserMedia({ audio: true })
                             .then(mediaStream => {
-                                document.querySelector('audio').srcObject = mediaStream;
+                                 document.querySelector('audio').srcObject = mediaStream;
                                 return mediaStream.getAudioTracks()[0];
                             });
 
