@@ -389,9 +389,9 @@ ONEmSimModule.factory('Phone', [
                             audioElement.src = "/sounds/ringing_tone_uk_new.wav";
                             //attachMediaStream(audioElement,"/sounds/ringing_tone_uk_new.wav");
                         };
-                        if (webrtcDetectedBrowser == "firefox") {
-                            audioElement.play();
-                        };
+                        // if (webrtcDetectedBrowser == "firefox") {
+                        //     audioElement.play();
+                        // };
                     });
                     globalSession.on("accepted", function (e) {
                         console.log("[WS]: newRTCSession - accepted");
