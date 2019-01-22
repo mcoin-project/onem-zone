@@ -346,11 +346,6 @@ ONEmSimModule.factory('Phone', [
                     globalSession.on("accepted", function (e) {
                         console.log("[WS]: newRTCSession - accepted");
 
-                        audioElement.pause();
-
-                        //Schedule update of talk time every second:
-                        talkTime = setInterval(updateTalkTime, 1000);
-
                         if (navigator.getUserMedia) {
                             console.log("[WS]: This appears to be Chrome");
                             webrtcDetectedBrowser = "chrome";
@@ -401,6 +396,11 @@ ONEmSimModule.factory('Phone', [
                         } else {
                             console.log("[WS]: Browser does not appear to be WebRTC-capable");
                         };
+
+                        audioElement.pause();
+
+                        //Schedule update of talk time every second:
+                        talkTime = setInterval(updateTalkTime, 1000);
 
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
                         attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
