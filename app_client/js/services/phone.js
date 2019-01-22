@@ -544,10 +544,7 @@ ONEmSimModule.factory('Phone', [
                     //phoneONEm.terminateSessions();
                     navigator.getUserMedia({audio: true, video: true},
                         function(stream) {
-                            var audioTrack = stream.getAudioTracks()[0];  // if only one media track
-                            audioTrack.stop();
-                            var videoTrack = stream.getVideoTracks()[0];  // if only one media track
-                            videoTrack.stop();
+                            stream.getTracks().forEach(track => track.stop());
                         },
                         function(error){
                             console.log('getUserMedia() error', error);
