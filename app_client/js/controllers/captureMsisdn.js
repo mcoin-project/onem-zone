@@ -14,7 +14,7 @@ ONEmSimModule.controller('captureMsisdnController', [
                 $rootScope.msisdn = msisdn;
                 $state.go('captureToken');
             }).catch(function (error) {
-                if (error.status == 401) {
+                if (error.status == 403) {
                     toastr.error("Mobile already linked - try a different number or logout");
                 } else {
                     toastr.error("Couldn't update mobile number - please try again");
