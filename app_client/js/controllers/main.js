@@ -77,8 +77,10 @@ ONEmSimModule.controller('mainController', [
             console.log("finished call to phone.start");
             console.log(response);
         }).catch(function (error) {
-            console.log("no msisdn, going to capture");
-            $state.go('captureMsisdn');
+            if (error && error.status == 401) {
+                console.log("no msisdn, going to capture");
+                $state.go('captureMsisdn');
+            }
         });
     }
 ]);
