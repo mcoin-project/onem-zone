@@ -346,57 +346,6 @@ ONEmSimModule.factory('Phone', [
                     globalSession.on("accepted", function (e) {
                         console.log("[WS]: newRTCSession - accepted");
 
-                        if (navigator.getUserMedia) {
-                            console.log("[WS]: This appears to be Chrome");
-                            webrtcDetectedBrowser = "chrome";
-                            //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
-                            // The RTCPeerConnection object.
-                            //RTCPeerConnection = webkitRTCPeerConnection;
-                            // Get UserMedia (only difference is the prefix).
-                            // Code from Adam Barth.
-                            getUserMedia = navigator.getUserMedia.bind(navigator);
-                            // Attach a media stream to an element.
-                            attachMediaStream = function (element, stream) {
-                                console.log("[WS]: Attaching media stream");
-                                if (typeof element.srcObject !== 'undefined') {
-                                    element.srcObject = stream;
-                                } else if (typeof element.mozSrcObject !== 'undefined') {
-                                    element.mozSrcObject = stream;
-                                } else if (typeof element.src !== 'undefined') {
-                                    element.src = URL.createObjectURL(stream);
-                                } else {
-                                    console.log("[WS]: Error attaching stream to element.");
-                                };
-                            };
-                            reattachMediaStream = function (to, from) {
-                                console.log("[WS]: Reattaching media stream");
-                                to.src = from.src;
-                            };
-        
-                            // The representation of tracks in a stream is changed in M26.
-                            // Unify them for earlier Chrome versions in the coexisting period.
-                            navigator.mediaDevices.getUserMedia({video: true}).then(mediaStream => {
-                                debugger;
-                                a=mediaStream.getVideoTracks();
-                                return mediaStream.getVideoTracks();
-                            });
-                            navigator.mediaDevices.getUserMedia({audio: true}).then(mediaStream => {
-                                return mediaStream.getAudioTracks();
-                            });
-        
-                            // New syntax of getXXXStreams method in M26.
-                            if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
-                                webkitRTCPeerConnection.prototype.getLocalStreams = function () {
-                                    return this.localStreams;
-                                };
-                                webkitRTCPeerConnection.prototype.getRemoteStreams = function () {
-                                    return this.remoteStreams;
-                                };
-                            }
-                        } else {
-                            console.log("[WS]: Browser does not appear to be WebRTC-capable");
-                        };
-
                         audioElement.pause();
 
                         //Schedule update of talk time every second:
@@ -500,6 +449,58 @@ ONEmSimModule.factory('Phone', [
                             console.log("[WS]: Fixing SDP bug!");
                             e.sdp = removeAllCryptoLines(e.sdp);
                         };
+
+                        if (navigator.getUserMedia) {
+                            console.log("[WS]: This appears to be Chrome");
+                            webrtcDetectedBrowser = "chrome";
+                            //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
+                            // The RTCPeerConnection object.
+                            //RTCPeerConnection = webkitRTCPeerConnection;
+                            // Get UserMedia (only difference is the prefix).
+                            // Code from Adam Barth.
+                            getUserMedia = navigator.getUserMedia.bind(navigator);
+                            // Attach a media stream to an element.
+                            attachMediaStream = function (element, stream) {
+                                console.log("[WS]: Attaching media stream");
+                                if (typeof element.srcObject !== 'undefined') {
+                                    element.srcObject = stream;
+                                } else if (typeof element.mozSrcObject !== 'undefined') {
+                                    element.mozSrcObject = stream;
+                                } else if (typeof element.src !== 'undefined') {
+                                    element.src = URL.createObjectURL(stream);
+                                } else {
+                                    console.log("[WS]: Error attaching stream to element.");
+                                };
+                            };
+                            reattachMediaStream = function (to, from) {
+                                console.log("[WS]: Reattaching media stream");
+                                to.src = from.src;
+                            };
+        
+                            // The representation of tracks in a stream is changed in M26.
+                            // Unify them for earlier Chrome versions in the coexisting period.
+                            navigator.mediaDevices.getUserMedia({video: true}).then(mediaStream => {
+                                debugger;
+                                a=mediaStream.getVideoTracks();
+                                return mediaStream.getVideoTracks();
+                            });
+                            navigator.mediaDevices.getUserMedia({audio: true}).then(mediaStream => {
+                                return mediaStream.getAudioTracks();
+                            });
+        
+                            // New syntax of getXXXStreams method in M26.
+                            if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
+                                webkitRTCPeerConnection.prototype.getLocalStreams = function () {
+                                    return this.localStreams;
+                                };
+                                webkitRTCPeerConnection.prototype.getRemoteStreams = function () {
+                                    return this.remoteStreams;
+                                };
+                            }
+                        } else {
+                            console.log("[WS]: Browser does not appear to be WebRTC-capable");
+                        };
+
                     });
                     globalSession.on("getusermediafailed", function (e) {
                         console.log("[WS]: newRTCSession - getusermediafailed");
