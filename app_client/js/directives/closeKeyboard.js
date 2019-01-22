@@ -13,6 +13,7 @@ ONEmSimModule.directive('closeKeyboard', [
                         //textFields[0].focus();
                         //textFields[0].blur();
                         element[0].blur();
+                        element[0].focus();
         
                         /* To ensure status messages are visible on small screens */
                         //$window.scrollTo(0, 0);

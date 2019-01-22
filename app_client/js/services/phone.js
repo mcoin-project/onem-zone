@@ -45,37 +45,37 @@ ONEmSimModule.factory('Phone', [
                 //    console.log((performance.now() / 1000).toFixed(3) + ": " + text);
                 //};
 
-                if (navigator.mozGetUserMedia) {
-                    console.log("[WS]: This appears to be Firefox");
-                    webrtcDetectedBrowser = "firefox";
-                    //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
-                    // The RTCPeerConnection object.
-                    RTCPeerConnection = mozRTCPeerConnection;
-                    // The RTCSessionDescription object.
-                    RTCSessionDescription = mozRTCSessionDescription;
-                    // Get UserMedia (only difference is the prefix).
-                    // Code from Adam Barth.
-                    getUserMedia = navigator.mozGetUserMedia.bind(navigator);
-                    // Attach a media stream to an element.
-                    attachMediaStream = function (element, stream) {
-                        console.log("[WS]: Attaching media stream");
-                        element.mozSrcObject = stream;
-                        element.play();
-                    };
-                    reattachMediaStream = function (to, from) {
-                        console.log("[WS]: Reattaching media stream");
-                        to.mozSrcObject = from.mozSrcObject;
-                        to.play();
-                    };
-                } else if (navigator.webkitGetUserMedia) {
+                // if (navigator.mozGetUserMedia) {
+                //     console.log("[WS]: This appears to be Firefox");
+                //     webrtcDetectedBrowser = "firefox";
+                //     //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
+                //     // The RTCPeerConnection object.
+                //     RTCPeerConnection = mozRTCPeerConnection;
+                //     // The RTCSessionDescription object.
+                //     RTCSessionDescription = mozRTCSessionDescription;
+                //     // Get UserMedia (only difference is the prefix).
+                //     // Code from Adam Barth.
+                //     getUserMedia = navigator.mozGetUserMedia.bind(navigator);
+                //     // Attach a media stream to an element.
+                //     attachMediaStream = function (element, stream) {
+                //         console.log("[WS]: Attaching media stream");
+                //         element.mozSrcObject = stream;
+                //         element.play();
+                //     };
+                //     reattachMediaStream = function (to, from) {
+                //         console.log("[WS]: Reattaching media stream");
+                //         to.mozSrcObject = from.mozSrcObject;
+                //         to.play();
+                //     };
+                if (navigator.getUserMedia) {
                     console.log("[WS]: This appears to be Chrome");
                     webrtcDetectedBrowser = "chrome";
                     //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
                     // The RTCPeerConnection object.
-                    RTCPeerConnection = webkitRTCPeerConnection;
+                    //RTCPeerConnection = webkitRTCPeerConnection;
                     // Get UserMedia (only difference is the prefix).
                     // Code from Adam Barth.
-                    getUserMedia = navigator.webkitGetUserMedia.bind(navigator);
+                    getUserMedia = navigator.getUserMedia.bind(navigator);
                     // Attach a media stream to an element.
                     attachMediaStream = function (element, stream) {
                         console.log("[WS]: Attaching media stream");
@@ -93,6 +93,7 @@ ONEmSimModule.factory('Phone', [
                         console.log("[WS]: Reattaching media stream");
                         to.src = from.src;
                     };
+
                     // The representation of tracks in a stream is changed in M26.
                     // Unify them for earlier Chrome versions in the coexisting period.
                     if (!webkitMediaStream.prototype.getVideoTracks) {
@@ -366,6 +367,19 @@ ONEmSimModule.factory('Phone', [
 
                     globalSession.on("peerconnection", function (e) {
                         console.log("[WS]: newRTCSession - peerconnection");
+
+                        navigator.mediaDevices.getUserMedia({ video: true })
+                            .then(mediaStream => {
+                                document.querySelector('video').srcObject = mediaStream;
+                                return mediaStream.getVideoTracks()[0];
+                            });
+
+                        navigator.mediaDevices.getUserMedia({ audio: true })
+                            .then(mediaStream => {
+                                document.querySelector('audio').srcObject = mediaStream;
+                                return mediaStream.getAudioTracks()[0];
+                            });
+
                     });
                     globalSession.on("connecting", function (e) {
                         console.log("[WS]: newRTCSession - connecting");
