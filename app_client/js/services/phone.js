@@ -368,18 +368,6 @@ ONEmSimModule.factory('Phone', [
                     globalSession.on("peerconnection", function (e) {
                         console.log("[WS]: newRTCSession - peerconnection");
 
-                        navigator.mediaDevices.getUserMedia({ video: true })
-                            .then(mediaStream => {
-                                document.querySelector('video').srcObject = mediaStream;
-                                return mediaStream.getVideoTracks()[0];
-                            });
-
-                        navigator.mediaDevices.getUserMedia({ audio: true })
-                            .then(mediaStream => {
-                                 document.querySelector('audio').srcObject = mediaStream;
-                                return mediaStream.getAudioTracks()[0];
-                            });
-
                     });
                     globalSession.on("connecting", function (e) {
                         console.log("[WS]: newRTCSession - connecting");
