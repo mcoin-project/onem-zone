@@ -19,10 +19,11 @@ var io = require('./app_api/common/io.js');
 
 // The http server will listen to an appropriate port, or default to
 // port 5000.
+
 var theport = process.env.PORT || 5000;
-var mode = process.argv[2] || 'dev';
+var mode = app.get('env');
 mode = mode.toLowerCase();
-var public_folder = mode == 'prod' ? 'public' : 'app_client';
+var public_folder = mode == 'production' ? 'public' : 'app_client';
 
 debug("public_folder:" + public_folder);
 
@@ -35,7 +36,7 @@ app.use(helmet.noCache());
 
 // compress all responses
 app.use(compression());
-if (mode === 'dev') app.use(logger('dev'));
+if (mode === 'development') app.use(logger('dev'));
 app.use(methodOverride());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
