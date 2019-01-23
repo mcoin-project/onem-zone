@@ -566,7 +566,13 @@ ONEmSimModule.factory('Phone', [
                     console.log("[UI]: RejectButton - click");
                     //phoneONEm.terminateSessions();
 
-                    navigator.mediaDevices.getUserMedia({ audio:true, video: true }).then(mediaStream => {
+                    navigator.mediaDevices.getUserMedia({ audio:true }).then(mediaStream => {
+                        mediaStream.getTracks().forEach(track => track.stop());
+                    }).catch(function(err) {
+                        console.log(err.name + ": " + err.message);
+                    });
+
+                    navigator.mediaDevices.getUserMedia({ video:true }).then(mediaStream => {
                         mediaStream.getTracks().forEach(track => track.stop());
                     }).catch(function(err) {
                         console.log(err.name + ": " + err.message);
