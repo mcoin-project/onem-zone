@@ -1,5 +1,5 @@
 
-ONEmSimModule.directive('closeKeyboard', ['screenSize'
+ONEmSimModule.directive('closeKeyboard', ['screenSize',
     function(screenSize) {
         return {
             restrict: 'A',
@@ -8,7 +8,7 @@ ONEmSimModule.directive('closeKeyboard', ['screenSize'
                 element.bind('keyup', function(event) {
 
                     if (!screenSize.is('xs')) return;
-                    
+
                     if (event.keyCode === 13) {
                         console.log("13 event");
                         /* To dismiss onscreen keyboard */
