@@ -359,8 +359,7 @@ ONEmSimModule.factory('Phone', [
                                 };
 //                                return mediaStream.getVideoTracks();
                             }).catch(function(err) {
-                                    console.log(err.name + ": " + err.message)
-                                });
+                                console.log(err.name + ": " + err.message);
                             });
                             navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
                                 var video = document.querySelector('audio');
@@ -370,8 +369,7 @@ ONEmSimModule.factory('Phone', [
                                 };
 //                                return mediaStream.getAudioTracks();
                             }).catch(function(err) {
-                                    console.log(err.name + ": " + err.message)
-                                });
+                                console.log(err.name + ": " + err.message);
                             });
                             //navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
 //                          //      return mediaStream.getAudioTracks();
