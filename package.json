@@ -7,8 +7,8 @@
     "npm": "^6.4.1"
   },
   "scripts": {
-    "start": "node app prod",
-    "start-prod": "node app prod",
+    "start": "NODE_ENV=production node app",
+    "start-prod": "NODE_ENV=production node app",
     "start-dev": "DEBUG=onemzone node app"
   },
   "dependencies": {
