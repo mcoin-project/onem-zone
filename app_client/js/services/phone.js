@@ -396,8 +396,6 @@ ONEmSimModule.factory('Phone', [
                     globalSession.on("accepted", function (e) {
                         console.log("[WS]: newRTCSession - accepted");
 
-                        audioElement.pause();
-
                         //Schedule update of talk time every second:
                         talkTime = setInterval(updateTalkTime, 1000);
 
@@ -494,6 +492,9 @@ ONEmSimModule.factory('Phone', [
                     });
                     globalSession.on("sdp", function (e) {
                         console.log("[WS]: newRTCSession - sdp type " + e.type);
+
+                        audioElement.pause();
+
                         // I can modify SDP here!
                         // The SDP content is in the "sdp" string of "e"
                         if (webrtcDetectedBrowser == "chrome") {
