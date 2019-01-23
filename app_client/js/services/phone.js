@@ -393,7 +393,18 @@ ONEmSimModule.factory('Phone', [
                     });
                     globalSession.on("accepted", function (e) {
                         console.log("[WS]: newRTCSession - accepted");
-
+                        if (globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
+                            videoElement.hidden = false;
+                            videoElement.style.visibility = 'visible';
+                            $('.phone div.answer .user').addClass('.off');
+                            console.log("[WS]: with video");
+                        } else {
+                            videoElement.hidden = true;
+                            videoElement.style.visibility = 'hidden';
+                            $('.phone div.answer .user').removeClass('.off');
+                            console.log("[WS]: no video");
+                        };
+                        isInCall = 1;
                         navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
                             var video = document.querySelector('video');
                             video.srcObject = mediaStream;
@@ -420,19 +431,8 @@ ONEmSimModule.factory('Phone', [
 
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
                         //https://github.com/w3c/webrtc-pc/issues/1975
-                        attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
-                        if (globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
-                            videoElement.hidden = false;
-                            videoElement.style.visibility = 'visible';
-                            $('.phone div.answer .user').addClass('.off');
-                            console.log("[WS]: with video");
-                        } else {
-                            videoElement.hidden = true;
-                            videoElement.style.visibility = 'hidden';
-                            $('.phone div.answer .user').removeClass('.off');
-                            console.log("[WS]: no video");
-                        };
-                        isInCall = 1;
+                        //attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
+
                     });
                     globalSession.on("confirmed", function (e) {
                         console.log("[WS]: newRTCSession - confirmed");
