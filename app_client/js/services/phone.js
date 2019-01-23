@@ -302,8 +302,8 @@ ONEmSimModule.factory('Phone', [
                     console.log("[WS]: Attaching media stream");
                     if (typeof element.srcObject !== 'undefined') {
                         element.srcObject = stream;
-                    // } else if (typeof element.mozSrcObject !== 'undefined') {
-                    //     element.mozSrcObject = stream;
+                    } else if (typeof element.mozSrcObject !== 'undefined') {
+                         element.mozSrcObject = stream;
                     } else if (typeof element.src !== 'undefined') {
                         element.src = URL.createObjectURL(stream);
                     } else {
@@ -338,7 +338,7 @@ ONEmSimModule.factory('Phone', [
 
                     globalSession.on("peerconnection", function (e) {
                         console.log("[WS]: newRTCSession - peerconnection");
-                        if (navigator.getUserMedia) {
+                        if (navigator.mediaDevices.getUserMedia) {
                             console.log("[WS]: This appears to be Chrome");
                             webrtcDetectedBrowser = "chrome";
                             //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
@@ -346,7 +346,7 @@ ONEmSimModule.factory('Phone', [
                             //RTCPeerConnection = webkitRTCPeerConnection;
                             // Get UserMedia (only difference is the prefix).
                             // Code from Adam Barth.
-                            getUserMedia = navigator.getUserMedia.bind(navigator);
+                            getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator);
                             // Attach a media stream to an element.
 
                             // The representation of tracks in a stream is changed in M26.
@@ -545,7 +545,7 @@ ONEmSimModule.factory('Phone', [
                 RejectButton.click(function () {
                     console.log("[UI]: RejectButton - click");
                     //phoneONEm.terminateSessions();
-                    navigator.getUserMedia({ audio: true, video: true },
+                    navigator.mediaDevices.getUserMedia({ audio: true, video: true },
                         function (stream) {
                             stream.getTracks().forEach(track => track.stop());
                         },
