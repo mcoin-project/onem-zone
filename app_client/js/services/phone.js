@@ -565,13 +565,13 @@ ONEmSimModule.factory('Phone', [
                 RejectButton.click(function () {
                     console.log("[UI]: RejectButton - click");
                     //phoneONEm.terminateSessions();
-                    navigator.mediaDevices.getUserMedia({ audio: true, video: true },
-                        function (stream) {
-                            stream.getTracks().forEach(track => track.stop());
-                        },
-                        function (error) {
-                            console.log('getUserMedia() error', error);
-                        });
+
+                    navigator.mediaDevices.getUserMedia({ audio:true, video: true }).then(mediaStream => {
+                        mediaStream.getTracks().forEach(track => track.stop());
+                    }).catch(function(err) {
+                        console.log(err.name + ": " + err.message);
+                    });
+
                     globalSession.terminate();
                 });
 
