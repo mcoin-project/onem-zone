@@ -298,6 +298,24 @@ ONEmSimModule.factory('Phone', [
                 //    console.log("[WS]: registrationExpiring");       //it’s responsible of calling ua.register() within the registrationExpiring event
                 //});                                                  //(otherwise the registration will expire).
 
+                attachMediaStream = function (element, stream) {
+                    console.log("[WS]: Attaching media stream");
+                    if (typeof element.srcObject !== 'undefined') {
+                        element.srcObject = stream;
+                    // } else if (typeof element.mozSrcObject !== 'undefined') {
+                    //     element.mozSrcObject = stream;
+                    } else if (typeof element.src !== 'undefined') {
+                        element.src = URL.createObjectURL(stream);
+                    } else {
+                        console.log("[WS]: Error attaching stream to element.");
+                    };
+                };
+                // reattachMediaStream = function (to, from) {
+                //     console.log("[WS]: Reattaching media stream");
+                //     to.src = from.src;
+                // };
+
+
                 phoneONEm.on('newRTCSession', function (data) {
                     console.log("[WS]: newRTCSession");
 
@@ -330,32 +348,16 @@ ONEmSimModule.factory('Phone', [
                             // Code from Adam Barth.
                             getUserMedia = navigator.getUserMedia.bind(navigator);
                             // Attach a media stream to an element.
-                            attachMediaStream = function (element, stream) {
-                                console.log("[WS]: Attaching media stream");
-                                if (typeof element.srcObject !== 'undefined') {
-                                    element.srcObject = stream;
-                                } else if (typeof element.mozSrcObject !== 'undefined') {
-                                    element.mozSrcObject = stream;
-                                } else if (typeof element.src !== 'undefined') {
-                                    element.src = URL.createObjectURL(stream);
-                                } else {
-                                    console.log("[WS]: Error attaching stream to element.");
-                                };
-                            };
-                            reattachMediaStream = function (to, from) {
-                                console.log("[WS]: Reattaching media stream");
-                                to.src = from.src;
-                            };
-        
+
                             // The representation of tracks in a stream is changed in M26.
                             // Unify them for earlier Chrome versions in the coexisting period.
-                            navigator.mediaDevices.getUserMedia({video: true}).then(mediaStream => {
+                            navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
                                 return mediaStream.getVideoTracks();
                             });
-                            navigator.mediaDevices.getUserMedia({audio: true}).then(mediaStream => {
+                            navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
                                 return mediaStream.getAudioTracks();
                             });
-        
+
                             // New syntax of getXXXStreams method in M26.
                             // if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
                             //     webkitRTCPeerConnection.prototype.getLocalStreams = function () {
@@ -400,6 +402,7 @@ ONEmSimModule.factory('Phone', [
                         talkTime = setInterval(updateTalkTime, 1000);
 
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
+                        //https://github.com/w3c/webrtc-pc/issues/1975
                         attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
                         if (globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                             videoElement.hidden = false;
@@ -542,11 +545,11 @@ ONEmSimModule.factory('Phone', [
                 RejectButton.click(function () {
                     console.log("[UI]: RejectButton - click");
                     //phoneONEm.terminateSessions();
-                    navigator.getUserMedia({audio: true, video: true},
-                        function(stream) {
+                    navigator.getUserMedia({ audio: true, video: true },
+                        function (stream) {
                             stream.getTracks().forEach(track => track.stop());
                         },
-                        function(error){
+                        function (error) {
                             console.log('getUserMedia() error', error);
                         });
                     globalSession.terminate();
