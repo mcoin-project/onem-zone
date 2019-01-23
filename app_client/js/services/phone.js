@@ -393,6 +393,7 @@ ONEmSimModule.factory('Phone', [
                     });
                     globalSession.on("accepted", function (e) {
                         console.log("[WS]: newRTCSession - accepted");
+                        audioElement.pause();
                         if (globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                             videoElement.hidden = false;
                             videoElement.style.visibility = 'visible';
@@ -503,6 +504,7 @@ ONEmSimModule.factory('Phone', [
 
                     });
                     globalSession.on("getusermediafailed", function (e) {
+                        console.log(e);
                         console.log("[WS]: newRTCSession - getusermediafailed");
                     });
                     globalSession.on("peerconnection:createofferfailed", function (e) {
