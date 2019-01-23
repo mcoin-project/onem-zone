@@ -338,36 +338,36 @@ ONEmSimModule.factory('Phone', [
 
                     globalSession.on("peerconnection", function (e) {
                         console.log("[WS]: newRTCSession - peerconnection");
-                        if (navigator.mediaDevices.getUserMedia) {
-                            console.log("[WS]: This appears to be Chrome");
-                            webrtcDetectedBrowser = "chrome";
-                            //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
-                            // The RTCPeerConnection object.
-                            //RTCPeerConnection = webkitRTCPeerConnection;
-                            // Get UserMedia (only difference is the prefix).
-                            // Code from Adam Barth.
-                            //getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator);
-                            // Attach a media stream to an element.
+//                         if (navigator.mediaDevices.getUserMedia) {
+//                             console.log("[WS]: This appears to be Chrome");
+//                             webrtcDetectedBrowser = "chrome";
+//                             //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
+//                             // The RTCPeerConnection object.
+//                             //RTCPeerConnection = webkitRTCPeerConnection;
+//                             // Get UserMedia (only difference is the prefix).
+//                             // Code from Adam Barth.
+//                             //getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator);
+//                             // Attach a media stream to an element.
 
-                            // The representation of tracks in a stream is changed in M26.
-                            // Unify them for earlier Chrome versions in the coexisting period.
+//                             // The representation of tracks in a stream is changed in M26.
+//                             // Unify them for earlier Chrome versions in the coexisting period.
 
-                            //navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
-//                          //      return mediaStream.getAudioTracks();
-                            //});
+//                             //navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
+// //                          //      return mediaStream.getAudioTracks();
+//                             //});
 
-                            // New syntax of getXXXStreams method in M26.
-                            // if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
-                            //     webkitRTCPeerConnection.prototype.getLocalStreams = function () {
-                            //         return this.localStreams;
-                            //     };
-                            //     webkitRTCPeerConnection.prototype.getRemoteStreams = function () {
-                            //         return this.remoteStreams;
-                            //     };
-                            // }
-                        } else {
-                            console.log("[WS]: Browser does not appear to be WebRTC-capable");
-                        };
+//                             // New syntax of getXXXStreams method in M26.
+//                             // if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
+//                             //     webkitRTCPeerConnection.prototype.getLocalStreams = function () {
+//                             //         return this.localStreams;
+//                             //     };
+//                             //     webkitRTCPeerConnection.prototype.getRemoteStreams = function () {
+//                             //         return this.remoteStreams;
+//                             //     };
+//                             // }
+//                         } else {
+//                             console.log("[WS]: Browser does not appear to be WebRTC-capable");
+//                         };
 
                     });
                     globalSession.on("connecting", function (e) {
