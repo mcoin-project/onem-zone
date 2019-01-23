@@ -431,7 +431,7 @@ ONEmSimModule.factory('Phone', [
 
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
                         //https://github.com/w3c/webrtc-pc/issues/1975
-                        //attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
+                        attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
 
                     });
                     globalSession.on("confirmed", function (e) {
