@@ -318,7 +318,7 @@ ONEmSimModule.factory('Phone', [
 
                 phoneONEm.on('newRTCSession', function (data) {
                     console.log("[WS]: newRTCSession");
-debugger;
+
                     globalSession = data.session; //session pointer
 
                     $('.phone div.caller').addClass('open');
