@@ -346,17 +346,36 @@ ONEmSimModule.factory('Phone', [
                             //RTCPeerConnection = webkitRTCPeerConnection;
                             // Get UserMedia (only difference is the prefix).
                             // Code from Adam Barth.
-                            getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator);
+                            //getUserMedia = navigator.mediaDevices.getUserMedia.bind(navigator);
                             // Attach a media stream to an element.
 
                             // The representation of tracks in a stream is changed in M26.
                             // Unify them for earlier Chrome versions in the coexisting period.
                             navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
-                                return mediaStream.getVideoTracks();
+                                var video = document.querySelector('video');
+                                video.srcObject = mediaStream;
+                                video.onloadedmetadata = function(e) {
+                                    video.play();
+                                };
+//                                return mediaStream.getVideoTracks();
+                            }).catch(function(err) {
+                                    console.log(err.name + ": " + err.message)
+                                });
                             });
                             navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
-                                return mediaStream.getAudioTracks();
+                                var video = document.querySelector('audio');
+                                audio.srcObject = mediaStream;
+                                audio.onloadedmetadata = function(e) {
+                                    audio.play();
+                                };
+//                                return mediaStream.getAudioTracks();
+                            }).catch(function(err) {
+                                    console.log(err.name + ": " + err.message)
+                                });
                             });
+                            //navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
+//                          //      return mediaStream.getAudioTracks();
+                            //});
 
                             // New syntax of getXXXStreams method in M26.
                             // if (!webkitRTCPeerConnection.prototype.getLocalStreams) {
