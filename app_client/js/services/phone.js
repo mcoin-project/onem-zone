@@ -405,26 +405,6 @@ ONEmSimModule.factory('Phone', [
                             console.log("[WS]: no video");
                         };
                         isInCall = 1;
-                        navigator.mediaDevices.getUserMedia({ video: true }).then(mediaStream => {
-                            var video = document.querySelector('video');
-                            video.srcObject = mediaStream;
-                            video.onloadedmetadata = function(e) {
-                                video.play();
-                            };
-//                                return mediaStream.getVideoTracks();
-                        }).catch(function(err) {
-                            console.log(err.name + ": " + err.message);
-                        });
-                        navigator.mediaDevices.getUserMedia({ audio: true }).then(mediaStream => {
-                            var audio = document.querySelector('audio');
-                            audio.srcObject = mediaStream;
-                            audio.onloadedmetadata = function(e) {
-                                audio.play();
-                            };
-//                                return mediaStream.getAudioTracks();
-                        }).catch(function(err) {
-                            console.log(err.name + ": " + err.message);
-                        });
 
                         //Schedule update of talk time every second:
                         talkTime = setInterval(updateTalkTime, 1000);
