@@ -30,7 +30,7 @@ ONEmSimModule.factory('Phone', [
                 var isInCall = 0;
 
                 //These are the variables needed for the code found at https://chromium.googlesource.com/chromium/src.git/+/lkgr/chrome/test/data/webrtc/adapter.js?autodive=0%2F
-                var RTCPeerConnection = null;
+                //var RTCPeerConnection = null;
                 var getUserMedia = null;
                 var attachMediaStream = null;
                 var reattachMediaStream = null;
@@ -50,9 +50,9 @@ ONEmSimModule.factory('Phone', [
                     webrtcDetectedBrowser = "firefox";
                     //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
                     // The RTCPeerConnection object.
-                    RTCPeerConnection = mozRTCPeerConnection;
+                  //  RTCPeerConnection = mozRTCPeerConnection;
                     // The RTCSessionDescription object.
-                    RTCSessionDescription = mozRTCSessionDescription;
+                  //  RTCSessionDescription = mozRTCSessionDescription;
                     // Get UserMedia (only difference is the prefix).
                     // Code from Adam Barth.
                     getUserMedia = navigator.mozGetUserMedia.bind(navigator);
@@ -72,7 +72,7 @@ ONEmSimModule.factory('Phone', [
                     webrtcDetectedBrowser = "chrome";
                     //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
                     // The RTCPeerConnection object.
-                    RTCPeerConnection = webkitRTCPeerConnection;
+                //    RTCPeerConnection = webkitRTCPeerConnection;
                     // Get UserMedia (only difference is the prefix).
                     // Code from Adam Barth.
                     getUserMedia = navigator.webkitGetUserMedia.bind(navigator);
@@ -396,7 +396,9 @@ ONEmSimModule.factory('Phone', [
                         talkTime = setInterval(updateTalkTime, 1000);
 
                         //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
-                        attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
+                        attachMediaStream(audioElement, globalSession.connection.getRemoteStreams()[0]);
+                        //attachMediaStream(videoElement, globalSession.connection.getRemoteStreams()[0]);
+
                         if (globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                             videoElement.hidden = false;
                             videoElement.style.visibility = 'visible';
