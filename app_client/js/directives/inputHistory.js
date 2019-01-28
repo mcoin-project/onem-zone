@@ -2,23 +2,24 @@ ONEmSimModule.directive('inputHistory', ['$timeout',
     function ($timeout) {
         return {
             restrict: 'A',
-            require: "ngModel",
+            require: 'ngModel',
             scope: {
-                ngModel: '='
+                ngModel: '=',
+                history: '='
             },
-            link: function (scope, element, attrs, ngModel) {
+            link: function (scope, element, attrs) {
 
-                var history = [];
                 var pointer = 0;
+                //scope.history = [];
 
                 element.on("input propertychange", function () {
-                    if (history.length == 0) {
-                        history.push(scope.ngModel);
-                    } else{
-                        history[pointer] = scope.ngModel;
+                    if (scope.history.length == 0) {
+                        scope.history.push(scope.ngModel);
+                    } else {
+                        scope.history[pointer] = scope.ngModel;
                     }
                     console.log(pointer);
-                    console.log(history);
+                    console.log(scope.history);
                     console.log(scope.ngModel);
                 });
 
@@ -33,40 +34,40 @@ ONEmSimModule.directive('inputHistory', ['$timeout',
                         case 38:
                             console.log("key up");
                             console.log(pointer);
-                            console.log(history);
+                            console.log(scope.history);
                             console.log(scope.ngModel);
 
                             scope.$apply(function() {
-                                if (history.length > 0) {
+                                if (scope.history.length > 0) {
                                     if (pointer - 1  > -1) {
                                         pointer--;
-                                        scope.ngModel = history[pointer];
+                                        scope.ngModel = scope.history[pointer];
                                         console.log("element:")
                                         console.log(element[0].selectionStart);
                                         console.log(element[0].selectionEnd);
-                                        $timeout(function() {
-                                            element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
-                                        });
                                     }
+                                    $timeout(function() {
+                                        element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
+                                    });
                                 }
                             });
                             break;
                         case 40:
                             console.log("key down");
                             console.log(pointer);
-                            console.log(history);
+                            console.log(scope.history);
                             console.log(scope.ngModel);
                             scope.$apply(function() {
-                                if (history.length > 0) {
-                                    if (pointer + 1 < history.length) {
+                                if (scope.history.length > 0) {
+                                    if (pointer + 1 < scope.history.length) {
                                         pointer++;
-                                        scope.ngModel = history[pointer];
-                                        $timeout(function() {
-                                            element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
-                                        });
-                                    } else if (pointer + 1 == history.length) {
+                                        scope.ngModel = scope.history[pointer];
+                                    } else if (pointer + 1 == scope.history.length) {
                                         scope.ngModel = '';
                                     }
+                                    $timeout(function() {
+                                        element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
+                                    });
                                 }
                             });
                             break;
