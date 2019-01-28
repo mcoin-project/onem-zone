@@ -13,6 +13,8 @@ ONEmSimModule.controller('mainController', [
 
         $scope.selected = { country: '' };
 
+        $scope.history = [];
+
         console.log("[MN]: mainController initialising");
 
         $scope.$on('error', function (ev, data) {
