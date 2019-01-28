@@ -25,6 +25,9 @@ function ensureAuthenticated(req, res, next) {
     }
     var token = req.header('Authorization').split(' ')[1];
 
+    debug("verifying token:");
+    debug(token);
+
     var payload = common.decodeJWT(token);
     debug("decoded payload");
     debug(payload);

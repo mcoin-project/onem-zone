@@ -81,14 +81,18 @@ exports.getMsisdn = function (User) {
 
 exports.getUser = function (id) {
     return new Promise(function (resolve, reject) {
-        debug("querying:" + id);
+        debug("querying user:" + id);
         User.findOne({ _id: id }).then(function (user) {
             if (!user) {
+                debug("user not found");
                 reject("user not found");
             } else {
+                debug("found");
+                debug(user);
                 resolve(user);
             }
         }).catch(function (error) {
+            debug(error);
             reject(error);
         });
     });

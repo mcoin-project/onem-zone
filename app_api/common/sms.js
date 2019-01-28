@@ -26,7 +26,7 @@ var idMsg = 0;
 
 var smppSession; // the SMPP session context saved globally.
 
-var smppServer = smpp.createServer(function(session) {
+var smppServer = smpp.createServer(function (session) {
 
     // var alreadySent = false;
     var mtText = '';
@@ -34,7 +34,7 @@ var smppServer = smpp.createServer(function(session) {
 
     smppSession = session; // save the session globally
 
-    session.on('bind_transceiver', function(pdu) {
+    session.on('bind_transceiver', function (pdu) {
         debug('Bind request received, system_id:' + pdu.system_id + ' password:' + pdu.password);
         // we pause the session to prevent further incoming pdu events,
         // untill we authorize the session with some async operation.
@@ -53,18 +53,18 @@ var smppServer = smpp.createServer(function(session) {
         session.resume();
     });
 
-    session.on('enquire_link', function(pdu) {
+    session.on('enquire_link', function (pdu) {
         debug('enquire_link received');
         session.send(pdu.response());
     });
 
-    session.on('unbind', function(pdu) {
+    session.on('unbind', function (pdu) {
         debug('unbind received, closing session');
         session.send(pdu.response());
         session.close();
     });
 
-    smppSession.on('submit_sm', function(pdu) {
+    smppSession.on('submit_sm', function (pdu) {
 
         //The delivery reports are sent to the client using the 'deliver_sm' packet.
         //This is the same packet as used to deliver incoming messages.
@@ -189,7 +189,7 @@ var smppServer = smpp.createServer(function(session) {
                 short_message: dlReceipt,
                 message_state: statMsgValue, // \_ These two message options should be added to a delivery receipt
                 receipted_message_id: hexidMsg // /
-            }, function(pdu) {
+            }, function (pdu) {
                 if (pdu.command_status === 0) {
                     // Message successfully sent
                     debug("Delivery receipt sent!");
@@ -201,7 +201,7 @@ var smppServer = smpp.createServer(function(session) {
 
     });
 
-    smppSession.on('deliver_sm', function(pdu) {
+    smppSession.on('deliver_sm', function (pdu) {
         debug("deliver_sm received: " + pdu);
         if (pdu.esm_class == 4) {
             var shortMessage = pdu.short_message;
@@ -212,7 +212,7 @@ var smppServer = smpp.createServer(function(session) {
 
 });
 
-exports.sendSMS = function(from, to, text) {
+exports.sendSMS = function (from, to, text) {
 
     var textLength = text.length;
 
@@ -233,7 +233,7 @@ exports.sendSMS = function(from, to, text) {
                 destination_addr_npi: 0,
                 data_coding: 8,
                 short_message: buffer
-            }, function(pdu) {
+            }, function (pdu) {
                 if (pdu.command_status === 0) {
                     // Message successfully sent
                     debug("Message sent!");
@@ -280,7 +280,7 @@ exports.sendSMS = function(from, to, text) {
                     destination_addr_npi: 0,
                     data_coding: 8,
                     short_message: { udh: udh, message: buffer }
-                }, function(pdu) {
+                }, function (pdu) {
                     if (pdu.command_status === 0) {
                         // Message successfully sent
                         debug("Multipart message sent!");
@@ -294,4 +294,7 @@ exports.sendSMS = function(from, to, text) {
     };
 }
 
-smppServer.listen(smppPort);
+exports.initialize = function (from, to, text) {
+    debug("smppPort:" + smppPort);
+    smppServer.listen(smppPort);
+}

@@ -12,10 +12,12 @@ var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var helmet = require('helmet');
 var compression = require('compression');
+var sms = require('./app_api/common/sms.js');
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
-var io = require('./app_api/common/io.js');
+//var io = require('./app_api/common/io.js');
+var sc = require('./app_api/common/sc.js');
 
 // The http server will listen to an appropriate port, or default to
 // port 5000.
@@ -52,11 +54,10 @@ if (process.env.HTTPS === 'ON') {
     });
 }
 
-//The message state to be used in receipts:
-// Bring in the data model & connect to db
+sc.initialize(server);
+sms.initialize();
 require('./app_api/models/db');
 
-io.initialize(server);
 
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
