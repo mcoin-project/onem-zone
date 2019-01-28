@@ -45,10 +45,10 @@ ONEmSimModule.directive('inputHistory', ['$timeout',
                                         console.log("element:")
                                         console.log(element[0].selectionStart);
                                         console.log(element[0].selectionEnd);
-                                        $timeout(function() {
-                                            element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
-                                        });
                                     }
+                                    $timeout(function() {
+                                        element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
+                                    });
                                 }
                             });
                             break;
@@ -62,12 +62,12 @@ ONEmSimModule.directive('inputHistory', ['$timeout',
                                     if (pointer + 1 < scope.history.length) {
                                         pointer++;
                                         scope.ngModel = scope.history[pointer];
-                                        $timeout(function() {
-                                            element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
-                                        });
                                     } else if (pointer + 1 == scope.history.length) {
                                         scope.ngModel = '';
                                     }
+                                    $timeout(function() {
+                                        element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
+                                    });
                                 }
                             });
                             break;
