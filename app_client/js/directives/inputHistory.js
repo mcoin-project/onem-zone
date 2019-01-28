@@ -1,5 +1,5 @@
-ONEmSimModule.directive('inputHistory', [
-    function () {
+ONEmSimModule.directive('inputHistory', ['$timeout',
+    function ($timeout) {
         return {
             restrict: 'A',
             require: "ngModel",
@@ -40,12 +40,14 @@ ONEmSimModule.directive('inputHistory', [
                                 if (history.length > 0) {
                                     if (pointer - 1  > -1) {
                                         pointer--;
-                                        //element[0].selectionStart = element[0].selectionEnd = scope.ngModel.length;
-                                        // element[0].set('selectionStart',scope.ngModel.length);
-                                    } else {
-                                        pointer = history.length - 1;
+                                        scope.ngModel = history[pointer];
+                                        console.log("element:")
+                                        console.log(element[0].selectionStart);
+                                        console.log(element[0].selectionEnd);
+                                        $timeout(function() {
+                                            element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
+                                        });
                                     }
-                                    scope.ngModel = history[pointer];   
                                 }
                             });
                             break;
@@ -59,6 +61,11 @@ ONEmSimModule.directive('inputHistory', [
                                     if (pointer + 1 < history.length) {
                                         pointer++;
                                         scope.ngModel = history[pointer];
+                                        $timeout(function() {
+                                            element[0].setSelectionRange(scope.ngModel.length, scope.ngModel.length);
+                                        });
+                                    } else if (pointer + 1 == history.length) {
+                                        scope.ngModel = '';
                                     }
                                 }
                             });
