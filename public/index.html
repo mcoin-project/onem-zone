@@ -1,54 +1,105 @@
 <!DOCTYPE html>
 <html lang="en" data-ng-app="ONEmSimModule">
 
-    <head>
-        <base href="/">
-        <meta charset="utf-8" />
-        <meta name="fragment" content="!" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<head>
+    <base href="/">
+    <meta charset="utf-8" />
+    <meta name="fragment" content="!" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ONEm Zone" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ONEm Zone</title>
+    <link rel="icon" href="./images/favicon.ico?v1.1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+        rel="stylesheet">
+    <!-- font-family: 'Roboto', sans-serif; font-family: 'Roboto Condensed', sans-serif; font-family: 'Noto Sans', sans-serif; font-family: 'Noto Serif', serif; -->
+    <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900"
+        rel="stylesheet">
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/plugins.min.css">
+    <link rel="stylesheet" href="css/app.min.css">
 
-        <!-- for Bootstrap 4 -- >
-        <meta property="og:title" content="ONEm Zone" />
-        <meta property="og:description" content="ONEm Zone" />
-        <meta name="description" content="ONEm Zone" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <title>ONEm Zone</title>
-        <!-- <link rel="stylesheet" href="/css/font-awesome.min.css"> -->
-        <link rel="icon" href="./images/favicon.ico?v1.1">
-        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
+    <!--if lt IE 9-->
+    <!-- JS Files -->
+    <script src="js/plugins.min.js"></script>
 
-        <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese" rel="stylesheet">
-        <!-- font-family: 'Roboto', sans-serif; font-family: 'Roboto Condensed', sans-serif; font-family: 'Noto Sans', sans-serif; font-family: 'Noto Serif', serif; -->
-        <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900" rel="stylesheet">
-        <!-- CSS Files -->
-        <link rel="stylesheet" href="css/plugins.min.css">
-        <link rel="stylesheet" href="assets/css/app.min.css">
+</head>
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
-        <!--if lt IE 9-->
-        <!-- JS Files -->
-        <script src="js/plugins.min.js"></script>
+<body ng-controller="navbarController" class="homepage container-fluid" name="body">
 
-    </head>
-
-    <body class="homepage container-fluid" name="body">
-
-        <div class="container">
-            <div ui-view></div>
+    <div class="ng-cloak" ng-show="user.email">
+        <!-- Dropdown Structure -->
+        <ul id="dropdown1" class="dropdown-content">
+            <p>{{user.firstName}} {{user.lastName}}</p>
+            <p>{{msisdn}}</p>
+            <li class="divider"></li>
+            <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink account</a></li>
+            <li><a ng-href="/logout">Logout</a></li>
+        </ul>
+        <div class="navbar-fixed">
+            <nav class="red">
+                <div class="container">
+                    <a ng-href="/" class="brand-logo">
+                        <img style="padding-top:10px" class="logo" height="50" src="./images/onem_zone_logo_thumb_white.png"
+                            alt="logo" />
+                    </a>
+                    <a ng-href="/" class="brand-logo"></a>
+                    <div class="nav-wrapper">
+                        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                        <ul class="right hide-on-med-and-down">
+                            <!-- Dropdown Trigger -->
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{user.email || 'My
+                                    Profile'}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
         </div>
+        <!-- Modal Structure -->
+        <div id="unlinkModal" class="modal">
+            <div class="modal-content">
+                <h4>Unlink account</h4>
+                <p>This will unlink your email account and log you out of ONEm.zone.</p>
+                <p>You can still text ONEm from your real mobile phone and you will not lose any data.</p>
+                <p>You will be able re-register to ONEm.zone again later.</p>
+            </div>
+            <div class="modal-footer">
+                <a ng-href="" class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
+                <a ng-click="agree()" ng-href="" class="modal-close waves-effect waves-green btn-flat">Confirm & Logout</a>
+            </div>
+        </div>
+    </div>
 
-        <audio loop id="myAudio" src="" hidden=true>
-            <source type="audio/wav"/>
-        </audio>
+    <ul class="sidenav" id="mobile-demo">
+        <h6>My Profile</h6>
+        <p>{{user.firstName}} {{user.lastName}}</p>
+        <p>{{msisdn}}</p>
+        <p>{{user.email}}</p>
+        <li class="divider"></li>
+        <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink account</a></li>
+        <li><a ng-href="/logout">Logout</a></li>
+    </ul>
+    </div>
 
-        <video loop id="myVideo" width="320" height="240" src="" hidden=true>
-            <source type="video/mp4">
-            <source type="video/ogg">
-            <source type="video/webm">
-            Your browser does not support the video tag.
-        </video>
+    <div class="container">
+        <div ui-view></div>
+    </div>
 
-    </body>
-    <script src="js/app.min.js"></script>
+    <audio loop id="myAudio" src="" hidden=true>
+        <source type="audio/wav" />
+    </audio>
+
+    <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+        <source type="video/mp4">
+        <source type="video/ogg">
+        <source type="video/webm">
+        Your browser does not support the video tag.
+    </video>
+
+</body>
+<script src="js/app.min.js"></script>
+
 </html>
-

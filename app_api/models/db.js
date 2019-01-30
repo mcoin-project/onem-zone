@@ -1,3 +1,5 @@
+const debug = require('debug')('onemzone');
+
 var mongoose = require('mongoose');
 var gracefulShutdown;
 
@@ -5,16 +7,16 @@ var gracefulShutdown;
 // localhost if we don't find one.
 var dbURI = process.env.MONGODB_URI ||  'mongodb://127.0.0.1:27017/onem-zone';
 
-console.log("dbURI:"+dbURI);
+debug("dbURI:"+dbURI);
 
 mongoose.connect(dbURI, { 
     useNewUrlParser: true,
     useCreateIndex: true
  }, function (err, res) {
   if (err) { 
-    console.log ('ERROR connecting to: ' + dbURI + '. ' + err);
+    debug ('ERROR connecting to: ' + dbURI + '. ' + err);
   } else {
-    console.log ('Succeeded connected to: ' + dbURI);
+    debug ('Succeeded connected to: ' + dbURI);
   }
 });
 
@@ -22,7 +24,7 @@ mongoose.connect(dbURI, {
 // To be called when process is restarted or terminated
 gracefulShutdown = function(msg, callback) {
     mongoose.connection.close(function() {
-        console.log('Mongoose disconnected through ' + msg);
+        debug('Mongoose disconnected through ' + msg);
         callback();
     });
 };

@@ -1,3 +1,4 @@
+const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 
@@ -29,17 +30,17 @@ exports.googleAuth = function (User) {
       var headers = { Authorization: 'Bearer ' + accessToken };
 
       googleJWTToken = common.decodeJWT(response.body.id_token, true);
-      console.log("jwt:");
-      console.log(googleJWTToken);
+      debug("jwt:");
+      debug(googleJWTToken);
       // if (!googleJWTToken.sub) {
       //   return res.status(500).send({ message: 'Cannot retrieve user profile' });
       // }
 
       // Step 3a. Link user accounts.
       if (googleJWTToken && googleJWTToken.sub && req.header('Authorization')) {
-        console.log("*** request header ***");
+        debug("*** request header ***");
         User.findOne({ google: googleJWTToken.sub }, function (err, existingUser) {
-          console.log("found existing user - creating jwt token");
+          debug("found existing user - creating jwt token");
           if (existingUser) {
             return res.status(409).send({ message: 'There is already a Google account that belongs to you' });
           }
@@ -47,13 +48,13 @@ exports.googleAuth = function (User) {
           var payload = common.decodeJWT(token);
           User.findById(payload.sub, function (err, user) {
             if (err) {
-              console.log(err);
+              debug(err);
               return res.status(500).send({ message: 'Server error' });
             }
             var newUser;
             if (!user) {
               newUser = new User();
-              console.log('user not found');
+              debug('user not found');
               //return res.status(400).send({ message: 'User not found' });
             } else {
               newUser = user;
@@ -65,13 +66,13 @@ exports.googleAuth = function (User) {
             newUser.email = newUser.email || googleJWTToken.email;
             newUser.save(function (err, user) {
               if (err) {
-                console.log(err);
+                debug(err);
                 return res.status(500).send({ message: 'Server error' });
               }
-              console.log("creating jwt (existing token)");
-              console.log(user);
+              debug("creating jwt (existing token)");
+              debug(user);
               if (!user) {
-                console.log(err);
+                debug(err);
                 return res.status(400).send({ message: 'User not found' });
               }
               var token = common.createJWT(newUser);
@@ -83,8 +84,8 @@ exports.googleAuth = function (User) {
         // Step 3b. Create a new user account or return an existing one.
         User.findOne({ google: googleJWTToken.sub }, function (err, existingUser) {
           if (existingUser && existingUser.email) {
-            console.log("creating jwt (no token)");
-            console.log(user);
+            debug("creating jwt (no token)");
+            debug(user);
             return res.send({ token: common.createJWT(existingUser) });
           }
           var user = new User();
@@ -95,11 +96,11 @@ exports.googleAuth = function (User) {
           user.email = user.email || googleJWTToken.email;
           user.save(function (err, user) {
             if (err) {
-              console.log(err);
+              debug(err);
               return res.status(400).send({ message: 'User not saved' });
             }
-            console.log("creating jwt");
-            console.log(user);
+            debug("creating jwt");
+            debug(user);
             var token = common.createJWT(user);
             res.send({ token: token });
           });
@@ -144,8 +145,8 @@ exports.facebookAuth = function (User) {
             }
             var token = req.header('Authorization').split(' ')[1];
             var payload = common.decodeJWT(token, true);
-            console.log(" fb payload");
-            console.log(payload);
+            debug(" fb payload");
+            debug(payload);
 
             User.findById(payload.sub, function (err, user) {
               if (!user) {
@@ -162,10 +163,10 @@ exports.facebookAuth = function (User) {
             });
           });
         } else {
-          console.log("no auth header");
+          debug("no auth header");
           // Step 3. Create a new user account or return an existing one.
-          console.log(" fb profile");
-          console.log(profile);
+          debug(" fb profile");
+          debug(profile);
 
           User.findOne({ facebook: profile.id }, function (err, existingUser) {
             if (existingUser && existingUser.email) {
@@ -177,7 +178,7 @@ exports.facebookAuth = function (User) {
             user.lastName = user.lastName || profile.last_name;
             user.email = user.email || profile.email;
             user.save(function (err) {
-              if (err) console.log(err);
+              if (err) debug(err);
               var token = common.createJWT(user);
               res.send({ token: token });
             });

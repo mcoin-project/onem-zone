@@ -1,3 +1,4 @@
+const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const moment = require('moment');
@@ -41,7 +42,7 @@ exports.decodeJWT = function (token, noVerify) {
 
 exports.getUser = function (msisdn) {
     return new Promise(function (resolve, reject) {
-        console.log("looking up user:" + msisdn);
+        debug("looking up user:" + msisdn);
         User.findOne({ msisdn: msisdn }).then(function (user) {
             if (!user) {
                 resolve(undefined);
@@ -63,25 +64,25 @@ exports.sendEmail = function (msisdn, text) {
     data.Subject = "SMS received";
     //data.formData = emailData;
 
-    //  console.log("data.firstName:" + data.firstName);
+    //  debug("data.firstName:" + data.firstName);
 
     //template.render(data).then(function(result) {
     exports.getUser(msisdn).then(function (user) {
         // data.HtmlBody = result.html;
         if (!user || !user.email) {
-            console.log("can't find email user for: " + user._id);
+            debug("can't find email user for: " + user._id);
             return;
         }
         data.TextBody = text;
         data.To = user.email;
         client.sendEmail(data, function (error, body) {
             if (error) {
-                console.log("sendEmail");
-                console.log(error);
+                debug("sendEmail");
+                debug(error);
             }
         });
     }).catch(function(error){
-        console.log(error);
+        debug(error);
     });
 }
 
@@ -91,7 +92,7 @@ exports.verifyJWT = function (token) {
         payload = jwt.decode(token, process.env.TOKEN_SECRET);
     }
     catch (err) {
-        console.log(err.message);
+        debug(err.message);
         return undefined;
     }
 

@@ -41,6 +41,7 @@ Create a .env file in the root directory with your favourite editor with the fol
 | `NEXMO_API_SECRET` | | Nexmo is used for sending SMS one time passwords to authenticate first-time users.  Get this from your system admin |
 | `NEXMO_ENABLED` | `false` | Boolean that controls whether to send SMS OTP password or not.  Default is false, set to true for production use |  
 | `HTTPS` | `OFF` | Set to `ON` to force Node JS to redirect the client to HTTPS session |  
+| `DEBUG` | none | Set to `onem-zone` to enable debug on node console.  |
 
 ## Running in production mode
 
@@ -48,7 +49,22 @@ The following command will execute in production mode and serve the files from t
 ```
 $ npm start
 ```
+## Server Side Debug
+
+Either:
+
+Use `DEBUG` parameter in `.env` (see above).
+
+
+Or:
+
+to enable debug in production mode:
+```
+$ DEBUG=onem-zone node app prod
+```
+
 ## Developing and contributing
+
 ```
 $ git checkout develop
 ```
@@ -68,7 +84,7 @@ From second terminal window:
 ```
 $ gulp
 ```
-The above command executes in dev mode and the server serves the files from `app_client`.  Browser should launch automatically.  Any changes you make to the scss files in `app_client/scss` are automatically compiled to css and the browser refreshes automatically.  Similarly, any changes to the html files in `index.html` or in `/partials` will also cause browser to refresh.
+The above command executes in dev mode and the server serves the files from the `app_client` folder.  Your browser should launch automatically.  Any changes you make to the scss files in `app_client/scss` are automatically compiled to css and the browser refreshes automatically.  Similarly, any changes to the html files in `index.html` or in `/partials` will also cause browser to refresh.
 
 When you want to make a production build:
 ```

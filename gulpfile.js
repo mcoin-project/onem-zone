@@ -1,8 +1,9 @@
 var gulp = require('gulp');
+var gutil = require('gulp-util');
 var sass = require('gulp-sass');
 var browserSync = require('browser-sync');
 var useref = require('gulp-useref');
-var uglify = require('gulp-uglify');
+var uglify = require('gulp-uglify-es').default;
 var gulpIf = require('gulp-if');
 var cssnano = require('gulp-cssnano');
 var imagemin = require('gulp-imagemin');
@@ -11,6 +12,8 @@ var del = require('del');
 var runSequence = require('run-sequence');
 var stripDebug = require('gulp-strip-debug');
 var path = require('path');
+var pump = require('pump');
+
 
 // Development Tasks 
 // -----------------
@@ -21,6 +24,14 @@ gulp.task('browserSync', function() {
     proxy: "http://localhost:5000" // port of node server
   })
 })
+
+gulp.task('uglify-error-debugging', function (cb) {
+  pump([
+    gulp.src('app_client/**/*.js'),
+    uglify(),
+    gulp.dest('./dist/')
+  ], cb);
+});
 
 gulp.task('sass-build', function() {
   return gulp.src('app_client/scss/**/*.scss') // Gets all files ending with .scss in app_client/scss and children dirs
@@ -52,6 +63,7 @@ gulp.task('useref', function() {
   return gulp.src('app_client/**/*.html')
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
+    .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
     .pipe(gulpIf('*.js', stripDebug()))
     .pipe(gulpIf('*.css', cssnano()))
     .pipe(gulp.dest('public'));
@@ -70,6 +82,11 @@ gulp.task('images', function() {
       interlaced: true,
     })))
     .pipe(gulp.dest('public/images'))
+});
+
+gulp.task('copy-flags', function() {
+  return gulp.src('app_client/bower_components/intl-tel-input/build/img/**/*.*')
+    .pipe(gulp.dest('public/bower_components/intl-tel-input/build/img'));
 });
 
 // Copying fonts 
@@ -102,7 +119,7 @@ gulp.task('build', function(callback) {
   runSequence(
     'clean:public',
     'sass-build',
-    ['useref', 'images', 'fonts', 'copy-sounds'],
+    ['useref', 'images', 'fonts', 'copy-sounds', 'copy-flags'],
     callback
   )
 })

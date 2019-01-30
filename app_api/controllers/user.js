@@ -1,3 +1,4 @@
+const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
 const ObjectId = require('mongoose').Types.ObjectId;
 const speakeasy = require('speakeasy');
@@ -20,13 +21,13 @@ exports.checkMsisdn = function (User) {
         if (req.query.msisdn) {
             User.find({ msisdn: req.query.msisdn }).then(function (user) {
                 if (user && user.length > 0) {
-                    console.log("/checkMsisdn - msisdn found");
+                    debug("/checkMsisdn - msisdn found");
                     return res.status(401).send({ status: false, error: "msisdn found" });
                 }
                 res.status(200).send({ status: true });
             }).catch(function (error) {
-                console.log("/user - user not found");
-                console.log(error);
+                debug("/user - user not found");
+                debug(error);
                 res.status(500).send({ error: "server error" });
             });
         } else {
@@ -35,29 +36,52 @@ exports.checkMsisdn = function (User) {
     }
 }
 
+exports.delete = function (User) {
+    return function (req, res) {
+        if (!req.user) {
+            return res.status(401).send({ error: "not authorized" });
+        }
+        User.remove({ _id: req.user }).then(function (result) {
+            if (!result.ok) throw "Error deleting";
+            debug("/user delete ok");
+            debug(result);
+            res.status(200).send({ result: 'Success'});
+        }).catch(function (error) {
+            debug("/user delete");
+            debug(error);
+            res.status(500).send({ result: 'Fail', error: "Error deleting" });
+        });
+    }
+}
+
 exports.getMsisdn = function (User) {
     return function (req, res) {
-        if (req.user) {
-            User.findById({ _id: req.user }).then(function (user) {
-                if (!user || !user.msisdn) {
-                    console.log("/getMsisdn - user not found");
-                    return res.status(401).send({ error: "msisdn not found" });
-                }
-                res.status(200).send({ msisdn: user.msisdn, user: req.user });
-            }).catch(function (error) {
-                console.log("/user - user not found");
-                console.log(error);
-                res.status(500).send({ error: "server error" });
-            });
-        } else {
-            res.status(401).send({ error: "not authorized" });
+        if (!req.user) {
+            return res.status(401).send({ error: "not authorized" });
         }
+        User.findById({ _id: req.user }).then(function (user) {
+            if (!user || !user.msisdn) {
+                debug("/getMsisdn - user not found");
+                return res.status(401).send({ error: "msisdn not found" });
+            }
+            var userObj = {};
+            userObj.firstName = user.firstName;
+            userObj.lastName = user.lastName;
+            userObj.email = user.email;
+
+            res.status(200).send({ msisdn: user.msisdn, user: userObj });
+        }).catch(function (error) {
+            debug("/user - user not found");
+            debug(error);
+            res.status(500).send({ error: "server error" });
+        });
+
     }
 }
 
 exports.getUser = function (id) {
     return new Promise(function (resolve, reject) {
-        console.log("querying:" + id);
+        debug("querying:" + id);
         User.findOne({ _id: id }).then(function (user) {
             if (!user) {
                 reject("user not found");
@@ -73,15 +97,15 @@ exports.getUser = function (id) {
 exports.verifyToken = function (User) {
     return function (req, res) {
         if (!req.user) {
-            console.log("/verifyToken");
-            console.log("user not found");
+            debug("/verifyToken");
+            debug("user not found");
             return res.status(401).send({
                 message: "User not found"
             });
         }
         if (!req.query.token) {
-            console.log("/verifyToken");
-            console.log("user missing token");
+            debug("/verifyToken");
+            debug("user missing token");
             return res.status(400).send({
                 message: "Malformed request"
             });
@@ -110,15 +134,15 @@ exports.verifyToken = function (User) {
 exports.sendToken = function (User) {
     return function (req, res) {
         if (!req.user) {
-            console.log("/sendToken");
-            console.log("user not found");
+            debug("/sendToken");
+            debug("user not found");
             return res.status(401).send({
                 message: "User not found"
             });
         }
         if (!req.query.msisdn) {
-            console.log("/sendToken");
-            console.log("user missing msisdn");
+            debug("/sendToken");
+            debug("user missing msisdn");
             return res.status(400).send({
                 message: "Malformed request"
             });
@@ -134,13 +158,13 @@ exports.sendToken = function (User) {
                 encoding: 'base32'
             });
             var text = "ONEm verification code: " + token;
-            console.log(text);
-            console.log("smsVerify:" + smsVerify);
+            debug(text);
+            debug("smsVerify:" + smsVerify);
             if (smsVerify.toLowerCase() == "true") {
-                console.log("sending sms");
+                debug("sending sms");
                 nexmo.message.sendSms(from, req.query.msisdn, text, function (err, response) {
                     if (err) {
-                        console.log(err);
+                        debug(err);
                     } else {
                         console.dir(response);
                     }
@@ -155,16 +179,16 @@ exports.updateMsisdn = function (User) {
     return function (req, res) {
 
         if (!req.user) {
-            console.log("/updateMsisdn");
-            console.log("user not found");
+            debug("/updateMsisdn");
+            debug("user not found");
             return res.status(401).send({
                 message: "User not found"
             });
         }
 
         if (!req.body.msisdn) {
-            console.log("/updateMsisdn");
-            console.log("user not found");
+            debug("/updateMsisdn");
+            debug("user not found");
             return res.status(400).send({
                 message: "Malformed request"
             });
@@ -176,11 +200,16 @@ exports.updateMsisdn = function (User) {
             }
         }, { new: true }, function (error, user) {
             if (error || !user) {
-                console.log("/update");
-                console.log(error);
+                debug("/update");
+                debug(error);
                 res.status(500).send({ error: error });
             } else {
-                res.json({ user: user });
+                var userObj = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName
+                };
+                res.json({ user: userObj });
             }
         });
     }
