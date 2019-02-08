@@ -500,7 +500,14 @@ body.full {
   margin: 16px 0;
   /*border: 1px solid #ccc;*/
   background-color: white;
-  border-bottom: none; }
+  border-bottom: none;
+  padding-left: 5px;
+  padding-right: 5px; }
+
+.phone .sms-input span.input input:focus {
+  border-bottom: none;
+  border: none;
+  box-shadow: none; }
 
 .phone .sms-input textarea {
   display: block;
@@ -804,6 +811,9 @@ body.full div.logo img {
     -webkit-box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     -moz-box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15);
     box-shadow: 0px 4px 20px 0px rgba(0, 0, 0, 0.15); }
+  .phone .sms-input span.input input:focus {
+    padding-left: 0;
+    padding-right: 0; }
   .phone .msisdn:after {
     content: '\00a0'; }
   .phone .keypad.squared .num {
