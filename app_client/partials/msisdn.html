@@ -18,14 +18,16 @@
             <form name="msisdnForm">
               <div class="row">
                 <div class="col l10 offset-l2 m10 offset-m2 s10">
-                  <div class="input-field" ng-class="{'has-error': msisdnForm.tel.$invalid && msisdnForm.tel.$touched, 'has-success': msisdnForm.tel.$valid}">
+                  <div class="input-field" ng-class="{'has-error': msisdnForm.phone.$invalid && msisdnForm.phone.$touched, 'has-success': msisdnForm.phone.$valid}">
                     <div class="col s1">
                       <i class="material-icons prefix">phone</i>
                     </div>
                     <div class="col s11">
                       <input required type="tel" id="phone" name="phone" autocomplete="tel" ng-model="msisdn" ng-intl-tel-input
                         data-initial-country="gb" data-selected-country="selected.country">
-                    </div>
+                        <span class="helper-text" ng-show="msisdnForm.phone.$pristine && msisdnForm.phone.$untouched">Please type a telephone number</span>
+                        <span class="helper-text" ng-show="msisdnForm.phone.$invalid && msisdnForm.phone.$touched">Invalid number format</span>
+                      </div>
                   </div>
                 </div>
               </div>
