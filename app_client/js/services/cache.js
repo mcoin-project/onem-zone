@@ -1,8 +1,8 @@
 
 ONEmSimModule.factory('Cache', [
     'Socket',
-    '$timeout'
-    function (Socket) {
+    '$timeout',
+    function (Socket, $timeout) {
 
         var services = [
             { name: 'market', template: 'cards' }
