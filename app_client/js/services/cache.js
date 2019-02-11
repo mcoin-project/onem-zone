@@ -23,7 +23,7 @@ ONEmSimModule.factory('Cache', [
                     var timer = $timeout(
                         function () {
                             reject("no response to MO SMS");
-                        }, 10000
+                        }, 100
                     );
                 });
             }
