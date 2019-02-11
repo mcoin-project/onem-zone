@@ -65,6 +65,8 @@ ONEmSimModule.controller('appHomeController', [
             $scope.services = services;
             console.log("cache got response");
             console.log(services);
+        }).catch(function(error) {
+            console.log(error);
         });
     }
 ]);
