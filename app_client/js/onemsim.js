@@ -41,7 +41,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             console.log("landingRedirect:" + $auth.isAuthenticated());
 
             if ($auth.isAuthenticated()) {
-                $location.path('/home');
+                $location.path('/apphome');
             } else {
                 $location.path('/login');
             }
