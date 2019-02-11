@@ -1,6 +1,7 @@
 
 ONEmSimModule.factory('Cache', [
     'Socket',
+    '$timeout'
     function (Socket) {
 
         var services = [
@@ -15,15 +16,15 @@ ONEmSimModule.factory('Cache', [
                 return new Promise(function (resolve, reject) {
 
                     scope.$on('socket:API MT SMS', function (ev, data) {
-                        //                $scope.theData = data;
-
-                        console.log("Cache: MT received:");
-                        console.log(data);
-
+                        $timeout.cancel(timer);
                         resolve(data);
-                     //   return data;
                     });
                     Socket.emit('API MO SMS', '#');
+                    var timer = $timeout(
+                        function () {
+                            reject("no response to MO SMS");
+                        }, 10000
+                    );
                 });
             }
         }
