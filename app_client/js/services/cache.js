@@ -5,17 +5,17 @@ ONEmSimModule.factory('Cache', [
     function (Socket, $timeout) {
 
         var services = [
-            { name: 'account', template: 'cards' },
-            { name: 'aljazeera', template: 'cards' },
-            { name: 'contacts', template: 'cards' },
-            { name: 'france24', template: 'cards' },
-            { name: 'market', template: 'cards' },
-            { name: 'msg', template: 'cards' },
-            { name: 'onem', template: 'cards' },
-            { name: 'reuters', template: 'cards' },
-            { name: 'subscribe', template: 'cards' },
-            { name: 'xgroup', template: 'cards' },
-            { name: 'unsubscribe', template: 'cards' }
+            { name: ['account'], icon:'3d_rotation', template: 'cards' },
+            { name: ['aljazeera'], icon:'accessibility', template: 'cards' },
+            { name: ['contacts'], icon:'account_circle', template: 'cards' },
+            { name: ['france24'], icon:'alarm', template: 'cards' },
+            { name: ['market'], icon:'all_out', template: 'cards' },
+            { name: ['msg'], icon:'build', template: 'cards' },
+            { name: ['onem'], icon:'done', template: 'cards' },
+            { name: ['reuters'], icon:'favorite', template: 'cards' },
+            { name: ['subscribe'], icon:'fine_replace', template: 'cards' },
+            { name: ['xgroup'], icon:'feedback', template: 'cards' },
+            { name: ['unsubscribe'], icon:'help_outline', template: 'cards' }
         ];
 
         var activeServices = [];
@@ -32,7 +32,7 @@ ONEmSimModule.factory('Cache', [
                     results.push(r[1].trim().toLowerCase());
                 });
                 for (var i = 0; i < results.length; i++) {
-                    if (services[i].name == results[i]) {
+                    if (services[i].name.includes(results[i].toLowerCase())) {
                         activeServices.push(services[i]);
                     }
                 }
@@ -48,6 +48,11 @@ ONEmSimModule.factory('Cache', [
             getServices: function (scope) {
 
                 return new Promise(function (resolve, reject) {
+
+                    if (activeServices.length > 0) {
+                        resolve(activeServices);
+                        return;
+                    }
 
                     scope.$on('socket:API MT SMS', function (ev, data) {
                         $timeout.cancel(timer);
