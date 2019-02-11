@@ -36,6 +36,7 @@ ONEmSimModule.factory('Socket', [
                 //var mySocket = socketFactory();
                 mySocket.forward('error');
                 mySocket.forward('MT SMS');
+                mySocket.forward('API MT SMS');
                 mySocket.forward('LOGOUT');
 
                 return mySocket;
