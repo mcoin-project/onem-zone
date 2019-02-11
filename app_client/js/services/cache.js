@@ -4,6 +4,20 @@ ONEmSimModule.factory('Cache', [
     '$timeout',
     function (Socket, $timeout) {
 
+	var services = [
+            { name: ['account'], icon:'3d_rotation', template: 'cards' },
+            { name: ['aljazeera'], icon:'accessibility', template: 'cards' },
+            { name: ['contacts'], icon:'account_circle', template: 'cards' },
+            { name: ['france24'], icon:'alarm', template: 'cards' },
+            { name: ['market'], icon:'all_out', template: 'cards' },
+            { name: ['msg'], icon:'build', template: 'cards' },
+            { name: ['onem'], icon:'done', template: 'cards' },
+            { name: ['reuters'], icon:'favorite', template: 'cards' },
+            { name: ['subscribe'], icon:'fine_replace', template: 'cards' },
+            { name: ['xgroup'], icon:'feedback', template: 'cards' },
+            { name: ['unsubscribe'], icon:'help_outline', template: 'cards' }
+	];
+	/*
         var services = [
             { name: 'account', template: 'cards' },
             { name: 'aljazeera', template: 'cards' },
@@ -16,7 +30,7 @@ ONEmSimModule.factory('Cache', [
             { name: 'subscribe', template: 'cards' },
             { name: 'xgroup', template: 'cards' },
             { name: 'unsubscribe', template: 'cards' }
-        ];
+        ]; */
 
         var activeServices = [];
 
