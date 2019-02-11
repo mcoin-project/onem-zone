@@ -113,6 +113,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     loginRequired: loginRequired
                 }
             }).
+            state('apphome', {
+                url: '/home',
+                templateUrl: 'partials/onemSim.html',
+                controller: 'appHomeController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
             state('login', {
                 url: '/login',
                 templateUrl: 'partials/login.html',
