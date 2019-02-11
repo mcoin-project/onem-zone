@@ -105,15 +105,15 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             state('authEndpoint', {
                 url: '/auth-endpoint'
             }).
-            state('home', {
-                url: '/home',
-                templateUrl: 'partials/onemSim.html',
-                controller: 'mainController',
-                resolve: {
-                    loginRequired: loginRequired
-                }
-            }).
-            state('apphome', {
+            // state('home', {
+            //     url: '/home',
+            //     templateUrl: 'partials/onemSim.html',
+            //     controller: 'mainController',
+            //     resolve: {
+            //         loginRequired: loginRequired
+            //     }
+            // }).
+            state('homeapp', {
                 url: '/homeapp',
                 templateUrl: 'partials/onemSim_app.html',
                 controller: 'appHomeController',

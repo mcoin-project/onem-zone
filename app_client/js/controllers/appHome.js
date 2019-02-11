@@ -54,7 +54,18 @@ ONEmSimModule.controller('appHomeController', [
             $scope.smsText = '';
         };
 
-        SmsHandler.start().$promise.then(function (response) {
+        Promise.resolve().then(function () {
+            if (!$rootScope.msisdn) {
+                return User.getMsisdn().$promise;
+            } else {
+                return { msisdn: $rootScope.msisdn };
+            }
+        }).then(function (response) {
+            console.log("setting msisdn:" + response.msisdn);
+            $rootScope.msisdn = response.msisdn;
+            $rootScope.user = response.user;
+            return SmsHandler.start().$promise;
+        }).then(function (response) {
             console.log("response fom smshandler.start");
             console.log(response);
             return Phone.start(response);
@@ -67,7 +78,8 @@ ONEmSimModule.controller('appHomeController', [
             console.log(services);
             $scope.services = services;
         }).catch(function(error) {
-            console.log(error);
+            console.log("no msisdn, going to capture");
+            $state.go('captureMsisdn');
         });
     }
 ]);
