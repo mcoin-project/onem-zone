@@ -13,7 +13,8 @@ ONEmSimModule.directive('inputHistory', ['$timeout',
                 //scope.history = [];
 
                 element.on("input propertychange", function () {
-                    if (scope.history && scope.history.length == 0) {
+                    if (!scope.history) return;
+                    if (scope.history.length == 0) {
                         scope.history.push(scope.ngModel);
                     } else {
                         scope.history[pointer] = scope.ngModel;
