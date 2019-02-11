@@ -9,7 +9,7 @@ ONEmSimModule.controller('loginController', [
             $auth.authenticate(provider).then(function() {
                 console.log("called authenticate");
                 toastr.success('You have successfully signed in with ' + provider + '!');
-                $state.go('home');
+                $state.go('homeapp');
             }).catch(function(error) {
                 console.log("authentication error");
                 console.log(error);
