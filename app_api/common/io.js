@@ -105,6 +105,35 @@ exports.initialize = function(server) {
 
         });
 
+        socket.on('API MO SMS', function(moText) {
+            debug('moText: ');
+            debug(moText);
+
+            // todo santizie the moText
+
+            debug("socket.id");
+            debug(socket.id);
+
+            //debug("socket");
+            //debug(socket);
+
+            if (socket.msisdn) {
+                var moRecord = {
+                    socket: socket, // presence of this indicates that client is connected
+                    mtText: '', // the pending sms text - built up if more-messages-to-send
+                    api: true
+                };
+                clients.clients[socket.msisdn] = {};
+                clients.clients[socket.msisdn].moRecord = moRecord;
+                
+                debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
+                sms.sendSMS(socket.msisdn, common.shortNumber, moText);
+            } else {
+                debug("can't locate msisdn for user");
+            }
+
+        });
+
         socket.on('disconnect', function() {
             debug('Client gone (id=' + socket.id + ').');
             if (socket.msisdn) delete clients.clients[socket.msisdn].moRecord.socket;

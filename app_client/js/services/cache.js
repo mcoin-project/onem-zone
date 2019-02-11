@@ -13,7 +13,7 @@ ONEmSimModule.factory('Cache', [
 
                 return new Promise(function (resolve, reject) {
 
-                    scope.$on('socket:MT SMS', function (ev, data) {
+                    scope.$on('socket:API MT SMS', function (ev, data) {
                         //                $scope.theData = data;
 
                         console.log("Cache: MT received:");
@@ -22,7 +22,7 @@ ONEmSimModule.factory('Cache', [
                         resolve(data);
                         return data;
                     });
-                    Socket.emit('MO SMS', '#');
+                    Socket.emit('API MO SMS', '#');
                 });
             }
         }
