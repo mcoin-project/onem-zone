@@ -22,6 +22,8 @@ ONEmSimModule.factory('Cache', [
 
         processServices = function (mtText) {
 
+            if (!mtText) return -1;
+
             var matches = mtText.match(/(^([A-Z])[ ].*\n+)/gm);
             var results = [];
             if (matches.length > 0) {
@@ -49,9 +51,11 @@ ONEmSimModule.factory('Cache', [
 
                     scope.$on('socket:API MT SMS', function (ev, data) {
                         $timeout.cancel(timer);
-                        var results = processServices(data);
+                        console.log("received MT");
+                        console.log(data);
+                        var results = processServices(data.mtText);
                         console.log(results);
-                        resolve(data);
+                        resolve(results);
                     });
                     Socket.emit('API MO SMS', '#');
                     var timer = $timeout(
