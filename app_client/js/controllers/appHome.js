@@ -4,9 +4,12 @@ ONEmSimModule.controller('appHomeController', [
     'SmsHandler',
     'Cache',
     'Phone',
+    'DataModel',
+    'Socket',
     '$state',
     '$rootScope',
-    function ($scope, SmsHandler, Cache, Phone, $state, $rootScope) {
+    '$location',
+    function ($scope, SmsHandler, Cache, Phone, DataModel, Socket, $state, $rootScope), $location {
 
         $scope.$on('error', function (ev, data) {
             console.log("[MN]: socket error:" + ev);
