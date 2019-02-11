@@ -9,6 +9,7 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
+            // taking scope as a param is a hack
             getServices: function (scope) {
 
                 return new Promise(function (resolve, reject) {
@@ -20,7 +21,7 @@ ONEmSimModule.factory('Cache', [
                         console.log(data);
 
                         resolve(data);
-                        return data;
+                     //   return data;
                     });
                     Socket.emit('API MO SMS', '#');
                 });
