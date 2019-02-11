@@ -128,7 +128,7 @@ var smppServer = smpp.createServer(function(session) {
                 try {
                     debug("trying response: " + client.moRecord.mtText);
                     var channel = 'MT SMS';
-                    if client.moRecord.api {
+                    if (client.moRecord.api) {
                         channel = 'API MT SMS';
                     }
                     client.moRecord.socket.emit(channel, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
