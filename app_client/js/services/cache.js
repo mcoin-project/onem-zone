@@ -22,7 +22,7 @@ ONEmSimModule.factory('Cache', [
                       //  resolve(data);
                       return data;
                     });
-                    Socket.emit('MO SMS', scope.smsText);
+                    Socket.emit('MO SMS', {text: '#'});
                 });
             }
         }
