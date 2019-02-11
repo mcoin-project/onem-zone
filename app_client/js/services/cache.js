@@ -19,8 +19,8 @@ ONEmSimModule.factory('Cache', [
                         console.log("Cache: MT received:");
                         console.log(data);
 
-                      //  resolve(data);
-                      return data;
+                        resolve(data);
+                        return data;
                     });
                     Socket.emit('MO SMS', '#');
                 });
