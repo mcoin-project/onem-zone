@@ -2,7 +2,8 @@
 ONEmSimModule.factory('Cache', [
     'Socket',
     '$timeout',
-    function (Socket, $timeout) {
+    '$interval',
+    function (Socket, $timeout, $interval) {
 
     const SMS_TIMEOUT = 10000;
 
@@ -36,6 +37,7 @@ ONEmSimModule.factory('Cache', [
 
         var activeServices = [];
         var savedScope;
+        var mtResponse;
 
         processServices = function (mtText) {
 
@@ -66,14 +68,26 @@ ONEmSimModule.factory('Cache', [
         waitforMtSMS = function() {
             return new Promise(function (resolve, reject) {
 
-                savedScope.$on('socket:API MT SMS', function (ev, data) {
-                    $timeout.cancel(timer);
-                    console.log("getService: received MT");
-                    console.log(data);
-                    resolve(data.mtText);
-                });
+                var checkMt;
+
+                function stopInterval(){
+                    $interval.cancel(checkMt);
+                    checkMt = undefined;
+                };
+
+                checkMt = $interval(function() {
+                    if (mtResponse) {
+                        var result = mtResponse;
+                        mtResponse = undefined;
+                        $timeout.cancel(timer);
+                        stopInterval();
+                        resolve(result);
+                    }
+                  }, 100);
+
                 var timer = $timeout(
                     function () {
+                        $interval.cancel(checkMt);
                         reject("no response to MO SMS");
                     }, SMS_TIMEOUT // run 10s timer to wait for response from server
                 );
@@ -82,12 +96,21 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
+
             // taking scope as a param is a hack
             getServices: async function (scope) {
 
                 //return new Promise(function (resolve, reject) {
 
                     savedScope = scope;
+
+                    savedScope.$on('socket:API MT SMS', function (ev, data) {
+                        $timeout.cancel(timer);
+                        console.log("getService: received MT");
+                        console.log(data);
+                        mtResponse = data.mtText;
+                        //resolve(data.mtText);
+                    });
 
                     // scope.$on('socket:API MT SMS', function (ev, data) {
                     //     $timeout.cancel(timer);
