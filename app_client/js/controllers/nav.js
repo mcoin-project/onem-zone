@@ -4,8 +4,8 @@ ONEmSimModule.controller('navbarController', [
     '$templateCache',
     '$auth',
     '$state',
-    '$timeout',
-    function ($scope, $rootScope, $templateCache, $auth, $state, $timeout) {
+    'Cache',
+    function ($scope, $rootScope, $templateCache, $auth, $state, Cache) {
         $scope.isAuthenticated = function () {
             return $auth.isAuthenticated();
         }
@@ -13,6 +13,14 @@ ONEmSimModule.controller('navbarController', [
         $scope.agree = function() {
             $state.go('logoutDelete');
         }
+
+        $scope.$on('socket:API MT SMS', function (ev, data) {
+            console.log("getService: received MT");
+            console.log(data);
+
+            Cache.receivedMt(data.mtText);
+
+        });
 
         // $rootScope.$watch('user', function (newVal, oldVal, scope) {
 
