@@ -107,7 +107,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/auth-endpoint'
             }).
             state('main', {
-                url: '/main',
+                url: '/',
                 //      templateUrl: 'partials/onemSim_app.html',
                 controller: 'mainController',
                 resolve: {
@@ -115,7 +115,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 }
             }).
             state('apphome', {
-                url: '/apphome',
+                url: '/',
                 templateUrl: 'partials/onemSim_app.html',
                 controller: 'appHomeController',
                 resolve: {
@@ -123,7 +123,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 }
             }).
             state('service', {
-                url: '/service',
+                url: '/',
                 templateUrl: 'partials/service.html',
                 controller: 'serviceController',
                 params: { name: null },
@@ -156,12 +156,12 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 }
             }).
             state('logoutDelete', {
-                url: '/logoutDelete',
+                url: '/',
                 templateUrl: null,
                 controller: 'logoutDeleteController'
             }).
             state('logout', {
-                url: '/logout',
+                url: '/',
                 templateUrl: null,
                 controller: 'logoutController'
             });
