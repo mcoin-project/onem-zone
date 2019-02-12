@@ -103,7 +103,7 @@ ONEmSimModule.factory('Cache', [
 
                 //return new Promise(function (resolve, reject) {
 
-                    savedScope = scope;
+                    //savedScope = scope;
 
                     // scope.$on('socket:API MT SMS', function (ev, data) {
                     //     $timeout.cancel(timer);
