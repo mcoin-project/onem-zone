@@ -4,7 +4,9 @@ ONEmSimModule.factory('Cache', [
     '$timeout',
     function (Socket, $timeout) {
 
-	var services = [
+    const SMS_TIMEOUT = 10000;
+
+	const services = [
             { name: ['account'], icon:'3d_rotation', template: 'cards' },
             { name: ['aljazeera'], icon:'accessibility', template: 'cards' },
             { name: ['contacts'], icon:'account_circle', template: 'cards' },
@@ -33,6 +35,7 @@ ONEmSimModule.factory('Cache', [
         ]; */
 
         var activeServices = [];
+        var savedScope;
 
         processServices = function (mtText) {
 
@@ -63,9 +66,11 @@ ONEmSimModule.factory('Cache', [
 
                 return new Promise(function (resolve, reject) {
 
+                    var savedScope = scope;
+
                     scope.$on('socket:API MT SMS', function (ev, data) {
                         $timeout.cancel(timer);
-                        console.log("received MT");
+                        console.log("getServices: received MT");
                         console.log(data);
                         var results = processServices(data.mtText);
                         console.log(results);
@@ -75,10 +80,28 @@ ONEmSimModule.factory('Cache', [
                     var timer = $timeout(
                         function () {
                             reject("no response to MO SMS");
-                        }, 10000 // run 10s timer to wait for response from server
+                        }, SMS_TIMEOUT // run 10s timer to wait for response from server
                     );
                 });
-            }
+            },
+            getService: function (service) {
+
+                return new Promise(function (resolve, reject) {
+
+                    savedScope.$on('socket:API MT SMS', function (ev, data) {
+                        $timeout.cancel(timer);
+                        console.log("getService: received MT");
+                        console.log(data);
+                        resolve();
+                    });
+                    savedScope.emit('API MO SMS', '#'+service);
+                    var timer = $timeout(
+                        function () {
+                            reject("no response to MO SMS");
+                        }, SMS_TIMEOUT // run 10s timer to wait for response from server
+                    );
+                });
+            },
         }
     }
 ]);
