@@ -12,16 +12,19 @@
     <link rel="icon" href="./images/favicon.ico?v1.1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
         rel="stylesheet">
     <!-- font-family: 'Roboto', sans-serif; font-family: 'Roboto Condensed', sans-serif; font-family: 'Noto Sans', sans-serif; font-family: 'Noto Serif', serif; -->
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900"
+    <link
+        href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900"
         rel="stylesheet">
     <!-- CSS Files -->
     <!--build:css css/plugins.min.css -->
     <link rel="stylesheet" href="css/materialize-src/sass/materialize.css">
     <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
-    <link rel="stylesheet" href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
+    <link rel="stylesheet"
+        href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
     <!-- endbuild -->
     <!--build:css css/app.min.css -->
     <link rel="stylesheet" href="css/onemsim.css" />
@@ -46,19 +49,21 @@
             <p>{{user.firstName}} {{user.lastName}}</p>
             <p>{{msisdn}}</p>
             <li class="divider"></li>
-            <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink account</a></li>
+            <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink
+                    account</a></li>
             <li><a ng-href="/logout">Logout</a></li>
         </ul>
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
                     <a ng-href="/" class="brand-logo">
-                        <img style="padding-top:10px" class="logo" height="50" src="./images/onem_zone_logo_thumb_white.png"
-                            alt="logo" />
+                        <img style="padding-top:10px" class="logo" height="50"
+                            src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
                     </a>
                     <a ng-href="/" class="brand-logo"></a>
                     <div class="nav-wrapper">
-                        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i
+                                class="material-icons">menu</i></a>
                         <ul class="right hide-on-med-and-down">
                             <!-- Dropdown Trigger -->
                             <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{user.email || 'My
@@ -78,7 +83,8 @@
             </div>
             <div class="modal-footer">
                 <a ng-href="" class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
-                <a ng-click="agree()" ng-href="" class="modal-close waves-effect waves-green btn-flat">Confirm & Logout</a>
+                <a ng-click="agree()" ng-href="" class="modal-close waves-effect waves-green btn-flat">Confirm &
+                    Logout</a>
             </div>
         </div>
     </div>
@@ -89,7 +95,8 @@
         <p>{{msisdn}}</p>
         <p>{{user.email}}</p>
         <li class="divider"></li>
-        <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink account</a></li>
+        <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink
+                account</a></li>
         <li><a ng-href="/logout">Logout</a></li>
     </ul>
     </div>
@@ -121,8 +128,10 @@
 <script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-media-queries/match-media.js"></script>
-<script type="text/javascript" src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
-<script type="text/javascript" src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput-jquery.js"></script>
+<script type="text/javascript"
+    src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
+<script type="text/javascript"
+    src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput-jquery.js"></script>
 <script type="text/javascript" src="bower_components/bootstrap-3.3.7/dist/js/bootstrap.min.js"></script>
 <script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
 <script type="text/javascript" src="bower_components/path/path.min.js"></script>

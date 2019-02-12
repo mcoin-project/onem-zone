@@ -32,7 +32,7 @@ ONEmSimModule.controller('logoutDeleteController', [
         }).catch(function(error) {
             console.log(error);
             toastr.info('Error logging out - close browser tab');
-            $state.go('home');
+            $state.go('landing');
         });
     }
 ]);
