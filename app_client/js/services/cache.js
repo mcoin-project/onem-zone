@@ -105,7 +105,7 @@ ONEmSimModule.factory('Cache', [
 
 
                     Socket.emit('API MO SMS', '#'+service);
-                    erturn await waitforMtSMS()
+                    return await waitforMtSMS()
                     // var timer = $timeout(
                     //     function () {
                     //         reject("no response to MO SMS");
