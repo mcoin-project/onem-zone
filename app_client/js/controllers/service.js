@@ -9,13 +9,19 @@ ONEmSimModule.controller('serviceController', [
     '$state',
     '$rootScope',
     '$location',
-    function ($scope, SmsHandler, Cache, Phone, $stateParams, Socket, $state, $rootScope, $location) {
+    '$timeout',
+    function ($scope, SmsHandler, Cache, Phone, $stateParams, Socket, $state, $rootScope, $location, $timeout) {
 
         console.log("stateParams:");
         console.log($stateParams);
 
         Cache.getService($stateParams.name).then(function (response) {
-            $scope.result = response;
+
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                $scope.result = response;
+                $rootScope.$apply();
+            });
             console.log("got response");
         }).catch(function (error) {
             console.log(error);
