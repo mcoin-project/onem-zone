@@ -98,7 +98,8 @@ ONEmSimModule.factory('Cache', [
                     //     resolve(results);
                     // });
                     Socket.emit('API MO SMS', '#');
-                    return await waitforMtSMS()
+                    var mt = await waitforMtSMS();
+                    return processServices(mt);
                 //});
             },
             getService: async function (service) {
