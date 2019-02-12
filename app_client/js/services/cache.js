@@ -70,7 +70,7 @@ ONEmSimModule.factory('Cache', [
 
                 return new Promise(function (resolve, reject) {
 
-                    var savedScope = scope;
+                    savedScope = scope;
 
                     scope.$on('socket:API MT SMS', function (ev, data) {
                         $timeout.cancel(timer);
@@ -98,7 +98,7 @@ ONEmSimModule.factory('Cache', [
                         console.log(data);
                         resolve();
                     });
-                    savedScope.emit('API MO SMS', '#'+service);
+                    Socket.emit('API MO SMS', '#'+service);
                     var timer = $timeout(
                         function () {
                             reject("no response to MO SMS");

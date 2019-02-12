@@ -14,11 +14,11 @@ ONEmSimModule.controller('serviceController', [
         console.log("stateParams:");
         console.log($stateParams);
 
-        // Cache.getService('market').then(function(response) {
-        //     console.log("got response");
-        // }).catch(function(error) {
-        //     console.log(error);
-        // });
-        
+        Cache.getService($stateParams.name).then(function (response) {
+            console.log("got response");
+        }).catch(function (error) {
+            console.log(error);
+        });
+
     }
 ]);
