@@ -21,8 +21,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
         msg = (msg + '').replace(/(\r\n|\n\r|\r|\n|&#10;&#13;|&#13;&#10;|&#10;|&#13;)/g, tag + '$1');
         return $sanitize(msg);
     };
-}]).run(['$state', '$stateParams', function($state, $stateParams) {
-        //this solves page refresh and getting back to state
+}]).run(['$state', '$stateParams', function ($state, $stateParams) {
+    //this solves page refresh and getting back to state
 }]);
 
 ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$authProvider', 'ngIntlTelInputProvider',
@@ -47,7 +47,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             }
             return deferred.promise;
         }];
-        
+
         var skipIfLoggedIn = ['$q', '$location', '$auth', function ($q, $location, $auth) {
             var deferred = $q.defer();
             console.log("skipIfLoggedIn:" + $auth.isAuthenticated());
@@ -87,7 +87,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         $authProvider.facebook({
             clientId: FACEBOOK_CLIENT_ID,
             redirectUri: redirectUri
-          });
+        });
 
         console.log("auth header:");
         console.log($authProvider.tokenHeader);
@@ -164,7 +164,12 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 controller: 'logoutController'
             });
 
-        $urlRouterProvider.otherwise('/');
+        //        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise(function ($injector) {
+            var $state = $injector.get('$state');
+            console.log("caught default route");
+            $state.go('apphome');
+        });
         $locationProvider.html5Mode(true);
 
     }
@@ -205,4 +210,4 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 
-     
+
