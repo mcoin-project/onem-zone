@@ -41,7 +41,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             console.log("landingRedirect:" + $auth.isAuthenticated());
 
             if ($auth.isAuthenticated()) {
-                $location.path('/apphome');
+                $location.path('/main');
             } else {
                 $location.path('/login');
             }
@@ -105,14 +105,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             state('authEndpoint', {
                 url: '/auth-endpoint'
             }).
-            // state('home', {
-            //     url: '/home',
-            //     templateUrl: 'partials/onemSim_app.html',
-            //     controller: 'mainController',
-            //     resolve: {
-            //         loginRequired: loginRequired
-            //     }
-            // }).
+            state('main', {
+                url: '/',
+          //      templateUrl: 'partials/onemSim_app.html',
+                controller: 'mainController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
             state('apphome', {
                 url: '/apphome',
                 templateUrl: 'partials/onemSim_app.html',
