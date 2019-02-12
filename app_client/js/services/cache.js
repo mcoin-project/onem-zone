@@ -38,6 +38,7 @@ ONEmSimModule.factory('Cache', [
         var activeServices = [];
         var savedScope;
         var mtResponse;
+        var timer;
 
         processServices = function (mtText) {
 
@@ -68,7 +69,7 @@ ONEmSimModule.factory('Cache', [
         waitforMtSMS = function() {
             return new Promise(function (resolve, reject) {
 
-                var checkMt, timer;;
+                var checkMt;
 
                 function stopInterval(){
                     $interval.cancel(checkMt);
