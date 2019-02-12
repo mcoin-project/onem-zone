@@ -106,7 +106,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/auth-endpoint'
             }).
             state('main', {
-                url: '/',
+                url: '/main',
           //      templateUrl: 'partials/onemSim_app.html',
                 controller: 'mainController',
                 resolve: {
