@@ -5,42 +5,27 @@ ONEmSimModule.factory('Cache', [
     '$interval',
     function (Socket, $timeout, $interval) {
 
-    const SMS_TIMEOUT = 10000;
+        const SMS_TIMEOUT = 10000;
 
-	const services = [
-            { name: ['account'], icon:'3d_rotation', template: 'cards' },
-            { name: ['aljazeera'], icon:'accessibility', template: 'cards' },
-            { name: ['contacts'], icon:'account_circle', template: 'cards' },
-            { name: ['france24'], icon:'alarm', template: 'cards' },
-            { name: ['market'], icon:'all_out', template: 'cards' },
-            { name: ['msg'], icon:'build', template: 'cards' },
-            { name: ['onem'], icon:'done', template: 'cards' },
-            { name: ['reuters'], icon:'favorite', template: 'cards' },
-            { name: ['subscribe'], icon:'find_replace', template: 'cards' },
-            { name: ['xgroup'], icon:'feedback', template: 'cards' },
-            { name: ['unsubscribe'], icon:'help_outline', template: 'cards' }
-	];
-	/*
-        var services = [
-            { name: 'account', template: 'cards' },
-            { name: 'aljazeera', template: 'cards' },
-            { name: 'contacts', template: 'cards' },
-            { name: 'france24', template: 'cards' },
-            { name: 'market', template: 'cards' },
-            { name: 'msg', template: 'cards' },
-            { name: 'onem', template: 'cards' },
-            { name: 'reuters', template: 'cards' },
-            { name: 'subscribe', template: 'cards' },
-            { name: 'xgroup', template: 'cards' },
-            { name: 'unsubscribe', template: 'cards' }
-        ]; */
+        const services = [
+            { name: ['account'], icon: '3d_rotation', template: 'cards' },
+            { name: ['aljazeera'], icon: 'accessibility', template: 'cards' },
+            { name: ['contacts'], icon: 'account_circle', template: 'cards' },
+            { name: ['france24'], icon: 'alarm', template: 'cards' },
+            { name: ['market'], icon: 'all_out', template: 'cards' },
+            { name: ['msg'], icon: 'build', template: 'cards' },
+            { name: ['onem'], icon: 'done', template: 'cards' },
+            { name: ['reuters'], icon: 'favorite', template: 'cards' },
+            { name: ['subscribe'], icon: 'find_replace', template: 'cards' },
+            { name: ['xgroup'], icon: 'feedback', template: 'cards' },
+            { name: ['unsubscribe'], icon: 'help_outline', template: 'cards' }
+        ];
 
         var activeServices = [];
-        var savedScope;
         var mtResponse;
         var timer;
 
-        processServices = function (mtText) {
+        var processServicesList = function (mtText) {
 
             if (!mtText) return -1;
 
@@ -66,17 +51,33 @@ ONEmSimModule.factory('Cache', [
             return activeServices;
         }
 
-        waitforMtSMS = function() {
+        var processService = function (mtText) {
+
+            if (!mtText) return -1;
+
+            var lines = mtText.split('\n');
+            var header = lines[0];
+            var footer = lines[lines.length-1];
+            var options = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
+
+            return {
+                header: header,
+                footer: footer,
+                options: options
+            };
+        }
+
+        var waitforMtSMS = function () {
             return new Promise(function (resolve, reject) {
 
                 var checkMt;
 
-                function stopInterval(){
+                function stopInterval() {
                     $interval.cancel(checkMt);
                     checkMt = undefined;
                 };
 
-                checkMt = $interval(function() {
+                checkMt = $interval(function () {
                     if (mtResponse) {
                         var result = mtResponse;
                         mtResponse = undefined;
@@ -84,7 +85,7 @@ ONEmSimModule.factory('Cache', [
                         stopInterval();
                         resolve(result);
                     }
-                  }, 100);
+                }, 100);
 
                 timer = $timeout(
                     function () {
@@ -97,43 +98,22 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
-
-            // taking scope as a param is a hack
             getServices: async function () {
 
-                //return new Promise(function (resolve, reject) {
-
-                    //savedScope = scope;
-
-                    // scope.$on('socket:API MT SMS', function (ev, data) {
-                    //     $timeout.cancel(timer);
-                    //     console.log("getServices: received MT");
-                    //     console.log(data);
-                    //     var results = processServices(data.mtText);
-                    //     console.log(results);
-                    //     resolve(results);
-                    // });
-                    Socket.emit('API MO SMS', '#');
-                    var mt = await waitforMtSMS();
-                    return processServices(mt);
-                //});
+                Socket.emit('API MO SMS', '#');
+                var mt = await waitforMtSMS();
+                return processServicesList(mt);
             },
             getService: async function (service) {
 
-                    Socket.emit('API MO SMS', '#'+service);
-                    console.log("emitting:"+ '#'+service);
-                    return await waitforMtSMS();
-                    // var timer = $timeout(
-                    //     function () {
-                    //         reject("no response to MO SMS");
-                    //     }, SMS_TIMEOUT // run 10s timer to wait for response from server
-                    // );
-                //});
+                Socket.emit('API MO SMS', '#' + service);
+                console.log("emitting:" + '#' + service);
+                var mt = await waitforMtSMS();
+                return processService(mt);
             },
             receivedMt: function (text) {
                 $timeout.cancel(timer);
                 mtResponse = text;
-                //resolve(data.mtText);
             }
         }
     }

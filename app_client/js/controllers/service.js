@@ -15,6 +15,7 @@ ONEmSimModule.controller('serviceController', [
         console.log($stateParams);
 
         Cache.getService($stateParams.name).then(function (response) {
+            $scope.result = response;
             console.log("got response");
         }).catch(function (error) {
             console.log(error);
