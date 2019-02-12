@@ -68,7 +68,7 @@ ONEmSimModule.factory('Cache', [
         waitforMtSMS = function() {
             return new Promise(function (resolve, reject) {
 
-                var checkMt;
+                var checkMt, timer;;
 
                 function stopInterval(){
                     $interval.cancel(checkMt);
@@ -85,7 +85,7 @@ ONEmSimModule.factory('Cache', [
                     }
                   }, 100);
 
-                var timer = $timeout(
+                timer = $timeout(
                     function () {
                         $interval.cancel(checkMt);
                         reject("no response to MO SMS");
