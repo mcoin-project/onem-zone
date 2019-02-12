@@ -52,7 +52,7 @@ ONEmSimModule.factory('Cache', [
                     if (services[i].name.incudes(results[i])) {
                         var s = services[i];
                         var ind = services.name.indexOf(results[i]);
-                        var s.name = services.name[ind];
+                        s.name = services.name[ind];
                         activeServices.push(s);
                     }
                 }
