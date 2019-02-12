@@ -70,7 +70,7 @@ ONEmSimModule.factory('Cache', [
                     $timeout.cancel(timer);
                     console.log("getService: received MT");
                     console.log(data);
-                    resolve(data);
+                    resolve(data.mtText);
                 });
                 var timer = $timeout(
                     function () {
