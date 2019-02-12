@@ -28,7 +28,7 @@ ONEmSimModule.controller('logoutDeleteController', [
             $rootScope.msisdn = undefined;
             $rootScope.user = undefined;
             DataModel.clearResults();
-            $state.go('home');
+            $state.go('apphome');
         }).catch(function(error) {
             console.log(error);
             toastr.info('Error logging out - close browser tab');
