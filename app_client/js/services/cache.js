@@ -49,13 +49,17 @@ ONEmSimModule.factory('Cache', [
                     results.push(r[1].trim().toLowerCase());
                 });
                 for (var i = 0; i < results.length; i++) {
-                    if (services[i].name == results[i]) {
-                        activeServices.push(services[i]);
+                    if (services[i].name.incudes(results[i])) {
+                        var s = services[i];
+                        var ind = services.name.indexOf(results[i]);
+                        var s.name = services.name[ind];
+                        activeServices.push(s);
                     }
                 }
             } else {
                 return -1;
             }
+            console.log(activeServices);
             return activeServices;
         }
 
