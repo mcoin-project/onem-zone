@@ -111,7 +111,7 @@ ONEmSimModule.factory('Cache', [
                     //         reject("no response to MO SMS");
                     //     }, SMS_TIMEOUT // run 10s timer to wait for response from server
                     // );
-                });
+                //});
             },
         }
     }
