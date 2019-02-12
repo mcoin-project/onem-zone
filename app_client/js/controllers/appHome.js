@@ -40,6 +40,14 @@ ONEmSimModule.controller('appHomeController', [
 
         });
 
+        $scope.$on('socket:API MT SMS', function (ev, data) {
+            console.log("getService: received MT");
+            console.log(data);
+
+            Cache.receivedMt(data.mtText);
+
+        });
+
         $scope.smsInput = function () {
 
             if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;

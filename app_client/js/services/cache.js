@@ -99,19 +99,11 @@ ONEmSimModule.factory('Cache', [
 
 
             // taking scope as a param is a hack
-            getServices: async function (scope) {
+            getServices: async function () {
 
                 //return new Promise(function (resolve, reject) {
 
                     savedScope = scope;
-
-                    savedScope.$on('socket:API MT SMS', function (ev, data) {
-                        $timeout.cancel(timer);
-                        console.log("getService: received MT");
-                        console.log(data);
-                        mtResponse = data.mtText;
-                        //resolve(data.mtText);
-                    });
 
                     // scope.$on('socket:API MT SMS', function (ev, data) {
                     //     $timeout.cancel(timer);
@@ -137,6 +129,11 @@ ONEmSimModule.factory('Cache', [
                     //     }, SMS_TIMEOUT // run 10s timer to wait for response from server
                     // );
                 //});
+            },
+            receivedMt: function (text) {
+                $timeout.cancel(timer);
+                mtResponse = text;
+                //resolve(data.mtText);
             }
         }
     }
