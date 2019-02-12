@@ -63,47 +63,54 @@ ONEmSimModule.factory('Cache', [
             return activeServices;
         }
 
+        waitforMtSMS = function() {
+            return new Promise(function (resolve, reject) {
+
+                savedScope.$on('socket:API MT SMS', function (ev, data) {
+                    $timeout.cancel(timer);
+                    console.log("getService: received MT");
+                    console.log(data);
+                    resolve(data);
+                });
+                var timer = $timeout(
+                    function () {
+                        reject("no response to MO SMS");
+                    }, SMS_TIMEOUT // run 10s timer to wait for response from server
+                );
+            });
+        }
+
         return {
 
             // taking scope as a param is a hack
-            getServices: function (scope) {
+            getServices: async function (scope) {
 
-                return new Promise(function (resolve, reject) {
+                //return new Promise(function (resolve, reject) {
 
                     savedScope = scope;
 
-                    scope.$on('socket:API MT SMS', function (ev, data) {
-                        $timeout.cancel(timer);
-                        console.log("getServices: received MT");
-                        console.log(data);
-                        var results = processServices(data.mtText);
-                        console.log(results);
-                        resolve(results);
-                    });
+                    // scope.$on('socket:API MT SMS', function (ev, data) {
+                    //     $timeout.cancel(timer);
+                    //     console.log("getServices: received MT");
+                    //     console.log(data);
+                    //     var results = processServices(data.mtText);
+                    //     console.log(results);
+                    //     resolve(results);
+                    // });
                     Socket.emit('API MO SMS', '#');
-                    var timer = $timeout(
-                        function () {
-                            reject("no response to MO SMS");
-                        }, SMS_TIMEOUT // run 10s timer to wait for response from server
-                    );
-                });
+                    return await waitforMtSMS()
+                //});
             },
-            getService: function (service) {
+            getService: async function (service) {
 
-                return new Promise(function (resolve, reject) {
 
-                    savedScope.$on('socket:API MT SMS', function (ev, data) {
-                        $timeout.cancel(timer);
-                        console.log("getService: received MT");
-                        console.log(data);
-                        resolve();
-                    });
                     Socket.emit('API MO SMS', '#'+service);
-                    var timer = $timeout(
-                        function () {
-                            reject("no response to MO SMS");
-                        }, SMS_TIMEOUT // run 10s timer to wait for response from server
-                    );
+                    erturn await waitforMtSMS()
+                    // var timer = $timeout(
+                    //     function () {
+                    //         reject("no response to MO SMS");
+                    //     }, SMS_TIMEOUT // run 10s timer to wait for response from server
+                    // );
                 });
             },
         }
