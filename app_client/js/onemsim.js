@@ -21,7 +21,7 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
         msg = (msg + '').replace(/(\r\n|\n\r|\r|\n|&#10;&#13;|&#13;&#10;|&#10;|&#13;)/g, tag + '$1');
         return $sanitize(msg);
     };
-//}]).run(['$state', '$stateParams', function ($state, $stateParams) {
+    //}]).run(['$state', '$stateParams', function ($state, $stateParams) {
     //this solves page refresh and getting back to state
 }]);
 
@@ -126,6 +126,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/service',
                 templateUrl: 'partials/service.html',
                 controller: 'serviceController',
+                params: { name: null },
                 resolve: {
                     loginRequired: loginRequired
                 }
