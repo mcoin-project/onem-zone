@@ -36,12 +36,13 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         /**
        * Helper auth functions
        */
-        var landingRedirect = ['$q', '$location', '$auth', function ($q, $location, $auth) {
+        var landingRedirect = ['$q', '$location', '$auth', '$state', function ($q, $location, $auth, $state) {
             var deferred = $q.defer();
             console.log("landingRedirect:" + $auth.isAuthenticated());
 
             if ($auth.isAuthenticated()) {
-                $location.path('/main');
+                //  $location.path('/main');
+                $state.go('main');
             } else {
                 $location.path('/login');
             }
@@ -107,7 +108,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             }).
             state('main', {
                 url: '/main',
-          //      templateUrl: 'partials/onemSim_app.html',
+                //      templateUrl: 'partials/onemSim_app.html',
                 controller: 'mainController',
                 resolve: {
                     loginRequired: loginRequired
