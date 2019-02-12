@@ -104,16 +104,16 @@ ONEmSimModule.factory('Cache', [
             },
             getService: async function (service) {
 
-
                     Socket.emit('API MO SMS', '#'+service);
-                    return await waitforMtSMS()
+                    console.log("emitting:"+ '#'+service);
+                    return await waitforMtSMS();
                     // var timer = $timeout(
                     //     function () {
                     //         reject("no response to MO SMS");
                     //     }, SMS_TIMEOUT // run 10s timer to wait for response from server
                     // );
                 //});
-            },
+            }
         }
     }
 ]);
