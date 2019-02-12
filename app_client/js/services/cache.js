@@ -13,7 +13,7 @@ ONEmSimModule.factory('Cache', [
             { name: ['msg'], icon:'build', template: 'cards' },
             { name: ['onem'], icon:'done', template: 'cards' },
             { name: ['reuters'], icon:'favorite', template: 'cards' },
-            { name: ['subscribe'], icon:'fine_replace', template: 'cards' },
+            { name: ['subscribe'], icon:'find_replace', template: 'cards' },
             { name: ['xgroup'], icon:'feedback', template: 'cards' },
             { name: ['unsubscribe'], icon:'help_outline', template: 'cards' }
 	];
