@@ -28,7 +28,7 @@ ONEmSimModule.controller('serviceController', [
         });
 
         $scope.optionSelected = function(option) {
-            Cache.selectOption($stateParams.option).then(function (response) {
+            Cache.selectOption(option.option).then(function (response) {
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
