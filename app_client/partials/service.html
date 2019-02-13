@@ -3,7 +3,7 @@
         <div class="card-content black-text">
             <span class="card-title">{{result.header}}</span>
             <div class="row valign-wrapper">
-                <ul ng-if="result.options.length > 0" class="collection">
+                <ul ng-if="result.options.length > 0" class="collection" style="width:100%">
                     <a ng-repeat="option in result.options track by $index" class="collection-item" ng-href="#"
                         ng-if="option.option" ng-click="optionSelected(option)">
                         {{option.desc}}</a>
@@ -15,9 +15,7 @@
         </div>
         <div class="card-action">
             <p>{{result.footer}}</p>
-            <div ng-repeat="button in result.buttons track by $index">
-                <a ng-click="optionSelected(button)">{{button}}</a>
-            </div>
+            <a ng-repeat="button in result.buttons track by $index" ng-click="optionSelected(button)">{{button}}</a>
         </div>
     </div>
 </div>
