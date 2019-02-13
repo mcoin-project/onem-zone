@@ -164,8 +164,7 @@ ONEmSimModule.factory('Cache', [
                     }
                 }
                 return result;
-            } 
-
+            },
             getServices: async function () {
 
                 Socket.emit('API MO SMS', '#');
