@@ -7,9 +7,8 @@
             <div class="row valign-wrapper">
                 <div ng-if="result.options.length > 0" class="collection"
                     ng-repeat="option in result.options track by $index">
-                    <a class="collection-item" ng-href="#" ng-if="option.option">
-                        <li ng-click="optionSelected(option)">{{option.desc}}</li>
-                    </a>
+                    <li class="collection-item" ng-href="#" ng-if="option.option" ng-click="optionSelected(option)">
+                        {{option.desc}}</li>
                 </div>
                 <div ng-if="result.options.length == 0">
                     {{option}}
