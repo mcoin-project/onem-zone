@@ -11,7 +11,7 @@
                                 class="collection-item" style="padding-right:5px">{{option.desc}}<span style="float:right"><i class="material-icons">chevron_right</i></span>
                             </a>
                         </div>
-                        <div ng-if="result.options.length == 0">
+                        <div ng-if="!result.options.length > 0">
                             {{option}}
                         </div>
                     </div>
