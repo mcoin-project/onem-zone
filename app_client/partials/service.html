@@ -1,26 +1,23 @@
 <div style="width:50%;padding-top:20px" class="row col-centered">
-    <div class="row">
-        <h4>{{result.header}}</h4>
-    </div>
-    <div class="row">
-        <div class="card-panel grey lighten-5 z-depth-1">
+    <div class="card-panel grey lighten-5 z-depth-1">
+        <div class="card-content black-text">
+            <span class="card-title">{{result.header}}</span>
             <div class="row valign-wrapper">
                 <ul ng-if="result.options.length > 0" class="collection">
-                    <li ng-repeat="option in result.options track by $index" class="collection-item" ng-href="#"
+                    <a ng-repeat="option in result.options track by $index" class="collection-item" ng-href="#"
                         ng-if="option.option" ng-click="optionSelected(option)">
-                        {{option.desc}}</li>
+                        {{option.desc}}</a>
                 </ul>
                 <div ng-if="result.options.length == 0">
                     {{option}}
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <p>{{result.footer}}</p>
-        <div style="display:inline-block" ng-repeat="button in result.buttons track by $index">
-            <a ng-click="optionSelected(button)" style="margin:10px"
-                class="waves-effect waves-light btn-small">{{button}}</a>
+        <div class="card-action">
+            <p>{{result.footer}}</p>
+            <div ng-repeat="button in result.buttons track by $index">
+                <a ng-click="optionSelected(button)">{{button}}</a>
+            </div>
         </div>
     </div>
 </div>
