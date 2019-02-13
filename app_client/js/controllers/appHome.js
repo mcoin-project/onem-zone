@@ -8,23 +8,19 @@ ONEmSimModule.controller('appHomeController', [
     'Socket',
     '$state',
     '$rootScope',
-    '$location',
-    function ($scope, SmsHandler, Cache, Phone, DataModel, Socket, $state, $rootScope, $location) {
+    '$timeout',
+    function ($scope, SmsHandler, Cache, Phone, DataModel, Socket, $state, $rootScope, $timeout) {
 
-        // SmsHandler.start().$promise.then(function (response) {
-        //     console.log("response fom smshandler.start");
-        //     console.log(response);
-        //     return Phone.start(response);
-        // }).then(function (response) {
-        //     console.log("finished call to phone.start");
-        //     return Cache.getServices($scope);
-        // }).then(function (services) {
-        //     $scope.services = services;
-        //     console.log("cache got response");
-        //     console.log(services);
-        //     $scope.services = services;
-        // }).catch(function(error) {
-        //     console.log(error);
-        // });
+        Cache.getService('france24').then(function (response) {
+
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                $scope.result = response;   
+                $rootScope.$apply();
+            });
+            console.log("got response");
+        }).catch(function (error) {
+            console.log(error);
+        });
     }
 ]);
