@@ -8,8 +8,7 @@
                         <div ng-if="result.options.length > 0" class="collection" style="width:100%">
                             <a ng-href="#!" ng-if="option.option" ng-click="optionSelected(option)"
                                 ng-repeat="option in result.options track by $index"
-                                class="collection-item grey lighten-5">
-                                <div class="secondary-content">{{option.desc}}<i class="material-icons">chevron_right</i></div>
+                                class="collection-item grey lighten-5">{{option.desc}}<span style="float:right"><i class="material-icons">chevron_right</i></span>
                             </a>
                         </div>
                         <div ng-if="result.options.length == 0">
