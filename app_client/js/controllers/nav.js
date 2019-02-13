@@ -8,7 +8,10 @@ ONEmSimModule.controller('navbarController', [
     'Cache',
     'DataModel',
     'Socket',
-    function ($scope, $rootScope, $timeout, $auth, $state, $location, Cache, DataModel, Socket) {
+    'Phone',
+    'SmsHandler',
+    'User',
+    function ($scope, $rootScope, $timeout, $auth, $state, $location, Cache, DataModel, Socket, Phone, SmsHandler, User) {
         $scope.isAuthenticated = function () {
             return $auth.isAuthenticated();
         }
@@ -66,6 +69,39 @@ ONEmSimModule.controller('navbarController', [
 
             Cache.receivedMt(data.mtText);
 
+        });
+
+        Promise.resolve().then(function () {
+            if (!$rootScope.msisdn) {
+                return User.getMsisdn().$promise;
+            } else {
+                return { msisdn: $rootScope.msisdn };
+            }
+        }).then(function (response) {
+            console.log("setting msisdn:" + response.msisdn);
+            $rootScope.msisdn = response.msisdn;
+            $rootScope.user = response.user;
+            //$state.go('apphome');
+            return SmsHandler.start().$promise;
+        }).then(function (response) {
+            console.log("response fom smshandler.start");
+            console.log(response);
+            return Phone.start(response);
+        }).then(function (response) {
+            console.log("finished call to phone.start");
+            return Cache.getServices($scope);
+        }).then(function (services) {
+            $scope.services = services;
+            console.log("cache got response");
+            console.log(services);
+            $scope.services = services;
+            $state.go('apphome');
+        }).catch(function (error) {
+            console.log(error);
+            if (!$rootScope.msisdn) {
+                console.log("no msisdn, going to capture");
+                $state.go('captureMsisdn');
+            }
         });
 
     }
