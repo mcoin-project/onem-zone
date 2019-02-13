@@ -11,7 +11,7 @@
                                 class="collection-item" style="padding-right:5px">{{option.desc}}<span style="float:right"><i class="material-icons">chevron_right</i></span>
                             </a>
                         </div>
-                        <div ng-if="!result.type !== 'menu'">
+                        <div ng-if="result.type !== 'menu'">
                             <div ng-repeat="option in result.options track by $index">{{option}}</div>
                         </div>
                     </div>
