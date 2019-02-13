@@ -93,7 +93,7 @@ ONEmSimModule.factory('Cache', [
                     currentPage = parseInt(p[0].slice(2));
                     numPages = parseInt(p[1]);
                     for (var i=1; i <= numPages; i++) {
-                        pages.push[i];
+                        pages.push(i);
                     }
                 }
             }
