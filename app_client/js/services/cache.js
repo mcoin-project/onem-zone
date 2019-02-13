@@ -98,6 +98,17 @@ ONEmSimModule.factory('Cache', [
                 }
             }
 
+            console.log("returning:" + {
+                header: header,
+                footer: footer,
+                options: options,
+                buttons: buttons,
+                type: type,
+                pages: pages,
+                numPages: numPages,
+                currentPage: currentPage
+            });
+
             return {
                 header: header,
                 footer: footer,
