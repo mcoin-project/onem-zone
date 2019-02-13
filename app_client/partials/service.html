@@ -12,7 +12,7 @@
                             </a>
                         </div>
                         <div ng-if="!result.type !== 'menu'">
-                            {{option}}
+                            <div ng-repeat="option in result.options track by $index">{{option}}</div>
                         </div>
                     </div>
                 </div>
