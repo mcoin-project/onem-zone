@@ -58,7 +58,17 @@ ONEmSimModule.factory('Cache', [
             var lines = mtText.split('\n');
             var header = lines[0];
             var footer = lines[lines.length-1];
-            var options = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
+            var optionsDesc = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
+            var optionLetters = mtText.match(/^([A-Z] )/gm);
+            var options = [];
+
+            for (var i=0; i < optionLetters.length && i < optionsDesc.length; i++) {
+                var o = {
+                    desc: optionsDesc[i],
+                    option: optionLetters[i]
+                };
+                options.push(o);
+            }
 
             return {
                 header: header,
@@ -108,6 +118,13 @@ ONEmSimModule.factory('Cache', [
 
                 Socket.emit('API MO SMS', '#' + service);
                 console.log("emitting:" + '#' + service);
+                var mt = await waitforMtSMS();
+                return processService(mt);
+            },
+            selectOption: async function (inputText) {
+
+                Socket.emit('API MO SMS', inputText);
+                console.log("emitting:" + inputText);
                 var mt = await waitforMtSMS();
                 return processService(mt);
             },

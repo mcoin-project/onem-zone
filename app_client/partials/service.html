@@ -1,7 +1,7 @@
-<div style="padding-top:20px" class="row col-centered">
-    <h1>{{result.header}}</h1>
+<div style="width:50%;padding-top:20px" class="row col-centered">
+    <h4>{{result.header}}</h4>
     <div ng-repeat="option in result.options track by $index">
-        <li>{{option}}</li>
+        <li ng-click="optionSelected(option)">{{option.desc}}</li>
     </div>
     <p>{{result.footer}}</p>
 </div>
