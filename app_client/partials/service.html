@@ -4,7 +4,7 @@
         <a ng-href="#" ng-if="option.option">
                 <li  ng-click="optionSelected(option)">{{option.desc}}</li>
         </a>
-        <li ng-if="!option.option">{{option.desc}}</li>
+        <div ng-if="!option.option">{{option}}</div>
     </div>
     <p>{{result.footer}}</p>
 </div>

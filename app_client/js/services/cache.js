@@ -74,6 +74,8 @@ ONEmSimModule.factory('Cache', [
 
             if (optionLetters.length == 0 || optionsDesc.length == 0) {
                 options = lines;
+                options.shift(); // remove header
+                options.pop(); // remove footer
             }
 
             return {
