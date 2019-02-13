@@ -35,7 +35,7 @@ ONEmSimModule.controller('serviceController', [
                     $scope.result = response;   
                     $rootScope.$apply();
                 });
-                console.log("got response");
+                console.log("got response from selectOption");
                 console.log(response);
             }).catch(function (error) {
                 console.log(error);
