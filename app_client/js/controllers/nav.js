@@ -71,6 +71,23 @@ ONEmSimModule.controller('navbarController', [
 
         });
 
+        // $scope.services1 = [
+        //     { name: 'account' , icon: '3d_rotation', template: 'cards' },
+        //     { name: 'aljazeera' , icon: 'accessibility', template: 'cards' },
+        //     { name: 'contacts' , icon: 'account_circle', template: 'cards' },
+        //     { name:  'france24' , icon: 'alarm', template: 'cards' },
+        //     { name:  'market' , icon: 'all_out', template: 'cards' },
+        //     { name:  'msg' , icon: 'build', template: 'cards' }
+        // ];
+
+        // $scope.services2 = [
+        //     { name:  'onem' , icon: 'done', template: 'cards' },
+        //     { name:  'reuters' , icon: 'favorite', template: 'cards' },
+        //     { name:  'subscribe', icon: 'find_replace', template: 'cards' },
+        //     { name:  'xgroup', icon: 'feedback', template: 'cards' },
+        //     { name:  'unsubscribe', icon: 'help_outline', template: 'cards' }
+        // ];
+
         Promise.resolve().then(function () {
             if (!$rootScope.msisdn) {
                 return User.getMsisdn().$promise;
@@ -92,9 +109,18 @@ ONEmSimModule.controller('navbarController', [
             return Cache.getServices($scope);
         }).then(function (services) {
             $scope.services = services;
+            $scope.services1 = [];
+            $scope.services2 = [];
+
+            for (var i=0; i<$scope.services.length; i+=2) {
+                $scope.services1.push($scope.services[i]);
+            }
+            for (var i=1; i<$scope.services.length; i+=2) {
+                $scope.services2.push($scope.services[i]);
+            }
             console.log("cache got response");
             console.log(services);
-            $scope.services = services;
+
             $state.go('apphome');
         }).catch(function (error) {
             console.log(error);
