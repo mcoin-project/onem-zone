@@ -87,7 +87,7 @@ ONEmSimModule.factory('Cache', [
 
             if (!buttons) buttons = [];
 
-            if (lines.length > 1 && lines[lines.length-2].startsWith("..") {
+            if (lines.length > 1 && lines[lines.length-2].startsWith("..")) {
                 var p = lines[lines.length-2].split('/');
                 if (p.length > 1) {
                     currentPage = p[0];
