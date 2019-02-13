@@ -76,10 +76,12 @@ ONEmSimModule.factory('Cache', [
                 options.push(o);
             }
 
+            if (!header.startsWith('#')) header = undefined;
+
             if (optionLetters.length == 0 || optionsDesc.length == 0) {
                 options = lines;
                 type = "input"
-                options.shift(); // remove header
+                if (header) options.shift(); // remove header only if it's present
                 options.pop(); // remove footer
             } else {
                 type = "menu"

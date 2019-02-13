@@ -15,6 +15,8 @@ ONEmSimModule.controller('serviceController', [
         console.log("stateParams:");
         console.log($stateParams);
 
+        $scope.activeService = $stateParams.name;
+
         Cache.getService($stateParams.name).then(function (response) {
 
             $timeout(function () {

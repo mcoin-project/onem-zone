@@ -3,7 +3,7 @@
         <div class="col s12 m12 l6 offset-l3">
             <div class="card">
                 <div class="card-content">
-                    <span class="card-title">{{result.header}}</span>
+                    <span class="card-title">{{result.header || '#' + activeService.toUpperCase()}}</span>
                     <div class="row valign-wrapper">
                         <div ng-if="result.type == 'menu'" class="collection grey lighten-5" style="width:100%">
                             <a ng-if="option.option" ng-click="optionSelected(option)"
@@ -24,9 +24,9 @@
                 </div>
             </div>
             <ul ng-if="result.numPages > 0" style="padding-top:20px" class="center-align pagination">
-                <li ng-click="buttonSelected('go ' + page -1)" ng-class="result.currentPage == 1 ? 'disabled' : 'waves-effect'"><a><i class="material-icons">chevron_left</i></a></li>
+                <li ng-click="buttonSelected('go ' + (page - 1))" ng-class="result.currentPage == 1 ? 'disabled' : 'waves-effect'"><a><i class="material-icons">chevron_left</i></a></li>
                 <li ng-click="buttonSelected('go ' + page)" ng-class="result.currentPage == page ? 'active' : 'waves-effect'" ng-repeat="page in result.pages"><a>{{page}}</a></li>
-                <li ng-click="buttonSelected('go ' + page + 1)" ng-class="result.currentPage == result.numPages ? 'disabled' : 'waves-effect'"><a><i class="material-icons">chevron_right</i></a></li>
+                <li ng-click="buttonSelected('go ' + (page + 1))" ng-class="result.currentPage == result.numPages ? 'disabled' : 'waves-effect'"><a><i class="material-icons">chevron_right</i></a></li>
             </ul>
         </div>
 
