@@ -4,8 +4,8 @@
     </div>
     <div class="row">
         <div class="card-panel grey lighten-5 z-depth-1">
-            <div class="row valign-wrapper">
-                <div ng-if="result.options.length > 0" class="collection"
+            <div class="row valign-wrapper collection">
+                <div ng-if="result.options.length > 0" 
                     ng-repeat="option in result.options track by $index">
                     <li class="collection-item" ng-href="#" ng-if="option.option" ng-click="optionSelected(option)">
                         {{option.desc}}</li>
@@ -19,7 +19,7 @@
     <div class="row">
         <p>{{result.footer}}</p>
         <div style="display:inline-block" ng-repeat="button in result.buttons track by $index">
-            <a ng-click="optionSelected(button)" style="padding:10px"
+            <a ng-click="optionSelected(button)" style="margin:10px"
                 class="waves-effect waves-light btn-small">{{button}}</a>
         </div>
     </div>
