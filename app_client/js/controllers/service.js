@@ -36,6 +36,7 @@ ONEmSimModule.controller('serviceController', [
                     $rootScope.$apply();
                 });
                 console.log("got response");
+                console.log(response);
             }).catch(function (error) {
                 console.log(error);
             });
