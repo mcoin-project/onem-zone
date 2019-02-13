@@ -118,7 +118,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/',
                 templateUrl: 'partials/service.html',
                 controller: 'serviceController',
-                params: { name: 'market' },
+                params: { service: 'market' },
                 resolve: {
                     loginRequired: loginRequired
                 }
@@ -127,7 +127,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/',
                 templateUrl: 'partials/service.html',
                 controller: 'serviceController',
-                params: { name: null },
+                params: { service: null },
                 resolve: {
                     loginRequired: loginRequired
                 }
