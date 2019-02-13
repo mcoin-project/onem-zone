@@ -1,10 +1,19 @@
 <div style="width:50%;padding-top:20px" class="row col-centered">
-    <h4>{{result.header}}</h4>
-    <div ng-repeat="option in result.options track by $index">
-        <a ng-href="#" ng-if="option.option">
-                <li  ng-click="optionSelected(option)">{{option.desc}}</li>
-        </a>
-        <div ng-if="!option.option">{{option}}</div>
+    <div class="row">
+        <h4>{{result.header}}</h4>
     </div>
-    <p>{{result.footer}}</p>
+    <div class="row">
+        <div ng-repeat="option in result.options track by $index">
+            <a ng-href="#" ng-if="option.option">
+                <li ng-click="optionSelected(option)">{{option.desc}}</li>
+            </a>
+            <div ng-if="!option.option">{{option}}</div>
+        </div>
+    </div>
+    <div class="row">
+        <p>{{result.footer}}</p>
+        <div ng-repeat="button in result.buttons track by $index">
+            <a ng-click="optionSelected(button)" class="waves-effect waves-light btn-small">{{button}}</a>
+        </div>
+    </div>
 </div>

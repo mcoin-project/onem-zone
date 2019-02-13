@@ -61,6 +61,7 @@ ONEmSimModule.factory('Cache', [
             var footer = lines[lines.length-1];
             var optionsDesc = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
             var optionLetters = mtText.match(/^([A-Z] )/gm);
+            var buttons = mtText.match(/\b[A-Z]+[A-Z]+\b/gm);
             if (!optionsDesc) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
 
@@ -78,10 +79,13 @@ ONEmSimModule.factory('Cache', [
                 options.pop(); // remove footer
             }
 
+            if (!buttons) buttons = [];
+
             return {
                 header: header,
                 footer: footer,
-                options: options
+                options: options,
+                buttons: buttons
             };
         }
 
