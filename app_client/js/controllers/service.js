@@ -19,7 +19,7 @@ ONEmSimModule.controller('serviceController', [
 
             $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
-                $scope.result = response;
+                $scope.result = response;   
                 $rootScope.$apply();
             });
             console.log("got response");
