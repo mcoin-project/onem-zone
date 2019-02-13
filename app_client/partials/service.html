@@ -25,7 +25,7 @@
             </div>
             <ul ng-if="result.numPages > 0" style="padding-top:20px" class="center-align pagination">
                 <li class="disabled"><a href="#!"><i class="material-icons">chevron_left</i></a></li>
-                <li ng-class="{result.currentPage == page ? 'active' : 'waves-effect'}" ng-repeat="page in result.pages"><a href="#!">{{page}}</a></li>
+                <li ng-class="result.currentPage == page ? 'active' : 'waves-effect'" ng-repeat="page in result.pages"><a href="#!">{{page}}</a></li>
                 <li class="waves-effect"><a href="#!"><i class="material-icons">chevron_right</i></a></li>
             </ul>
         </div>
