@@ -12,7 +12,7 @@ ONEmSimModule.factory('Cache', [
             { name: ['aljazeera'], icon: 'accessibility', template: 'cards' },
             { name: ['contacts'], icon: 'account_circle', template: 'cards' },
             { name: ['france24'], icon: 'alarm', template: 'cards' },
-            { name: ['market'], icon: 'all_out', template: 'cards' },
+            { name: ['market'], icon: 'all_out', template: 'cards', default: true },
             { name: ['msg'], icon: 'build', template: 'cards' },
             { name: ['onem'], icon: 'done', template: 'cards' },
             { name: ['reuters'], icon: 'favorite', template: 'cards' },
@@ -154,6 +154,17 @@ ONEmSimModule.factory('Cache', [
         }
 
         return {
+
+            getLandingService: function() {
+                var result;
+                for (var i=0; i< services.length; i++) {
+                    if (services[i].default) {
+                        result = services[i];
+                        break;
+                    }
+                }
+                return result;
+            } 
 
             getServices: async function () {
 
