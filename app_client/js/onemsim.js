@@ -25,8 +25,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     //this solves page refresh and getting back to state
 }]);
 
-ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$authProvider', 'ngIntlTelInputProvider', 'Cache',
-    function ($stateProvider, $urlRouterProvider, $locationProvider, $authProvider, ngIntlTelInputProvider, Cache) {
+ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$authProvider', 'ngIntlTelInputProvider',
+    function ($stateProvider, $urlRouterProvider, $locationProvider, $authProvider, ngIntlTelInputProvider) {
 
         ngIntlTelInputProvider.set({
             initialCountry: 'gb',
@@ -94,9 +94,9 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         console.log($authProvider.tokenHeader);
         console.log($authProvider.tokenType);
 
-        function getLandingService() {
+        var getLandingService = ['Cache', function (Cache) {
             return Cache.getLandingService();
-        }
+        }];
 
         $stateProvider.
             state('landing', {
