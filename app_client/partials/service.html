@@ -5,9 +5,9 @@
     <div class="row">
         <div class="card-panel grey lighten-5 z-depth-1">
             <div class="row valign-wrapper">
-                <ul ng-if="result.options.length > 0" class="collection"
-                    ng-repeat="option in result.options track by $index">
-                    <li class="collection-item" ng-href="#" ng-if="option.option" ng-click="optionSelected(option)">
+                <ul ng-if="result.options.length > 0" class="collection">
+                    <li ng-repeat="option in result.options track by $index" class="collection-item" ng-href="#"
+                        ng-if="option.option" ng-click="optionSelected(option)">
                         {{option.desc}}</li>
                 </ul>
                 <div ng-if="result.options.length == 0">
