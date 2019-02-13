@@ -63,6 +63,8 @@ ONEmSimModule.factory('Cache', [
             var optionLetters = mtText.match(/^([A-Z] )/gm);
             var buttons = lines[lines.length-1].match(/\b[A-Z]+[A-Z]+\b/gm) || null;
             var type;
+            var currentPage, numPages = 0;
+            var pages = [];
             if (!optionsDesc) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
 
@@ -85,12 +87,26 @@ ONEmSimModule.factory('Cache', [
 
             if (!buttons) buttons = [];
 
+            if (lines.length > 1 && lines[lines.length-2].startsWith("..") {
+                var p = lines[lines.length-2].split('/');
+                if (p.length > 1) {
+                    currentPage = p[0];
+                    numPages = p[1];
+                    for (var i=1; i <= numPages; i++) {
+                        pages.push[i];
+                    }
+                }
+            }
+
             return {
                 header: header,
                 footer: footer,
                 options: options,
                 buttons: buttons,
-                type: type
+                type: type,
+                pages: pages,
+                numPages: numPages,
+                currentPage: currentPage
             };
         }
 
