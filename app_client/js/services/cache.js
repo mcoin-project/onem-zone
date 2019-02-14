@@ -38,6 +38,9 @@ ONEmSimModule.factory('Cache', [
                     var r = s.split(' #');
                     results.push(r[1].trim().toLowerCase());
                 });
+                console.log("results");
+                console.log(results);
+
                 for (var i = 0; i < results.length; i++) {
                     if (services[i].name.includes(results[i])) {
                         var s = services[i];
