@@ -120,7 +120,8 @@ ONEmSimModule.factory('Cache', [
                 header = undefined;
             }
 
-            if (optionLetters.length == 0 || optionsDesc.length == 0) {
+            if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
+                (optionNumbers.length == 0 || optionsDescNumbers.length == 0)) {
                 options = lines;
                 type = "input"
                 if (header) options.shift(); // remove header only if it's present
