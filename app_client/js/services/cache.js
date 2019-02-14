@@ -8,17 +8,17 @@ ONEmSimModule.factory('Cache', [
         const SMS_TIMEOUT = 10000;
 
         const services = [
-            { name: ['account'], icon: '3d_rotation', template: 'cards' },
-            { name: ['aljazeera'], icon: 'accessibility', template: 'cards' },
-            { name: ['contacts'], icon: 'account_circle', template: 'cards' },
-            { name: ['france24'], icon: 'alarm', template: 'cards' },
-            { name: ['market'], icon: 'all_out', template: 'cards', default: true },
-            { name: ['msg'], icon: 'build', template: 'cards' },
-            { name: ['onem'], icon: 'done', template: 'cards' },
-            { name: ['reuters'], icon: 'favorite', template: 'cards' },
-            { name: ['subscribe'], icon: 'find_replace', template: 'cards' },
-            { name: ['xgroup'], icon: 'feedback', template: 'cards' },
-            { name: ['unsubscribe'], icon: 'help_outline', template: 'cards' }
+            { name: ['account'], icon: 'settings', template: 'cards' },
+            { name: ['aljazeera'], icon: 'format_align_left', template: 'cards' },
+            { name: ['contacts'], icon: 'supervisor_account', template: 'cards' },
+            { name: ['france24'], icon: 'list', template: 'cards' },
+            { name: ['market'], icon: 'shopping_cart', template: 'cards', default: true },
+            { name: ['msg'], icon: 'message', template: 'cards' },
+            { name: ['onem'], icon: 'home', template: 'cards' },
+            { name: ['reuters'], icon: 'description', template: 'cards' },
+            { name: ['subscribe'], icon: 'note_add', template: 'cards' },
+            { name: ['xgroup'], icon: 'group_work', template: 'cards' },
+            { name: ['unsubscribe'], icon: 'delete', template: 'cards' }
         ];
 
         var activeServices = [];
