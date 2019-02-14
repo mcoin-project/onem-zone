@@ -44,7 +44,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 //  $location.path('/main');
                 $state.go('main');
             } else {
-                $location.path('/login');
+                $state.go('login');
             }
             return deferred.promise;
         }];
