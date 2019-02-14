@@ -33,7 +33,7 @@ ONEmSimModule.factory('Cache', [
             var results = [];
             console.log("matches");
             console.log(matches);
-            if (matches.length > 0) {
+            if (matches && matches.length > 0) {
                 matches.filter(function (s) {
                     var r = s.split(' #');
                     results.push(r[1].trim().toLowerCase());
@@ -51,10 +51,10 @@ ONEmSimModule.factory('Cache', [
                         }
                     }
                 }
-                console.log("activeServices");
-                console.log(activeServices);
-                return activeServices;
             }
+            console.log("activeServices");
+            console.log(activeServices);
+            return activeServices;
         }
 
         var processService = function (mtText) {

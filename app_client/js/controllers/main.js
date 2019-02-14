@@ -3,13 +3,13 @@ ONEmSimModule.controller('mainController', [
     '$rootScope',
     '$state',
     'Cache',
-    'DataModel',
+    'SmsHandler',
     'Socket',
     'User',
     'Phone',
     '$location',
     '$timeout',
-    function ($scope, $rootScope, $state, Cache, DataModel, Socket, User, Phone, $location, $timeout) {
+    function ($scope, $rootScope, $state, Cache, SmsHandler, Socket, User, Phone, $location, $timeout) {
 
         $scope.selected = { country: '' };
 
@@ -27,11 +27,39 @@ ONEmSimModule.controller('mainController', [
             console.log("setting msisdn:" + response.msisdn);
             $rootScope.msisdn = response.msisdn;
             $rootScope.user = response.user;
+            //$state.go('apphome');
+            return SmsHandler.start().$promise;
+        }).then(function (response) {
+            console.log("response fom smshandler.start");
+            console.log(response);
+            return Phone.start(response);
+        }).then(function (response) {
+            console.log("finished call to phone.start");
+            return Cache.getServices($scope);
+        }).then(function (services) {
+            $rootScope.services = services;
+            $rootScope.services1 = [];
+            $rootScope.services2 = [];
 
-            $state.go('apphome', { service: Cache.getLandingService() });
+            console.log("cache got response");
+            console.log(services);
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                for (var i = 0; i < $scope.services.length; i += 2) {
+                    $rootScope.services1.push($rootScope.services[i]);
+                }
+                for (var i = 1; i < $scope.services.length; i += 2) {
+                    $rootScope.services2.push($rootScope.services[i]);
+                }
+                $rootScope.$apply();
+            });
+            $state.go('landing');
         }).catch(function (error) {
-            console.log("no msisdn, going to capture");
-            $state.go('captureMsisdn');
+            console.log(error);
+            if (!$rootScope.msisdn) {
+                console.log("no msisdn, going to capture");
+                $state.go('captureMsisdn');
+            }
         });
     }
 ]);
