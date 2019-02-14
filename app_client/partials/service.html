@@ -24,7 +24,7 @@
                                             class="material-icons">chevron_right</i></span>
                                 </a>
                             </div>
-                            <div ng-show="result.type !== 'menu'">
+                            <div ng-cloak ng-show="result.type !== 'menu'">
                                 <div ng-repeat="option in result.options track by $index">{{option}}</div>
                                 <form ng-submit="moSubmit()" name="inputForm">
                                     <div class="input-field">
