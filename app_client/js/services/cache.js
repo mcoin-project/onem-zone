@@ -83,7 +83,7 @@ ONEmSimModule.factory('Cache', [
             // make breadcrumb contain words after the first word
             if (header.startsWith('#')) {
                 var words = header.match(/\S+\s*/gm);
-                if (words & words.length > 0) {
+                if (words && words.length > 0) {
                     breadcrumbs.push(words[0].toUpperCase().trim());
                     var rest = "";
                     for (var i = 1; i < words.length; i++) {
