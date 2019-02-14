@@ -37,11 +37,11 @@ ONEmSimModule.controller('serviceController', [
             console.log("motext: "+moText);
             console.log("motext: "+$scope.moText);
             Cache.selectOption(moText).then(function (response) {
-                $scope.moText = "";
                 console.log("motext: "+$scope.moText);
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
+                    $scope.moText = "";
                     $scope.result = response;   
                     $rootScope.$apply();
                 });
