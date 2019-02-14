@@ -1,7 +1,7 @@
 <div style="padding-top:20px">
     <div class="row col-centered">
         <div class="col s12 m12 l6 offset-l3">
-            <nav>
+            <nav ng-cloak ng-show="result.breadcrumbs.length > 0">
                 <div class="nav-wrapper">
                     <div class="col s12">
                         <a ng-show="result.breadcrumbs[0]" ui-sref="service({service: activeService.name}"

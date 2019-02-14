@@ -66,7 +66,7 @@ ONEmSimModule.factory('Cache', [
             var currentPage, numPages = 0;
             var pages = [];
             var breadcrumbs = [];
-            
+
             if (!optionsDesc) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
 
@@ -117,6 +117,9 @@ ONEmSimModule.factory('Cache', [
                     }
                 }
             }
+
+            console.log("breadcrumbs");
+            console.log(breadcrumbs);
 
             return {
                 header: header,
