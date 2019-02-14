@@ -15,15 +15,12 @@
                             </a>
                         </div>
                         <div ng-if="result.type !== 'menu'">
-                            <div class="row">
-                                <div ng-repeat="option in result.options track by $index">{{option}}</div>
-                            </div>
-                            <div class="row">
-                                <div class="input-field col s12">
-                                    <input ng-model="moText" placeholder="Message" id="moText" type="text">
-                                    <span class="helper-text">{{result.footer}}</span>
-                                    <button ng-submit="moSubmit(moText)" class="btn waves-effect waves-light" type="submit" name="submit">Submit</button>
-                                </div>
+                            <div ng-repeat="option in result.options track by $index">{{option}}</div>
+                            <div class="input-field col s12">
+                                <input ng-model="moText" placeholder="Message" id="moText" type="text">
+                                <span class="helper-text">{{result.footer}}</span>
+                                <button ng-click="moSubmit(moText)" class="btn waves-effect waves-light"
+                                    name="submit">Submit</button>
                             </div>
                         </div>
                     </div>
