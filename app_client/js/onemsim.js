@@ -122,7 +122,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/',
                 templateUrl: 'partials/service.html',
                 controller: 'serviceController',
-                params: { service: getLandingService },
+                params: { service: getLandingService, initialize: true },
                 resolve: {
                     loginRequired: loginRequired
                 }
@@ -131,7 +131,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/',
                 templateUrl: 'partials/service.html',
                 controller: 'serviceController',
-                params: { service: null },
+                params: { service: null, initialize: null },
                 resolve: {
                     loginRequired: loginRequired
                 }
@@ -175,7 +175,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         $urlRouterProvider.otherwise(function ($injector) {
             var $state = $injector.get('$state');
             console.log("caught default route");
-            $state.go('apphome');
+            $state.go('landing');
         });
         $locationProvider.html5Mode(true);
 
