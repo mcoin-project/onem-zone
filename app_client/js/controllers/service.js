@@ -34,7 +34,7 @@ ONEmSimModule.controller('serviceController', [
         $scope.moSubmit = function(moText) {
             if (!moText || moText.length == 0) return;
             $scope.moText = moText;
-            console.log("motext: "moText);
+            console.log("motext: "+moText);
             Cache.selectOption(moText).then(function (response) {
                 $scope.moText = "";
 
