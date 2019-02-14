@@ -41,12 +41,12 @@ ONEmSimModule.factory('Cache', [
                 console.log("results");
                 console.log(results);
 
-                for (var i = 0; i < results.length; i++) {
-                    for (var j = 0; j < services.length; j++) {
-                        if (services[j].name.includes(results[i])) {
-                            var s = services[j];
-                            var ind = services[j].name.indexOf(results[i]);
-                            s.name = services[j].name[ind];
+                for (var i = 0; i < service.length; i++) {
+                    for (var j = 0; j < results.length; j++) {
+                        if (services[i].name.includes(results[j])) {
+                            var s = services[i];
+                            var ind = services[i].name.indexOf(results[j]);
+                            s.name = services[i].name[ind];
                             activeServices.push(s);
                         }
                     }
