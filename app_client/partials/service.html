@@ -17,17 +17,20 @@
                             </div>
                             <div ng-if="result.type !== 'menu'">
                                 <div ng-repeat="option in result.options track by $index">{{option}}</div>
-                                <div class="input-field">
-                                    <div class="col s8">
-                                        <input close-keyboard auto-focus autocomplete="off" ng-model="moText"
-                                            placeholder="Message" id="moText" type="text">
-                                        <span class="helper-text">{{result.footer}}</span>
+                                <form ng-submit="moSubmit()">
+                                    <div class="input-field">
+                                        <div class="col s8">
+                                            <input close-keyboard auto-focus autocomplete="off" ng-model="moText"
+                                                placeholder="Message" id="moText" type="text">
+                                            <span class="helper-text">{{result.footer}}</span>
+                                        </div>
+                                        <div class="col s4">
+                                            <button type="submit" class="right btn waves-effect waves-light"
+                                                name="submit">Submit</button>
+                                        </div>
                                     </div>
-                                    <div class="col s4">
-                                        <button ng-click="moSubmit(moText)" class="right btn waves-effect waves-light"
-                                            name="submit">Submit</button>
-                                    </div>
-                                </div>
+                                </form>
+
                             </div>
                         </div>
                     </div>
