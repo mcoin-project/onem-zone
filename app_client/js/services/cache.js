@@ -58,7 +58,7 @@ ONEmSimModule.factory('Cache', [
         }
 
         var processService = function (mtText) {
-debugger;
+//debugger;
             if (!mtText) return -1;
             var options = [];
 
@@ -67,7 +67,7 @@ debugger;
             var footer = lines[lines.length - 1];
             var optionsDescLetters = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
             var optionsDescNumbers = [];
-            var optionNumbersRegex = /^\d+(\s.+)/gm;
+            var optionNumbersRegex = /^(\s+?\d+)(\s.+)/gm;
             var optionLetters = mtText.match(/^([A-Z] )/gm);
             var optionNumbers = mtText.match(/^((\s+)?[0-9]+ )/gm);
             var buttons = lines[lines.length - 1].match(/\b[A-Z]+[A-Z]+\b/gm) || null;
@@ -86,7 +86,7 @@ debugger;
             }
 
             while ((no = optionNumbersRegex.exec(mtText)) !== null) {
-                optionsDescNumbers.push(no[1].trim());
+                optionsDescNumbers.push(no[2].trim());
             }
 
             if (optionLetters.length > 0) {
