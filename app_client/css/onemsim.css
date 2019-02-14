@@ -112,7 +112,7 @@ span.icon {
   margin-top: 10px; }
 
 .breadcrumb:before {
-  color: #000000; }
+  color: rgba(30, 30, 30, 0.7); }
 
 .breadcrumb, .breadcrumb:last-child {
   color: #000000; }

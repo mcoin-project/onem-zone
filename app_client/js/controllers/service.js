@@ -17,7 +17,7 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.activeService = $stateParams.service;
 
-        Cache.getService($stateParams.service.name).then(function (response) {
+        Cache.getService($stateParams.service).then(function (response) {
 
             $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
