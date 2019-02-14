@@ -29,6 +29,22 @@ ONEmSimModule.controller('serviceController', [
             console.log(error);
         });
 
+        $scope.moSubmit = function(moText) {
+            if (!$scope.moText || $scope.moText.length == 0) return;
+            
+            Cache.selectOption($scope.moText).then(function (response) {
+
+                $timeout(function () {
+                    // anything you want can go here and will safely be run on the next digest.
+                    $scope.result = response;   
+                    $rootScope.$apply();
+                });
+                console.log("got response");
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+
         $scope.optionSelected = function(option) {
             Cache.selectOption(option.option).then(function (response) {
 
