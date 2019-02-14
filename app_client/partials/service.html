@@ -17,7 +17,7 @@
                         <div ng-if="result.type !== 'menu'">
                             <div ng-repeat="option in result.options track by $index">{{option}}</div>
                             <div class="input-field col s12">
-                                <input ng-model="moText" placeholder="Message" id="moText" type="text">
+                                <input close-keyboard auto-focus autocomplete="off" ng-model="moText" placeholder="Message" id="moText" type="text">
                                 <span class="helper-text">{{result.footer}}</span>
                                 <button ng-click="moSubmit(moText)" class="btn waves-effect waves-light"
                                     name="submit">Submit</button>

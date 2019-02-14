@@ -30,9 +30,9 @@ ONEmSimModule.controller('serviceController', [
         });
 
         $scope.moSubmit = function(moText) {
-            if (!$scope.moText || $scope.moText.length == 0) return;
+            if (!moText || moText.length == 0) return;
             
-            Cache.selectOption($scope.moText).then(function (response) {
+            Cache.selectOption(moText).then(function (response) {
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
