@@ -33,7 +33,12 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.moSubmit = function(moText) {
             if (!moText || moText.length == 0) return;
-            $scope.moText = moText;
+            
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                $scope.moText = "";
+                $rootScope.$apply();
+            });
             console.log("motext: "+moText);
             console.log("motext: "+$scope.moText);
             Cache.selectOption(moText).then(function (response) {
@@ -41,7 +46,6 @@ ONEmSimModule.controller('serviceController', [
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
-                    $scope.moText = "";
                     $scope.result = response;   
                     $rootScope.$apply();
                 });
