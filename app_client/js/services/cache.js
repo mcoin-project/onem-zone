@@ -125,10 +125,10 @@ ONEmSimModule.factory('Cache', [
             console.log("optionNumbers");
             console.log(optionNumbers);
             console.log("optionDescLetters");
-            console.log(optionDescLetters);
+            console.log(optionsDescLetters);
             console.log("optionDescNumbers");
-            console.log(optionDescNumbers);
-            
+            console.log(optionsDescNumbers);
+
             if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
                 (optionNumbers.length == 0 || optionsDescNumbers.length == 0)) {
                 options = lines;
