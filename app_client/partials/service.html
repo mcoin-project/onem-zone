@@ -17,7 +17,7 @@
                             </div>
                             <div ng-show="result.type !== 'menu'">
                                 <div ng-repeat="option in result.options track by $index">{{option}}</div>
-                                <form ng-submit=moSubmit()" name="inputForm">
+                                <form ng-submit="moSubmit()" name="inputForm">
                                     <div class="input-field">
                                         <div class="col s8">
                                             <input auto-focus autocomplete="off" ng-model="moText"
