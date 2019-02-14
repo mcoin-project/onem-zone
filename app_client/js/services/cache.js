@@ -31,6 +31,8 @@ ONEmSimModule.factory('Cache', [
 
             var matches = mtText.match(/(^([A-Z])[ ].*\n+)/gm);
             var results = [];
+            console.log("matches");
+            console.log(matches);
             if (matches.length > 0) {
                 matches.filter(function (s) {
                     var r = s.split(' #');
