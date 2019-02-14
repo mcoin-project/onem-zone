@@ -21,7 +21,7 @@ ONEmSimModule.controller('serviceController', [
 
             $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
-                $scope.result = response;   
+                $scope.result = response;
                 $rootScope.$apply();
             });
             console.log("got response");
@@ -31,22 +31,15 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.moText = "";
 
-        $scope.moSubmit = function(moText) {
-            if (!moText || moText.length == 0) return;
-            
-            $timeout(function () {
-                // anything you want can go here and will safely be run on the next digest.
+        $scope.moSubmit = function () {
+            if (!$scope.moText || $scope.moText.length == 0) return;
+
+            Cache.selectOption($scope.moText).then(function (response) {
                 $scope.moText = "";
-                $rootScope.$apply();
-            });
-            console.log("motext: "+moText);
-            console.log("motext: "+$scope.moText);
-            Cache.selectOption(moText).then(function (response) {
-                console.log("motext: "+$scope.moText);
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
-                    $scope.result = response;   
+                    $scope.result = response;
                     $rootScope.$apply();
                 });
                 console.log("got response");
@@ -55,12 +48,12 @@ ONEmSimModule.controller('serviceController', [
             });
         }
 
-        $scope.optionSelected = function(option) {
+        $scope.optionSelected = function (option) {
             Cache.selectOption(option.option).then(function (response) {
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
-                    $scope.result = response;   
+                    $scope.result = response;
                     $rootScope.$apply();
                 });
                 console.log("got response from selectOption");
@@ -70,12 +63,12 @@ ONEmSimModule.controller('serviceController', [
             });
         }
 
-        $scope.buttonSelected = function(buttonText) {
+        $scope.buttonSelected = function (buttonText) {
             Cache.selectOption(buttonText).then(function (response) {
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
-                    $scope.result = response;   
+                    $scope.result = response;
                     $rootScope.$apply();
                 });
                 console.log("got response");
