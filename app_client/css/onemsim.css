@@ -111,6 +111,12 @@ span.icon {
 .breadcrumb {
   margin-top: 10px; }
 
+.breadcrumb:before {
+  color: #000000; }
+
+.breadcrumb, .breadcrumb:last-child {
+  color: #000000; }
+
 .comment {
   margin-top: 20px; }
 
