@@ -29,10 +29,13 @@ ONEmSimModule.controller('serviceController', [
             console.log(error);
         });
 
+        $scope.moText = "";
+
         $scope.moSubmit = function(moText) {
-            if (!moText || moText.length == 0) return;
-            
-            Cache.selectOption(moText).then(function (response) {
+        //    if (!moText || moText.length == 0) return;
+            console.log("motext: "+$scope.moText);
+            Cache.selectOption($scope.moText).then(function (response) {
+                $scope.moText = "";
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
