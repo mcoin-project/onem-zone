@@ -54,7 +54,7 @@ ONEmSimModule.controller('mainController', [
                 }
                 $rootScope.$apply();
             });
-            $state.go('apphome', {service: Cache.getLandingService()});
+            $state.go('apphome', {initialize: true, service: Cache.getLandingService()});
         }).catch(function (error) {
             console.log(error);
             if (!$rootScope.msisdn) {

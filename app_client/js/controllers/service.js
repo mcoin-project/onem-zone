@@ -17,17 +17,19 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.activeService = $stateParams.service;
 
-        Cache.getService($stateParams.service.name).then(function (response) {
+        if ($stateParams.initialize) {
+            Cache.getService($stateParams.service.name).then(function (response) {
 
-            $timeout(function () {
-                // anything you want can go here and will safely be run on the next digest.
-                $scope.result = response;
-                $rootScope.$apply();
+                $timeout(function () {
+                    // anything you want can go here and will safely be run on the next digest.
+                    $scope.result = response;
+                    $rootScope.$apply();
+                });
+                console.log("got response");
+            }).catch(function (error) {
+                console.log(error);
             });
-            console.log("got response");
-        }).catch(function (error) {
-            console.log(error);
-        });
+        }
 
         $scope.moText = "";
 
