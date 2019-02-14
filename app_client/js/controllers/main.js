@@ -28,7 +28,7 @@ ONEmSimModule.controller('mainController', [
             $rootScope.msisdn = response.msisdn;
             $rootScope.user = response.user;
 
-            $state.go('apphome', { service: Cache.getLandingService });
+            $state.go('apphome', { service: Cache.getLandingService() });
         }).catch(function (error) {
             console.log("no msisdn, going to capture");
             $state.go('captureMsisdn');
