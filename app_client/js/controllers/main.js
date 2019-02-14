@@ -9,7 +9,8 @@ ONEmSimModule.controller('mainController', [
     'Phone',
     '$location',
     '$timeout',
-    function ($scope, $rootScope, $state, Cache, SmsHandler, Socket, User, Phone, $location, $timeout) {
+    'Cache',
+    function ($scope, $rootScope, $state, Cache, SmsHandler, Socket, User, Phone, $location, $timeout, Cache) {
 
         $scope.selected = { country: '' };
 
@@ -53,7 +54,7 @@ ONEmSimModule.controller('mainController', [
                 }
                 $rootScope.$apply();
             });
-            $state.go('landing');
+            $state.go('apphome', {service: Cache.getLandingService()});
         }).catch(function (error) {
             console.log(error);
             if (!$rootScope.msisdn) {
