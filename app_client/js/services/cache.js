@@ -65,23 +65,42 @@ ONEmSimModule.factory('Cache', [
             var lines = mtText.split('\n');
             var header = lines[0];
             var footer = lines[lines.length - 1];
-            var optionsDesc = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
+            var optionsDescLetters = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
+            var optionsDescNumbers = [];
+            var optionNumbersRegex = /^\d+(\s.+)/gm;
             var optionLetters = mtText.match(/^([A-Z] )/gm);
+            var optionNumbers = mtText.match(/^([0-9]+ )/gm);
             var buttons = lines[lines.length - 1].match(/\b[A-Z]+[A-Z]+\b/gm) || null;
             var type;
             var currentPage, numPages = 0;
             var pages = [];
             var breadcrumbs = [];
+            var no;
 
-            if (!optionsDesc) optionsDesc = [];
+            if (!optionsDescLetters) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
+            if (!optionNumbers) optionNumbers = [];
 
-            for (var i = 0; i < optionLetters.length && i < optionsDesc.length; i++) {
-                var o = {
-                    desc: optionsDesc[i],
-                    option: optionLetters[i]
-                };
-                options.push(o);
+            while ((no = optionNumbersRegex.exec(mtText)) !== null) {
+                optionsDescNumbers.push(no[1].trim());
+            }
+
+            if (optionLetters.length > 0) {
+                for (var i = 0; i < optionLetters.length && i < optionsDescLetters.length; i++) {
+                    var o = {
+                        desc: optionsDescLetters[i],
+                        option: optionLetters[i]
+                    };
+                    options.push(o);
+                }
+            } else if (optionNumbers.length > 0) {
+                for (var i = 0; i < optionNumbers.length && i < optionsDescNumbers.length; i++) {
+                    var o = {
+                        desc: optionsDescNumbers[i],
+                        option: optionNumbers[i]
+                    };
+                    options.push(o);
+                }             
             }
 
             if (footer && footer.startsWith('--')) footer = footer.slice(2) // remove -- from footer
@@ -100,7 +119,6 @@ ONEmSimModule.factory('Cache', [
             } else {
                 header = undefined;
             }
-
 
             if (optionLetters.length == 0 || optionsDesc.length == 0) {
                 options = lines;
