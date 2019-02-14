@@ -16,7 +16,7 @@ ONEmSimModule.controller('navbarController', [
             return $auth.isAuthenticated();
         }
 
-        $scope.agree = function() {
+        $scope.agree = function () {
             $state.go('logoutDelete');
         }
 
@@ -112,15 +112,18 @@ ONEmSimModule.controller('navbarController', [
             $scope.services1 = [];
             $scope.services2 = [];
 
-            for (var i=0; i<$scope.services.length; i+=2) {
-                $scope.services1.push($scope.services[i]);
-            }
-            for (var i=1; i<$scope.services.length; i+=2) {
-                $scope.services2.push($scope.services[i]);
-            }
             console.log("cache got response");
             console.log(services);
-
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                for (var i = 0; i < $scope.services.length; i += 2) {
+                    $scope.services1.push($scope.services[i]);
+                }
+                for (var i = 1; i < $scope.services.length; i += 2) {
+                    $scope.services2.push($scope.services[i]);
+                }
+                $rootScope.$apply();
+            });
             $state.go('apphome');
         }).catch(function (error) {
             console.log(error);
