@@ -17,7 +17,7 @@
                             </div>
                             <div ng-if="result.type !== 'menu'">
                                 <div ng-repeat="option in result.options track by $index">{{option}}</div>
-                                <form name="inputForm" ng-submit="moSubmit(moText)">
+                                <form name="inputForm">
                                     <div class="input-field">
                                         <div class="col s8">
                                             <input auto-focus autocomplete="off" ng-model="moText"
@@ -25,7 +25,7 @@
                                             <span class="helper-text">{{result.footer}}</span>
                                         </div>
                                         <div class="col s4">
-                                            <button type="submit" ng-disabled="inputForm.$invalid"
+                                            <button ng-click="moSubmit(moText)" ng-disabled="inputForm.$invalid"
                                                 class="right btn waves-effect waves-light" name="submit">Submit</button>
                                         </div>
                                     </div>
