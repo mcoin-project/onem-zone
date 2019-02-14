@@ -47,6 +47,7 @@ ONEmSimModule.factory('Cache', [
             } else {
                 return -1;
             }
+            console.log("activeServices");
             console.log(activeServices);
             return activeServices;
         }
