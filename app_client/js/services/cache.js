@@ -65,6 +65,8 @@ ONEmSimModule.factory('Cache', [
             var type;
             var currentPage, numPages = 0;
             var pages = [];
+            var breadcrumbs = [];
+            
             if (!optionsDesc) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
 
@@ -76,7 +78,23 @@ ONEmSimModule.factory('Cache', [
                 options.push(o);
             }
 
-            if (!header.startsWith('#')) header = undefined;
+            if (footer && footer.startsWith('--')) footer = footer.slice(2) // remove -- from footer
+
+            // make breadcrumb contain words after the first word
+            if (header.startsWith('#')) {
+                var words = header.match(/\S+\s*/gm);
+                if (words & words.length > 0) {
+                    breadcrumbs.push(words[0].toUpperCase().trim());
+                    var rest = "";
+                    for (var i = 1; i < words.length; i++) {
+                        rest += words[i];
+                    }
+                    breadcrumbs.push(rest.toUpperCase().trim());
+                }
+            } else {
+                header = undefined;
+            } 
+
 
             if (optionLetters.length == 0 || optionsDesc.length == 0) {
                 options = lines;
@@ -100,18 +118,6 @@ ONEmSimModule.factory('Cache', [
                 }
             }
 
-            console.log("returning:");
-            console.log({
-                header: header,
-                footer: footer,
-                options: options,
-                buttons: buttons,
-                type: type,
-                pages: pages,
-                numPages: numPages,
-                currentPage: currentPage
-            });
-
             return {
                 header: header,
                 footer: footer,
@@ -120,7 +126,8 @@ ONEmSimModule.factory('Cache', [
                 type: type,
                 pages: pages,
                 numPages: numPages,
-                currentPage: currentPage
+                currentPage: currentPage,
+                breadcrumbs: breadcrumbs
             };
         }
 

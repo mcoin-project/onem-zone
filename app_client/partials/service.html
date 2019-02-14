@@ -1,6 +1,15 @@
 <div style="padding-top:20px">
     <div class="row col-centered">
         <div class="col s12 m12 l6 offset-l3">
+            <nav>
+                <div class="nav-wrapper">
+                    <div class="col s12">
+                        <a ng-show="result.breadcrumbs[0]" ui-sref="service({service: activeService.name}"
+                            class="breadcrumb">{{result.breadcrumbs[0]}})</a>
+                        <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}})</a>
+                    </div>
+                </div>
+            </nav>
             <div class="card">
                 <div class="card-content">
                     <span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
@@ -20,8 +29,8 @@
                                 <form ng-submit="moSubmit()" name="inputForm">
                                     <div class="input-field">
                                         <div class="col s8">
-                                            <input auto-focus autocomplete="off" ng-model="moText"
-                                                placeholder="Message" required id="moText" type="text">
+                                            <input auto-focus autocomplete="off" ng-model="moText" placeholder="Message"
+                                                required id="moText" type="text">
                                             <span class="helper-text">{{result.footer}}</span>
                                         </div>
                                         <div class="col s4">
@@ -35,7 +44,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-action">
+                <div class="card-action right-align">
                     <a ng-repeat="button in result.buttons track by $index"
                         ng-click="buttonSelected(button)">{{button}}</a>
                 </div>
