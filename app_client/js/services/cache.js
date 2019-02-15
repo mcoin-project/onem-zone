@@ -21,7 +21,6 @@ ONEmSimModule.factory('Cache', [
             { name: ['unsubscribe'], icon: 'delete', template: 'cards' }
         ];
 
-        var activeServices = [];
         var mtResponse;
         var timer;
 
@@ -33,7 +32,10 @@ ONEmSimModule.factory('Cache', [
         };
 
         var processServicesList = function (mtText) {
-      //      debugger;
+
+            var activeServices = [];
+
+            //      debugger;
             if (!mtText) return -1;
 
             var matches = mtText.match(/(^([A-Z])[ ].*\n+)/gm);
