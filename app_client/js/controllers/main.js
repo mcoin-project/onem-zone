@@ -38,7 +38,6 @@ ONEmSimModule.controller('mainController', [
             console.log("finished call to phone.start");
             return Cache.getServices();
         }).then(function (services) {
-            debugger;
 
             $rootScope.services = services;
             $rootScope.services1 = [];

@@ -141,7 +141,7 @@ exports.initialize = function (server) {
                             if (index == testMessages.length) index = 0;
                             if (testMessages[index]) socket.emit('API MT SMS', { mtText: testMessages[index] });
                             index++;
-                        }, 3000
+                        }, 1000
                     );
                 }
 

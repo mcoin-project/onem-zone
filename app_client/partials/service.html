@@ -1,7 +1,7 @@
 <div style="padding-top:20px">
     <div class="row col-centered">
         <div class="col s12 m12 l6 offset-l3">
-            <nav ng-cloak ng-show="result.breadcrumbs.length > 0">
+            <nav style="z-index:995" class="navbar-fixed" ng-cloak ng-show="result.breadcrumbs.length > 0">
                 <div class="nav-wrapper white">
                     <div class="col s12">
                         <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
@@ -18,38 +18,28 @@
                     <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
                             style="float:right"><i
                                 class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
-                    <div ng-include="/partials/templates/result.html"></div>
+                    <div ng-include="'partials/templates/result.html'"></div>
                 </div>
                 <div class="card-action right-align">
                     <a ng-repeat="button in result.buttons track by $index"
                         ng-click="buttonSelected(button)">{{button}}</a>
                 </div>
             </div>
-            <div class="show-on-small ng-cloak" ng-show="result">
-                <div class="card-content">
-                    <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
+            <div class="hide-on-med-and-up ng-cloak" ng-show="result">
+                <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
                             style="float:right"><i
                                 class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
-                    <div ng-include="/partials/templates/result.html"></div>
-                </div>
-                <div style="position:fixed;bottom:0" class="right-align">
-                    <a ng-repeat="button in result.buttons track by $index"
-                        ng-click="buttonSelected(button)">{{button}}</a>
+                <div ng-include="'partials/templates/result.html'"></div>
+                <div style="position:fixed;z-index:995;left:0;bottom:0" class="navbar-fixed">
+                    <nav class="red right-align">
+                        <a style="margin-right:10px" ng-repeat="button in result.buttons track by $index"
+                            ng-click="buttonSelected(button)">{{button}}</a>
+                    </nav>
                 </div>
             </div>
-            <ul ng-if="result.numPages > 0" style="padding-top:20px" class="center-align pagination">
-                <li ng-click="buttonSelected('go ' + (result.currentPage - 1))"
-                    ng-class="result.currentPage == 1 ? 'disabled' : 'waves-effect'"><a><i
-                            class="material-icons">chevron_left</i></a></li>
-                <li ng-click="buttonSelected('go ' + page)"
-                    ng-class="result.currentPage == page ? 'active' : 'waves-effect'" ng-repeat="page in result.pages">
-                    <a>{{page}}</a></li>
-                <li ng-click="buttonSelected('go ' + (result.currentPage + 1))"
-                    ng-class="result.currentPage == result.numPages ? 'disabled' : 'waves-effect'"><a><i
-                            class="material-icons">chevron_right</i></a></li>
-            </ul>
+            <div class="hide-on-small-only">
+                <div ng-include="'partials/templates/result.html'"></div>
+            </div>
         </div>
-
-
     </div>
 </div>
