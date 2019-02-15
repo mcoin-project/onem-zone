@@ -14,6 +14,8 @@ const services = [
     { name: ['unsubscribe'], icon: 'delete', template: 'cards' }
 ];
 
+var mtResponse;
+
 
 ONEmSimModule.factory('Cache', [
     'Socket',
@@ -23,12 +25,11 @@ ONEmSimModule.factory('Cache', [
 
         const SMS_TIMEOUT = 10000;
 
-        var mtResponse;
         var timer;
 
         var checkMt;
 
-        function stopInterval() {
+        var stopInterval = function () {
             $interval.cancel(checkMt);
             checkMt = undefined;
         };
