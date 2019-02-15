@@ -234,26 +234,35 @@ ONEmSimModule.factory('Cache', [
             getServices: async function () {
 
                 Socket.emit('API MO SMS', '#');
-                var mt = await waitforMtSMS();
-                return processServicesList(mt);
+                try {
+                    var mt = await waitforMtSMS();
+                    return processServicesList(mt);
+                } catch (error) {
+                    return new Error (error);
+                }
             },
             getService: async function (service) {
 
                 Socket.emit('API MO SMS', '#' + service);
                 console.log("emitting:" + '#' + service);
 
-                var mt = await waitforMtSMS();
-           //     debugger;
-
-                console.log("got response to getService: " + mt);
-                return processService(mt);
+                try {
+                    var mt = await waitforMtSMS();
+                    return processService(mt);
+                } catch (error) {
+                    return new Error (error);
+                }
             },
             selectOption: async function (inputText) {
 
                 Socket.emit('API MO SMS', inputText);
                 console.log("emitting:" + inputText);
-                var mt = await waitforMtSMS();
-                return processService(mt);
+                try {
+                    var mt = await waitforMtSMS();
+                    return processService(mt);
+                } catch (error) {
+                    return new Error (error);
+                }
             },
             receivedMt: function (text) {
                 console.log("cancelling timer : " + text);
