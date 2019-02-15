@@ -49,6 +49,14 @@ ONEmSimModule.controller('navbarController', [
 
         });
 
+        $scope.$on('socket:API MT SMS', function (ev, data) {
+            console.log("nav: received MT");
+            console.log(data.mtText);
+
+            Cache.receivedMt(data.mtText);
+
+        });
+
         $scope.smsInput = function () {
 
             if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;
@@ -62,14 +70,6 @@ ONEmSimModule.controller('navbarController', [
             Socket.emit('MO SMS', $scope.smsText);
             $scope.smsText = '';
         };
-
-        $scope.$on('socket:API MT SMS', function (ev, data) {
-            console.log("getService: received MT");
-            console.log(data);
-
-            Cache.receivedMt(data.mtText);
-
-        });
 
         // $scope.services1 = [
         //     { name: 'account' , icon: '3d_rotation', template: 'cards' },

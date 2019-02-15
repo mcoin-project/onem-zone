@@ -21,7 +21,7 @@ ONEmSimModule.controller('captureTokenController', [
                     $rootScope.$apply();
                 });
                 console.log($rootScope.user);
-                $state.go('landing');
+                $state.go('main');
             }).catch(function (error) {
                 toastr.error(error);
             });

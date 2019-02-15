@@ -25,8 +25,15 @@ ONEmSimModule.factory('Cache', [
         var mtResponse;
         var timer;
 
-        var processServicesList = function (mtText) {
+        var checkMt;
 
+        function stopInterval() {
+            $interval.cancel(checkMt);
+            checkMt = undefined;
+        };
+
+        var processServicesList = function (mtText) {
+      //      debugger;
             if (!mtText) return -1;
 
             var matches = mtText.match(/(^([A-Z])[ ].*\n+)/gm);
@@ -58,7 +65,7 @@ ONEmSimModule.factory('Cache', [
         }
 
         var processService = function (mtText) {
-//debugger;
+
             if (!mtText) return -1;
             var options = [];
 
@@ -175,19 +182,17 @@ ONEmSimModule.factory('Cache', [
         var waitforMtSMS = function () {
             return new Promise(function (resolve, reject) {
 
-                var checkMt;
-
-                function stopInterval() {
-                    $interval.cancel(checkMt);
-                    checkMt = undefined;
-                };
-
                 checkMt = $interval(function () {
+                    console.log("checking:" + mtResponse);
                     if (mtResponse) {
                         var result = mtResponse;
                         mtResponse = undefined;
                         $timeout.cancel(timer);
                         stopInterval();
+                        console.log("got sms");
+                        console.log(result);
+         //               debugger;
+
                         resolve(result);
                     }
                 }, 100);
@@ -195,6 +200,7 @@ ONEmSimModule.factory('Cache', [
                 timer = $timeout(
                     function () {
                         $interval.cancel(checkMt);
+                        stopInterval();
                         reject("no response to MO SMS");
                     }, SMS_TIMEOUT // run 10s timer to wait for response from server
                 );
@@ -223,7 +229,11 @@ ONEmSimModule.factory('Cache', [
 
                 Socket.emit('API MO SMS', '#' + service);
                 console.log("emitting:" + '#' + service);
+
                 var mt = await waitforMtSMS();
+           //     debugger;
+
+                console.log("got response to getService: " + mt);
                 return processService(mt);
             },
             selectOption: async function (inputText) {
@@ -234,7 +244,9 @@ ONEmSimModule.factory('Cache', [
                 return processService(mt);
             },
             receivedMt: function (text) {
+                console.log("cancelling timer : " + text);
                 $timeout.cancel(timer);
+             //   stopInterval();
                 mtResponse = text;
             }
         }

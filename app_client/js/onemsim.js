@@ -36,25 +36,25 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         /**
        * Helper auth functions
        */
-        var landingRedirect = ['$q', '$location', '$auth', '$state', function ($q, $location, $auth, $state) {
-            var deferred = $q.defer();
-            console.log("landingRedirect:" + $auth.isAuthenticated());
+        // var landingRedirect = ['$q', '$location', '$auth', '$state', function ($q, $location, $auth, $state) {
+        //     var deferred = $q.defer();
+        //     console.log("landingRedirect:" + $auth.isAuthenticated());
 
-            if ($auth.isAuthenticated()) {
-                //  $location.path('/main');
-                $state.go('main');
-            } else {
-                $state.go('login');
-            }
-            return deferred.promise;
-        }];
+        //     if ($auth.isAuthenticated()) {
+        //         //  $location.path('/main');
+        //         $state.go('main');
+        //     } else {
+        //         $state.go('login');
+        //     }
+        //     return deferred.promise;
+        // }];
 
         var skipIfLoggedIn = ['$q', '$location', '$auth', function ($q, $location, $auth) {
             var deferred = $q.defer();
             console.log("skipIfLoggedIn:" + $auth.isAuthenticated());
 
             if ($auth.isAuthenticated()) {
-                $location.path('/');
+                $state.go('main');
             } else {
                 deferred.resolve();
             }
@@ -99,14 +99,14 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         }];
 
         $stateProvider.
-            state('landing', {
-                url: '/',
-                templateUrl: 'partials/login.html',
-                controller: 'loginController',
-                resolve: {
-                    landingRedirect: landingRedirect
-                }
-            }).
+            // state('landing', {
+            //     url: '/',
+            //     templateUrl: 'partials/login.html',
+            //     controller: 'loginController',
+            //     resolve: {
+            //         landingRedirect: landingRedirect
+            //     }
+            // }).
             state('authEndpoint', {
                 url: '/auth-endpoint'
             }).
@@ -175,7 +175,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         $urlRouterProvider.otherwise(function ($injector) {
             var $state = $injector.get('$state');
             console.log("caught default route");
-            $state.go('landing');
+            $state.go('main');
         });
         $locationProvider.html5Mode(true);
 

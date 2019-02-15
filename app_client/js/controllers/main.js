@@ -36,8 +36,10 @@ ONEmSimModule.controller('mainController', [
             return Phone.start(response);
         }).then(function (response) {
             console.log("finished call to phone.start");
-            return Cache.getServices($scope);
+            return Cache.getServices();
         }).then(function (services) {
+            debugger;
+
             $rootScope.services = services;
             $rootScope.services1 = [];
             $rootScope.services2 = [];
@@ -54,9 +56,14 @@ ONEmSimModule.controller('mainController', [
                 }
                 $rootScope.$apply();
             });
-            $state.go('service', {initialize: true, service: Cache.getLandingService()});
+            console.log("services:")
+            console.log($rootScope.services);
+
+            $state.go('service', { initialize: true, service: Cache.getLandingService() });
         }).catch(function (error) {
-            console.log(error);
+
+          //  debugger;
+            console.log("error in main " + error);
             if (!$rootScope.msisdn) {
                 console.log("no msisdn, going to capture");
                 $state.go('captureMsisdn');

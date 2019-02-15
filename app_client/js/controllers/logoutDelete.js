@@ -28,11 +28,11 @@ ONEmSimModule.controller('logoutDeleteController', [
             $rootScope.msisdn = undefined;
             $rootScope.user = undefined;
             DataModel.clearResults();
-            $state.go('apphome');
+            $state.go('login');
         }).catch(function(error) {
             console.log(error);
             toastr.info('Error logging out - close browser tab');
-            $state.go('landing');
+            $state.go('main');
         });
     }
 ]);

@@ -17,6 +17,6 @@ ONEmSimModule.controller('logoutController', [
         $rootScope.msisdn = undefined;
         $rootScope.user = undefined;
         DataModel.clearResults();
-        $state.go('landing');
+        $state.go('login');
     }
 ]);
