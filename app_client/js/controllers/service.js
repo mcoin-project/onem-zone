@@ -18,6 +18,7 @@ ONEmSimModule.controller('serviceController', [
         $scope.activeService = $stateParams.service;
 
         if ($stateParams.initialize) {
+        
            // debugger;
 
             Cache.getService($stateParams.service.name).then(function (response) {
