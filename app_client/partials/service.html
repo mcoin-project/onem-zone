@@ -18,17 +18,43 @@
                     <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
                             style="float:right"><i
                                 class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
-                    <div ng-include="'partials/templates/result.html'"></div>
+                    <div class="row valign-wrapper">
+                        <div class="col s12">
+                            <div ng-if="result.type == 'menu'" class="collection grey lighten-5" style="width:100%">
+                                <a ng-if="option.option" ng-click="optionSelected(option)"
+                                    ng-repeat="option in result.options track by $index" class="collection-item"
+                                    style="padding-right:5px">{{option.desc}}<span style="float:right"><i
+                                            class="material-icons">chevron_right</i></span>
+                                </a>
+                            </div>
+                            <div class="ng-cloak" ng-show="result.type !== 'menu'">
+                                <div ng-repeat="option in result.options track by $index">{{option}}</div>
+                                <form ng-submit="moSubmit()" name="inputForm">
+                                    <div class="input-field">
+                                        <div class="col s8">
+                                            <input auto-focus autocomplete="off" ng-model="moText" placeholder="Message"
+                                                required id="moText" type="text">
+                                            <span class="helper-text">{{result.footer}}</span>
+                                        </div>
+                                        <div class="col s4">
+                                            <button ng-disabled="inputForm.$invalid"
+                                                class="right btn waves-effect waves-light" name="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-action right-align">
                     <a ng-repeat="button in result.buttons track by $index"
                         ng-click="buttonSelected(button)">{{button}}</a>
                 </div>
             </div>
-            <div class="hide-on-med-and-up ng-cloak" ng-show="result">
+            <!---- <div class="hide-on-med-and-up ng-cloak" ng-show="result">
                 <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
                             style="float:right"><i
-                                class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
+                                class="teal-text small material-icons">{{activeService.icon}}</i></span></span>
                 <div class="row valign-wrapper">
                     <div class="col s12">
                         <div ng-if="result.type == 'menu'" class="collection grey lighten-5" style="width:100%">
@@ -62,7 +88,7 @@
                             ng-click="buttonSelected(button)">{{button}}</a>
                     </nav>
                 </div>
-            </div>
+        </div>-->
             <div class="hide-on-small-only">
                 <div ng-include="'partials/templates/pagination.html'"></div>
             </div>
