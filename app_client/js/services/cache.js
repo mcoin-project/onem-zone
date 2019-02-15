@@ -156,6 +156,7 @@ ONEmSimModule.factory('Cache', [
                 type = "input"
                 if (header) options.shift(); // remove header only if it's present
                 options.pop(); // remove footer
+                if (options.length > 1 && options[options.length-1].startsWith('..')) options.pop(); // remove pagination footer if present
             } else {
                 type = "menu"
             }
