@@ -162,7 +162,7 @@ ONEmSimModule.factory('Cache', [
 
             if (!buttons) buttons = [];
 
-            if (pagesText[0] && pagesText[0].length > 0) {
+            if (pagesText && pagesText[0] && pagesText[0].length > 0) {
                 var p = pagesText[0].split('/');
                 if (p.length > 1) {
                     currentPage = parseInt(p[0].slice(2));
