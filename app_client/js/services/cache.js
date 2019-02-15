@@ -1,25 +1,28 @@
+ONEmSimModule.constant('Services', 
+    [
+        { name: ['onem'], icon: 'home', template: 'cards' },
+        { name: ['account'], icon: 'settings', template: 'cards' },
+        { name: ['subscribe'], icon: 'note_add', template: 'cards' },
+        { name: ['market'], icon: 'shopping_cart', template: 'cards', default: true },
+        { name: ['msg'], icon: 'message', template: 'cards' },
+        { name: ['xgroup'], icon: 'group_work', template: 'cards' },
+        { name: ['post'], icon: 'comment', template: 'cards' },
+        { name: ['wiki'], icon: 'import_contacts', template: 'cards' },
+        { name: ['france24'], icon: 'list', template: 'cards' },
+        { name: ['aljazeera'], icon: 'format_align_left', template: 'cards' },
+        { name: ['contacts'], icon: 'supervisor_account', template: 'cards' },
+        { name: ['reuters'], icon: 'description', template: 'cards' },
+        { name: ['unsubscribe'], icon: 'delete', template: 'cards' }
+    ]
+);
+
 
 ONEmSimModule.factory('Cache', [
     'Socket',
     '$timeout',
     '$interval',
-    function (Socket, $timeout, $interval) {
-
-        var services = [
-            { name: ['onem'], icon: 'home', template: 'cards' },
-            { name: ['account'], icon: 'settings', template: 'cards' },
-            { name: ['subscribe'], icon: 'note_add', template: 'cards' },
-            { name: ['market'], icon: 'shopping_cart', template: 'cards', default: true },
-            { name: ['msg'], icon: 'message', template: 'cards' },
-            { name: ['xgroup'], icon: 'group_work', template: 'cards' },
-            { name: ['post'], icon: 'comment', template: 'cards' },
-            { name: ['wiki'], icon: 'import_contacts', template: 'cards' },
-            { name: ['france24'], icon: 'list', template: 'cards' },
-            { name: ['aljazeera'], icon: 'format_align_left', template: 'cards' },
-            { name: ['contacts'], icon: 'supervisor_account', template: 'cards' },
-            { name: ['reuters'], icon: 'description', template: 'cards' },
-            { name: ['unsubscribe'], icon: 'delete', template: 'cards' }
-        ];
+    'Services',
+    function (Socket, $timeout, $interval, Services) {
         
         var mtResponse;
 
@@ -53,15 +56,15 @@ ONEmSimModule.factory('Cache', [
                 console.log("results");
                 console.log(results);
 
-                for (var i = 0; i < services.length; i++) {
+                for (var i = 0; i < Services.length; i++) {
                     for (var j = 0; j < results.length; j++) {
                         console.log("services[i].name");
-                        console.log(services[i].name);
-                        if (services[i].name.includes(results[j])) {
-                            var s = services[i];
-                            var ind = services[i].name.indexOf(results[j]);
+                        console.log(Services[i].name);
+                        if (Services[i].name.includes(results[j])) {
+                            var s = Services[i];
+                            var ind = Services[i].name.indexOf(results[j]);
                             console.log("ind:"+ind);
-                            s.name = services[i].name[ind];
+                            s.name = Services[i].name[ind];
                             console.log("s.name:"+s.name);
 
                             activeServices.push(s);
@@ -221,15 +224,13 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
-            services: services,
-
             mtResponse: mtResponse,
             
             getLandingService: function () {
                 var result;
-                for (var i = 0; i < services.length; i++) {
-                    if (services[i].default) {
-                        result = services[i];
+                for (var i = 0; i < Services.length; i++) {
+                    if (Services[i].default) {
+                        result = Services[i];
                         break;
                     }
                 }
