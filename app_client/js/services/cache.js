@@ -92,6 +92,7 @@ ONEmSimModule.factory('Cache', [
             var pages = [];
             var breadcrumbs = [];
             var no;
+            var pagesText = mtText.match(/^(\.\.).+/gm);
 
             if (!optionsDescLetters) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
@@ -161,8 +162,8 @@ ONEmSimModule.factory('Cache', [
 
             if (!buttons) buttons = [];
 
-            if (lines.length > 1 && lines[lines.length - 2].startsWith("..")) {
-                var p = lines[lines.length - 2].split('/');
+            if (pagesText[0] && pagesText[0].length > 0) {
+                var p = pagesText[0].split('/');
                 if (p.length > 1) {
                     currentPage = parseInt(p[0].slice(2));
                     numPages = parseInt(p[1]);
