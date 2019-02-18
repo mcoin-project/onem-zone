@@ -70,8 +70,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
-                    $scope.pages = $scope.result.pages.length;
-                    $scope.currentPage = $scope.result.currentPage;
+                    $scope.pages = $scope.result.pages.length || 0;
+                    $scope.currentPage = $scope.result.currentPage || 0;
                     $rootScope.$apply();
                 });
                 console.log("got response from selectOption");

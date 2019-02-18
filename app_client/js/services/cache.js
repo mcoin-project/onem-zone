@@ -43,7 +43,7 @@ ONEmSimModule.factory('Cache', [
                         console.log("services[i].name");
                         console.log(Services[i].name);
                         if (Services[i].name.includes(results[j])) {
-                            var s = Services[i];
+                            var s = Object.assign({},Services[i]);
                             var ind = Services[i].name.indexOf(results[j]);
                             console.log("ind:"+ind);
                             s.name = Services[i].name[ind];
