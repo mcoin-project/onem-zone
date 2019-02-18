@@ -26,12 +26,12 @@
                             <form ng-submit="moSubmit()" name="inputForm">
                                 <div class="input-field">
                                     <div class="col s8">
-                                        <input close-keyboard auto-focus autocomplete="off" ng-model="moText" placeholder="Message"
+                                        <input type="submit" close-keyboard auto-focus autocomplete="off" ng-model="moText" placeholder="Message"
                                             required id="moText" type="text">
                                         <span class="helper-text">{{result.footer}}</span>
                                     </div>
                                     <div class="col s4">
-                                        <button ng-disabled="inputForm.$invalid"
+                                        <button type="submit" ng-disabled="inputForm.$invalid"
                                             class="right btn waves-effect waves-light" name="submit">Submit</button>
                                     </div>
                                 </div>
