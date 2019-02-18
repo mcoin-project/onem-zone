@@ -67,7 +67,8 @@ ONEmSimModule.factory('Cache', [
             var lines = mtText.split('\n');
             var header = lines[0];
             var footer = lines[lines.length - 1];
-            var optionsDescLetters = mtText.match(/(?<=^[A-Z][ ])(.*\n+)/gm);
+            var optionsDescLettersRegEx = /^([A-Z]) (.+)/gm;
+            var optionsDescLetters = [];
             var optionsDescNumbers = [];
             var optionNumbersRegex = /^(\s+?\d+)(\s.+)/gm;
             var optionLetters = mtText.match(/^([A-Z] )/gm);
@@ -79,6 +80,10 @@ ONEmSimModule.factory('Cache', [
             var breadcrumbs = [];
             var no;
             var pagesText = mtText.match(/^(\.\.).+/gm);
+
+            while ((no = optionsDescLettersRegEx.exec(mtText)) !== null) {
+                optionsDescLetters.push(no[2].trim());
+            }
 
             if (!optionsDescLetters) optionsDesc = [];
             if (!optionLetters) optionLetters = [];
