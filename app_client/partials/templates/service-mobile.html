@@ -40,17 +40,17 @@
                     </div>
                 </div>
             </div>
+            <div ng-show="result.numPages > 0" style="position:fixed;z-index:995;left:0;top:85vh" class="navbar-fixed">
+                <nav class="white right-align">
+                    <div ng-include="'partials/templates/pagination.html'"></div>
+                </nav>
+            </div>
         </div>
-        <div ng-show="result.numPages > 0" style="position:fixed;z-index:995;left:0;top:85vh" class="navbar-fixed">
-            <nav class="white right-align">
-                <div ng-include="'partials/templates/pagination.html'"></div>
-            </nav>
-        </div>
-        <div style="position:fixed;z-index:995;left:0;bottom:0" class="navbar-fixed">
+        <!----<div style="position:fixed;z-index:995;left:0;bottom:0" class="navbar-fixed">
             <nav class="red right-align">
                 <a style="margin-right:10px" ng-repeat="button in result.buttons track by $index"
                     ng-click="buttonSelected(button)">{{button}}</a>
             </nav>
-        </div>
+        </div>-->
     </div>
 </div>
