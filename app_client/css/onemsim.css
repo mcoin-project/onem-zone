@@ -1,3 +1,7 @@
+@media (max-width: 600px) {
+  .pagination li {
+    height: 56px; } }
+
 .navbar-fixed {
   z-index: 999; }
 
