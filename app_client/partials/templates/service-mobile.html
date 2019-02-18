@@ -1,20 +1,18 @@
 <div style="padding-top:20px">
     <div class="row col-centered">
         <div class="col s12 m12 l6 offset-l3">
-            <nav style="z-index:995" class="navbar-fixed" ng-cloak ng-show="result.breadcrumbs.length > 0">
+            <nav style="white-space:nowrap; z-index:995" class="navbar-fixed" ng-cloak ng-show="result.breadcrumbs.length > 0">
                 <div class="nav-wrapper white">
                     <div class="col s12">
                         <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
                             ng-click="buttonSelected('#' + activeService.name)"
                             class="breadcrumb black-text">{{result.breadcrumbs[0]}}</a>
                         <a ng-show="result.breadcrumbs[1]" class="breadcrumb black-text">{{result.breadcrumbs[1]}}</a>
-                        <span style="float:right"><i
-                                class="teal-text small material-icons">{{activeService.icon}}</i></span>
                     </div>
                 </div>
             </nav>
-            <div ng-show="result">
-                <div class="row valign-wrapper">
+            <div class="ng-cloak" ng-show="result">
+                <div class="row">
                     <div class="col s12">
                         <div ng-if="result.type == 'menu'" class="collection grey lighten-5" style="width:100%">
                             <a ng-if="option.option" ng-click="optionSelected(option)"
