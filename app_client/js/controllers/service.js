@@ -15,6 +15,8 @@ ONEmSimModule.controller('serviceController', [
         console.log("stateParams:");
         console.log($stateParams);
 
+        $scope.result = {};
+
         $scope.activeService = $stateParams.service;
 
         if ($stateParams.initialize) {
@@ -26,9 +28,14 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    $scope.pages = $scope.result.pages.length;
+                    $scope.currentPage = $scope.result.currentPage;
                     $rootScope.$apply();
+
                 });
                 console.log("got response");
+
+
             }).catch(function (error) {
              //   debugger;
 
@@ -61,6 +68,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    $scope.pages = $scope.result.pages.length;
+                    $scope.currentPage = $scope.result.currentPage;
                     $rootScope.$apply();
                 });
                 console.log("got response from selectOption");

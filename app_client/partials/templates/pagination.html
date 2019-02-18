@@ -1,11 +1,9 @@
-<ul ng-if="result.numPages > 0" style="padding-top:20px" class="center-align pagination">
-    <li ng-click="buttonSelected('go ' + (result.currentPage - 1))"
-        ng-class="result.currentPage == 1 ? 'disabled' : 'waves-effect'"><a><i
-                class="material-icons">chevron_left</i></a></li>
-    <li ng-click="buttonSelected('go ' + page)" ng-class="result.currentPage == page ? 'active' : 'waves-effect'"
-        ng-repeat="page in result.pages">
-        <a>{{page}}</a></li>
-    <li ng-click="buttonSelected('go ' + (result.currentPage + 1))"
-        ng-class="result.currentPage == result.numPages ? 'disabled' : 'waves-effect'"><a><i
-                class="material-icons">chevron_right</i></a></li>
-</ul>
+<pagination page="{{currentPage}}" page-size="1" total="{{pages}}"
+    pagination-action="buttonSelected('go ' + page)" ul-class="'pagination center-align'" show-prev-next="true"
+    use-simple-prev-next="false"
+    hide-if-empty="false"
+    adjacent="2"
+    scroll-top="false">
+</pagination>
+currentPage:{{currentPage}}
+total:{{pages}}
