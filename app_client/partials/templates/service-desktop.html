@@ -3,11 +3,11 @@
         <div class="col s12 m12 l8 offset-l2">
             <nav style="z-index:995" class="navbar-fixed" ng-cloak ng-show="result.breadcrumbs.length > 0">
                 <div class="nav-wrapper white">
-                    <div class="col s12">
+                    <div class="col s12 truncate black-text">
                         <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
                             ng-click="buttonSelected('#' + activeService.name)"
-                            class="breadcrumb black-text">{{result.breadcrumbs[0]}}</a>
-                        <a ng-show="result.breadcrumbs[1]" class="breadcrumb black-text">{{result.breadcrumbs[1]}}</a>
+                            class="breadcrumb">{{result.breadcrumbs[0]}}</a>
+                        <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}}</a>
                         <span style="float:right"><i
                                 class="teal-text small material-icons">{{activeService.icon}}</i></span>
                     </div>
