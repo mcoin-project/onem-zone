@@ -28,8 +28,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
-                    if ($scope.result.pages) $scope.pages = $scope.result.pages.length;
-                    if ($scope.currentPage) $scope.result.currentPage;
+                    if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
+                    if ($scope.currentPage) $scope.result.currentPage || 0;
                     $rootScope.$apply();
 
                 });
@@ -70,8 +70,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
-                    $scope.pages = $scope.result.pages.length || 0;
-                    $scope.currentPage = $scope.result.currentPage || 0;
+                    if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
+                    if ($scope.currentPage) $scope.result.currentPage || 0;
                     $rootScope.$apply();
                 });
                 console.log("got response from selectOption");
@@ -87,6 +87,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
+                    if ($scope.currentPage) $scope.result.currentPage || 0;
                     $rootScope.$apply();
                 });
                 console.log("got response");
