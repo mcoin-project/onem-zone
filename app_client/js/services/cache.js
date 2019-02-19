@@ -23,7 +23,6 @@ ONEmSimModule.factory('Cache', [
 
             var activeServices = [];
 
-            //      debugger;
             if (!mtText) return -1;
 
             var matches = mtText.match(/(^([A-Z])[ ].*\n+)/gm);
@@ -76,11 +75,11 @@ ONEmSimModule.factory('Cache', [
             var buttons = lines[lines.length - 1].match(/\b[A-Z]+[A-Z]+\b/gm) || null;
             var type;
             var currentPage = 0, numPages = 0;
-            var pages = [];
             var breadcrumbs = [];
             var no;
             var pagesText = mtText.match(/^(\.\.).+/gm);
 
+          //  debugger;
             while ((no = optionsDescLettersRegEx.exec(mtText)) !== null) {
                 optionsDescLetters.push(no[2].trim());
             }
@@ -141,7 +140,17 @@ ONEmSimModule.factory('Cache', [
             console.log("optionDescNumbers");
             console.log(optionsDescNumbers);
 
-            if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
+            // check if it's a chunking footer, if so, remove
+            var chunkingFooter = footer.match(/([A-Z //]+)/gm);
+            if (optionsDescLetters.length == 0 && optionsDescNumbers.length == 0 && 
+                chunkingFooter && chunkingFooter[0].length == footer.length) {
+                footer = undefined;
+                type = "content";
+                options = lines;
+                options.pop(); // remove footer
+                options.pop(); // remove chunking footer
+
+            } else if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
                 (optionNumbers.length == 0 || optionsDescNumbers.length == 0)) {
                 options = lines;
                 type = "input"
@@ -153,9 +162,9 @@ ONEmSimModule.factory('Cache', [
             }
 
             if (!buttons) buttons = [];
-debugger;
+
             if (pagesText && pagesText[0] && pagesText[0].length > 0) {
-                var p = pagesText[0].split('/');
+                    var p = pagesText[0].split('/');
                 if (p.length > 1) {
                     currentPage = parseInt(p[0].slice(2));
                     numPages = parseInt(p[1]);
@@ -165,6 +174,17 @@ debugger;
             console.log("breadcrumbs");
             console.log(breadcrumbs);
 
+            console.log({
+                header: header,
+                footer: footer,
+                options: options,
+                buttons: buttons,
+                type: type,
+                pages: numPages,
+                currentPage: currentPage,
+                breadcrumbs: breadcrumbs               
+            });
+
             return {
                 header: header,
                 footer: footer,
@@ -172,7 +192,6 @@ debugger;
                 buttons: buttons,
                 type: type,
                 pages: numPages,
-                numPages: numPages,
                 currentPage: currentPage,
                 breadcrumbs: breadcrumbs
             };
@@ -190,7 +209,6 @@ debugger;
                         stopInterval();
                         console.log("got sms");
                         console.log(result);
-         //               debugger;
 
                         resolve(result);
                     }
@@ -227,7 +245,7 @@ debugger;
                     var mt = await waitforMtSMS();
                     return processServicesList(mt);
                 } catch (error) {
-                    return new Error (error);
+                    throw error;
                 }
             },
             getService: async function (service) {
@@ -239,7 +257,7 @@ debugger;
                     var mt = await waitforMtSMS();
                     return processService(mt);
                 } catch (error) {
-                    return new Error (error);
+                    throw error;
                 }
             },
             selectOption: async function (inputText) {
@@ -250,7 +268,7 @@ debugger;
                     var mt = await waitforMtSMS();
                     return processService(mt);
                 } catch (error) {
-                    return new Error (error);
+                    throw error;
                 }
             },
             receivedMt: function (text) {
