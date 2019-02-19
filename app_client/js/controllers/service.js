@@ -28,8 +28,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
-                    $scope.pages = $scope.result.pages.length;
-                    $scope.currentPage = $scope.result.currentPage;
+                    if ($scope.result.pages) $scope.pages = $scope.result.pages.length;
+                    if ($scope.currentPage) $scope.result.currentPage;
                     $rootScope.$apply();
 
                 });

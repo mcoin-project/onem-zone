@@ -13,7 +13,7 @@
                     </div>
                 </div>
             </nav>
-            <div class="card ng-cloak" ng-show="result.type">
+            <div class="card ng-cloak" >
                 <div class="card-content">
                     <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
                             style="float:right"><i
@@ -21,7 +21,7 @@
                     <div class="row valign-wrapper">
                         <div class="col s12">
                             <div ng-show="result.type == 'menu'" class="collection grey lighten-5" style="width:100%">
-                                <a ng-show="option.option" ng-click="optionSelected(option)"
+                                <a ng-click="optionSelected(option)"
                                     ng-repeat="option in result.options track by $index" class="collection-item"
                                     style="padding-right:5px">{{option.desc}}<span style="float:right"><i
                                             class="material-icons">chevron_right</i></span>
@@ -29,7 +29,7 @@
                             </div>
                             <div class="ng-cloak" ng-show="result.type !== 'menu'">
                                 <div ng-repeat="option in result.options track by $index">{{option}}</div>
-                                <form name="inputForm">
+                                <form ng-show="result.type !== 'content'" name="inputForm">
                                     <div class="input-field">
                                         <div class="col s8">
                                             <input auto-focus autocomplete="off" ng-model="$parent.moText" placeholder="Message"
@@ -51,9 +51,9 @@
                         ng-click="buttonSelected(button)">{{button}}</a>
                 </div>
             </div>
-            <div>
+            <!----<div>
                 <div ng-include="'partials/templates/pagination.html'"></div>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>

@@ -81,6 +81,7 @@ ONEmSimModule.factory('Cache', [
             var no;
             var pagesText = mtText.match(/^(\.\.).+/gm);
 
+          //  debugger;
             while ((no = optionsDescLettersRegEx.exec(mtText)) !== null) {
                 optionsDescLetters.push(no[2].trim());
             }
@@ -141,7 +142,17 @@ ONEmSimModule.factory('Cache', [
             console.log("optionDescNumbers");
             console.log(optionsDescNumbers);
 
-            if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
+            // check if it's a chunking footer, if so, remove
+            var chunkingFooter = footer.match(/([A-Z //]+)/gm);
+            if (optionsDescLetters.length == 0 && optionsDescNumbers.length == 0 && 
+                chunkingFooter && chunkingFooter[0].length == footer.length) {
+                footer = undefined;
+                type = "content";
+                options = lines;
+                options.pop(); // remove footer
+                options.pop(); // remove chunking footer
+
+            } else if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
                 (optionNumbers.length == 0 || optionsDescNumbers.length == 0)) {
                 options = lines;
                 type = "input"
@@ -154,8 +165,9 @@ ONEmSimModule.factory('Cache', [
 
             if (!buttons) buttons = [];
 
-            if (pagesText && pagesText[0] && pagesText[0].length > 0) {
-                var p = pagesText[0].split('/');
+            //if (pagesText && pagesText[0] && pagesText[0].length > 0) {
+            if (pagesText) {
+                    var p = pagesText.split('/');
                 if (p.length > 1) {
                     currentPage = parseInt(p[0].slice(2));
                     numPages = parseInt(p[1]);
@@ -167,6 +179,18 @@ ONEmSimModule.factory('Cache', [
 
             console.log("breadcrumbs");
             console.log(breadcrumbs);
+
+            console.log({
+                header: header,
+                footer: footer,
+                options: options,
+                buttons: buttons,
+                type: type,
+                pages: pages,
+                numPages: numPages,
+                currentPage: currentPage,
+                breadcrumbs: breadcrumbs               
+            });
 
             return {
                 header: header,
@@ -237,6 +261,8 @@ ONEmSimModule.factory('Cache', [
 
                 Socket.emit('API MO SMS', '#' + service);
                 console.log("emitting:" + '#' + service);
+
+                debugger;
 
                 try {
                     var mt = await waitforMtSMS();
