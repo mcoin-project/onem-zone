@@ -29,7 +29,7 @@ ONEmSimModule.controller('serviceController', [
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
                     if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
-                    if ($scope.currentPage) $scope.result.currentPage || 0;
+                    if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();
 
                 });
@@ -56,6 +56,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
+                    if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();
                 });
                 console.log("got response");
@@ -71,7 +73,7 @@ ONEmSimModule.controller('serviceController', [
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
                     if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
-                    if ($scope.currentPage) $scope.result.currentPage || 0;
+                    if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();
                 });
                 console.log("got response from selectOption");
@@ -88,7 +90,7 @@ ONEmSimModule.controller('serviceController', [
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
                     if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
-                    if ($scope.currentPage) $scope.result.currentPage || 0;
+                    if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();
                 });
                 console.log("got response");
