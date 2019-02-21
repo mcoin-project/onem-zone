@@ -66,7 +66,7 @@ ONEmSimModule.factory('Cache', [
             if (!mtText) return -1;
 
             var result = new MtText(mtText);
-            var type = result.hideInput() ? "menu" : "input";
+            var type = !result.hideInput() ? "input" : "menu";
 
             console.log({
                 header: result.header,
