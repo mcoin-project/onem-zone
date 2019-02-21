@@ -25,6 +25,7 @@ ONEmSimModule.factory('MtText', function () {
 		this.buttons = this.getButtons();
 		this.breadcrumbs = this.getBreadcrumbs();
 		this.pages = this.getPages();
+		this.options = this.hasOptions();
 	}
 
 	Text.prototype.hideInput = function () {
@@ -32,7 +33,7 @@ ONEmSimModule.factory('MtText', function () {
 
 		if (!this.footer) return false;
 
-		if (this.hasOptions() && this.preBody.length == 0 && this.footer.length <= FOOTER_THRESHOLD) {
+		if (this.options && this.preBody.length == 0 && this.footer.length <= FOOTER_THRESHOLD) {
 			result = true;
 		};
 		var onlyActions = this.footer.match(/([A-Z //]+)/gm);
@@ -182,9 +183,8 @@ ONEmSimModule.factory('MtText', function () {
 		if (this.hasHeader() && this.lines[1]) start = 1;
 
 		// check if it's an error message and include in prebody and return
-		if (start == 0 && !this.footer && this.lines.length == 1) {
-			result.push(this.lines[0]);
-			return result;
+		if (start == 0 && !this.footer && !this.options) {
+			return this.lines;;
 		}
 
 		i = start;
