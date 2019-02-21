@@ -4,8 +4,9 @@ ONEmSimModule.factory('Cache', [
     '$timeout',
     '$interval',
     'Services',
-    function (Socket, $timeout, $interval, Services) {
-        
+    'MtText',
+    function (Socket, $timeout, $interval, Services, MtText) {
+
         var mtResponse;
 
         const SMS_TIMEOUT = 10000;
@@ -42,11 +43,11 @@ ONEmSimModule.factory('Cache', [
                         console.log("services[i].name");
                         console.log(Services[i].name);
                         if (Services[i].name.includes(results[j])) {
-                            var s = Object.assign({},Services[i]);
+                            var s = Object.assign({}, Services[i]);
                             var ind = Services[i].name.indexOf(results[j]);
-                            console.log("ind:"+ind);
+                            console.log("ind:" + ind);
                             s.name = Services[i].name[ind];
-                            console.log("s.name:"+s.name);
+                            console.log("s.name:" + s.name);
 
                             activeServices.push(s);
                         }
@@ -60,6 +61,11 @@ ONEmSimModule.factory('Cache', [
 
         var processService = function (mtText) {
 
+            var test = new MtText(mtText);
+
+            console.log("test:");
+            console.log(test);
+
             if (!mtText) return -1;
             var options = [];
 
@@ -67,6 +73,8 @@ ONEmSimModule.factory('Cache', [
             var header = lines[0];
             var footer = lines[lines.length - 1];
             var optionsDescLettersRegEx = /^([A-Z]) (.+)/gm;
+            var preBodyRegEx = mtText.match(/^(?![A-Z] ).+/gm);
+            var preBody = [];
             var optionsDescLetters = [];
             var optionsDescNumbers = [];
             var optionNumbersRegex = /^(\s+?\d+)(\s.+)/gm;
@@ -79,7 +87,13 @@ ONEmSimModule.factory('Cache', [
             var no;
             var pagesText = mtText.match(/^(\.\.).+/gm);
 
-          //  debugger;
+            //  debugger;
+            while ((no = preBodyRegEx.exec(mtText)) !== null) {
+                if (!preBody.startsWith('#') && !preBody.startsWith('..')) {
+                    preBody.push(no[0].trim());
+                }
+            }
+
             while ((no = optionsDescLettersRegEx.exec(mtText)) !== null) {
                 optionsDescLetters.push(no[2].trim());
             }
@@ -88,7 +102,7 @@ ONEmSimModule.factory('Cache', [
             if (!optionLetters) optionLetters = [];
             if (!optionNumbers) optionNumbers = [];
 
-            for (var i=0; i< optionNumbers.length; i++) {
+            for (var i = 0; i < optionNumbers.length; i++) {
                 optionNumbers[i] = optionNumbers[i].trim();
             }
 
@@ -111,7 +125,7 @@ ONEmSimModule.factory('Cache', [
                         option: optionNumbers[i]
                     };
                     options.push(o);
-                }             
+                }
             }
 
             if (footer && footer.startsWith('--')) footer = footer.slice(2) // remove -- from footer
@@ -142,7 +156,7 @@ ONEmSimModule.factory('Cache', [
 
             // check if it's a chunking footer, if so, remove
             var chunkingFooter = footer.match(/([A-Z //]+)/gm);
-            if (optionsDescLetters.length == 0 && optionsDescNumbers.length == 0 && 
+            if (optionsDescLetters.length == 0 && optionsDescNumbers.length == 0 &&
                 chunkingFooter && chunkingFooter[0].length == footer.length) {
                 footer = undefined;
                 type = "content";
@@ -150,13 +164,13 @@ ONEmSimModule.factory('Cache', [
                 options.pop(); // remove footer
                 options.pop(); // remove chunking footer
 
-            } else if ((optionLetters.length == 0 || optionsDescLetters.length == 0) && 
+            } else if ((optionLetters.length == 0 || optionsDescLetters.length == 0) &&
                 (optionNumbers.length == 0 || optionsDescNumbers.length == 0)) {
                 options = lines;
                 type = "input"
                 if (header) options.shift(); // remove header only if it's present
                 options.pop(); // remove footer
-                if (options.length > 1 && options[options.length-1].startsWith('..')) options.pop(); // remove pagination footer if present
+                if (options.length > 1 && options[options.length - 1].startsWith('..')) options.pop(); // remove pagination footer if present
             } else {
                 type = "menu"
             }
@@ -164,7 +178,7 @@ ONEmSimModule.factory('Cache', [
             if (!buttons) buttons = [];
 
             if (pagesText && pagesText[0] && pagesText[0].length > 0) {
-                    var p = pagesText[0].split('/');
+                var p = pagesText[0].split('/');
                 if (p.length > 1) {
                     currentPage = parseInt(p[0].slice(2));
                     numPages = parseInt(p[1]);
@@ -182,7 +196,7 @@ ONEmSimModule.factory('Cache', [
                 type: type,
                 pages: numPages,
                 currentPage: currentPage,
-                breadcrumbs: breadcrumbs               
+                breadcrumbs: breadcrumbs
             });
 
             return {
@@ -227,7 +241,7 @@ ONEmSimModule.factory('Cache', [
         return {
 
             mtResponse: mtResponse,
-            
+
             getLandingService: function () {
                 var result;
                 for (var i = 0; i < Services.length; i++) {
@@ -274,7 +288,7 @@ ONEmSimModule.factory('Cache', [
             receivedMt: function (text) {
                 console.log("cancelling timer : " + text);
                 $timeout.cancel(timer);
-             //   stopInterval();
+                //   stopInterval();
                 mtResponse = text;
             }
         }
