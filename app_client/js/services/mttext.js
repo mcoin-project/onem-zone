@@ -176,6 +176,8 @@ ONEmSimModule.factory('MtText', function () {
 
 	Text.prototype.getPreBody = function () {
 		// skip the header if present
+		var result = [];
+
 		var start = 0;
 		var i;
 		if (this.hasHeader() && this.lines[1]) start = 1;
@@ -188,7 +190,6 @@ ONEmSimModule.factory('MtText', function () {
 
 		i = start;
 
-		var result = [];
 		// skip to the first option
 		while (!this.getOption(i) && i < this.lines.length && !this.isFooter(i)) {
 			result.push(this.lines[i]);
