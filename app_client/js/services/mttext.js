@@ -26,6 +26,8 @@ ONEmSimModule.factory('MtText', function () {
 		this.breadcrumbs = this.getBreadcrumbs();
 		this.pages = this.getPages();
 		this.options = this.hasOptions();
+		console.log("initialized");
+		console.log(this);
 	}
 
 	Text.prototype.hideInput = function () {
@@ -183,8 +185,12 @@ ONEmSimModule.factory('MtText', function () {
 		if (this.hasHeader() && this.lines[1]) start = 1;
 
 		// check if it's an error message and include in prebody and return
-		if (start == 0 && !this.footer && !this.options) {
-			return this.lines;;
+		if (!this.footer && !this.options) {
+			if (start == 0) {
+				return this.lines;
+			} else {
+				return this.lines.slice(1);
+			}
 		}
 
 		i = start;
