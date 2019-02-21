@@ -30,7 +30,6 @@ ONEmSimModule.factory('Cache', [
             var results = [];
             console.log("matches");
             console.log(matches);
-            debugger;
             if (matches && matches.length > 0) {
                 matches.filter(function (s) {
                     var r = s.split(' #');
