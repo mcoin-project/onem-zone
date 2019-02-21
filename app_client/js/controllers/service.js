@@ -16,11 +16,14 @@ ONEmSimModule.controller('serviceController', [
         console.log($stateParams);
 
         $scope.result = {};
+        $scope.ready = false;
 
         $scope.activeService = $stateParams.service;
 
         if ($stateParams.initialize) {
-        
+
+            $scope.ready = false;
+
            // debugger;
 
             Cache.getService($stateParams.service.name).then(function (response) {
@@ -28,6 +31,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    $scope.ready = true;
+
                     if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
                     if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();
@@ -56,6 +61,8 @@ ONEmSimModule.controller('serviceController', [
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    $scope.ready = true;
+
                     if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
                     if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();
@@ -67,11 +74,16 @@ ONEmSimModule.controller('serviceController', [
         }
 
         $scope.optionSelected = function (option) {
+
+            $scope.ready = false;
+
             Cache.selectOption(option.option).then(function (response) {
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
                     $scope.result = response;
+                    $scope.ready = true;
+
                     if ($scope.result.pages) $scope.pages = $scope.result.pages || 0;
                     if ($scope.result.currentPage) $scope.currentPage = $scope.result.currentPage|| 0;
                     $rootScope.$apply();

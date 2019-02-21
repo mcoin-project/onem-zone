@@ -180,6 +180,12 @@ ONEmSimModule.factory('MtText', function () {
 		var i;
 		if (this.hasHeader() && this.lines[1]) start = 1;
 
+		// check if it's an error message and include in prebody and return
+		if (start == 1 && !this.footer && this.lines.length == 1) {
+			result.push(this.lines[0]);
+			return result;
+		}
+
 		i = start;
 
 		var result = [];

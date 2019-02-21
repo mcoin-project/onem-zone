@@ -20,7 +20,7 @@
                                 class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
                     <div class="row valign-wrapper">
                         <div class="col s12">
-                            <div ng-repeat="line in result.preBody track by $index">{{line.preBody}}</div>
+                            <div ng-repeat="line in result.preBody track by $index">{{line}}</div>
                             <div ng-repeat="line in result.body track by $index">
                                 <div ng-show="line.type == 'content'">{{line.content}}</div>
                                 <div class="collection grey lighten-5" style="width:100%"
@@ -34,7 +34,7 @@
                                     </a>
                                 </div>
                             </div>
-                            <div class="ng-cloak" ng-show="result.type == 'input'">
+                            <div class="ng-cloak" ng-show="result.type == 'input' && ready">
                                 <form name="inputForm">
                                     <div class="input-field">
                                         <div class="col s8">
