@@ -160,6 +160,11 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     loginRequired: loginRequired
                 }
             }).
+            state('settings', {
+                url: '/',
+                templateUrl: 'partials/settings.html',
+                controller: 'settingsController'
+            }).
             state('logoutDelete', {
                 url: '/',
                 templateUrl: null,

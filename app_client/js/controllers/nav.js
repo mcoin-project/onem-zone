@@ -16,6 +16,30 @@ ONEmSimModule.controller('navbarController', [
             return $auth.isAuthenticated();
         }
 
+        $scope.dropdown="My Profile";
+
+        $rootScope.$watch('user', function(newVal, oldVal, scope) {
+            if ($rootScope.user) {
+                console.log($scope.dropdown);
+                if ($rootScope.user.firstName) {
+                    $scope.dropdown = $rootScope.user.firstName;
+                    console.log($scope.dropdown);
+    
+                    if ($rootScope.user.lastName) $scope.dropdown += ' ';
+                }
+                if ($rootScope.user.lastName) {
+                    console.log($scope.dropdown);
+    
+                    $scope.dropdown += $rootScope.user.lastName;
+                }
+                if (!$scope.dropdown) {
+                    console.log($scope.dropdown);
+    
+                    $scope.dropdown = $rootScope.user.email;
+                }
+            }
+        });
+
         $scope.agree = function () {
             $state.go('logoutDelete');
         }
@@ -70,23 +94,5 @@ ONEmSimModule.controller('navbarController', [
             Socket.emit('MO SMS', $scope.smsText);
             $scope.smsText = '';
         };
-
-        // $scope.services1 = [
-        //     { name: 'account' , icon: '3d_rotation', template: 'cards' },
-        //     { name: 'aljazeera' , icon: 'accessibility', template: 'cards' },
-        //     { name: 'contacts' , icon: 'account_circle', template: 'cards' },
-        //     { name:  'france24' , icon: 'alarm', template: 'cards' },
-        //     { name:  'market' , icon: 'all_out', template: 'cards' },
-        //     { name:  'msg' , icon: 'build', template: 'cards' }
-        // ];
-
-        // $scope.services2 = [
-        //     { name:  'onem' , icon: 'done', template: 'cards' },
-        //     { name:  'reuters' , icon: 'favorite', template: 'cards' },
-        //     { name:  'subscribe', icon: 'find_replace', template: 'cards' },
-        //     { name:  'xgroup', icon: 'feedback', template: 'cards' },
-        //     { name:  'unsubscribe', icon: 'help_outline', template: 'cards' }
-        // ];
-
     }
 ]);

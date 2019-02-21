@@ -42,16 +42,12 @@
 </head>
 
 <body ng-controller="navbarController" class="homepage container-fluid" name="body">
-
     <div class="ng-cloak" ng-show="user.email">
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
-            <p>{{user.firstName}} {{user.lastName}}</p>
-            <p>{{msisdn}}</p>
+            <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
             <li class="divider"></li>
-            <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink
-                    account</a></li>
-            <li><a ui-sref="logout">Logout</a></li>
+            <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
         <ul id="services" class="dropdown-content">
             <div class="row">
@@ -99,8 +95,8 @@
                                 class="material-icons">menu</i></a>
                         <ul class="right hide-on-med-and-down">
                             <!-- Dropdown Trigger -->
-                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{user.email || 'My
-                                    Profile'}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{dropdown}}<i
+                                        class="material-icons right">arrow_drop_down</i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -127,7 +123,8 @@
         <div style="padding-top:15px" class="row ">
             <div style="text-align:center" class="col s6 center-align">
                 <li ng-repeat="service in services1 track by $index">
-                    <a style="line-height:normal;padding:10px;height:auto" ui-sref="service({initialize: true, service: service})">
+                    <a style="line-height:normal;padding:10px;height:auto"
+                        ui-sref="service({initialize: true, service: service})">
                         <span>
                             <i class="teal-text center-align small material-icons">{{service.icon}}</i>
                         </span>
@@ -137,7 +134,8 @@
             </div>
             <div style="text-align:center" style="text-align:center" class="col s6 center-align">
                 <li ng-repeat="service in services2 track by $index">
-                    <a style="line-height:normal;padding:10px;height:auto" ui-sref="service({initialize: true, service: service})">
+                    <a style="line-height:normal;padding:10px;height:auto"
+                        ui-sref="service({initialize: true, service: service})">
                         <span>
                             <i class="teal-text center-align small material-icons">{{service.icon}}</i>
                         </span>
@@ -149,16 +147,10 @@
     </ul>
 
     <ul class="sidenav" id="mobile-demo-left">
-        <h6>My Profile</h6>
-        <p>{{user.firstName}} {{user.lastName}}</p>
-        <p>{{msisdn}}</p>
-        <p>{{user.email}}</p>
+        <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
         <li class="divider"></li>
-        <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink
-                account</a></li>
-        <li><a ui-sref="logout">Logout</a></li>
+        <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
     </ul>
-    </div>
 
     <div class="container">
         <div ui-view></div>
@@ -217,6 +209,7 @@
 <script type="text/javascript" src="js/controllers/logout.js"></script>
 <script type="text/javascript" src="js/controllers/logoutDelete.js"></script>
 <script type="text/javascript" src="js/controllers/service.js"></script>
+<script type="text/javascript" src="js/controllers/settings.js"></script>
 <script type="text/javascript" src="js/directives/closeKeyboard.js"></script>
 <script type="text/javascript" src="js/directives/myClock.js"></script>
 <script type="text/javascript" src="js/directives/scrollBottom.js"></script>
