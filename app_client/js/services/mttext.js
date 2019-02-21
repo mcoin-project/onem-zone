@@ -126,27 +126,31 @@ ONEmSimModule.factory('MtText', function () {
 	}
 
 	Text.prototype.getOption = function (lineNumber) {
-		var optionsDescLetterRegEx = /^([A-Z]) (.+)/gm;
-		var optionNumbersRegex = /^(\d+)(\s.+)/gm;
+		var optionsDescLetterRegEx = /^([A-Z]) ([A-Z].+)/gm;
+		var optionNumbersRegex = /^(\d+) ([A-Z].+)/gm;
+		var sectionNumbersRegex = /^(\d.+) ([A-Z].+)/gm;
 		var result;
 
 		if (!lineNumber || lineNumber > this.lines.length - 1) return undefined;
 
 		var text = this.lines[lineNumber];
 		var no = optionNumbersRegex.exec(text);
+		var no1 = optionsDescLetterRegEx.exec(text);
+		var no2 = sectionNumbersRegex.exec(text);
+
 
 		if (no) {
 			var option = no[1].trim();
 			var desc = no[2].trim();
 			result = { option: option, desc: desc };
-		} else {
-			var no = optionsDescLetterRegEx.exec(text);
-
-			if (no) {
-				var option = no[1].trim();
-				var desc = no[2].trim();
-				result = { option: option, desc: desc };
-			}
+		} else if (no1) {
+			var option = no1[1].trim();
+			var desc = no1[2].trim();
+			result = { option: option, desc: desc };
+		} else if (no2) {
+			var option = no2[1].trim();
+			var desc = no2[2].trim();
+			result = { option: option, desc: desc };
 		}
 
 		return result;
