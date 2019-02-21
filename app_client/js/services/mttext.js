@@ -161,7 +161,6 @@ ONEmSimModule.factory('MtText', function () {
 				result = true;
 				break;
 			}
-			i++;
 		}
 		return result;
 

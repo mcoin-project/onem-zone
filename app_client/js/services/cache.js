@@ -63,7 +63,7 @@ ONEmSimModule.factory('Cache', [
 
         var processService = function (mtText) {
 
-            if (!mtText) return -1;
+            if (!mtText)  throw "missing mtText";
 
             var result = new MtText(mtText);
             var type = !result.hideInput() ? "input" : "menu";
