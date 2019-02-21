@@ -16,17 +16,19 @@ ONEmSimModule.factory('MtText', function () {
 			this.lines[i] = this.lines[i].trim();
 		}
 
+		console.log(this.lines)
+
 		this.header = this.getHeader();
 		this.footer = this.getFooter();
 		this.preBody = this.getPreBody();
 		this.body = this.getBody();
 		this.buttons = this.getButtons();
 		this.breadcrumbs = this.getBreadcrumbs();
+		this.pages = this.getPages();
 	}
 
 	Text.prototype.hideInput = function () {
 		var result = false;
-		debugger;
 
 		if (!this.footer) return false;
 
@@ -72,7 +74,7 @@ ONEmSimModule.factory('MtText', function () {
 	}
 
 	Text.prototype.getPages = function () {
-		var result;
+		var result = {};
 		for (var i = 0; i < this.lines.length; i++) {
 			if (this.lines[i].startsWith(PAGING_PREFIX)) {
 				var p = this.lines[i].split('/');

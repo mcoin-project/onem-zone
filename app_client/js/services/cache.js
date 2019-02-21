@@ -30,10 +30,13 @@ ONEmSimModule.factory('Cache', [
             var results = [];
             console.log("matches");
             console.log(matches);
+            debugger;
             if (matches && matches.length > 0) {
                 matches.filter(function (s) {
                     var r = s.split(' #');
-                    results.push(r[1].trim().toLowerCase());
+                    if (r[1]) {
+                        results.push(r[1].trim().toLowerCase());
+                    }
                 });
                 console.log("results");
                 console.log(results);
@@ -61,153 +64,33 @@ ONEmSimModule.factory('Cache', [
 
         var processService = function (mtText) {
 
-            var test = new MtText(mtText);
-
-            console.log("test:");
-            console.log(test);
-
             if (!mtText) return -1;
-            var options = [];
 
-            var lines = mtText.split('\n');
-            var header = lines[0];
-            var footer = lines[lines.length - 1];
-            var optionsDescLettersRegEx = /^([A-Z]) (.+)/gm;
-            var preBodyRegEx = mtText.match(/^(?![A-Z] ).+/gm);
-            var preBody = [];
-            var optionsDescLetters = [];
-            var optionsDescNumbers = [];
-            var optionNumbersRegex = /^(\s+?\d+)(\s.+)/gm;
-            var optionLetters = mtText.match(/^([A-Z] )/gm);
-            var optionNumbers = mtText.match(/^((\s+)?[0-9]+ )/gm);
-            var buttons = lines[lines.length - 1].match(/\b[A-Z]+[A-Z]+\b/gm) || null;
-            var type;
-            var currentPage = 0, numPages = 0;
-            var breadcrumbs = [];
-            var no;
-            var pagesText = mtText.match(/^(\.\.).+/gm);
-
-            //  debugger;
-            while ((no = preBodyRegEx.exec(mtText)) !== null) {
-                if (!preBody.startsWith('#') && !preBody.startsWith('..')) {
-                    preBody.push(no[0].trim());
-                }
-            }
-
-            while ((no = optionsDescLettersRegEx.exec(mtText)) !== null) {
-                optionsDescLetters.push(no[2].trim());
-            }
-
-            if (!optionsDescLetters) optionsDesc = [];
-            if (!optionLetters) optionLetters = [];
-            if (!optionNumbers) optionNumbers = [];
-
-            for (var i = 0; i < optionNumbers.length; i++) {
-                optionNumbers[i] = optionNumbers[i].trim();
-            }
-
-            while ((no = optionNumbersRegex.exec(mtText)) !== null) {
-                optionsDescNumbers.push(no[2].trim());
-            }
-
-            if (optionLetters.length > 0) {
-                for (var i = 0; i < optionLetters.length && i < optionsDescLetters.length; i++) {
-                    var o = {
-                        desc: optionsDescLetters[i],
-                        option: optionLetters[i]
-                    };
-                    options.push(o);
-                }
-            } else if (optionNumbers.length > 0) {
-                for (var i = 0; i < optionNumbers.length && i < optionsDescNumbers.length; i++) {
-                    var o = {
-                        desc: optionsDescNumbers[i],
-                        option: optionNumbers[i]
-                    };
-                    options.push(o);
-                }
-            }
-
-            if (footer && footer.startsWith('--')) footer = footer.slice(2) // remove -- from footer
-
-            // make breadcrumb contain words after the first word
-            if (header.startsWith('#')) {
-                var words = header.match(/\S+\s*/gm);
-                if (words && words.length > 0) {
-                    breadcrumbs.push(words[0].toUpperCase().trim());
-                    var rest = "";
-                    for (var i = 1; i < words.length; i++) {
-                        rest += words[i];
-                    }
-                    breadcrumbs.push(rest.toUpperCase().trim());
-                }
-            } else {
-                header = undefined;
-            }
-
-            console.log("optionLetters");
-            console.log(optionLetters);
-            console.log("optionNumbers");
-            console.log(optionNumbers);
-            console.log("optionDescLetters");
-            console.log(optionsDescLetters);
-            console.log("optionDescNumbers");
-            console.log(optionsDescNumbers);
-
-            // check if it's a chunking footer, if so, remove
-            var chunkingFooter = footer.match(/([A-Z //]+)/gm);
-            if (optionsDescLetters.length == 0 && optionsDescNumbers.length == 0 &&
-                chunkingFooter && chunkingFooter[0].length == footer.length) {
-                footer = undefined;
-                type = "content";
-                options = lines;
-                options.pop(); // remove footer
-                options.pop(); // remove chunking footer
-
-            } else if ((optionLetters.length == 0 || optionsDescLetters.length == 0) &&
-                (optionNumbers.length == 0 || optionsDescNumbers.length == 0)) {
-                options = lines;
-                type = "input"
-                if (header) options.shift(); // remove header only if it's present
-                options.pop(); // remove footer
-                if (options.length > 1 && options[options.length - 1].startsWith('..')) options.pop(); // remove pagination footer if present
-            } else {
-                type = "menu"
-            }
-
-            if (!buttons) buttons = [];
-
-            if (pagesText && pagesText[0] && pagesText[0].length > 0) {
-                var p = pagesText[0].split('/');
-                if (p.length > 1) {
-                    currentPage = parseInt(p[0].slice(2));
-                    numPages = parseInt(p[1]);
-                }
-            }
-
-            console.log("breadcrumbs");
-            console.log(breadcrumbs);
+            var result = new MtText(mtText);
+            var type = result.hideInput() ? "menu" : "input";
 
             console.log({
-                header: header,
-                footer: footer,
-                options: options,
-                buttons: buttons,
+                header: result.header,
+                footer: result.footer,
+                preBody : result.preBody,
+                body: result.body,
+                buttons: result.buttons,
                 type: type,
-                pages: numPages,
-                currentPage: currentPage,
-                breadcrumbs: breadcrumbs
+                pages: result.pages.numPages,
+                currentPage: result.pages.currentPage,
+                breadcrumbs: result.breadcrumbs
             });
 
             return {
-                header: header,
-                footer: footer,
-                options: options,
-                buttons: buttons,
+                header: result.header,
+                footer: result.footer,
+                preBody : result.preBody,
+                body: result.body,
+                buttons: result.buttons,
                 type: type,
-                pages: numPages,
-                currentPage: currentPage,
-                breadcrumbs: breadcrumbs
+                pages: result.pages.numPages,
+                currentPage: result.pages.currentPage,
+                breadcrumbs: result.breadcrumbs
             };
         }
 

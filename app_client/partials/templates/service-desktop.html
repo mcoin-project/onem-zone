@@ -13,27 +13,33 @@
                     </div>
                 </div>
             </nav>
-            <div class="card ng-cloak" >
+            <div class="card ng-cloak">
                 <div class="card-content">
                     <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
                             style="float:right"><i
                                 class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
                     <div class="row valign-wrapper">
                         <div class="col s12">
-                            <div ng-show="result.type == 'menu'" class="collection grey lighten-5" style="width:100%">
-                                <a ng-click="optionSelected(option)"
-                                    ng-repeat="option in result.options track by $index" class="collection-item"
-                                    style="padding-right:5px">{{option.desc}}<span style="float:right"><i
-                                            class="material-icons">chevron_right</i></span>
-                                </a>
+                            <div ng-repeat="line in result.preBody track by $index">{{line.preBody}}</div>
+                            <div ng-repeat="line in result.body track by $index">
+                                <div ng-show="line.type == 'content'">{{line.content}}</div>
+                                <div class="collection grey lighten-5" style="width:100%"
+                                    ng-show="line.type == 'options'">
+                                    <a style="padding-right:5px" class="collection-item"
+                                        ng-click="optionSelected(option)"
+                                        ng-repeat="option in line.options track by $index"
+                                        ng-show="line.type == 'options'">
+                                        {{option.desc}}<span style="float:right"><i
+                                                class="material-icons">chevron_right</i></span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="ng-cloak" ng-show="result.type !== 'menu'">
-                                <div ng-repeat="option in result.options track by $index">{{option}}</div>
-                                <form ng-show="result.type !== 'content'" name="inputForm">
+                            <div class="ng-cloak" ng-show="result.type == 'input'">
+                                <form name="inputForm">
                                     <div class="input-field">
                                         <div class="col s8">
-                                            <input auto-focus autocomplete="off" ng-model="$parent.moText" placeholder="Message"
-                                                required id="moText" type="text">
+                                            <input auto-focus autocomplete="off" ng-model="$parent.moText"
+                                                placeholder="Message" required id="moText" type="text">
                                             <span class="helper-text">{{result.footer}}</span>
                                         </div>
                                         <div class="col s4">
