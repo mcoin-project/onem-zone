@@ -7,6 +7,7 @@ ONEmSimModule.factory('Cache', [
     'MtText',
     function (Socket, $timeout, $interval, Services, MtText) {
 
+        var services;
         var mtResponse;
 
         const SMS_TIMEOUT = 10000;
@@ -40,21 +41,9 @@ ONEmSimModule.factory('Cache', [
                 console.log("results");
                 console.log(results);
 
-                for (var i = 0; i < Services.length; i++) {
-                    for (var j = 0; j < results.length; j++) {
-                        console.log("services[i].name");
-                        console.log(Services[i].name);
-                        if (Services[i].name.includes(results[j])) {
-                            var s = Object.assign({}, Services[i]);
-                            var ind = Services[i].name.indexOf(results[j]);
-                            console.log("ind:" + ind);
-                            s.name = Services[i].name[ind];
-                            console.log("s.name:" + s.name);
+                services = new Services(results);
+                activeServices = services.generateMenuItems();
 
-                            activeServices.push(s);
-                        }
-                    }
-                }
             }
             console.log("activeServices");
             console.log(activeServices);
@@ -125,14 +114,7 @@ ONEmSimModule.factory('Cache', [
             mtResponse: mtResponse,
 
             getLandingService: function () {
-                var result;
-                for (var i = 0; i < Services.length; i++) {
-                    if (Services[i].default) {
-                        result = Services[i];
-                        break;
-                    }
-                }
-                return result;
+                return services.getLandingService();
             },
             getServices: async function () {
 

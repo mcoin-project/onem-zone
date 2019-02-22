@@ -26,7 +26,7 @@ ONEmSimModule.controller('serviceController', [
 
            // debugger;
 
-            Cache.getService($stateParams.service.name).then(function (response) {
+            Cache.getService($stateParams.service.getName()).then(function (response) {
 
                 $timeout(function () {
                     // anything you want can go here and will safely be run on the next digest.
@@ -39,7 +39,6 @@ ONEmSimModule.controller('serviceController', [
 
                 });
                 console.log("got response");
-
 
             }).catch(function (error) {
              //   debugger;

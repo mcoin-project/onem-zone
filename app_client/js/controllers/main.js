@@ -39,29 +39,26 @@ ONEmSimModule.controller('mainController', [
             return Cache.getServices();
         }).then(function (services) {
 
-            $rootScope.services = services;
-            $rootScope.services1 = [];
-            $rootScope.services2 = [];
+            $scope.$parent.services1 = [];
+            $scope.$parent.services2 = [];
 
             console.log("cache got response");
             console.log(services);
-            $timeout(function () {
-                // anything you want can go here and will safely be run on the next digest.
-                for (var i = 0; i < $scope.services.length; i += 2) {
-                    $rootScope.services1.push($rootScope.services[i]);
-                }
-                for (var i = 1; i < $scope.services.length; i += 2) {
-                    $rootScope.services2.push($rootScope.services[i]);
-                }
-                $rootScope.$apply();
-            });
-            console.log("services:")
-            console.log($rootScope.services);
+            // $timeout(function () {
+            // anything you want can go here and will safely be run on the next digest.
+            for (var i = 0; i < services.length; i += 2) {
+                $scope.$parent.services1.push(services[i]);
+            }
+            for (var i = 1; i < services.length; i += 2) {
+                $scope.$parent.services2.push(services[i]);
+            }
+            //   $rootScope.$apply();
+            // });
 
             $state.go('service', { initialize: true, service: Cache.getLandingService() });
         }).catch(function (error) {
 
-          //  debugger;
+            //  debugger;
             console.log("error in main " + error);
             if (!$rootScope.msisdn) {
                 console.log("no msisdn, going to capture");

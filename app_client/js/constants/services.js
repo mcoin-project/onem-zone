@@ -1,4 +1,4 @@
-ONEmSimModule.constant('Services', 
+ONEmSimModule.constant('ServicesConfig', 
     [
         { name: ['onem'], icon: 'home', template: 'cards' },
         { name: ['account'], icon: 'settings', template: 'cards' },
