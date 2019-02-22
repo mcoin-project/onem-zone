@@ -41,7 +41,7 @@
 
 </head>
 
-<body ng-controller="navbarController" class="homepage container-fluid" name="body">
+<body ng-controller="navbarController" name="body">
     <div class="ng-cloak" ng-show="user.email">
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
@@ -76,7 +76,7 @@
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
-                    <a ng-href="/" class="brand-logo">
+                    <a ui-sref="service" class="brand-logo">
                         <img style="padding-top:10px" class="logo" height="50"
                             src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
                     </a>
