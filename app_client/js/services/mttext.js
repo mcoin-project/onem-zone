@@ -126,9 +126,9 @@ ONEmSimModule.factory('MtText', function () {
 	}
 
 	Text.prototype.getOption = function (lineNumber) {
-		var optionsDescLetterRegEx = /^([A-Z]) ([A-Z#].+)/gm;
-		var optionNumbersRegex = /^(\d+) ([A-Z#].+)/gm;
-		var sectionNumbersRegex = /^(\d.+) ([A-Z#].+)/gm;
+		var optionsDescLetterRegEx = /^([A-Z]) ([A-Z#b-z].+)/gm;
+		var optionNumbersRegex = /^(\d+) ([A-Z#b-z].+)/gm;
+		var sectionNumbersRegex = /^(\d.+) ([A-Z#b-z].+)/gm;
 		var result;
 
 		if (!lineNumber || lineNumber > this.lines.length - 1) return undefined;
