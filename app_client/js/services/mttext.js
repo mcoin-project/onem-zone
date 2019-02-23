@@ -1,5 +1,4 @@
 ONEmSimModule.factory('MtText', function () {
-
 	const FOOTER_PREFIX = '--';
 	const PAGING_PREFIX = '..';
 	const FOOTER_THRESHOLD = 25;  // if long footer, it probably has instructions needing specialised input
@@ -129,9 +128,9 @@ ONEmSimModule.factory('MtText', function () {
 	Text.prototype.getOption = function (lineNumber) {
 		var optionsDescLetterRegEx = /^([A-Z]) ([A-Z#a-z].+)/gm;
 		var optionNumbersRegex = /^(\d+) ([A-Z#a-z].+)/gm;
-		var sectionNumbersRegex = /^(\d.+) ([A-Z#a-z].+)/gm;
+		var sectionNumbersRegex = /^\d+[\.\d]+ ([A-Z#a-z].+)/gm;
 		var result;
-
+debugger;
 		if (!lineNumber || lineNumber > this.lines.length - 1) return undefined;
 
 		var text = this.lines[lineNumber];
@@ -139,17 +138,20 @@ ONEmSimModule.factory('MtText', function () {
 		var no1 = optionsDescLetterRegEx.exec(text);
 		var no2 = sectionNumbersRegex.exec(text);
 
-		if (no && no[2].split(' ').length <= WORD_THRESHOLD) {
+console.log("no");
+console.log(no);
+
+		if (no && no[2] && no[2].split(' ').length <= WORD_THRESHOLD) {
 			var option = no[1].trim();
 			var desc = no[2].trim();
 			result = { option: option, desc: desc };
-		} else if (no1 && no1[2].split(' ').length <= WORD_THRESHOLD) {
+		} else if (no1 && no1[2] && no1[2].split(' ').length <= WORD_THRESHOLD) {
 			var option = no1[1].trim();
 			var desc = no1[2].trim();
 			result = { option: option, desc: desc };
-		} else if (no2 && no2[2].split(' ').length <= WORD_THRESHOLD) {
-			var option = no2[1].trim();
-			var desc = no2[2].trim();
+		} else if (no2 && no2[1] && no2[1].split(' ').length <= WORD_THRESHOLD) {
+			var option = no2[0].trim();
+			var desc = no2[1].trim();
 			result = { option: option, desc: desc };
 		}
 
