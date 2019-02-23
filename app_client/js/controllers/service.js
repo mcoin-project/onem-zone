@@ -16,6 +16,9 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.activeService = $stateParams.service;
 
+        $scope.goCommand = Cache.getGoCommand();
+        console.log("go command:" + $scope.goCommand);
+
         var applyResult = function (response) {
             $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
@@ -29,13 +32,18 @@ ONEmSimModule.controller('serviceController', [
 
             $scope.ready = false;
 
-            Cache.getService($stateParams.service.getName()).then(function (response) {
-                console.log("got response");
-                applyResult(response);
-            }).catch(function (error) {
-                toastr.error(error);
+            try {
+                var serviceName = $stateParams.service.getName();
+                Cache.getService(serviceName).then(function (response) {
+                    console.log("got response");
+                    applyResult(response);
+                }).catch(function (error) {
+                    toastr.error(error);
+                    console.log(error);
+                });
+            } catch (error) {
                 console.log(error);
-            });
+            }
         }
 
         $scope.moText = "";

@@ -22,14 +22,17 @@ ONEmSimModule.factory('Services', [
         }
         function Services(hashResults) {
         
+            this.goCommand = ServicesConfig.goCommand;
             this.hashResults = hashResults;
             this.services = [];
-            for (var i = 0; i < ServicesConfig.length; i++) {
-                var s = new Service(ServicesConfig[i]);
+            for (var i = 0; i < ServicesConfig.services.length; i++) {
+                var s = new Service(ServicesConfig.services[i]);
                 this.services.push(s);
             }
             this.languageIndex = this.detectLanguage();
             this.setLanguageIndex(this.languageIndex);
+            console.log(this);
+
         };
         
         Services.prototype.getLandingService = function() {
@@ -43,6 +46,11 @@ ONEmSimModule.factory('Services', [
             console.log("getLandingService:");
             console.log(result);
             return result;
+        }
+
+        Services.prototype.getGoCommand = function() {
+            var i = this.languageIndex;
+            return this.goCommand[i];
         }
 
         Services.prototype.detectLanguage = function() {
@@ -72,9 +80,12 @@ ONEmSimModule.factory('Services', [
         
         // bit ugly but looks like I need to apply this to all services.  Tried to pass parent object but caused angular circular reference errors
         Services.prototype.setLanguageIndex = function(index) {
+            if (index < 0 || index >= this.goCommand.length) return false;
             for (var i = 0; i < this.services.length; i++) {
                 this.services[i].languageIndex = index;
             }
+            this.languageIndex = index;
+            return true;
         };
         
         Services.prototype.getLanguageIndex = function() {
@@ -84,7 +95,6 @@ ONEmSimModule.factory('Services', [
         
         Services.prototype.generateMenuItems = function() {
             var results = [];
-        
             for (var i = 0; i < this.services.length; i++) {
                 for (var j = 0; j < this.hashResults.length; j++) {
                     var n = this.services[i].getName();

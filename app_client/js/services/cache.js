@@ -126,8 +126,19 @@ ONEmSimModule.factory('Cache', [
             isInitialized: function() {
                 return initialized;
             },
+            getGoCommand: function() {
+                if (services) {
+                    return services.getGoCommand();
+                } else {
+                    return 'go';
+                }
+            },
             getLandingService: function () {
-                return services.getLandingService();
+                if (services) {
+                    return services.getLandingService();
+                } else {
+                    return false;
+                }
             },
             getServices: async function () {
 
