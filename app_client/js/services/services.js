@@ -90,6 +90,7 @@ ONEmSimModule.factory('Services', [
                     var n = this.services[i].getName();
                     if (n && n.length > 1 && n.includes(this.hashResults[j])) {
                         results.push(this.services[i]);
+                        break;
                     }
                 }
             }
