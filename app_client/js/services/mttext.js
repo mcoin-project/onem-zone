@@ -2,7 +2,7 @@ ONEmSimModule.factory('MtText', function () {
 	const FOOTER_PREFIX = '--';
 	const PAGING_PREFIX = '..';
 	const FOOTER_THRESHOLD = 25;  // if long footer, it probably has instructions needing specialised input
-	const WORD_THRESHOLD = '5'; // max number of words in an option
+	const WORD_THRESHOLD = '6'; // max number of words in an option
 
 	function Text(text) {
 		this.initialize(text);
