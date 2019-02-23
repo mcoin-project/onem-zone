@@ -11,6 +11,7 @@ ONEmSimModule.controller('mainController', [
     '$timeout',
     'Cache',
     function ($scope, $rootScope, $state, Cache, SmsHandler, Socket, User, Phone, $location, $timeout, Cache) {
+        console.log("user:" + $rootScope.user);
 
         $scope.history = [];
 

@@ -17,8 +17,17 @@ ONEmSimModule.controller('navbarController', [
         }
 
         $scope.dropdown="My Profile";
+        $scope.user = {};
 
         $rootScope.$watch('user', function(newVal, oldVal, scope) {
+            console.log("rootscope watch");
+            console.log(newVal);
+            if (newVal) {
+                if (newVal.email) $scope.user.email = newVal.email;
+                if (newVal.firstName) $scope.user.firstName = newVal.firstName;
+                if (newVal.lastName) $scope.user.lastName = newVal.lastName;
+            }
+
             if ($rootScope.user) {
                 console.log($scope.dropdown);
                 if ($rootScope.user.firstName) {
@@ -39,10 +48,6 @@ ONEmSimModule.controller('navbarController', [
                 }
             }
         });
-
-        $scope.agree = function () {
-            $state.go('logoutDelete');
-        }
 
         $scope.$on('error', function (ev, data) {
             console.log("[MN]: socket error:" + ev);

@@ -3,7 +3,7 @@
         <div class="row">
             <div class="row">
                 <div class="col s8 offset-s4 left-align">
-                    <h5>{{user.firstName}} {{user.lastName}}</h5>
+                    <h5>{{$parent.user.firstName}} {{$parent.user.lastName}}</h5>
                 </div>
             </div>
             <div class="col s12">
@@ -12,7 +12,7 @@
                         <p><small>Email:</small></p>
                     </div>
                     <div class="col s8 left-align">
-                        <p style="font-size: 90%">{{user.email}}</p>
+                        <p style="font-size: 90%">{{$parent.user.email}}</p>
                     </div>
                 </div>
                 <div class="row valign-wrapper">
@@ -42,7 +42,8 @@
                 </div>
                 <div style="padding-top:30px" class="row">
                     <div class="col s8 offset-s4 left-align">
-                        <a class="waves-effect waves-light btn red" href="#">Unlink account</a>
+                        <a class="modal-trigger waves-effect waves-light btn red" ng-click="openModalfn()" data-target="unlinkModal"
+                            href="">Unlink account</a>
                     </div>
                 </div>
             </div>
