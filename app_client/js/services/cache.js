@@ -20,21 +20,53 @@ ONEmSimModule.factory('Cache', [
             checkMt = undefined;
         };
 
+        var getOption = function(text) {
+            var optionsDescLetterRegEx = /^([A-Z]) ([A-Z#a-z].+)/gm;
+            var optionNumbersRegex = /^(\d+) ([A-Z#a-z].+)/gm;
+            var sectionNumbersRegex = /^\d+[\.\d]+ ([A-Z#a-z].+)/gm;
+            var result;
+            if (!text) return undefined;
+    
+            text = text.trim();
+
+            var no = optionNumbersRegex.exec(text);
+            var no1 = optionsDescLetterRegEx.exec(text);
+            var no2 = sectionNumbersRegex.exec(text);
+    
+            if (no && no[2] && no[2].split(' ').length <= 5) {
+                //var option = no[1].trim();
+                var desc = no[2].trim();
+                result = desc;
+            } else if (no1 && no1[2] && no1[2].split(' ').length <= 5) {
+                //var option = no1[1].trim();
+                var desc = no1[2].trim();
+                result = desc;
+            } else if (no2 && no2[1] && no2[1].split(' ').length <= 5) {
+                //var option = no2[0].trim();
+                var desc = no2[1].trim();
+                result = desc;
+            }
+            return result;
+            
+        }
+
         var processServicesList = function (mtText) {
 
             var activeServices = [];
 
             if (!mtText) return -1;
 
-            var matches = mtText.match(/(^([A-Z])[ ].*\n+)/gm);
             var results = [];
-            console.log("matches");
-            console.log(matches);
-            if (matches && matches.length > 0) {
-                matches.filter(function (s) {
-                    var r = s.split(' #');
-                    if (r[1]) {
-                        results.push(r[1].trim().toLowerCase());
+
+            var lines = mtText.split('\n');
+            console.log("lines");
+            console.log(lines);
+
+            if (lines && lines.length > 0) {
+                lines.filter(function (s) {
+                    var r = getOption(s);
+                    if (r) {
+                        results.push(r.slice(1).toLowerCase());
                     }
                 });
                 console.log("results");
