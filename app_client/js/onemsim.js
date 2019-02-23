@@ -118,11 +118,10 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     loginRequired: loginRequired
                 }
             }).
-            state('apphome', {
+            state('console', {
                 url: '/',
-                templateUrl: 'partials/service.html',
-                controller: 'serviceController',
-                params: { service: getLandingService, initialize: true },
+                templateUrl: 'partials/onemSim.html',
+                controller: 'consoleController',
                 resolve: {
                     loginRequired: loginRequired
                 }

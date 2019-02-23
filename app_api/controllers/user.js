@@ -45,7 +45,7 @@ exports.delete = function (User) {
             if (!result.ok) throw "Error deleting";
             debug("/user delete ok");
             debug(result);
-            res.status(200).send({ result: 'Success'});
+            res.status(200).send({ result: 'Success' });
         }).catch(function (error) {
             debug("/user delete");
             debug(error);
@@ -76,6 +76,54 @@ exports.getMsisdn = function (User) {
             res.status(500).send({ error: "server error" });
         });
 
+    }
+}
+
+exports.getProfile = function (id) {
+    return function (req, res) {
+        res.status(200).send({ user: { touchMode: req.userProfile.touchMode } });
+    }
+}
+
+exports.setProfile = function (User) {
+    return function (req, res) {
+
+        if (!req.user) {
+            debug("/updateMsisdn");
+            debug("user not found");
+            return res.status(401).send({
+                message: "User not found"
+            });
+        }
+        console.log(req.body);
+        if (typeof req.body.touchMode == "undefined" || typeof req.body.touchMode !== "boolean") {
+            console.log(typeof req.body.touchMode);
+            debug("/setProfile");
+            debug("missing param");
+            return res.status(400).send({
+                message: "Malformed request"
+            });
+        }
+
+        User.findOneAndUpdate({ _id: ObjectId(req.user) }, {
+            $set: {
+                touchMode: req.body.touchMode,
+            }
+        }, { new: true }, function (error, user) {
+            if (error || !user) {
+                debug("/update");
+                debug(error);
+                res.status(500).send({ error: error });
+            } else {
+                var userObj = {
+                    email: user.email,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    touchMode: user.touchMode
+                };
+                res.json({ user: userObj });
+            }
+        });
     }
 }
 

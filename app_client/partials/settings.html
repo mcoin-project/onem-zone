@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="col s12">
-                <div class="row">
+                <div class="row valign-wrapper">
                     <div class="col s4 left-align grey-text lighten-5">
                         <p><small>Email:</small></p>
                     </div>
@@ -15,21 +15,28 @@
                         <p style="font-size: 90%">{{user.email}}</p>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row valign-wrapper">
                     <div class="col s4 left-align grey-text lighten-5">
-                        <p><small>Console view:</small></p>
+                        <p><small>Mobile:</small></p>
+                    </div>
+                    <div class="col s8 left-align">
+                        <p style="font-size: 90%">{{msisdn}}</p>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s4 left-align grey-text lighten-5">
+                        <p><small>Touch mode:</small></p>
                     </div>
                     <div class="col s8 left-align">
                         <div class="switch">
                             <p>
                                 <label>
                                     Off
-                                    <input type="checkbox">
+                                    <input ng-change="changed()" ng-model="checkboxModel.on" type="checkbox">
                                     <span class="lever"></span>
                                     On
                                 </label>
                             </p>
-
                         </div>
                     </div>
                 </div>

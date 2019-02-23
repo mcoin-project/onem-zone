@@ -1,21 +1,21 @@
 ONEmSimModule.controller('settingsController', [
     '$scope',
-    '$rootScope',
-    '$timeout',
-    '$auth',
-    '$state',
-    '$location',
-    'Cache',
-    'DataModel',
-    'Socket',
-    'Phone',
-    'SmsHandler',
     'User',
-    function ($scope, $rootScope, $timeout, $auth, $state, $location, Cache, DataModel, Socket, Phone, SmsHandler, User) {
+    function ($scope, User) {
 
-        $scope.agree = function () {
-            $state.go('logoutDelete');
+        User.getProfile().$promise.then(function (response) {
+            $scope.$parent.checkboxModel = {
+                on: response.user.touchMode
+            };
+        });
+
+        $scope.changed = function () {
+            User.setProfile({ touchMode: $scope.$parent.checkboxModel.on }).$promise.then(function (response) {
+                $scope.$parent.checkboxModel = {
+                    on: response.user.touchMode
+                };
+            });
+            console.log($scope.$parent.checkboxModel);
         }
-
     }
 ]);

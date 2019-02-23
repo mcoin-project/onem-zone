@@ -42,7 +42,7 @@
 </head>
 
 <body ng-controller="navbarController" name="body">
-    <div class="ng-cloak" ng-show="user.email">
+    <div class="ng-cloak" ng-show="msisdn">
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
@@ -76,11 +76,11 @@
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
-                    <a ui-sref="service({initialize:true})" class="brand-logo">
+                    <a ui-sref="main" class="brand-logo">
                         <img style="padding-top:10px" class="logo" height="50"
                             src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
                     </a>
-                    <a ng-href="/" class="brand-logo"></a>
+                    <!---<a ui-sref="main" class="brand-logo"></a>-->
                     <div class="nav-wrapper">
                         <a href="#" data-target="services-target" class="sidenav-trigger right"><i
                                 class="material-icons">more_vert</i></a>
@@ -210,6 +210,7 @@
 <script type="text/javascript" src="js/controllers/logoutDelete.js"></script>
 <script type="text/javascript" src="js/controllers/service.js"></script>
 <script type="text/javascript" src="js/controllers/settings.js"></script>
+<script type="text/javascript" src="js/controllers/console.js"></script>
 <script type="text/javascript" src="js/directives/closeKeyboard.js"></script>
 <script type="text/javascript" src="js/directives/myClock.js"></script>
 <script type="text/javascript" src="js/directives/scrollBottom.js"></script>

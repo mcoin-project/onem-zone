@@ -130,7 +130,6 @@ ONEmSimModule.factory('MtText', function () {
 		var optionNumbersRegex = /^(\d+) ([A-Z#a-z].+)/gm;
 		var sectionNumbersRegex = /^\d+[\.\d]+ ([A-Z#a-z].+)/gm;
 		var result;
-debugger;
 		if (!lineNumber || lineNumber > this.lines.length - 1) return undefined;
 
 		var text = this.lines[lineNumber];

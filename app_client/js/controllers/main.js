@@ -12,23 +12,42 @@ ONEmSimModule.controller('mainController', [
     'Cache',
     function ($scope, $rootScope, $state, Cache, SmsHandler, Socket, User, Phone, $location, $timeout, Cache) {
 
-        $scope.selected = { country: '' };
-
         $scope.history = [];
 
-        console.log("[MN]: mainController initialising");
+        function resolveState() {
+            console.log("$scope.$parent.checkboxModel.on");
+            console.log($scope.$parent.checkboxModel.on);
+            console.log("resolving state:" + $scope.$parent.checkboxModel.on)
+            if ($scope.$parent.checkboxModel.on) {
+                $state.go('service', { initialize: true, service: Cache.getLandingService() });
+            } else {
+                $state.go('console');
+            }
+        }
+        $scope.$parent.checkboxModel = {};
 
-        Promise.resolve().then(function () {
-            if (!$rootScope.msisdn) {
+        User.getProfile().$promise.then(function (response) {
+            $scope.$parent.checkboxModel = {
+                on: response.user.touchMode
+            };
+            console.log("$scope.checkboxModel.on");
+            console.log($scope.$parent.checkboxModel.on);
+            if (Cache.isInitialized()) {
+                console.log("already initialized");
+                resolveState();
+            } else if (!$rootScope.msisdn) {
                 return User.getMsisdn().$promise;
             } else {
                 return { msisdn: $rootScope.msisdn };
             }
         }).then(function (response) {
             console.log("setting msisdn:" + response.msisdn);
-            $rootScope.msisdn = response.msisdn;
-            $rootScope.user = response.user;
-            //$state.go('apphome');
+            $timeout(function () {
+                // anything you want can go here and will safely be run on the next digest.
+                $rootScope.msisdn = response.msisdn;
+                $rootScope.user = response.user;
+                $rootScope.$apply();
+            });
             return SmsHandler.start().$promise;
         }).then(function (response) {
             console.log("response fom smshandler.start");
@@ -54,8 +73,7 @@ ONEmSimModule.controller('mainController', [
             }
             //   $rootScope.$apply();
             // });
-
-            $state.go('service', { initialize: true, service: Cache.getLandingService() });
+            resolveState();
         }).catch(function (error) {
 
             //  debugger;

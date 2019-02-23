@@ -8,12 +8,11 @@ exports.UserSchema = new Mongoose.Schema({
     blocked: { type: Boolean, default: false },
     secret: { type: String, select: false }, // totp secret
     msisdn: { type: String, minlength: 6, maxlength: 20 },
-    //   picture: String,
-    //   bitbucket: String,
     facebook: { type: String, unique: true, index: true, sparse: true },
-    campaign: String,
-    //    foursquare: String,
     google: { type: String, unique: true, index: true, sparse: true },
+    lastLogin: { type: Date, default: Date.now },
+    invalidLoginCount: { type: Number, default: 0 },
+    touchMode: { type: Boolean, default: false }
     //    github: String,
     //    instagram: String,
     //    linkedin: String,
@@ -21,9 +20,10 @@ exports.UserSchema = new Mongoose.Schema({
     //    yahoo: String,
     //    twitter: String,
     //    twitch: String,
-    //    spotify: String
-    lastLogin: { type: Date, default: Date.now },
-    invalidLoginCount: { type: Number, default: 0 },
+    //    spotify: String,
+    //    foursquare: String,
+    //   picture: String,
+    //   bitbucket: String,
 }, {
     timestamps: true
 });

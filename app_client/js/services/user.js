@@ -12,6 +12,16 @@ ONEmSimModule.factory('User', [
                 url: 'api/user/msisdn',
                 isArray: false
             },
+            setProfile: {
+                method: 'PUT',
+                url: 'api/user/profile',
+                isArray: false
+            },
+            getProfile: {
+                method: 'GET',
+                url: 'api/user/profile',
+                isArray: false
+            },
             checkMsisdn: {
                 method: 'GET',
                 url: 'api/user/checkMsisdn',

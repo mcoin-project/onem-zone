@@ -33,6 +33,7 @@ function ensureAuthenticated(req, res, next) {
     }
     user.getUser(payload.sub).then(function (user) {
         req.user = user._id;
+        req.userProfile = user;
         next();
     }).catch(function (error) {
         debug(error);
@@ -65,8 +66,10 @@ api.get('/user/sendToken', ensureAuthenticated, user.sendToken(User));
 api.get('/user/verifyToken', ensureAuthenticated, user.verifyToken(User));
 api.get('/user/msisdn', ensureAuthenticated, user.getMsisdn(User));
 api.get('/user/checkMsisdn', ensureAuthenticated, user.checkMsisdn(User));
+api.get('/user/profile', ensureAuthenticated, user.getProfile(User));
 
 api.put('/user/msisdn', ensureAuthenticated, user.updateMsisdn(User));
+api.put('/user/profile', ensureAuthenticated, user.setProfile(User));
 
 api.get('/start', ensureAuthenticated, function (req, res) {
     var httpProtocol = req.get('Referer').split(":")[0];

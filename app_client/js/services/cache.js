@@ -9,11 +9,10 @@ ONEmSimModule.factory('Cache', [
 
         var services;
         var mtResponse;
-
+        var initialized = false;
         const SMS_TIMEOUT = 10000;
 
         var timer;
-
         var checkMt;
 
         var stopInterval = function () {
@@ -47,6 +46,9 @@ ONEmSimModule.factory('Cache', [
             }
             console.log("activeServices");
             console.log(activeServices);
+            if (activeServices.length > 0) {
+                initialized = true;
+            }
             return activeServices;
         }
 
@@ -113,6 +115,17 @@ ONEmSimModule.factory('Cache', [
 
             mtResponse: mtResponse,
 
+            reset: function() {
+                if (checkMt) stopInterval();
+                if (timer) $timeout.cancel(timer);
+                initialized = false;
+                activeServices = [];
+                mtResponse = undefined;
+                return true;
+            },
+            isInitialized: function() {
+                return initialized;
+            },
             getLandingService: function () {
                 return services.getLandingService();
             },
