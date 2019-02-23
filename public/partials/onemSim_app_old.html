@@ -1,0 +1,10 @@
+<div style="padding-top:20px" class="row col-centered">
+    <div class="col s6 m4" ng-repeat="service in services track by $index">
+        <a ui-sref="service({name: service.name})">
+            <div style="height:120px; text-align:center">
+                <i class="medium material-icons">{{service.icon}}</i>
+                <div>{{service.name}}</div>
+            </div>
+        </a>
+    </div>
+</div>

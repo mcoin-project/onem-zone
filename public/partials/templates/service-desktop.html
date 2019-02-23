@@ -1,0 +1,65 @@
+<div class="ng-cloak" style="padding-top:20px" ng-show="ready">
+    <div class="row col-centered">
+        <div class="col s12 m12 l8 offset-l2">
+            <nav style="z-index:995" class="navbar-fixed" ng-cloak ng-show="result.breadcrumbs.length > 0">
+                <div class="nav-wrapper white">
+                    <div class="col s12 truncate black-text">
+                        <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
+                            ng-click="buttonSelected('#' + activeService.name)"
+                            class="breadcrumb">{{result.breadcrumbs[0]}}</a>
+                        <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}}</a>
+                        <span style="float:right"><i
+                                class="teal-text small material-icons">{{activeService.icon}}</i></span>
+                    </div>
+                </div>
+            </nav>
+            <div class="card ng-cloak">
+                <div class="card-content">
+                    <!---<span class="card-title">{{result.header || '#' + activeService.name.toUpperCase()}}<span
+                            style="float:right"><i
+                                class="teal-text small material-icons">{{activeService.icon}}</i></span></span>-->
+                    <div class="row valign-wrapper">
+                        <div class="col s12">
+                            <div ng-repeat="line in result.preBody track by $index">{{line}}</div>
+                            <div ng-repeat="line in result.body track by $index">
+                                <div ng-show="line.type == 'content'">{{line.content}}</div>
+                                <div class="collection grey lighten-5" style="width:100%"
+                                    ng-show="line.type == 'options'">
+                                    <a style="padding-right:5px" class="collection-item"
+                                        ng-click="optionSelected(option)"
+                                        ng-repeat="option in line.options track by $index"
+                                        ng-show="line.type == 'options'">
+                                        {{option.desc}}<span style="float:right"><i
+                                                class="material-icons">chevron_right</i></span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="ng-cloak" ng-show="result.type == 'input'">
+                                <form name="inputForm">
+                                    <div class="input-field">
+                                        <div class="col s8">
+                                            <input auto-focus autocomplete="off" ng-model="$parent.moText"
+                                                placeholder="Message" required id="moText" type="text">
+                                            <span class="helper-text">{{result.footer}}</span>
+                                        </div>
+                                        <div class="col s4">
+                                            <button ng-disabled="inputForm.$invalid" ng-click="moSubmit(moText)"
+                                                class="right btn waves-effect waves-light" name="submit">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-action right-align">
+                    <a class="waves-effect waves-light" ng-repeat="button in result.buttons track by $index"
+                        ng-click="buttonSelected(button)">{{button}}</a>
+                </div>
+            </div>
+            <div>
+                <div ng-include="'partials/templates/pagination.html'"></div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,52 @@
+<div style="padding-left:10px;padding-right:10px" class="container row">
+    <div class="col s12 m12 l12" style="padding-top:50px">
+        <div class="row">
+            <div class="row">
+                <div class="col s8 offset-s4 left-align">
+                    <h5>{{$parent.user.firstName}} {{$parent.user.lastName}}</h5>
+                </div>
+            </div>
+            <div class="col s12">
+                <div class="row valign-wrapper">
+                    <div class="col s4 left-align grey-text lighten-5">
+                        <p><small>Email:</small></p>
+                    </div>
+                    <div class="col s8 left-align">
+                        <p style="font-size: 90%">{{$parent.user.email}}</p>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s4 left-align grey-text lighten-5">
+                        <p><small>Mobile:</small></p>
+                    </div>
+                    <div class="col s8 left-align">
+                        <p style="font-size: 90%">{{msisdn}}</p>
+                    </div>
+                </div>
+                <div class="row valign-wrapper">
+                    <div class="col s4 left-align grey-text lighten-5">
+                        <p><small>Touch mode:</small></p>
+                    </div>
+                    <div class="col s8 left-align">
+                        <div class="switch">
+                            <p>
+                                <label>
+                                    Off
+                                    <input ng-change="changed()" ng-model="checkboxModel.on" type="checkbox">
+                                    <span class="lever"></span>
+                                    On
+                                </label>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div style="padding-top:30px" class="row">
+                    <div class="col s8 offset-s4 left-align">
+                        <a class="modal-trigger waves-effect waves-light btn red" ng-click="openModalfn()" data-target="unlinkModal"
+                            href="">Unlink account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

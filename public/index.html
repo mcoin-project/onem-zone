@@ -12,10 +12,12 @@
     <link rel="icon" href="./images/favicon.ico?v1.1">
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
         rel="stylesheet">
     <!-- font-family: 'Roboto', sans-serif; font-family: 'Roboto Condensed', sans-serif; font-family: 'Noto Sans', sans-serif; font-family: 'Noto Serif', serif; -->
-    <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900"
+    <link
+        href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Noto+Serif:400,400i,700,700i|Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:300,300i,400,400i,500,500i,700,700i,900"
         rel="stylesheet">
     <!-- CSS Files -->
     <link rel="stylesheet" href="css/plugins.min.css">
@@ -28,31 +30,62 @@
 
 </head>
 
-<body ng-controller="navbarController" class="homepage container-fluid" name="body">
-
-    <div class="ng-cloak" ng-show="user.email">
+<body ng-controller="navbarController" name="body">
+    <div class="ng-cloak" ng-show="msisdn">
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
-            <p>{{user.firstName}} {{user.lastName}}</p>
-            <p>{{msisdn}}</p>
+            <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
             <li class="divider"></li>
-            <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink account</a></li>
-            <li><a ng-href="/logout">Logout</a></li>
+            <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
+        </ul>
+        <ul id="services" class="dropdown-content">
+            <div class="row">
+                <div class="col s6">
+                    <li ng-repeat="service in services1 track by $index">
+                        <a ui-sref="service({initialize: true, service: service})">
+                            <div style="text-align:center">
+                                <i class="small material-icons">{{service.getIcon()}}</i>
+                                <h6 style="margin-top:0;margin-bottom:0;font-size:1rem">{{service.getName()}}</h6>
+                            </div>
+                        </a>
+                    </li>
+                </div>
+                <div class="col s6">
+                    <li ng-repeat="service in services2 track by $index">
+                        <a ui-sref="service({initialize: true, service: service})">
+                            <div style="text-align:center">
+                                <i class="small material-icons">{{service.getIcon()}}</i>
+                                <h6 style="margin-top:0;margin-bottom:0;font-size:1rem">{{service.getName()}}</h6>
+                            </div>
+                        </a>
+                    </li>
+                </div>
+            </div>
         </ul>
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
-                    <a ng-href="/" class="brand-logo">
-                        <img style="padding-top:10px" class="logo" height="50" src="./images/onem_zone_logo_thumb_white.png"
-                            alt="logo" />
+                    <a ui-sref="main" class="brand-logo">
+                        <img style="padding-top:10px" class="logo" height="50"
+                            src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
                     </a>
-                    <a ng-href="/" class="brand-logo"></a>
-                    <div class="nav-wrapper">
-                        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+                    <!---<a ui-sref="main" class="brand-logo"></a>-->
+                    <div ng-show="checkboxModel.on" class="nav-wrapper">
+                        <a href="#" data-target="services-target" class="sidenav-trigger right"><i
+                                class="material-icons">more_vert</i></a>
                         <ul class="right hide-on-med-and-down">
                             <!-- Dropdown Trigger -->
-                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{user.email || 'My
-                                    Profile'}}<i class="material-icons right">arrow_drop_down</i></a></li>
+                            <li><a class="dropdown-trigger" href="#!" data-target="services">Services<i
+                                        class="material-icons right">arrow_drop_down</i></a></li>
+                        </ul>
+                    </div>
+                    <div class="nav-wrapper">
+                        <a href="#" data-target="mobile-demo-left" class="sidenav-trigger"><i
+                                class="material-icons">menu</i></a>
+                        <ul class="right hide-on-med-and-down">
+                            <!-- Dropdown Trigger -->
+                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{dropdown}}<i
+                                        class="material-icons right">arrow_drop_down</i></a></li>
                         </ul>
                     </div>
                 </div>
@@ -67,22 +100,45 @@
                 <p>You will be able re-register to ONEm.zone again later.</p>
             </div>
             <div class="modal-footer">
-                <a ng-href="" class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
-                <a ng-click="agree()" ng-href="" class="modal-close waves-effect waves-green btn-flat">Confirm & Logout</a>
+                <a class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
+                <a ui-sref="logoutDelete" class="modal-close waves-effect waves-green btn-flat">Confirm &
+                    Logout</a>
             </div>
         </div>
     </div>
 
-    <ul class="sidenav" id="mobile-demo">
-        <h6>My Profile</h6>
-        <p>{{user.firstName}} {{user.lastName}}</p>
-        <p>{{msisdn}}</p>
-        <p>{{user.email}}</p>
-        <li class="divider"></li>
-        <li><a class="red-text modal-trigger" ng-click="openModalfn()" data-target="unlinkModal" href="">Unlink account</a></li>
-        <li><a ng-href="/logout">Logout</a></li>
+    <ul class="sidenav" id="services-target">
+        <h6 class="teal-text">Services</h6>
+        <div style="padding-top:15px" class="row ">
+            <div style="text-align:center" class="col s6 center-align">
+                <li ng-repeat="service in services1 track by $index">
+                    <a style="line-height:normal;padding:10px;height:auto"
+                        ui-sref="service({initialize: true, service: service})">
+                        <span>
+                            <i class="teal-text center-align small material-icons">{{service.getIcon()}}</i>
+                        </span>
+                        <div class="teal-text">{{service.getName()}}</div>
+                    </a>
+                </li>
+            </div>
+            <div style="text-align:center" style="text-align:center" class="col s6 center-align">
+                <li ng-repeat="service in services2 track by $index">
+                    <a style="line-height:normal;padding:10px;height:auto"
+                        ui-sref="service({initialize: true, service: service})">
+                        <span>
+                            <i class="teal-text center-align small material-icons">{{service.getIcon()}}</i>
+                        </span>
+                        <div class="teal-text">{{service.getName()}}</div>
+                    </a>
+                </li>
+            </div>
+        </div>
     </ul>
-    </div>
+    <ul class="sidenav" id="mobile-demo-left">
+        <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
+        <li class="divider"></li>
+        <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
+    </ul>
 
     <div class="container">
         <div ui-view></div>
