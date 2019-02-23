@@ -95,9 +95,9 @@ exports.setProfile = function (User) {
                 message: "User not found"
             });
         }
-        console.log(req.body);
+        debug(req.body);
         if (typeof req.body.touchMode == "undefined" || typeof req.body.touchMode !== "boolean") {
-            console.log(typeof req.body.touchMode);
+            debug(typeof req.body.touchMode);
             debug("/setProfile");
             debug("missing param");
             return res.status(400).send({

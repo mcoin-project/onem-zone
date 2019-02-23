@@ -56,11 +56,7 @@ ONEmSimModule.controller('navbarController', [
         });
 
         $scope.$on('socket:LOGOUT', function (ev, data) {
-            $location.path('/logout');
-            $timeout(function () {
-                // anything you want can go here and will safely be run on the next digest.
-                $rootScope.$apply();
-            });
+            $state.go('logout');
         });
 
         $scope.$on('socket:MT SMS', function (ev, data) {

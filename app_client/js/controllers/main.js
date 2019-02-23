@@ -36,6 +36,7 @@ ONEmSimModule.controller('mainController', [
             if (Cache.isInitialized()) {
                 console.log("already initialized");
                 resolveState();
+                throw "finished";
             } else if (!$rootScope.msisdn) {
                 return User.getMsisdn().$promise;
             } else {
