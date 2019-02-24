@@ -65,10 +65,15 @@
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
-                    <a ui-sref="main" class="brand-logo">
-                        <img style="padding-top:10px" class="logo" height="50"
-                            src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
-                    </a>
+                    <div class="nav-wrapper">
+                        <ul class="left hide-on-med-and-down">
+                              <li><a ui-sref="main" class="brand-logo">
+                                        <img style="padding-top:10px" class="logo" height="50"
+                                            src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
+                                    </a></li>
+                            <li><a ui-sref="main">Home</a></li>
+                            </ul>
+                        </div>
                     <!---<a ui-sref="main" class="brand-logo"></a>-->
                     <div ng-show="checkboxModel.on" class="nav-wrapper">
                         <a href="#" data-target="services-target" class="sidenav-trigger right"><i
@@ -83,6 +88,7 @@
                         <a href="#" data-target="mobile-demo-left" class="sidenav-trigger"><i
                                 class="material-icons">menu</i></a>
                         <ul class="right hide-on-med-and-down">
+                            </li>
                             <!-- Dropdown Trigger -->
                             <li><a class="dropdown-trigger" href="#!" data-target="dropdown1">{{dropdown}}<i
                                         class="material-icons right">arrow_drop_down</i></a></li>
@@ -135,6 +141,7 @@
         </div>
     </ul>
     <ul class="sidenav" id="mobile-demo-left">
+        <li><a ui-sref="main">Home<i class="right small material-icons">home</i></a></li>
         <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
         <li class="divider"></li>
         <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>

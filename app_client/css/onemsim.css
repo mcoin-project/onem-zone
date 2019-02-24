@@ -9,6 +9,9 @@
   .pagination li {
     height: 56px; } }
 
+.nav-wrapper .brand-logo {
+  position: relative; }
+
 .navbar-fixed {
   z-index: 999; }
 
