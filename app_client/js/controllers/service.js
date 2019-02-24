@@ -11,8 +11,14 @@ ONEmSimModule.controller('serviceController', [
         console.log("stateParams:");
         console.log($stateParams);
 
+        $scope.$parent.spinner = false;
+
         $scope.result = {};
         $scope.ready = false;
+
+        $scope.isSpinnerActive = function() {
+            return $scope.spinner;
+        }
 
         $scope.activeService = $stateParams.service;
 
@@ -25,6 +31,7 @@ ONEmSimModule.controller('serviceController', [
                 $scope.result = response;
                 $scope.ready = true;
                 $rootScope.$apply();
+                $scope.$parent.spinner = false;
             });
         }
 
@@ -33,11 +40,16 @@ ONEmSimModule.controller('serviceController', [
             $scope.ready = false;
 
             try {
+                $scope.$parent.spinner = true;
                 var serviceName = $stateParams.service.getName();
                 Cache.getService(serviceName).then(function (response) {
                     console.log("got response");
+
                     applyResult(response);
+
                 }).catch(function (error) {
+                    $scope.spinner = false;
+
                     toastr.error(error);
                     console.log(error);
                 });
@@ -52,7 +64,7 @@ ONEmSimModule.controller('serviceController', [
             console.log("motext:" + $scope.moText);
             console.log("motext param:" + moText);
             if (!$scope.moText || $scope.moText.length == 0) return;
-
+            $scope.$parent.spinner = true;
             Cache.selectOption($scope.moText).then(function (response) {
                 console.log("got response");
                 $scope.moText = "";
@@ -65,10 +77,11 @@ ONEmSimModule.controller('serviceController', [
         $scope.optionSelected = function (option) {
 
             $scope.ready = false;
-
+            $scope.$parent.spinner = true;
             Cache.selectOption(option.option).then(function (response) {
                 console.log("got response from selectOption");
                 console.log(response);
+
                 applyResult(response);
             }).catch(function (error) {
                 console.log(error);
@@ -76,6 +89,7 @@ ONEmSimModule.controller('serviceController', [
         }
 
         $scope.buttonSelected = function (buttonText) {
+            $scope.$parent.spinner = true;
             Cache.selectOption(buttonText).then(function (response) {
                 console.log("got response");
                 applyResult(response);
