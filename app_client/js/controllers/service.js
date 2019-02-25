@@ -54,6 +54,7 @@ ONEmSimModule.controller('serviceController', [
                     console.log(error);
                 });
             } catch (error) {
+                $scope.$parent.spinner = false;
                 console.log(error);
             }
         }
@@ -70,6 +71,7 @@ ONEmSimModule.controller('serviceController', [
                 $scope.moText = "";
                 applyResult(response);
             }).catch(function (error) {
+                $scope.$parent.spinner = false;
                 console.log(error);
             });
         }
@@ -84,6 +86,7 @@ ONEmSimModule.controller('serviceController', [
 
                 applyResult(response);
             }).catch(function (error) {
+                $scope.$parent.spinner = false;
                 console.log(error);
             });
         }
@@ -94,6 +97,7 @@ ONEmSimModule.controller('serviceController', [
                 console.log("got response");
                 applyResult(response);
             }).catch(function (error) {
+                $scope.$parent.spinner = false;
                 console.log(error);
             });
         }
