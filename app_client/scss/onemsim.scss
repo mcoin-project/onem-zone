@@ -1,18 +1,32 @@
+/*------------------------------------------------------------------------------------------
+ *
+ *    GENERAL
+ *
+ *----------------------------------------------------------------------------------------*/
 
-  @media (max-width: 600px) {
-      .center-pagination {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      .container {
-          width: 100%;
-      }
-    .pagination li {
-        height: 56px;
+ /* Google signin  - check if used*/
+
+.container.small {
+    @media only screen and (max-width: 320px) {
+        padding-left: 0;
+        padding-right: 0;
     }
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
   }
+
+.col-centered {
+    float: none;
+    margin: 0 auto;
+}
+
+/*------------------------------------------------------------------------------------------
+ *
+ *    NAV
+ *
+ *----------------------------------------------------------------------------------------*/
 
 nav ul a {
     text-transform: uppercase;
@@ -34,11 +48,10 @@ nav ul a {
     z-index: 999;
 }
 
-
 .dropdown-content-services {
-    min-width: 250px;
     clear: both;
     float: none;
+
 }
 .dropdown-content-services.dropdown-content li > a > i {
     clear: both;
@@ -51,7 +64,7 @@ nav ul a {
 }
 
 .dropdown-content {
-    min-width: 175px;
+    width: auto;
     p {
         font-size: 16px;
         color: #004d40;
@@ -60,10 +73,15 @@ nav ul a {
         padding-left: 16px;
     }
     li a {
+        text-transform: capitalize;
         margin-right:0;
         padding-right:0;
-        text-transform: initial;
     }
+}
+
+#services {
+    min-width: 220px;
+    max-height: 80vh;
 }
 
 .dropdown-icon-wrapper {
@@ -84,9 +102,8 @@ nav ul a {
     margin-bottom:0;
     font-size:12px;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
-
 
 .sidenav p {
     color: #004d40;
@@ -108,9 +125,64 @@ nav ul a {
     padding: 0px 32px;
 }
 
-[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
-    display: none !important;
+/*------------------------------------------------------------------------------------------
+ *
+ *    SIGN-IN
+ *
+ *----------------------------------------------------------------------------------------*/
+ 
+ .customBtn {
+    display: inline-block;
+    text-align: center;
+    background: white;
+    color: #444;
+    width: 100%;
+    height: 42px;
+    border-radius: 5px;
+    border: thin solid #888;
+    /*box-shadow: 1px 1px 1px grey;*/
+    white-space: nowrap;
+    margin-top: 15px;
   }
+  
+  .fbblue {
+      background: #4267B2;
+      color: white;
+      border-radius: 5px;
+      border: thin solid #4267B2;   
+  }
+  .customBtn:hover {
+    cursor: pointer;
+  }
+  span.label {
+    font-family: serif;
+    font-weight: normal;
+  }
+  span.icon {
+    background: url('/images/g-logo.png') transparent 5px 50% no-repeat;
+    display: inline-block;
+    vertical-align: middle;
+    width: 42px;
+    height: 42px;
+  }
+  .buttonText {
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-size: 18px;
+    line-height: 18px;
+    font-weight: bold;
+    /* Use the Roboto font that is loaded in the <head> */
+  }
+  
+  /* end Google signin */
+
+/*------------------------------------------------------------------------------------------
+ *
+ *    TELEPHONE NUMBER INPUT
+ *
+ *----------------------------------------------------------------------------------------*/
 
 /* for telephone number input*/
 .iti-flag {background-image: url("/bower_components/intl-tel-input/build/img/flags.png");}
@@ -124,79 +196,11 @@ nav ul a {
 }
 /* end telephone number input */
 
-/* Google signin */
-
-.container.small {
-    @media only screen and (max-width: 320px) {
-        padding-left: 0;
-        padding-right: 0;
-    }
-}
-
-.customBtn {
-  display: inline-block;
-  text-align: center;
-  background: white;
-  color: #444;
-  width: 100%;
-  height: 42px;
-  border-radius: 5px;
-  border: thin solid #888;
-  /*box-shadow: 1px 1px 1px grey;*/
-  white-space: nowrap;
-  margin-top: 15px;
-}
-
-.fbblue {
-    background: #4267B2;
-    color: white;
-    border-radius: 5px;
-    border: thin solid #4267B2;   
-}
-.customBtn:hover {
-  cursor: pointer;
-}
-span.label {
-  font-family: serif;
-  font-weight: normal;
-}
-span.icon {
-  background: url('/images/g-logo.png') transparent 5px 50% no-repeat;
-  display: inline-block;
-  vertical-align: middle;
-  width: 42px;
-  height: 42px;
-}
-.buttonText {
-  display: inline-block;
-  vertical-align: middle;
-  padding-left: 5px;
-  padding-right: 5px;
-  font-size: 18px;
-  line-height: 18px;
-  font-weight: bold;
-  /* Use the Roboto font that is loaded in the <head> */
-}
-
-/* end Google signin */
-
-.col-centered {
-    float: none;
-    margin: 0 auto;
-}
-
-#context-menu {
-    position: absolute;
-    left: 150px !important;
-}
-
-
-.panel > .panel-heading {
-    background-image: none;
-    background-color: red;
-    color: white;
-    font-size: 16px;
-}
+/*------------------------------------------------------------------------------------------
+ *
+ *    SERVICES SCREEN
+ *
+ *----------------------------------------------------------------------------------------*/
 
 .breadcrumb {
     margin-top: 10px;
@@ -209,212 +213,3 @@ span.icon {
 .breadcrumb, .breadcrumb:last-child {
    color: #000000;
 }
-
-.comment {
-    margin-top: 20px;
-}
-
-.comment-text {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-}
-
-.onem-border {
-    margin-top: 10px;
-}
-
-.onem-controls-container {
-    margin-top: 25px;
-    /* float: right;*/
-}
-.onem-label {
-    display: inline-block;
-    margin-left: 10px;
-    margin-top: 10px;
-}
-.onem-controls {
-    display: inline-block;
-    margin-top: 10px;
-    margin-left: 30px;
-}
-
-.tab-log-container {
-    overflow: auto;
-    height: 65vh;
-}
-
-.tab-log-text {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-}
-
-.tab-help-container {
-    overflow: auto;
-    height: 65vh;
-}
-
-.tab-help-table {
-    font-size: 10px;
-}
-
-.tab-help-container p {
-    text-align: justify;
-    margin-left: 10px;
-    margin-right: 20px;
-}
-
-.tab-help-navigator {
-    overflow: auto;
-    border-right: solid;
-    border-right-width: 1px;
-    border-right-color: LightGrey;
-    /*background-color: #e0e0e0;*/
-    height: 100%;
-    max-height: 100%;
-}
-
-.tab-help-level-1 {
-    font-weight: bold;
-}
-
-.tab-help-level-2 {
-    text-indent: 10px;
-}
-
-.tab-help-text {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-}
-
-.comments-container {
-    overflow: auto;
-    height: 70vh;
-}
-
-.filemanager-container {
-    overflow: auto;
-    height: 70vh;
-}
-
-.onem-logo img {
-    width: 90px;
-    height: auto;
-    vertical-align: inherit;
-    margin-left: 55px;
-}
-
-.onem-logo p {
-    margin-top: 30px;
-    font-size: 33px;
-    font-weight: bold;
-    padding-left: 5px;
-    display: inline-block;
-}
-
-.img-container img {
-    width: 90%;
-    height: auto;
-    margin: 0 auto;
-    display: block;
-}
-
-.img-container .sms-input {
-    /*position: absolute;
-    top: 78%;
-    left: 17%;
-    width: 67%;*/
-}
-
-.img-container .sms-response {
-    /*position: absolute;
-    top: 13%;
-    min-height: 65%;
-    height: 75%;
-    left: 16%;
-    width: 69%;*/
-}
-
-.img-container .sms-response-pos {
-    width: 100%;
-    height: 90%;
-    display: block;
-    overflow: auto;
-}
-
-.img-container .sms-response-pos .sms-placeholder {
-    width: 100%;
-    height: auto;
-    display: inline-block;
-    padding: 4px;
-}
-
-.img-container .sms-response-pos .sms-mt-container {
-    position: relative;
-    max-width: 79%;
-    height: auto;
-    display: inline-block;
-    border-radius: 15px;
-    float: left;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    background-color: #e0e0e0;
-    font-size: 13.5px;
-    line-height: 18px;
-    vertical-align: top;
-}
-
-.sms-length span {
-    font-size: 9px;
-}
-
-.img-container .sms-response-pos .sms-mo-container {
-    position: relative;
-    max-width: 79%;
-    height: auto;
-    display: block;
-    border-radius: 15px;
-    float: right;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    background-color: blue;
-    color: white;
-    font-size: 13.5px;
-    line-height: 18px;
-}
-
-.img-container .sms-response-pos .sms-mt-container .sms-mt {
-    height: auto;
-    padding: 10px;
-}
-
-.img-container .sms-response-pos .sms-mo-container .sms-mo {
-    height: auto;
-    padding: 10px;
-}
-
-.sms-mt span {
-    padding: 0;
-    white-space: pre-wrap;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-    word-wrap: break-word;
-}
-
-.sms-mo span {
-    padding: 0;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-}
-
