@@ -35,11 +35,23 @@ nav ul a {
 }
 
 
-.dropdown-content {
+.dropdown-content-services {
     min-width: 250px;
+    clear: both;
+    float: none;
+}
+.dropdown-content-services.dropdown-content li > a > i {
+    clear: both;
+    float: none;
+    margin: 0 auto;
+}
+
+.dropdown-content-services.dropdown-content li > a {
+    padding: 5px;
 }
 
 .dropdown-content {
+    min-width: 175px;
     p {
         font-size: 16px;
         color: #004d40;
@@ -47,7 +59,34 @@ nav ul a {
         line-height: 18px;
         padding-left: 16px;
     }
+    li a {
+        margin-right:0;
+        padding-right:0;
+        text-transform: initial;
+    }
 }
+
+.dropdown-icon-wrapper {
+    padding:5px;
+    text-align: center;
+    line-height: 45px;
+    margin-right:5px;
+    .material-icons {
+        height:45px;
+        line-height: 45px;
+        text-align: center;
+        display: block;
+    }
+}
+
+.dropdown-icon-wrapper span {
+    margin-top:0;
+    margin-bottom:0;
+    font-size:12px;
+    text-align: center;
+    text-transform: uppercase;
+}
+
 
 .sidenav p {
     color: #004d40;
@@ -133,10 +172,10 @@ span.icon {
   vertical-align: middle;
   padding-left: 5px;
   padding-right: 5px;
-  font-size: 16 px;
+  font-size: 18px;
+  line-height: 18px;
   font-weight: bold;
   /* Use the Roboto font that is loaded in the <head> */
-  font-family: 'Roboto', sans-serif;
 }
 
 /* end Google signin */
