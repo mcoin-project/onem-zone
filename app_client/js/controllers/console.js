@@ -5,6 +5,8 @@ ONEmSimModule.controller('consoleController', [
     'Socket',
     function ($scope, DataModel, Socket) {
 
+        $scope.results = DataModel.getResults();
+
         $scope.smsInput = function () {
 
             if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;

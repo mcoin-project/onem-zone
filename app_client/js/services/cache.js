@@ -5,7 +5,8 @@ ONEmSimModule.factory('Cache', [
     '$interval',
     'Services',
     'MtText',
-    function (Socket, $timeout, $interval, Services, MtText) {
+    'DataModel',
+    function (Socket, $timeout, $interval, Services, MtText, DataModel) {
 
         var services;
         var mtResponse;
@@ -184,7 +185,13 @@ ONEmSimModule.factory('Cache', [
             },
             getService: async function (service) {
 
-                Socket.emit('API MO SMS', '#' + service);
+                var inputObj = {
+                    type: "mo",
+                    value: '#' + service
+                };
+                DataModel.addResult(inputObj);
+
+                Socket.emit('MO SMS', '#' + service);
                 console.log("emitting:" + '#' + service);
 
                 try {
@@ -196,7 +203,12 @@ ONEmSimModule.factory('Cache', [
             },
             selectOption: async function (inputText) {
 
-                Socket.emit('API MO SMS', inputText);
+                var inputObj = {
+                    type: "mo",
+                    value: inputText
+                };
+                DataModel.addResult(inputObj);
+                Socket.emit('MO SMS', inputText);
                 console.log("emitting:" + inputText);
                 try {
                     var mt = await waitforMtSMS();

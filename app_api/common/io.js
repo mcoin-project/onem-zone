@@ -126,6 +126,17 @@ exports.initialize = function (server) {
 
                 debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
                 sms.sendSMS(socket.msisdn, common.shortNumber, moText);
+                if (process.env.TEST == 'on') {
+
+                    var timer = setTimeout(
+                        function () {
+                            if (index == testMessages.length) index = 0;
+                            if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
+                            index++;
+                        }, 1000
+                    );
+                }
+
             } else {
                 debug("can't locate msisdn for user");
             }

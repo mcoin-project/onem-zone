@@ -9,6 +9,16 @@
   .pagination li {
     height: 56px; } }
 
+nav ul a {
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400; }
+  nav ul a .material-icons {
+    display: inline-block;
+    padding-right: 5px;
+    vertical-align: top;
+    margin-left: 0; }
+
 .nav-wrapper .brand-logo {
   position: relative; }
 

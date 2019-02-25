@@ -72,10 +72,12 @@ ONEmSimModule.controller('navbarController', [
 
             $scope.results = DataModel.addResult(outputObj);
 
+            Cache.receivedMt(data.mtText);
+
         });
 
         $scope.$on('socket:API MT SMS', function (ev, data) {
-            console.log("nav: received MT");
+            console.log("nav: received API MT");
             console.log(data.mtText);
 
             Cache.receivedMt(data.mtText);
