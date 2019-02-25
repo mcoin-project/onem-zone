@@ -1,11 +1,11 @@
-body {
-    color: #333;
-    font-size: 18px;
-    line-height: 1.3;
-    font-weight: 300; 
-    font-family: 'Merriweather', serif;
-    font-family: 'Open Sans', sans-serif;
-}
+// body {
+//     color: #333;
+//     font-size: 18px;
+//     line-height: 1.3;
+//     font-weight: 300; 
+//     font-family: 'Merriweather', serif;
+//     font-family: 'Open Sans', sans-serif;
+// }
 
 body.full {
     overflow: hidden;
@@ -21,7 +21,13 @@ body.full {
 
 .phone {
 /*    z-index: -1;*/
-    position: relative;
+color: #333;
+font-size: 18px;
+line-height: 1.3;
+font-weight: 300; 
+font-family: 'Merriweather', serif;
+font-family: 'Open Sans', sans-serif;
+position: relative;
     display: block;
     width: 400px;
     margin: 0px auto;

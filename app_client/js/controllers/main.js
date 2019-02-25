@@ -4,13 +4,12 @@ ONEmSimModule.controller('mainController', [
     '$state',
     'Cache',
     'SmsHandler',
-    'Socket',
     'User',
     'Phone',
-    '$location',
     '$timeout',
     'Cache',
-    function ($scope, $rootScope, $state, Cache, SmsHandler, Socket, User, Phone, $location, $timeout, Cache) {
+    'toastr',
+    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr) {
         console.log("user:" + $rootScope.user);
 
         $scope.history = [];
@@ -36,7 +35,7 @@ ONEmSimModule.controller('mainController', [
             if (Cache.isInitialized()) {
                 console.log("already initialized");
                 resolveState();
-                throw "finished";
+                throw null;
             } else if (!$rootScope.msisdn) {
                 return User.getMsisdn().$promise;
             } else {
@@ -57,8 +56,11 @@ ONEmSimModule.controller('mainController', [
             return Phone.start(response);
         }).then(function (response) {
             console.log("finished call to phone.start");
+            $scope.$parent.spinner = true;
             return Cache.getServices();
         }).then(function (services) {
+
+            $scope.$parent.spinner = false;
 
             $scope.$parent.services1 = [];
             $scope.$parent.services2 = [];
@@ -79,6 +81,9 @@ ONEmSimModule.controller('mainController', [
         }).catch(function (error) {
 
             //  debugger;
+            $scope.$parent.spinner = false;
+            if (error) toastr.error(error);
+
             console.log("error in main " + error);
             if (!$rootScope.msisdn) {
                 console.log("no msisdn, going to capture");

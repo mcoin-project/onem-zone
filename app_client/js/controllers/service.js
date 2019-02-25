@@ -30,8 +30,9 @@ ONEmSimModule.controller('serviceController', [
                 // anything you want can go here and will safely be run on the next digest.
                 $scope.result = response;
                 $scope.ready = true;
-                $rootScope.$apply();
                 $scope.$parent.spinner = false;
+
+                $rootScope.$apply();
             });
         }
 
@@ -48,7 +49,7 @@ ONEmSimModule.controller('serviceController', [
                     applyResult(response);
 
                 }).catch(function (error) {
-                    $scope.spinner = false;
+                    $scope.$parent.spinner = false;
 
                     toastr.error(error);
                     console.log(error);

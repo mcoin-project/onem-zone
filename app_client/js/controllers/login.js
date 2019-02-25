@@ -4,6 +4,7 @@ ONEmSimModule.controller('loginController', [
     'toastr',
     '$state',
     function($scope, $auth, toastr, $state) {
+        $scope.$parent.spinner = false;
         $scope.authenticate = function(provider) {
             console.log("inside authenticate");
             $auth.authenticate(provider).then(function() {
