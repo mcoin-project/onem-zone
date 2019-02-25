@@ -6,10 +6,16 @@ ONEmSimModule.controller('serviceController', [
     '$rootScope',
     '$timeout',
     'toastr',
-    function ($scope, Cache, $stateParams, $rootScope, $timeout, toastr) {
+    'screenSize',
+    function ($scope, Cache, $stateParams, $rootScope, $timeout, toastr, screenSize) {
 
         console.log("stateParams:");
         console.log($stateParams);
+
+        $scope.showPn = function() {
+            console.log("showPn");
+           return !(screenSize.is('xs, sm'));
+        }
 
         $scope.$parent.spinner = false;
 
