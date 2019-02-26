@@ -129,8 +129,8 @@ ONEmSimModule.factory('MtText', function () {
 	Text.prototype.getOption = function (lineNumber) {
 
 		var optionFormats = [
-			/^([A-Z]) ([A-Z#a-z0-9].+)/gm,  // check for basic option A-Z
-			/^(\d+) ([+A-Z#a-z0-9].+)/gm,   // check for basic numbering options 0-9
+			/^([A-Z]) (['A-Z#a-z0-9].+)/gm,  // check for basic option A-Z
+			/^(\d+) (['+A-Z#a-z0-9].+)/gm,   // check for basic numbering options 0-9
 			/^(\d+[\.\d]+) ([+A-Z#a-z0-9].+)/gm  // check for wiki-style section numbering
 		];
 
