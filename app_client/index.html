@@ -23,6 +23,7 @@
         href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
     <!-- endbuild -->
     <!--build:css css/app.min.css -->
+    <link rel="stylesheet" href="css/onemfonts.css" />
     <link rel="stylesheet" href="css/onemsim.css" />
     <link rel="stylesheet" href="css/screens.css" />
     <!-- endbuild -->
@@ -50,16 +51,16 @@
                 <div class="col s6">
                     <li ng-repeat="service in services1 track by $index">
                         <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
-                            <i class="small material-icons">{{service.getIcon()}}</i>
-                            <span>{{service.getName()}}</span>
+                            <span class="icon-{{service.getIcon()}}"></span>
+                            <div>{{service.getName()}}</div>
                         </a>
                     </li>
                 </div>
                 <div class="col s6">
                     <li ng-repeat="service in services2 track by $index">
                         <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
-                            <i class="small material-icons">{{service.getIcon()}}</i>
-                            <span>{{service.getName()}}</span>
+                            <span class="icon-{{service.getIcon()}}"></span>
+                            <div>{{service.getName()}}</div>
                         </a>
                     </li>
                 </div>

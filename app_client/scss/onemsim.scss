@@ -55,14 +55,16 @@ nav ul a {
     float: none;
 
 }
-.dropdown-content-services.dropdown-content li > a > i {
-    clear: both;
-    float: none;
-    margin: 0 auto;
+.dropdown-content-services.dropdown-content li > a > span {
+    font-size: 24px;
+}
+.dropdown-content-services.dropdown-content li > a > div {
+    font-size: 12px;
+    font-weight: 200;
 }
 
 .dropdown-content-services.dropdown-content li > a {
-    padding: 5px;
+    padding: 10px 5px 5px 5px;
 }
 
 .dropdown-content {
