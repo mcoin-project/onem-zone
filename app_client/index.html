@@ -128,10 +128,8 @@
                 <li ng-repeat="service in services1 track by $index">
                     <a style="line-height:normal;padding:10px;height:auto"
                         ui-sref="service({initialize: true, service: service})">
-                        <span>
-                            <i class="teal-text center-align small material-icons">{{service.getIcon()}}</i>
-                        </span>
-                        <div class="teal-text">{{service.getName()}}</div>
+                        <span style="font-size:24px" class="teal-text center-align icon-{{service.getIcon()}}"></span>
+                        <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
                     </a>
                 </li>
             </div>
@@ -139,10 +137,8 @@
                 <li ng-repeat="service in services2 track by $index">
                     <a style="line-height:normal;padding:10px;height:auto"
                         ui-sref="service({initialize: true, service: service})">
-                        <span>
-                            <i class="teal-text center-align small material-icons">{{service.getIcon()}}</i>
-                        </span>
-                        <div class="teal-text">{{service.getName()}}</div>
+                        <span style="font-size:24px" class="teal-text center-align icon-{{service.getIcon()}}"></span>
+                        <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
                     </a>
                 </li>
             </div>

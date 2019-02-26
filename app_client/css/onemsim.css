@@ -16,6 +16,11 @@
   float: none;
   margin: 0 auto; }
 
+.onem-icon {
+  font-size: 24px;
+  padding: 5px;
+  margin-top: 15px; }
+
 /*------------------------------------------------------------------------------------------
  *
  *    NAV
@@ -68,7 +73,7 @@ nav ul a {
 
 #services {
   min-width: 220px;
-  max-height: 80vh; }
+  max-height: 90vh; }
 
 .dropdown-icon-wrapper {
   padding: 5px;

@@ -8,8 +8,7 @@
                             ng-click="buttonSelected('#' + activeService.getName())"
                             class="breadcrumb">{{result.breadcrumbs[0]}}</a>
                         <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}}</a>
-                        <span style="float:right"><i
-                                class="teal-text small material-icons">{{activeService.getIcon()}}</i></span>
+                        <span style="float:right" class="teal-text onem-icon icon-{{activeService.getIcon()}}"></span>
                     </div>
                 </div>
             </nav>
