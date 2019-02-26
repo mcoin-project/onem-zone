@@ -20,6 +20,8 @@ ONEmSimModule.factory('Phone', [
                 console.log("got start response");
                 Socket.connect();
 
+                // might need to check the response from Socket.connect and return here if already connected
+
                 var msisdn = $rootScope.msisdn;
                 var sipProxy = response.sipproxy;
                 var wsProtocol = response.wsprotocol;

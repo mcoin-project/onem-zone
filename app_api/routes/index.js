@@ -74,7 +74,6 @@ api.put('/user/profile', ensureAuthenticated, user.setProfile(User));
 api.get('/start', ensureAuthenticated, function (req, res) {
     var httpProtocol = req.get('Referer').split(":")[0];
     debug(httpProtocol);
-    debug(wsProtocol);
 
     if (httpProtocol == 'https') {
         // the used protocol is HTTPS

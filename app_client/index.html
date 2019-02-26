@@ -48,6 +48,11 @@
         </ul>
         <ul id="services" class="dropdown-content dropdown-content-services">
             <div class="row">
+                <div class="col s12">
+                    <div ng-show="services1.length == 0 && services2.length == 0">
+                        <li><a ui-sref="main">Click here to load menu</a></li>
+                    </div>
+                </div>
                 <div class="col s6">
                     <li ng-repeat="service in services1 track by $index">
                         <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
@@ -79,7 +84,6 @@
                     </div>
                     <!---<a ui-sref="main" class="brand-logo"></a>-->
                     <div ng-show="checkboxModel.on" class="nav-wrapper">
-
                         <a href="#" data-target="services-target" class="sidenav-trigger right"><i
                                 class="material-icons">more_vert</i></a>
                         <ul class="right hide-on-med-and-down">
@@ -124,6 +128,9 @@
     <ul class="sidenav" id="services-target">
         <h6 class="teal-text">Services</h6>
         <div style="padding-top:15px" class="row ">
+            <div ng-show="services1.length == 0 && services2.length == 0">
+                <li><a ui-sref="main">Click here to load menu</a></li>
+            </div>
             <div style="text-align:center" class="col s6 center-align">
                 <li ng-repeat="service in services1 track by $index">
                     <a style="line-height:normal;padding:10px;height:auto"

@@ -147,7 +147,11 @@ var smppServer = smpp.createServer(function(session) {
                     errMsg = '001'; // Error sending the message
                     dlvrdMsg = '000'; // No message was delivered
                     common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
-                    message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+
+                    // don't save api messages
+                    if (!client.moRecord.api) {
+                        message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+                    }
                 };
             } else {
                 common.sendEmail(pdu.destination_addr, client.moRecord.mtText);

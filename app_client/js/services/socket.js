@@ -9,10 +9,11 @@ ONEmSimModule.factory('Socket', [
         //debugger;
         return {
             disconnect: function () {
-                if (!mySocket) {
-                    console.log("mySocket undefined");
+                if (!myIoSocket) {
+                    console.log("myIoSocket undefined");
                     return;
                 }
+                console.log("disconnecting socket");
                 return myIoSocket.disconnect();
             },
             connect: function () {
@@ -22,6 +23,12 @@ ONEmSimModule.factory('Socket', [
                     console.log("could not locate jwt token")
                     return false;
                 }
+
+                if (myIoSocket && myIoSocket.connected) {
+                    console.log("already connected, returning");
+                    return myIoSocket;
+                }
+
                 var path = $window.location.protocol + "//" + $window.location.host;
                 console.log("making connection")
                 myIoSocket = io.connect(path, { query: { token: token } });
