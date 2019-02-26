@@ -51,12 +51,10 @@ ONEmSimModule.controller('serviceController', [
                 var serviceName = $stateParams.service.getName();
                 Cache.getService(serviceName).then(function (response) {
                     console.log("got response");
-
                     applyResult(response);
 
                 }).catch(function (error) {
                     $scope.$parent.spinner = false;
-
                     toastr.error(error);
                     console.log(error);
                 });
@@ -90,7 +88,6 @@ ONEmSimModule.controller('serviceController', [
             Cache.selectOption(option.option).then(function (response) {
                 console.log("got response from selectOption");
                 console.log(response);
-
                 applyResult(response);
             }).catch(function (error) {
                 $scope.$parent.spinner = false;

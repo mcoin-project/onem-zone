@@ -2,7 +2,6 @@
 ONEmSimModule.factory('Services', [
     'ServicesConfig',
     function (ServicesConfig) {
-
         function Service(service) {
             this.service = service;
             this.languageIndex = 0;
@@ -21,7 +20,6 @@ ONEmSimModule.factory('Services', [
             return this.service.default;
         }
         function Services(hashResults) {
-        
             this.goCommand = ServicesConfig.goCommand;
             this.hashResults = hashResults;
             this.services = [];
@@ -30,9 +28,8 @@ ONEmSimModule.factory('Services', [
                 this.services.push(s);
             }
             this.languageIndex = this.detectLanguage();
-            this.setLanguageIndex(this.languageIndex);
+            this.language(this.languageIndex);
             console.log(this);
-
         };
         
         Services.prototype.getLandingService = function() {
@@ -76,10 +73,11 @@ ONEmSimModule.factory('Services', [
                 }
             }
             return undefined;
-        };
-        
-        // bit ugly but looks like I need to apply this to all services.  Tried to pass parent object but caused angular circular reference errors
-        Services.prototype.setLanguageIndex = function(index) {
+        };  
+
+        // setter and getter depending if index param is present
+        Services.prototype.language = function(index) {
+            if (!index) return this.languageIndex;
             if (index < 0 || index >= this.goCommand.length) return false;
             for (var i = 0; i < this.services.length; i++) {
                 this.services[i].languageIndex = index;
@@ -87,11 +85,6 @@ ONEmSimModule.factory('Services', [
             this.languageIndex = index;
             return true;
         };
-        
-        Services.prototype.getLanguageIndex = function() {
-            return this.languageIndex;
-        };
-        
         
         Services.prototype.generateMenuItems = function() {
             var results = [];

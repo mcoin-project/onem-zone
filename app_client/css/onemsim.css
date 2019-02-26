@@ -32,7 +32,9 @@ nav ul a {
     margin-left: 0; }
 
 .nav-wrapper .brand-logo {
-  position: relative; }
+  position: relative;
+  height: 64px;
+  line-height: 64px; }
 
 .navbar-fixed {
   z-index: 999; }
@@ -181,3 +183,15 @@ span.icon {
 
 .breadcrumb, .breadcrumb:last-child {
   color: #000000; }
+
+.results-mobile-wrapper {
+  height: 63vh;
+  overflow: scroll; }
+
+.pagination-mobile-wrapper {
+  width: 100%;
+  position: fixed;
+  left: 50%;
+  top: 81%;
+  z-index: 995;
+  transform: translateX(-50%); }

@@ -94,10 +94,6 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         console.log($authProvider.tokenHeader);
         console.log($authProvider.tokenType);
 
-        var getLandingService = ['Cache', function (Cache) {
-            return Cache.getLandingService();
-        }];
-
         $stateProvider.
             // state('landing', {
             //     url: '/',

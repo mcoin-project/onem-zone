@@ -42,6 +42,8 @@ nav ul a {
 
 .nav-wrapper .brand-logo {
     position: relative;
+    height: 64px;
+    line-height: 64px;
 }
 
 .navbar-fixed {
@@ -201,7 +203,6 @@ nav ul a {
  *    SERVICES SCREEN
  *
  *----------------------------------------------------------------------------------------*/
-
 .breadcrumb {
     margin-top: 10px;
 }
@@ -212,4 +213,19 @@ nav ul a {
 
 .breadcrumb, .breadcrumb:last-child {
    color: #000000;
+}
+
+.results-mobile-wrapper {
+    height:63vh;
+    overflow:scroll;
+}
+
+
+.pagination-mobile-wrapper {
+    width:100%;
+    position:fixed;
+    left: 50%;
+    top: 81%;
+    z-index:995;
+    transform: translateX(-50%);
 }

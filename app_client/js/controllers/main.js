@@ -82,12 +82,15 @@ ONEmSimModule.controller('mainController', [
 
             //  debugger;
             $scope.$parent.spinner = false;
-            if (error) toastr.error(error);
 
-            console.log("error in main " + error);
+            console.log("error in main ");
+            console.log(error);
+            
             if (!$rootScope.msisdn) {
                 console.log("no msisdn, going to capture");
                 $state.go('captureMsisdn');
+            } else {
+                if (error) toastr.error(error);
             }
         });
     }
