@@ -1,7 +1,8 @@
 
 ONEmSimModule.controller('phoneController', [
     '$rootScope',
-    function ($rootScope) {
+    'dateFilter',
+    function ($rootScope, dateFilter) {
 
         var msisdn = $rootScope.msisdn;
         var sipProxy = $rootScope.sipproxy;
