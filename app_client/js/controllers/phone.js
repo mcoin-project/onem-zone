@@ -38,7 +38,7 @@ ONEmSimModule.controller('phoneController', [
         var webrtcDetectedBrowser = null;
         //var webrtcDetectedVersion = null;
 
-        $scope.dialerOpen = true;
+        $scope.dialerOpen = false;
         $scope.answerOpen = false;
 
         //function trace(text) {
