@@ -38,8 +38,12 @@ ONEmSimModule.controller('phoneController', [
         var webrtcDetectedBrowser = null;
         //var webrtcDetectedVersion = null;
 
-        $scope.dialerOpen = true;
-        $scope.answerOpen = true;
+        $scope.dialerOpen = false;  // 'phone screen_wrp'
+        $scope.answerOpen = false;  // 'panel answer'
+        $scope.showKeypad = false;  // 'ul nums'
+        $scope.callNotif = false; // 'call_notif'
+        $scope.dialerTypedNo = "";
+        $scope.answerTypedNo = "";
 
         //function trace(text) {
         //    // This function is used for logging.
@@ -225,48 +229,55 @@ ONEmSimModule.controller('phoneController', [
 
         $scope.openDialer = function () {
             $scope.dialerOpen = true;
-            console.log('[UI]: Dialer state changed!');
+            console.log('[UI]: Open Dialer state changed!');
+        };
+
+        $scope.closeDialer = function () {
+            $scope.dialerOpen = false;
+            console.log('[UI]: Close Dialer state changed!');
         };
 
         $scope.dialButtonClicked = function(b) {
             console.log("clicked");
+            console.log(b);
             b.pressed = true;
             $timeout(function () {
                 b.pressed = false;
             }, 400);
+            $scope.dialerTypedNo += b.value;
             if ($rootScope.globalSession) {
-                $rootScope.globalSession.sendDTMF(b.val);
-                console.log("[UI]: Sending DTMF " + b.val);
+                $rootScope.globalSession.sendDTMF(b.value);
+                console.log("[UI]: Sending DTMF " + b.value);
             }
         };
 
-        $('.dialer a.num').click(function (e) {
-            e.preventDefault();
-            var $btn = $(this);
-            var val = $(this).data('val');
-            var resizeTextarea = function (el) {
-                var offset = el[0].offsetHeight - el[0].clientHeight;
-                $(el).css('height', 'auto').css('height', el[0].scrollHeight + offset);
-            };
-            $btn.addClass('pressed');
-            setTimeout(function () {
-                $btn.removeClass('pressed');
-            }, 400);
-            $('.dialer #typed_no').val($('.dialer #typed_no').val() + val);
-            resizeTextarea($('.dialer #typed_no'));
-            return false;
-        });
+        // $('.dialer a.num').click(function (e) {
+        //     e.preventDefault();
+        //     var $btn = $(this);
+        //     var val = $(this).data('val');
+        //     var resizeTextarea = function (el) {
+        //         var offset = el[0].offsetHeight - el[0].clientHeight;
+        //         $(el).css('height', 'auto').css('height', el[0].scrollHeight + offset);
+        //     };
+        //     $btn.addClass('pressed');
+        //     setTimeout(function () {
+        //         $btn.removeClass('pressed');
+        //     }, 400);
+        //     $('.dialer #typed_no').val($('.dialer #typed_no').val() + val);
+        //     resizeTextarea($('.dialer #typed_no'));
+        //     return false;
+        // });
 
-        $('a.delete').click(function (e) {
-            e.preventDefault();
-            var $btn = $(this);
-            $btn.addClass('pressed');
-            //setTimeout(function () {
-            //    $btn.removeClass('pressed');
-            //}, 400);
-            $('.dialer #typed_no').val($('.dialer #typed_no').val().slice(0, -1));
-            return false;
-        });
+        // $('a.delete').click(function (e) {
+        //     e.preventDefault();
+        //     var $btn = $(this);
+        //     $btn.addClass('pressed');
+        //     //setTimeout(function () {
+        //     //    $btn.removeClass('pressed');
+        //     //}, 400);
+        //     $('.dialer #typed_no').val($('.dialer #typed_no').val().slice(0, -1));
+        //     return false;
+        // });
 
         $.each($('.panel textarea[data-autoresize]'), function () {
             var offset = this.offsetHeight - this.clientHeight;
@@ -288,30 +299,46 @@ ONEmSimModule.controller('phoneController', [
             if (!(a.indexOf(k) >= 0)) e.preventDefault();
         });
 
-        $('a.numpad').click(function (e) {
-            e.preventDefault();
-            $('.answer ul.nums').toggleClass('on');
-            console.log('[UI]: In call numpad state changed');
-            return false;
-        });
+        $scope.showNumpad = function() {
+            console.log("show numpad");
+            $scope.showKeypad = !$scope.showKeypad;
+            return $scope.showKeypad;
+        }
+
+        $scope.deleteNum = function(num) {
+            num = num.slice(0,-1);
+            console.log("delete:"+num);
+            return num;
+        }
+
+        // $('a.numpad').click(function (e) {
+        //     e.preventDefault();
+        //     $('.answer ul.nums').toggleClass('on');
+        //     console.log('[UI]: In call numpad state changed');
+        //     return false;
+        // });
 
         $('.answer a.minimize').click(function (e) {
             e.preventDefault();
             $('.phone .screen_wrp').removeClass('open');
-            $('.call_notif').addClass('on');
+            //$('.call_notif').addClass('on');
+            $scope.callNotif = true;
             $('.phone div.panel').removeClass('open');
             console.log('[UI]: Pannels minimized from answer panel');
             return false;
         });
 
-        $('.call_notif a.resume').click(function (e) {
-            e.preventDefault();
-            $('.phone .screen_wrp').addClass('open');
-            $('.call_notif').removeClass('on');
-            $('.phone div.panel.answer').addClass('open');
+        $scope.callNotifClicked = function() {
+       // $('.call_notif a.resume').click(function (e) {
+           $scope.dialerOpen = true;
+            //$('.phone .screen_wrp').addClass('open');
+            //$('.call_notif').removeClass('on');
+            $scope.callNotif = false;
+            //$('.phone div.panel.answer').addClass('open');
+            $scope.answerOpen = true;
             console.log('[UI]: Answer panel maximized');
             return false;
-        });
+        };
 
         phoneONEm.start();
         phoneONEm.register();
@@ -353,9 +380,11 @@ ONEmSimModule.controller('phoneController', [
             //Identity display:
             console.log("[WS]: Caller ID: " + $rootScope.globalSession.remote_identity.uri.user);
             console.log("[WS]: User Name: " + $rootScope.globalSession.remote_identity.display_name);
-            $('.phone .screen_wrp').addClass('open');
-            $('.answer #typed_no').val($rootScope.globalSession.remote_identity.uri.user);
-            $('.caller #typed_no').val($rootScope.globalSession.remote_identity.uri.user);
+            //$('.phone .screen_wrp').addClass('open');
+            $scope.dialerOpen = true;
+            $scope.answerTypedNo = $rootScope.globalSession.remote_identity.uri.user;
+            //$('.answer #typed_no').val($rootScope.globalSession.remote_identity.uri.user);
+            //$('.caller #typed_no').val($rootScope.globalSession.remote_identity.uri.user);
             console.log("remote_identity:");
             console.log(JSON.stringify($rootScope.globalSession.remote_identity));
             if ($rootScope.globalSession.remote_identity.display_name) {
@@ -427,10 +456,14 @@ ONEmSimModule.controller('phoneController', [
                 // $('.phone div.panel').removeClass('open');
                 $scope.answerOpen = false;
                 $scope.dialerOpen = false;
-                $('.phone .call_notif').removeClass('on');
-                $('.answer ul.nums').removeClass('on');
-                $('.answer #typed_no').val('');
-                $('.dialer #typed_no').val('');
+                $scope.callNotif = false;
+                //$('.phone .call_notif').removeClass('on');
+                //$('.answer ul.nums').removeClass('on');
+                $scope.showKeypad = false;  // 'ul nums'
+                //$('.answer #typed_no').val('');
+                //$('.dialer #typed_no').val('');
+                $scope.answerTypedNo = '';
+                $scope.dialerTypedNo = '';
                 $('.caller #typed_no').val('');
                 options = jQuery.extend(true, {}, optionsMask);
             });
@@ -449,12 +482,14 @@ ONEmSimModule.controller('phoneController', [
                 // $('.phone div.panel').removeClass('open');
                 $scope.dialerOpen = false;
                 $scope.answerOpen = false;
-
-                $('.phone .call_notif').removeClass('on');
-                $('.answer ul.nums').removeClass('on');
-                $('.answer #typed_no').val('');
-                $('.dialer #typed_no').val('');
-                $('.caller #typed_no').val('');
+                $scope.callNotif = false;
+                //$('.phone .call_notif').removeClass('on');
+                //$('.answer ul.nums').removeClass('on');
+                //$('.answer #typed_no').val('');
+                //$('.dialer #typed_no').val('');
+                $scope.dialerTypedNo = '';
+                $scope.answerTypedNo = '';
+                //$('.caller #typed_no').val('');
                 options = jQuery.extend(true, {}, optionsMask);
             });
             $rootScope.globalSession.on("newDTMF", function (e) {
@@ -549,18 +584,20 @@ ONEmSimModule.controller('phoneController', [
         };
 
         //Make a phone call:
-        CallButton.click(function () {
-            console.log("[UI]: CallButton - click; Call to " + $('.dialer #typed_no').val());
-            phoneONEm.call('sip:' + $('.dialer #typed_no').val() + '@' + sipProxy, options);
+        $scope.callButtonClicked = function() {
+        //CallButton.click(function () {
+            console.log("[UI]: CallButton - click; Call to " + $scope.dialerTypedNo);
+            phoneONEm.call('sip:' + $scope.dialerTypedNo + '@' + sipProxy, options);
             isInCall = 1;
-            $('.answer #typed_no').val($('.dialer #typed_no').val());
-            $('.dialer #typed_no').val('');
+            //$('.answer #typed_no').val($scope.dialerTypedNo);
+            $scope.answerTypedNo = $scope.dialerTypedNo;
+            $scope.dialerTypedNo = '';
+            //$('.dialer #typed_no').val('');
             // $('.phone div.panel').removeClass('open');
             // $('.screen div.answer').addClass('open');
             $scope.dialerOpen = false;
             $scope.answerOpen = true;
-
-        });
+        };
 
         $scope.closePanel = function () {
             //ClosePanelButton.click(function (e) {
@@ -572,7 +609,6 @@ ONEmSimModule.controller('phoneController', [
             if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
             //if(phoneONEm.isConnected()) $rootScope.globalSession.terminate();
             if (isInCall == 1) $scope.dialerOpen = !$scope.dialerOpen;
-
         };
 
         window.onunload = function () {
