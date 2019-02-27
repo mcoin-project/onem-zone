@@ -510,20 +510,22 @@ ONEmSimModule.controller('phoneController', [
         });
 
         // Answer the call:
-        AnswerButton.click(function () {
+        $scope.answerCall = function() {
+        //AnswerButton.click(function () {
             console.log("[UI]: AnswerButton - click");
             $scope.globalSession.answer(options);
             $('.phone div.panel').removeClass('open');
             $('.phone div.answer').addClass('open');
             isInCall = 1;
-        });
+        };
 
         // End the call or reject the call:
-        RejectButton.click(function () {
+        $scope.cancelCall = function() {
+        //RejectButton.click(function () {
             console.log("[UI]: RejectButton - click");
             //phoneONEm.terminateSessions();
             $scope.globalSession.terminate();
-        });
+        };
 
         //Make a phone call:
         CallButton.click(function () {
@@ -536,14 +538,15 @@ ONEmSimModule.controller('phoneController', [
             $('.screen div.answer').addClass('open');
         });
 
-        ClosePanelButton.click(function (e) {
+        $scope.closePanel = function() {
+        //ClosePanelButton.click(function (e) {
             console.log("[UI]: ClosePanelButton - click");
             $('.phone .screen_wrp').removeClass('open');
             $('.phone div.panel').removeClass('open');
             if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
             //if(phoneONEm.isConnected()) $scope.globalSession.terminate();
             if (isInCall == 1) $('.phone div.answer').toggleClass('open');
-        });
+        };
 
         window.onunload = function () {
             if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
