@@ -268,7 +268,7 @@ body.full {
 .phone .keypad .num .txt {
   font-size: 60%;
   color: #b2b2b2;
-  margin-top: -14%; }
+  margin-top: -10%; }
 
 .phone .keypad .more .no {
   font-size: 16px;
@@ -287,6 +287,10 @@ body.full {
 
 .phone .keypad .zero .no {
   padding: 30% 0; }
+
+.phone .keypad .star .no {
+  font-size: 60px;
+  padding: 40% 0; }
 
 .phone .keypad .aste .no {
   padding: 30% 0;

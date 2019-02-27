@@ -11,9 +11,9 @@
 
     <div class="screen">
 
-        <div class="screen_wrp">
+        <div ng-class="dialerOpen ? 'open': ''" class="screen_wrp">
 
-            <div class="panel dialer">
+            <div ng-class="dialerOpen ? 'open' : ''" class="panel dialer">
 
                 <div class="preview">
                     <p class="title">Who you gonna call?</p>
@@ -27,6 +27,8 @@
                 </div> <!-- /preview -->
 
                 <ul class="keypad dialpad nums squared">
+                    <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons" class="clicky"><a data-val="b.value" ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span class="no">{{b.value}}</span><span class="txt">{{b.label}}</span></a></li>
+<!----
                     <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
                     <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>
                     <li class="clicky"><a id="num_3" class="num" data-val="3" href="#"><span class="no">3</span><span class="txt">DEF</span></a></li>
@@ -38,8 +40,8 @@
                     <li class="clicky"><a id="num_9" class="num" data-val="9" href="#"><span class="no">9</span><span class="txt">WXYZ</span></a></li>
                     <li class="clicky"><a id="num_+" class="num plus" data-val="+" href="#"><span class="no">&#x2719;</span></a></li>
                     <li class="clicky"><a id="num_0" class="num zero" data-val="0" href="#"><span class="no">0</span></a></li>
-                    <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li> -->
-                    <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>
+                    <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li>
+                    <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>-->
                 </ul> <!-- /keypad dialpad nums squared-->
                 <a class="closer" href="#"><img src="images/icn_close.svg" /></a>
 
@@ -61,7 +63,7 @@
                 <a class="closer" href="#"><img src="images/icn_close.svg" /></a>
             </div> <!-- /panel caller -->
 
-            <div class="panel answer">
+            <div ng-class="answerOpen ? 'open': ''" class="panel answer">
                 <div class="preview">
                     <p class="title talktime"></p>
                     <p class="user off"><img src="images/icn_usr.svg" /></p>
@@ -77,7 +79,7 @@
                     <!-- <p class="msg">Unknown number</p> -->
                     <p class="call_tools">
                         <a class="clicky numpad" href="#"><img src="images/icn_numpad.svg" /></a>
-                        <a class="clicky cancel" href="#"><img src="images/icn_reject.svg" /></a>
+                        <a ng-click="cancelCall()" class="clicky cancel" href=""><img src="images/icn_reject.svg" /></a>
                         <a class="clicky mute" href="#"><img src="images/icn_mute.svg" /></a>
                     </p> <!-- /call_tools -->
                 </div> <!-- /preview -->
@@ -90,19 +92,7 @@
                     </video>
                 </div> --> <!-- /video -->
                 <ul class="keypad dialpad nums squared">
-                    <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
-                    <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>
-                    <li class="clicky"><a id="num_3" class="num" data-val="3" href="#"><span class="no">3</span><span class="txt">DEF</span></a></li>
-                    <li class="clicky"><a id="num_4" class="num" data-val="4" href="#"><span class="no">4</span><span class="txt">GHI</span></a></li>
-                    <li class="clicky"><a id="num_5" class="num" data-val="5" href="#"><span class="no">5</span><span class="txt">JKL</span></a></li>
-                    <li class="clicky"><a id="num_6" class="num" data-val="6" href="#"><span class="no">6</span><span class="txt">MNO</span></a></li>
-                    <li class="clicky"><a id="num_7" class="num" data-val="7" href="#"><span class="no">7</span><span class="txt">PQRS</span></a></li>
-                    <li class="clicky"><a id="num_8" class="num" data-val="8" href="#"><span class="no">8</span><span class="txt">TUV</span></a></li>
-                    <li class="clicky"><a id="num_9" class="num" data-val="9" href="#"><span class="no">9</span><span class="txt">WXYZ</span></a></li>
-                    <li class="clicky"><a id="num_+" class="num plus" data-val="+" href="#"><span class="no">&#x2719;</span></a></li>
-                    <li class="clicky"><a id="num_0" class="num zero" data-val="0" href="#"><span class="no">0</span></a></li>
-                    <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li> -->
-                    <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>
+                    <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons" class="clicky"><a ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span class="no"{{b.value}}></span><span class="txt">{{b.label}}</span></a></li>
                 </ul> <!-- /keypad dialpad nums squared-->
                 <a class="minimize" href="#"><img src="images/icn_mini.svg" /></a>
             </div> <!-- /panel answer -->
@@ -136,7 +126,7 @@
         <div ng-controller="consoleController" class="sms-input">
             <form ng-submit="smsInput()">
                 <!-- <label for="sms"></label> -->
-                <span class="dial"><a class="open_dialer" href="#"><img src="images/icn_dialer.svg"></a></span>
+                <span class="dial"><a ng-click="openDialer()" class="open_dialer" href=""><img src="images/icn_dialer.svg"></a></span>
                 <span class="input">
                     <input close-keyboard input-history history="history" ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
                     <!---<textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea>-->

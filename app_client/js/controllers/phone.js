@@ -2,8 +2,9 @@
 ONEmSimModule.controller('phoneController', [
     '$rootScope',
     '$scope',
+    '$timeout',
     'dateFilter',
-    function ($rootScope, $scope,dateFilter) {
+    function ($rootScope, $scope, $timeout, dateFilter) {
 
         var msisdn = $rootScope.msisdn;
         var sipProxy = $rootScope.sipproxy;
@@ -14,6 +15,21 @@ ONEmSimModule.controller('phoneController', [
 
         var isInCall = 0;
 
+        $scope.callButtons = [
+            { value: "1", label: "", class: "num" },
+            { value: "2", label: "ABC", class: "num" },
+            { value: "3", label: "DEF", class: "num" },
+            { value: "4", label: "GHI", class: "num" },
+            { value: "5", label: "JKL", class: "num" },
+            { value: "6", label: "MNO", class: "num" },
+            { value: "7", label: "PQRS", class: "num" },
+            { value: "8", label: "TUV", class: "num" },
+            { value: "9", label: "WXYZ", class: "num" },
+            { value: "*", label: "", class: "num star" },
+            { value: "0", label: "+", class: "num zero" },
+            { value: "#", label: "", class: "num aste" }
+        ];
+
         //These are the variables needed for the code found at https://chromium.googlesource.com/chromium/src.git/+/lkgr/chrome/test/data/webrtc/adapter.js?autodive=0%2F
         var RTCPeerConnection = null;
         var getUserMedia = null;
@@ -21,6 +37,9 @@ ONEmSimModule.controller('phoneController', [
         var reattachMediaStream = null;
         var webrtcDetectedBrowser = null;
         //var webrtcDetectedVersion = null;
+
+        $scope.dialerOpen = true;
+        $scope.answerOpen = false;
 
         //function trace(text) {
         //    // This function is used for logging.
@@ -196,7 +215,6 @@ ONEmSimModule.controller('phoneController', [
         phoneONEm.registrator().setExtraHeaders([
             'X-WEBRTC-UA: zoiper'
         ]);
-
         $('a.full').click(function (e) {
             e.preventDefault();
             $('.phone').toggleClass('full');
@@ -205,26 +223,22 @@ ONEmSimModule.controller('phoneController', [
             return false;
         });
 
-        $('a.open_dialer').click(function (e) {
-            e.preventDefault();
-            $(this).parents('.phone').find('.screen_wrp').addClass('open');
-            $(this).parents('.phone').find('div.dialer').toggleClass('open');
+        $scope.openDialer = function () {
+            $scope.dialerOpen = true;
             console.log('[UI]: Dialer state changed!');
-            return false;
-        });
+        };
 
-        $('.answer a.num').click(function (e) {
-            e.preventDefault();
-            var $btn = $(this);
-            var val = $(this).data('val');
-            $btn.addClass('pressed');
-            setTimeout(function () {
-                $btn.removeClass('pressed');
+        $scope.dialButtonClicked = function(b) {
+            console.log("clicked");
+            b.pressed = true;
+            $timeout(function () {
+                b.pressed = false;
             }, 400);
-            $rootScope.globalSession.sendDTMF(val);
-            console.log("[UI]: Sending DTMF " + val);
-            return false;
-        });
+            if ($rootScope.globalSession) {
+                $rootScope.globalSession.sendDTMF(b.val);
+                console.log("[UI]: Sending DTMF " + b.val);
+            }
+        };
 
         $('.dialer a.num').click(function (e) {
             e.preventDefault();
@@ -409,8 +423,10 @@ ONEmSimModule.controller('phoneController', [
                 nowMoment = new Date(1970, 0);
                 TalkTimer.text('Current call: ' + dateFilter(nowMoment, 'HH:mm:ss'));
                 $('.phone div.answer .user').removeClass('.off');
-                $('.phone .screen_wrp').removeClass('open');
-                $('.phone div.panel').removeClass('open');
+                // $('.phone .screen_wrp').removeClass('open');
+                // $('.phone div.panel').removeClass('open');
+                $scope.answerOpen = false;
+                $scope.dialerOpen = false;
                 $('.phone .call_notif').removeClass('on');
                 $('.answer ul.nums').removeClass('on');
                 $('.answer #typed_no').val('');
@@ -429,8 +445,11 @@ ONEmSimModule.controller('phoneController', [
                 nowMoment = new Date(1970, 0);
                 TalkTimer.text('Current call: ' + dateFilter(nowMoment, 'HH:mm:ss'));
                 $('.phone div.answer .user').removeClass('.off');
-                $('.phone .screen_wrp').removeClass('open');
-                $('.phone div.panel').removeClass('open');
+                // $('.phone .screen_wrp').removeClass('open');
+                // $('.phone div.panel').removeClass('open');
+                $scope.dialerOpen = false;
+                $scope.answerOpen = false;
+
                 $('.phone .call_notif').removeClass('on');
                 $('.answer ul.nums').removeClass('on');
                 $('.answer #typed_no').val('');
@@ -510,18 +529,20 @@ ONEmSimModule.controller('phoneController', [
         });
 
         // Answer the call:
-        $scope.answerCall = function() {
-        //AnswerButton.click(function () {
+        $scope.answerCall = function () {
+            //AnswerButton.click(function () {
             console.log("[UI]: AnswerButton - click");
             $rootScope.globalSession.answer(options);
-            $('.phone div.panel').removeClass('open');
-            $('.phone div.answer').addClass('open');
+            $scope.dialerOpen = false;
+            $scope.answerOpen = true;
+            // $('.phone div.panel').removeClass('open');
+            // $('.phone div.answer').addClass('open');
             isInCall = 1;
         };
 
         // End the call or reject the call:
-        $scope.cancelCall = function() {
-        //RejectButton.click(function () {
+        $scope.cancelCall = function () {
+            //RejectButton.click(function () {
             console.log("[UI]: RejectButton - click");
             //phoneONEm.terminateSessions();
             $rootScope.globalSession.terminate();
@@ -534,18 +555,24 @@ ONEmSimModule.controller('phoneController', [
             isInCall = 1;
             $('.answer #typed_no').val($('.dialer #typed_no').val());
             $('.dialer #typed_no').val('');
-            $('.phone div.panel').removeClass('open');
-            $('.screen div.answer').addClass('open');
+            // $('.phone div.panel').removeClass('open');
+            // $('.screen div.answer').addClass('open');
+            $scope.dialerOpen = false;
+            $scope.answerOpen = true;
+
         });
 
-        $scope.closePanel = function() {
-        //ClosePanelButton.click(function (e) {
+        $scope.closePanel = function () {
+            //ClosePanelButton.click(function (e) {
             console.log("[UI]: ClosePanelButton - click");
-            $('.phone .screen_wrp').removeClass('open');
-            $('.phone div.panel').removeClass('open');
+            // $('.phone .screen_wrp').removeClass('open');
+            // $('.phone div.panel').removeClass('open');
+            $scope.dialerOpen = false;
+
             if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
             //if(phoneONEm.isConnected()) $rootScope.globalSession.terminate();
-            if (isInCall == 1) $('.phone div.answer').toggleClass('open');
+            if (isInCall == 1) $scope.dialerOpen = !$scope.dialerOpen;
+
         };
 
         window.onunload = function () {
