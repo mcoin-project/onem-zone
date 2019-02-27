@@ -38,8 +38,8 @@ ONEmSimModule.controller('phoneController', [
         var webrtcDetectedBrowser = null;
         //var webrtcDetectedVersion = null;
 
-        $scope.dialerOpen = false;
-        $scope.answerOpen = false;
+        $scope.dialerOpen = true;
+        $scope.answerOpen = true;
 
         //function trace(text) {
         //    // This function is used for logging.
