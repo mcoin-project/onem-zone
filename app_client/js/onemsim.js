@@ -117,7 +117,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             state('console', {
                 url: '/',
                 templateUrl: 'partials/onemSim.html',
-                controller: 'consoleController',
+                controller: 'phoneController',
                 resolve: {
                     loginRequired: loginRequired
                 }
