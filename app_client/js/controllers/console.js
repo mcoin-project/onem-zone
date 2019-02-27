@@ -5,6 +5,8 @@ ONEmSimModule.controller('consoleController', [
     'Socket',
     function ($scope, DataModel, Socket) {
 
+        $scope.history = [];
+
         $scope.results = DataModel.getResults();
 
         $scope.smsInput = function () {

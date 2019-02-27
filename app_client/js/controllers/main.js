@@ -11,9 +11,7 @@ ONEmSimModule.controller('mainController', [
     'toastr',
     function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr) {
         console.log("user:" + $rootScope.user);
-
-        $scope.history = [];
-
+        
         function resolveState() {
             console.log("$scope.$parent.checkboxModel.on");
             console.log($scope.$parent.checkboxModel.on);
