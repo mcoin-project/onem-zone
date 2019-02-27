@@ -51,6 +51,8 @@ ONEmSimModule.controller('mainController', [
         }).then(function (response) {
             console.log("response fom smshandler.start");
             console.log(response);
+            $rootScope.sipproxy = response.sipproxy;
+            $rootScope.wsprotocol = response.wsprotocol;
             return Phone.start(response);
         }).then(function (response) {
             console.log("finished call to phone.start");
