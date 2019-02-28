@@ -38,7 +38,8 @@ ONEmSimModule.controller('phoneController', [
         var webrtcDetectedBrowser = null;
         //var webrtcDetectedVersion = null;
 
-        $scope.dialerOpen = false;  // 'phone screen_wrp'
+        $scope.screenOpen = false;  // 'screen_wrp'
+        $scope.dialerOpen = false;  // 'phone'
         $scope.answerOpen = false;  // 'panel answer'
         $scope.showKeypad = false;  // 'ul nums'
         $scope.callNotif = false; // 'call_notif'
@@ -230,12 +231,14 @@ ONEmSimModule.controller('phoneController', [
         });
 
         $scope.openDialer = function () {
-            $scope.dialerOpen = true;
-            console.log('[UI]: Open Dialer state changed!');
+            $scope.dialerOpen = !$scope.dialerOpen;
+            $scope.screenOpen = true;
+            console.log('[UI]:  Dialer state changed!');
         };
 
         $scope.closeDialer = function () {
             $scope.dialerOpen = false;
+            $scope.screenOpen = false;
             console.log('[UI]: Close Dialer state changed!');
         };
 
@@ -383,6 +386,7 @@ ONEmSimModule.controller('phoneController', [
             console.log("[WS]: Caller ID: " + $rootScope.globalSession.remote_identity.uri.user);
             console.log("[WS]: User Name: " + $rootScope.globalSession.remote_identity.display_name);
             //$('.phone .screen_wrp').addClass('open');
+            $scope.screenOpen = true;
             $scope.dialerOpen = true;
             $scope.answerTypedNo = $rootScope.globalSession.remote_identity.uri.user;
             //$('.answer #typed_no').val($rootScope.globalSession.remote_identity.uri.user);
