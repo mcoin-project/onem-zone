@@ -492,9 +492,12 @@ ONEmSimModule.controller('phoneController', [
                 //$('.phone div.answer .user').removeClass('.off');
                 // $('.phone .screen_wrp').removeClass('open');
                 // $('.phone div.panel').removeClass('open');
+                $scope.screenOpen = false;
                 $scope.dialerOpen = false;
                 $scope.answerOpen = false;
                 $scope.callNotif = false;
+                $scope.showKeypad = false;  // 'ul nums'
+
                 //$('.phone .call_notif').removeClass('on');
                 //$('.answer ul.nums').removeClass('on');
                 //$('.answer #typed_no').val('');

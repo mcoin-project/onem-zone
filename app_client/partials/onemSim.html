@@ -23,7 +23,7 @@
                         <a ng-click="dialerTypedNo=deleteNum(dialerTypedNo)" class="delete" href="#"><img class="clicky" src="images/icn_delete.svg" /></a>
                     </p>
                     <p class="msg">Type the number you want to call.</p>
-                    <p class="call_no"><a class="call" href="#"><img src="images/icn_answer.svg" /></a></p>
+                    <p class="call_no"><a ng-click="callButtonClicked()" class="call" href="#"><img src="images/icn_answer.svg" /></a></p>
                 </div> <!-- /preview -->
 
                 <ul ng-class="showKeypad ? 'on' : ''" class="keypad dialpad nums squared">
