@@ -19,7 +19,14 @@
 .onem-icon {
   font-size: 24px;
   padding: 5px;
-  margin-top: 15px; }
+  margin-top: 10px; }
+
+.spinner-container {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  left: 50%;
+  transform: translate(-50%, 0); }
 
 /*------------------------------------------------------------------------------------------
  *
@@ -36,13 +43,19 @@ nav ul a {
     vertical-align: top;
     margin-left: 0; }
 
-.nav-wrapper .brand-logo {
-  position: relative;
-  height: 64px;
-  line-height: 64px; }
+.logo {
+  display: inline-block;
+  height: 100%; }
+
+.logo > img {
+  vertical-align: middle;
+  max-height: 30px;
+  margin-bottom: 5px; }
 
 .navbar-fixed {
-  z-index: 999; }
+  z-index: 999;
+  vertical-align: middle;
+  display: inline-block; }
 
 .dropdown-content-services {
   clear: both;

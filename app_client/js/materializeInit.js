@@ -5,6 +5,6 @@ $(document).ready(function () {
     edge: 'right'
   });
   $('#mobile-demo-left').sidenav();
-  $('.dropdown-trigger').dropdown({ hover: false });
+  $('.dropdown-trigger').dropdown({ hover: false, coverTrigger: false });
   $('.modal').modal();
 });

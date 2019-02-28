@@ -1,17 +1,11 @@
 ONEmSimModule.controller('navbarController', [
     '$scope',
     '$rootScope',
-    '$timeout',
     '$auth',
     '$state',
-    '$location',
-    'Cache',
+    'Request',
     'DataModel',
-    'Socket',
-    'Phone',
-    'SmsHandler',
-    'User',
-    function ($scope, $rootScope, $timeout, $auth, $state, $location, Cache, DataModel, Socket, Phone, SmsHandler, User) {
+    function ($scope, $rootScope, $auth, $state, Request, DataModel) {
         $scope.isAuthenticated = function () {
             return $auth.isAuthenticated();
         }
@@ -60,28 +54,20 @@ ONEmSimModule.controller('navbarController', [
         });
 
         $scope.$on('socket:MT SMS', function (ev, data) {
-            $scope.theData = data;
-
             console.log("[MN]: MT received:");
             console.log(data);
-
             var outputObj = {
                 type: "mt",
                 value: data.mtText
             };
-
             $scope.results = DataModel.addResult(outputObj);
-
-            Cache.receivedMt(data.mtText);
-
+            Request.receivedMt(data.mtText);
         });
 
         $scope.$on('socket:API MT SMS', function (ev, data) {
             console.log("nav: received API MT");
             console.log(data.mtText);
-
-            Cache.receivedMt(data.mtText);
-
+            Request.apiReceivedMt(data.mtText);
         });
 
     }

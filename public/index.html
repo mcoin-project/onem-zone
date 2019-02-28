@@ -35,12 +35,12 @@
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
         <ul id="services" class="dropdown-content dropdown-content-services">
-            <div class="row">
-                <div class="col s12">
-                    <div ng-show="services1.length == 0 && services2.length == 0">
-                        <li><a ui-sref="main">Click here to load menu</a></li>
-                    </div>
-                </div>
+            <li ng-show="services1.length == 0 && services2.length == 0"><a style="min-width:auto;
+                padding-top: 14px;
+                padding-right: 16px;
+                padding-bottom: 14px;
+                padding-left: 16px;" ui-sref="main">Click here to load menu</a></li>
+            <div ng-show="services1.length > 0 || services2.length > 0" class="row">
                 <div class="col s6">
                     <li ng-repeat="service in services1 track by $index">
                         <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
@@ -64,10 +64,11 @@
                 <div class="container">
                     <div class="nav-wrapper">
                         <ul class="left hide-on-med-and-down">
-                            <li><a ui-sref="main" class="brand-logo">
-                                    <img style="padding-top:10px" class="logo" height="50"
-                                        src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
-                                </a></li>
+                            <li>
+                                <a ui-sref="main" class="logo">
+                                    <img src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
+                                </a>
+                            </li>
                         </ul>
                     </div>
                     <!---<a ui-sref="main" class="brand-logo"></a>-->
@@ -111,6 +112,7 @@
                     Logout</a>
             </div>
         </div>
+
     </div>
 
     <ul class="sidenav" id="services-target">
@@ -148,12 +150,7 @@
 
     <div class="container">
         <div ui-view></div>
-        <div style="
-        position: absolute;
-        top: 50%;
-        bottom: 50%;
-        left: 50%;
-        transform: translate(-50%,0);">
+        <div class="spinner-container">
             <div ng-class="{active : spinner}" class="preloader-wrapper">
                 <div class="spinner-layer spinner-red-only">
                     <div class="circle-clipper left">

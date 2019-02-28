@@ -30,13 +30,7 @@ ONEmSimModule.controller('phoneController', [
             { value: "#", label: "", class: "num aste" }
         ];
 
-        //These are the variables needed for the code found at https://chromium.googlesource.com/chromium/src.git/+/lkgr/chrome/test/data/webrtc/adapter.js?autodive=0%2F
-        var RTCPeerConnection = null;
-        var getUserMedia = null;
-        var attachMediaStream = null;
-        var reattachMediaStream = null;
         var webrtcDetectedBrowser = null;
-        //var webrtcDetectedVersion = null;
 
         $scope.screenOpen = false;  // 'screen_wrp'
         $scope.dialerOpen = false;  // 'phone'
@@ -48,14 +42,6 @@ ONEmSimModule.controller('phoneController', [
 
         $scope.dialerTypedNo = "";
         $scope.answerTypedNo = "";
-
-        //function trace(text) {
-        //    // This function is used for logging.
-        //    if (text[text.length - 1] == '\n') {
-        //        text = text.substring(0, text.length - 1);
-        //    };
-        //    console.log((performance.now() / 1000).toFixed(3) + ": " + text);
-        //};
 
         if (navigator.mozGetUserMedia) {
             console.log("[WS]: This appears to be Firefox");
@@ -128,19 +114,12 @@ ONEmSimModule.controller('phoneController', [
             console.log("[WS]: Browser does not appear to be WebRTC-capable");
         };
 
-        //These are the buttons of the phone's user interface:
-        var AnswerButton = $('.call_tools a.answer');
-        var RejectButton = $('.call_tools a.cancel');
-        var CallButton = $('.screen a.call');
-        var ClosePanelButton = $('.screen a.closer');
         var TalkTimer = $('.answer .talktime');
 
         var audioElement = document.getElementById('myAudio');
-        //var audioElement = $('#myAudio')[0];
         audioElement.autoplay = true;
         console.log(audioElement);
         var videoElement = document.getElementById('myVideo');
-        //var videoElement = $('#myVideo')[0];
         videoElement.autoplay = true;
         console.log(videoElement);
 
@@ -317,22 +296,16 @@ ONEmSimModule.controller('phoneController', [
             return num;
         }
 
-        // $('a.numpad').click(function (e) {
-        //     e.preventDefault();
-        //     $('.answer ul.nums').toggleClass('on');
-        //     console.log('[UI]: In call numpad state changed');
-        //     return false;
-        // });
-
-        $('.answer a.minimize').click(function (e) {
-            e.preventDefault();
-            $('.phone .screen_wrp').removeClass('open');
+        $scope.minimizeClicked = function() {
+//        $('.answer a.minimize').click(function (e) {
+            //$('.phone .screen_wrp').removeClass('open');
+            $scope.screenOpen = false;
             //$('.call_notif').addClass('on');
             $scope.callNotif = true;
-            $('.phone div.panel').removeClass('open');
-            console.log('[UI]: Pannels minimized from answer panel');
-            return false;
-        });
+            //$('.phone div.panel').removeClass('open');
+            $scope.dialerOpen = false;
+            console.log('[UI]: Panels minimized from answer panel');
+        };
 
         $scope.callNotifClicked = function() {
        // $('.call_notif a.resume').click(function (e) {

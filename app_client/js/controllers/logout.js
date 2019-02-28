@@ -8,7 +8,8 @@ ONEmSimModule.controller('logoutController', [
     'Socket',
     'DataModel',
     'Cache',
-    function($scope, $auth, toastr, $state, $rootScope, Phone, Socket, DataModel, Cache) {
+    'Request',
+    function($scope, $auth, toastr, $state, $rootScope, Phone, Socket, DataModel, Cache, Request) {
         $scope.$parent.spinner = false;
 
         if ($auth.isAuthenticated()) { 
@@ -21,6 +22,7 @@ ONEmSimModule.controller('logoutController', [
         $rootScope.msisdn = undefined;
         $rootScope.user = undefined;
         DataModel.clearResults();
+        Request.reset();
         Cache.reset();
         $state.go('login');
     }

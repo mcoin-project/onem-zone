@@ -1,7 +1,9 @@
 ONEmSimModule.factory('MtText', function () {
 
+	const SERVICE_PREFIX = '#';
 	const FOOTER_PREFIX = '--';
 	const PAGING_PREFIX = '..';
+	const PAGING_BREAKER = '/';
 	const FOOTER_THRESHOLD = 25;  // if long footer, it probably has instructions needing specialised input
 	const WORD_THRESHOLD = '7'; // max number of words in an option
 
@@ -16,9 +18,6 @@ ONEmSimModule.factory('MtText', function () {
 		for (var i = 0; i < this.lines.length; i++) {
 			this.lines[i] = this.lines[i].trim();
 		}
-
-		//console.log(this.lines)
-
 		this.header = this.getHeader();
 		this.footer = this.getFooter();
 		this.preBody = this.getPreBody();
@@ -27,8 +26,7 @@ ONEmSimModule.factory('MtText', function () {
 		this.breadcrumbs = this.getBreadcrumbs();
 		this.pages = this.getPages();
 		this.options = this.hasOptions();
-		//console.log("initialized");
-		//console.log(this);
+
 	}
 
 	Text.prototype.hideInput = function () {
@@ -70,7 +68,7 @@ ONEmSimModule.factory('MtText', function () {
 		if (!this.lines || this.lines.length == 0) {
 			return undefined;
 		}
-		if (this.lines[0].startsWith('#')) {
+		if (this.lines[0].startsWith(SERVICE_PREFIX)) {
 			return this.lines[0];
 		} else {
 			return undefined;
@@ -81,7 +79,7 @@ ONEmSimModule.factory('MtText', function () {
 		var result = {};
 		for (var i = 0; i < this.lines.length; i++) {
 			if (this.lines[i].startsWith(PAGING_PREFIX)) {
-				var p = this.lines[i].split('/');
+				var p = this.lines[i].split(PAGING_BREAKER);
 				if (p.length > 1) {
 					result = {};
 					result.currentPage = parseInt(p[0].slice(2));
@@ -139,7 +137,7 @@ ONEmSimModule.factory('MtText', function () {
 
 		var text = this.lines[lineNumber];
 
-		optionFormats.some(function(regexp) {
+		optionFormats.some(function (regexp) {
 			var r = regexp.exec(text);
 			if (r && r[2] && r[2].split(' ').length <= WORD_THRESHOLD) {
 				var option = r[1].trim();
@@ -171,6 +169,31 @@ ONEmSimModule.factory('MtText', function () {
 		return result;
 
 		// there is at least one option
+	}
+
+	// Analyses the text for a DYM menu
+	Text.prototype.isServicesList = function () {
+		if (!this.hasOptions()) {
+			return false;
+		};
+		if (this.hasHeader()) {
+			return false;
+		}
+		var result = true;
+		for (var i = 0; i < this.body.length; i++) {
+			if (this.body[i].type !== "options") {
+				result = false;
+				break;
+			} else {
+				for (var j = 0; j < this.body[i].options; j++) {
+					if (!(this.body[i].options[j].startsWith('#'))) {
+						result = false;
+						break;
+					}
+				}
+			}
+		}
+		return result;
 	}
 
 	Text.prototype.getButtons = function () {

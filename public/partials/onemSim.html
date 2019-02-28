@@ -94,7 +94,7 @@
                 <ul ng-class="showKeypad ? 'on' : ''" class="keypad dialpad nums squared">
                     <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value" class="clicky"><a data-val="b.value" ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span class="no">{{b.value}}</span><span class="txt">{{b.label}}</span></a></li>
                 </ul> <!-- /keypad dialpad nums squared-->
-                <a class="minimize" href="#"><img src="images/icn_mini.svg" /></a>
+                <a ng-click="minimizeClicked() " class="minimize" href="#"><img src="images/icn_mini.svg" /></a>
             </div> <!-- /panel answer -->
 
         </div> <!-- /screen_wrp -->
