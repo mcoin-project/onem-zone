@@ -42,6 +42,8 @@ ONEmSimModule.controller('phoneController', [
         $scope.answerOpen = false;  // 'panel answer'
         $scope.showKeypad = false;  // 'ul nums'
         $scope.callNotif = false; // 'call_notif'
+        $scope.callerOpen = false;
+
         $scope.dialerTypedNo = "";
         $scope.answerTypedNo = "";
 
@@ -376,7 +378,7 @@ ONEmSimModule.controller('phoneController', [
             $rootScope.globalSession = data.session; //session pointer
 
             $('.phone div.caller').addClass('open');
-
+            $scope.callerOpen = true;
             //Identity display:
             console.log("[WS]: Caller ID: " + $rootScope.globalSession.remote_identity.uri.user);
             console.log("[WS]: User Name: " + $rootScope.globalSession.remote_identity.display_name);
