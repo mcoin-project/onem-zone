@@ -66,7 +66,7 @@
             <div ng-class="answerOpen ? 'open': ''" class="panel answer">
                 <div class="preview">
                     <p class="title talktime"></p>
-                    <p class="user off"><img src="images/icn_usr.svg" /></p>
+                    <p ng-class="userOff ? 'off' : ''" class="user"><img src="images/icn_usr.svg" /></p>
                     <p class="video">
                         <video loop id="myVideo" width="320" height="240" src="" hidden=true>
                             <source type="video/mp4">

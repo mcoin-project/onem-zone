@@ -43,6 +43,7 @@ ONEmSimModule.controller('phoneController', [
         $scope.answerOpen = false;  // 'panel answer'
         $scope.showKeypad = false;  // 'ul nums'
         $scope.callNotif = false; // 'call_notif'
+        $scope.userOff = true;   // 'phone.div answer user off'
         $scope.callerOpen = false;
 
         $scope.dialerTypedNo = "";
@@ -434,12 +435,14 @@ ONEmSimModule.controller('phoneController', [
                 if ($rootScope.globalSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                     videoElement.hidden = false;
                     videoElement.style.visibility = 'visible';
-                    $('.phone div.answer .user').addClass('.off');
+                   // $('.phone div.answer .user').addClass('.off');
+                    $scope.userOff = true;
                     console.log("[WS]: with video");
                 } else {
                     videoElement.hidden = true;
                     videoElement.style.visibility = 'hidden';
-                    $('.phone div.answer .user').removeClass('.off');
+                    $scope.userOff = false;
+                  //  $('.phone div.answer .user').removeClass('.off');
                     console.log("[WS]: no video");
                 };
                 isInCall = 1;
@@ -457,9 +460,11 @@ ONEmSimModule.controller('phoneController', [
                 clearInterval(talkTime);
                 nowMoment = new Date(1970, 0);
                 TalkTimer.text('Current call: ' + dateFilter(nowMoment, 'HH:mm:ss'));
-                $('.phone div.answer .user').removeClass('.off');
+                $scope.userOff = false;
+                //$('.phone div.answer .user').removeClass('.off');
                 // $('.phone .screen_wrp').removeClass('open');
                 // $('.phone div.panel').removeClass('open');
+                $scope.screenOpen = false;
                 $scope.answerOpen = false;
                 $scope.dialerOpen = false;
                 $scope.callNotif = false;
@@ -483,7 +488,8 @@ ONEmSimModule.controller('phoneController', [
                 clearInterval(talkTime);
                 nowMoment = new Date(1970, 0);
                 TalkTimer.text('Current call: ' + dateFilter(nowMoment, 'HH:mm:ss'));
-                $('.phone div.answer .user').removeClass('.off');
+                $scope.userOff = false;
+                //$('.phone div.answer .user').removeClass('.off');
                 // $('.phone .screen_wrp').removeClass('open');
                 // $('.phone div.panel').removeClass('open');
                 $scope.dialerOpen = false;
