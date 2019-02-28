@@ -133,7 +133,7 @@ ONEmSimModule.factory('MtText', function () {
 		];
 
 		var result;
-		if (!lineNumber || lineNumber > this.lines.length - 1) return undefined;
+		if (typeof lineNumber == "undefined" || lineNumber > this.lines.length - 1) return undefined;
 
 		var text = this.lines[lineNumber];
 
@@ -146,9 +146,6 @@ ONEmSimModule.factory('MtText', function () {
 				return true;
 			}
 		})
-
-		console.log("result:");
-		console.log(result);
 
 		return result;
 

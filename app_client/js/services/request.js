@@ -4,7 +4,9 @@ ONEmSimModule.factory('Request', [
     '$timeout',
     '$interval',
     'DataModel',
-    function (Socket, $timeout, $interval, DataModel) {
+    'MtText',
+ //   'Cache',
+    function (Socket, $timeout, $interval, DataModel, MtText) {
 
         const SMS_TIMEOUT = 10000;
         var mtResponse;
@@ -13,6 +15,7 @@ ONEmSimModule.factory('Request', [
         var apiMtResponse;
         var apiTimer;
         var apiCheckMt;
+        var allResults = [];
 
         var stopInterval = function () {
             $interval.cancel(checkMt);
@@ -83,7 +86,7 @@ ONEmSimModule.factory('Request', [
             mtResponse: mtResponse,
             apiMtResponse: apiMtResponse,
 
-            reset: function() {
+            reset: function () {
 
                 if (checkMt) stopInterval();
                 if (timer) $timeout.cancel(timer);
@@ -94,11 +97,11 @@ ONEmSimModule.factory('Request', [
                 return true;
             },
             get: async function (data, options) {
-
+                var self = this;
                 var channel = 'MO SMS';
                 if (!data) throw "missing data parameter";
 
-                if (options && options.method && options.method.toLowerCase() == 'api' ) {
+                if (options && options.method && options.method.toLowerCase() == 'api') {
                     channel = 'API ' + channel;
                 } else {
                     var inputObj = {
@@ -116,7 +119,24 @@ ONEmSimModule.factory('Request', [
                     } else {
                         mt = await waitforMtSMS();
                     }
-                    return mt;
+                    var response = new MtText(mt);
+                    allResults.push(mt);
+
+                    if (options && options.all && response.pages.currentPage < response.pages.numPages) {
+                        var nextPage = parseInt(response.pages.currentPage) + 1;
+                        var goCommand = 'go' + ' ' + nextPage;
+                        mt = await self.get(goCommand, { method: options.method, all: true });
+                    }
+
+                    console.log("returning allResults:");
+                    console.log(allResults);
+                    if (allResults.length == 1) {
+                        return allResults[0];
+                    } else if (allResults.length == 0) {
+                        return undefined;
+                    } else {
+                        return allResults;
+                    }
                 } catch (error) {
                     throw error;
                 }

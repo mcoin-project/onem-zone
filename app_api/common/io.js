@@ -13,6 +13,8 @@ var io = null;
 
 var index = 0;
 var testMessages = [
+    "DID YOU MEAN?\n1 #account\n2 #aljazeera\n3 #arabic\n4 #call\n5 #contacts\n6 #convert\n7 #crossword\n8 #duas\n9 #dw\n10 #exchange\n11 #finance\n12 #france24\n13 #hangman\n14 #jokes\n15 #market\n16 #mcat\n17 #mine\n18 #moderate\n19 #msg\n20 #news\n21 #onem\n22 #points\n23 #poll\n24 #post\n25 #quotes\n26 #quran\n27 #radio\n28 #reuters\n..1/2\n--MORE",
+    "29 #rewards\n30 #salah\n31 #scores\n32 #stock\n33 #stories\n34 #subscribe\n35 #time\n36 #translate\n37 #viacom\n38 #wallet\n39 #weather\n40 #wiki\n41 #words\n42 #xgroup\n43 #unsubscribe\n..2/2\n--Reply 1-43",
     "DID YOU MEAN?\nA #account\nB #aljazeera\nC #contacts\nD #france24\nE #market\nF #msg\nG #onem\nH #post\nI #reuters\nJ #subscribe\nK #wiki\nL #xgroup\nM #unsubscribe\n--Reply A-M",
     "DID YOU MEAN?\n   1 #account\n    2 #aljazeera\n    3 #arabic\n    4 #call\n    5 #contacts\n    6 #convert\n    7 #crossword\n    8 #duas\n    9 #dw\n   10 #exchange\n   11 #finance\n   12 #france24\n   13 #hangman\n   14 #jokes\n   15 #market\n   ..1/3\n   --MORE",
     "#MARKET SELL\nA Sell Something\nB Active listings(1)\nC De-listed(0)\nD Orders to approve(0)\nE Orders to dispatch(0)\nF My profile\n--Reply A-F or BUY or search words",

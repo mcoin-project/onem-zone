@@ -12,28 +12,42 @@ ONEmSimModule.factory('Cache', [
 
             if (!text) throw "missing parameter";
 
+            var texts = []; // array
+
+            if (!Array.isArray(text)) {
+                texts.push(text);
+            } else {
+                texts = text;
+            }
+
             var activeServices = [];
             var results = [];
-            var mtText = new MtText(text);
 
-            console.log("mtText");
-            console.log(mtText);
+            for (var i = 0; i < texts.length; i++) {
+                console.log("text");
+                console.log(texts[i]);
+                var mtText = new MtText(texts[i]);
 
-            if (mtText.isServicesList()) {
-                mtText.body.filter(function (b) {
-                    if (b.type == "options") {
-                        b.options.filter(function (o) {
-                            results.push(o.desc.slice(1).toLowerCase());
-                        });
-                    }
-                });
+                if (mtText.isServicesList()) {
+                    mtText.body.filter(function (b) {
+                        if (b.type == "options") {
+                            b.options.filter(function (o) {
+                                results.push(o.desc.slice(1).toLowerCase());
+                            });
+                        }
+                    });
+
+                }
+            }
+
+            if (results.length > 0) {
                 console.log("results");
                 console.log(results);
 
                 services = new Services(results);
                 activeServices = services.generateMenuItems();
-
             }
+
             console.log("activeServices");
             console.log(activeServices);
             if (activeServices.length > 0) {
@@ -44,7 +58,7 @@ ONEmSimModule.factory('Cache', [
 
         var processService = function (mtText) {
 
-            if (!mtText)  throw "missing mtText";
+            if (!mtText) throw "missing mtText";
 
             var result = new MtText(mtText);
             var type = !result.hideInput() ? "input" : "menu";
@@ -52,7 +66,7 @@ ONEmSimModule.factory('Cache', [
             console.log({
                 header: result.header,
                 footer: result.footer,
-                preBody : result.preBody,
+                preBody: result.preBody,
                 body: result.body,
                 buttons: result.buttons,
                 type: type,
@@ -64,7 +78,7 @@ ONEmSimModule.factory('Cache', [
             return {
                 header: result.header,
                 footer: result.footer,
-                preBody : result.preBody,
+                preBody: result.preBody,
                 body: result.body,
                 buttons: result.buttons,
                 type: type,
@@ -76,15 +90,15 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
-            reset: function() {
+            reset: function () {
                 initialized = false;
                 activeServices = [];
                 return true;
             },
-            isInitialized: function() {
+            isInitialized: function () {
                 return initialized;
             },
-            getGoCommand: function() {
+            getGoCommand: function () {
                 if (services) {
                     return services.getGoCommand();
                 } else {
@@ -101,7 +115,7 @@ ONEmSimModule.factory('Cache', [
             getServices: async function () {
 
                 try {
-                    var mt = await Request.get('#', {method: 'api'});
+                    var mt = await Request.get('#', { method: 'api', all: true });
                     console.log("back from api request:");
                     console.log(mt);
                     return processServicesList(mt);
