@@ -32,7 +32,7 @@
                             <p>
                                 <label>
                                     Off
-                                    <input ng-change="changed()" ng-model="checkboxModel.on" type="checkbox">
+                                    <input ng-change="touchChanged()" ng-model="touchCheckboxModel.on" type="checkbox">
                                     <span class="lever"></span>
                                     On
                                 </label>
@@ -40,6 +40,23 @@
                         </div>
                     </div>
                 </div>
+                <div class="row valign-wrapper">
+                        <div class="col s4 left-align grey-text lighten-5">
+                            <p><small>Email notifications:</small></p>
+                        </div>
+                        <div class="col s8 left-align">
+                            <div class="switch">
+                                <p>
+                                    <label>
+                                        Off
+                                        <input ng-change="emailChanged()" ng-model="emailCheckboxModel.on" type="checkbox">
+                                        <span class="lever"></span>
+                                        On
+                                    </label>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 <div style="padding-top:30px" class="row">
                     <div class="col s8 offset-s4 left-align">
                         <a class="modal-trigger waves-effect waves-light btn red" ng-click="openModalfn()" data-target="unlinkModal"

@@ -5,9 +5,12 @@ ONEmSimModule.controller('settingsController', [
     function ($scope, User, $state) {
 
         User.getProfile().$promise.then(function (response) {
-            $scope.$parent.checkboxModel = {
+            $scope.$parent.touchCheckboxModel = {
                 on: response.user.touchMode
             };
+            $scope.$parent.emailCheckboxModel = {
+                on: !response.user.dontSendEmails
+            };            
         });
 
         $scope.agree = function () {
@@ -15,15 +18,27 @@ ONEmSimModule.controller('settingsController', [
             $state.go('logoutDelete');
         }
 
-        $scope.changed = function () {
-            User.setProfile({ touchMode: $scope.$parent.checkboxModel.on }).$promise.then(function (response) {
+        $scope.touchChanged = function () {
+            User.setProfile({ touchMode: $scope.$parent.touchCheckboxModel.on }).$promise.then(function (response) {
                 console.log("setProfile:");
                 console.log(response);
-                $scope.$parent.checkboxModel = {
+                $scope.$parent.touchCheckboxModel = {
                     on: response.user.touchMode
                 };
             });
-            console.log($scope.$parent.checkboxModel);
+            console.log($scope.$parent.touchCheckboxModel);
         }
+
+        $scope.emailChanged = function () {
+            User.setProfile({ dontSendEmails: !$scope.$parent.emailCheckboxModel.on }).$promise.then(function (response) {
+                console.log("setProfile:");
+                console.log(response);
+                $scope.$parent.emailCheckboxModel = {
+                    on: !response.user.dontSendEmails
+                };
+            });
+            console.log($scope.$parent.emailCheckboxModel);
+        }
+
     }
 ]);

@@ -13,23 +13,27 @@ ONEmSimModule.controller('mainController', [
         console.log("user:" + $rootScope.user);
         
         function resolveState() {
-            console.log("$scope.$parent.checkboxModel.on");
-            console.log($scope.$parent.checkboxModel.on);
-            console.log("resolving state:" + $scope.$parent.checkboxModel.on)
-            if ($scope.$parent.checkboxModel.on) {
+            console.log("$scope.$parent.touchCheckboxModel.on");
+            console.log($scope.$parent.touchCheckboxModel.on);
+            console.log("resolving state:" + $scope.$parent.touchCheckboxModel.on)
+            if ($scope.$parent.touchCheckboxModel.on) {
                 $state.go('service', { initialize: true, service: Cache.getLandingService() });
             } else {
                 $state.go('console');
             }
         }
-        $scope.$parent.checkboxModel = {};
+        $scope.$parent.touchCheckboxModel = {};
+        $scope.$parent.emailCheckboxModel = {};
 
         User.getProfile().$promise.then(function (response) {
-            $scope.$parent.checkboxModel = {
+            $scope.$parent.touchCheckboxModel = {
                 on: response.user.touchMode
             };
-            console.log("$scope.checkboxModel.on");
-            console.log($scope.$parent.checkboxModel.on);
+            $scope.$parent.emailCheckboxModel = {
+                on: !response.user.dontSendEmails
+            };
+            console.log("$scope.emailCheckboxModel.on");
+            console.log($scope.$parent.emailCheckboxModel.on);
             if (Cache.isInitialized()) {
                 console.log("already initialized");
                 resolveState();

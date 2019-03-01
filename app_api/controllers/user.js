@@ -81,12 +81,19 @@ exports.getMsisdn = function (User) {
 
 exports.getProfile = function (id) {
     return function (req, res) {
-        res.status(200).send({ user: { touchMode: req.userProfile.touchMode } });
+        res.status(200).send({
+            user: {
+                touchMode: req.userProfile.touchMode,
+                dontSendEmails: req.userProfile.dontSendEmails
+            }
+        });
     }
 }
 
 exports.setProfile = function (User) {
     return function (req, res) {
+
+        var setObj = {};
 
         if (!req.user) {
             debug("/updateMsisdn");
@@ -96,7 +103,7 @@ exports.setProfile = function (User) {
             });
         }
         debug(req.body);
-        if (typeof req.body.touchMode == "undefined" || typeof req.body.touchMode !== "boolean") {
+        if (typeof req.body.touchMode !== "undefined" && req.body.touchMode !== "boolean") {
             debug(typeof req.body.touchMode);
             debug("/setProfile");
             debug("missing param");
@@ -104,11 +111,35 @@ exports.setProfile = function (User) {
                 message: "Malformed request"
             });
         }
+        if (typeof req.body.dontSendEmails !== "undefined" && typeof req.body.dontSendEmails !== "boolean") {
+            debug(typeof req.body.dontSendEmails);
+            debug("/setProfile");
+            debug("missing param");
+            return res.status(400).send({
+                message: "Malformed request"
+            });
+        }
+        if (typeof req.body.touchMode == "undefined" &&
+            typeof req.body.dontSendEmails == "undefined") {
+            debug(typeof req.body.touchMode);
+            debug(typeof req.body.dontSendEmails);
+            debug("/setProfile");
+            debug("missing param");
+            return res.status(400).send({
+                message: "Malformed request"
+            });
+        }
+        
+        if (typeof req.body.touchMode !== "undefined") {
+            setObj.touchMode = req.body.touchMode
+        }
+
+        if (typeof req.body.dontSendEmails !== "undefined") {
+            setObj.dontSendEmails = req.body.dontSendEmails
+        }
 
         User.findOneAndUpdate({ _id: ObjectId(req.user) }, {
-            $set: {
-                touchMode: req.body.touchMode,
-            }
+            $set: setObj
         }, { new: true }, function (error, user) {
             if (error || !user) {
                 debug("/update");
@@ -119,7 +150,8 @@ exports.setProfile = function (User) {
                     email: user.email,
                     firstName: user.firstName,
                     lastName: user.lastName,
-                    touchMode: user.touchMode
+                    touchMode: user.touchMode,
+                    dontSendEmails: user.dontSendEmails
                 };
                 res.json({ user: userObj });
             }
