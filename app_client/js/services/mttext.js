@@ -13,6 +13,12 @@ ONEmSimModule.factory('MtText', function () {
 
 	Text.prototype.initialize = function (text) {
 
+		if (typeof text == "undefined" || typeof text !== "string") {
+			console.log("text:" + typeof text);
+			console.log(text);
+			return false;
+		}
+
 		this.text = text;
 		this.lines = this.text.split('\n');
 		for (var i = 0; i < this.lines.length; i++) {
@@ -72,6 +78,28 @@ ONEmSimModule.factory('MtText', function () {
 			return this.lines[0];
 		} else {
 			return undefined;
+		}
+	}
+
+	Text.prototype.isChunkedPage = function () {
+		var p = this.getPages();
+
+		if (typeof p.numPages !== 'undefined' ) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// assume the more command is the first action button in the list in chunked page
+	// if it's the last page, we don't know
+	Text.prototype.getMoreButton = function () {
+		var p = this.getPages();
+
+		if (this.isChunkedPage() && this.buttons.length > 0 && p.currentPage < p.numPages) {
+			return this.buttons[0];
+		} else {
+			return false;
 		}
 	}
 

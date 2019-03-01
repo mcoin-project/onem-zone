@@ -5,8 +5,8 @@ ONEmSimModule.factory('Request', [
     '$interval',
     'DataModel',
     'MtText',
- //   'Cache',
-    function (Socket, $timeout, $interval, DataModel, MtText) {
+    'ServicesData',
+    function (Socket, $timeout, $interval, DataModel, MtText, ServicesData) {
 
         const SMS_TIMEOUT = 10000;
         var mtResponse;
@@ -111,6 +111,9 @@ ONEmSimModule.factory('Request', [
                     DataModel.addResult(inputObj);
                 }
 
+                // if this is not a next page operation, we're being called for the first time, so can clear results
+                if (!options || (options && !options.recursive)) allResults = [];
+
                 Socket.emit(channel, data);
                 try {
                     var mt;
@@ -122,10 +125,12 @@ ONEmSimModule.factory('Request', [
                     var response = new MtText(mt);
                     allResults.push(mt);
 
-                    if (options && options.all && response.pages.currentPage < response.pages.numPages) {
-                        var nextPage = parseInt(response.pages.currentPage) + 1;
-                        var goCommand = 'go' + ' ' + nextPage;
-                        mt = await self.get(goCommand, { method: options.method, all: true });
+                    if (options && options.all &&
+                        response.isChunkedPage() && 
+                        response.pages.currentPage < response.pages.numPages) {
+
+                        var moreCommand = response.getMoreButton() || 'more';
+                        mt = await self.get(moreCommand, { method: options.method, all: true, recursive: true });
                     }
 
                     console.log("returning allResults:");
@@ -138,6 +143,7 @@ ONEmSimModule.factory('Request', [
                         return allResults;
                     }
                 } catch (error) {
+                    allResults = [];
                     throw error;
                 }
             },

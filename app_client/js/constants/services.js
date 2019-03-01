@@ -18,7 +18,7 @@ ONEmSimModule.constant('ServicesConfig',
             { name: ['mcat'], icon: 'mcatalog' },
             { name: ['exchange'], icon: 'exchange' },
             { name: ['contacts'], icon: 'contacts' },
-            { name: ['reuters'], icon: 'reuters' },
+            { name: ['dw'], icon: 'mail' },
             { name: ['unsubscribe'], icon: 'unsubscribe' }
         ],
         goCommand: ['go']

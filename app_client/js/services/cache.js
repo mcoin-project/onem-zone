@@ -3,9 +3,9 @@ ONEmSimModule.factory('Cache', [
     'Services',
     'MtText',
     'Request',
-    function (Services, MtText, Request) {
+    'ServicesData',
+    function (Services, MtText, Request, ServicesData) {
 
-        var services;
         var initialized = false;
 
         var processServicesList = function (text) {
@@ -44,8 +44,8 @@ ONEmSimModule.factory('Cache', [
                 console.log("results");
                 console.log(results);
 
-                services = new Services(results);
-                activeServices = services.generateMenuItems();
+                ServicesData.services(results);
+                activeServices = ServicesData.services().generateMenuItems();
             }
 
             console.log("activeServices");
@@ -99,15 +99,15 @@ ONEmSimModule.factory('Cache', [
                 return initialized;
             },
             getGoCommand: function () {
-                if (services) {
-                    return services.getGoCommand();
+                if (ServicesData.services()) {
+                    return ServicesData.services().getGoCommand();
                 } else {
                     return 'go';
                 }
             },
             getLandingService: function () {
-                if (services) {
-                    return services.getLandingService();
+                if (ServicesData.services) {
+                    return ServicesData.services().getLandingService();
                 } else {
                     return false;
                 }
