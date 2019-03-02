@@ -25,10 +25,12 @@ ONEmSimModule.controller('inboxController', [
 
         $scope.deleteMessage = function(message, index) {
 
-            var i = index;  // the deleteMessage function expects an index starting with 1
+            var i = index + 1;  // the deleteMessage function expects an index starting with 1
             console.log("deleteMessage:"+i);
 
             $scope.messages = DataModel.deleteMessage(i);
+            refreshInbox();
+
             $rootScope.$broadcast('_onemUpdateInbox');
 
             console.log($scope.messages);
