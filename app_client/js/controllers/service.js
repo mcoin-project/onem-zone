@@ -36,7 +36,9 @@ ONEmSimModule.controller('serviceController', [
                 // anything you want can go here and will safely be run on the next digest.
                 $scope.result = response;
                 $scope.ready = true;
-                $scope.$parent.spinner = false;
+                if ($scope.$parent) {
+                    $scope.$parent.spinner = false;
+                }
 
                 $rootScope.$apply();
             });
@@ -54,11 +56,26 @@ ONEmSimModule.controller('serviceController', [
                     applyResult(response);
 
                 }).catch(function (error) {
+                    console.log("catch error");
+
+                    Cache.selectOption('#').then(function(response) {
+                        console.log("apply result");
+
+                        applyResult(response);                      
+                    })
                     $scope.$parent.spinner = false;
-                    toastr.error(error);
+         //           toastr.error(error);
                     console.log(error);
                 });
             } catch (error) {
+                Cache.selectOption('#').then(function(response) {
+                    console.log("apply result");
+
+                    applyResult(response);                      
+                });
+                $scope.$parent.spinner = false;
+          //      toastr.error(error);
+                console.log(error);
                 $scope.$parent.spinner = false;
                 console.log(error);
             }

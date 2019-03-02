@@ -215,3 +215,25 @@ span.icon {
   top: 81%;
   z-index: 995;
   transform: translateX(-50%); }
+
+/*------------------------------------------------------------------------------------------
+ *
+ *    INBOX SCREEN
+ *
+ *----------------------------------------------------------------------------------------*/
+i.icon-blue {
+  color: blue;
+  margin-right: 0; }
+
+.collapsible-header {
+  padding: 0.5rem 1rem 0.5rem 1rem;
+  display: block; }
+
+.collapsible-header .row {
+  margin-bottom: 0; }
+
+.collapsible-body {
+  padding-top: 0.5rem; }
+  .collapsible-body p {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem; }

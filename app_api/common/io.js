@@ -137,6 +137,23 @@ exports.initialize = function (server) {
                             index++;
                         }, 1000
                     );
+
+                    // send another
+                    var timer2 = setTimeout(
+                        function () {
+                            if (testMessages[testMessages.length-1]) socket.emit('MT SMS', { mtText: testMessages[testMessages.length-1] });
+                            index++;
+                        }, 1500
+                    );
+
+                    // send another
+                    var timer3 = setTimeout(
+                        function () {
+                            if (testMessages[testMessages.length-2]) socket.emit('MT SMS', { mtText: testMessages[testMessages.length-2] });
+                            index++;
+                        }, 1600
+                    );
+
                 }
 
             } else {

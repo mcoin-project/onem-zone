@@ -22,6 +22,7 @@ ONEmSimModule.controller('logoutController', [
         $rootScope.msisdn = undefined;
         $rootScope.user = undefined;
         DataModel.clearResults();
+        DataModel.clearInbox();
         Request.reset();
         Cache.reset();
         $state.go('login');

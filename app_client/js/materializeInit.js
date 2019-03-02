@@ -7,4 +7,5 @@ $(document).ready(function () {
   $('#mobile-demo-left').sidenav();
   $('.dropdown-trigger').dropdown({ hover: false, coverTrigger: false });
   $('.modal').modal();
+  $('.collapsible').collapsible();
 });

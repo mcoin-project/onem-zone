@@ -13,7 +13,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'ui.router',
     'ngIntlTelInput',
     'mp.autoFocus',
-    'monospaced.elastic'
+    'monospaced.elastic',
+    'angularMoment',
 ]).filter('nl2br', ['$sanitize', function ($sanitize) {
     var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
     return function (msg) {
@@ -159,6 +160,11 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 url: '/',
                 templateUrl: 'partials/settings.html',
                 controller: 'settingsController'
+            }).
+            state('inbox', {
+                url: '/',
+                templateUrl: 'partials/inbox.html',
+                controller: 'inboxController'
             }).
             state('logoutDelete', {
                 url: '/',

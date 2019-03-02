@@ -10,8 +10,20 @@ ONEmSimModule.controller('navbarController', [
             return $auth.isAuthenticated();
         }
 
+        $scope.$state = $state;
         $scope.dropdown="My Profile";
         $scope.user = {};
+        $scope.spinner = false;
+        $scope.ready = false;
+
+        $scope.inboxCount = DataModel.getInbox().length || 0;
+
+        $rootScope.$on('_onemUpdateInbox', function(event, result) {
+            $scope.inboxCounts = DataModel.getInboxCounts();
+            console.log("inboxCounts");
+            console.log($scope.inboxCounts);
+        });
+
 
         $rootScope.$watch('user', function(newVal, oldVal, scope) {
             console.log("rootscope watch");
@@ -68,6 +80,12 @@ ONEmSimModule.controller('navbarController', [
             console.log("nav: received API MT");
             console.log(data.mtText);
             Request.apiReceivedMt(data.mtText);
+        });
+
+        $scope.$on('socket:INBOX MT SMS', function (ev, data) {
+            console.log("nav: received INBOX API MT");
+            console.log(data.mtText);
+            DataModel.addMessage(data.mtText);
         });
 
     }

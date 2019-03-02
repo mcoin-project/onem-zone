@@ -44,7 +44,7 @@
                 <div class="col s6">
                     <li ng-repeat="service in services1 track by $index">
                         <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
-                            <span class="icon-{{service.getIcon()}}"></span>
+                            <span class="onem-icon-{{service.getIcon()}}"></span>
                             <div>{{service.getName()}}</div>
                         </a>
                     </li>
@@ -52,7 +52,7 @@
                 <div class="col s6">
                     <li ng-repeat="service in services2 track by $index">
                         <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
-                            <span class="icon-{{service.getIcon()}}"></span>
+                            <span class="onem-icon-{{service.getIcon()}}"></span>
                             <div>{{service.getName()}}</div>
                         </a>
                     </li>
@@ -86,10 +86,10 @@
                         <a href="#" data-target="mobile-demo-left" class="sidenav-trigger"><i
                                 class="material-icons">menu</i></a>
                         <ul class="right hide-on-med-and-down">
-                            <li><a ui-sref="main"><span><i class="material-icons">home</i></span> Home</a></li>
-
+                                <li ng-class="{active: $state.includes('service')}" ><a ui-sref="main"><span><i class="material-icons">home</i></span>Home</a></li>
+                                <li ui-sref-active="active" ng-show="touchCheckboxModel.on && ready" ><a ui-sref="inbox"><span><i class="material-icons">message</i></span><span class="new badge teal white-text">{{inboxCounts.unread}}</span></a></li>
                             <!-- Dropdown Trigger -->
-                            <li><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i
+                            <li ng-class="{active: $state.includes('settings')}"><a class="dropdown-trigger" href="#!" data-target="dropdown1"><i
                                         class="material-icons">person</i>{{dropdown}}<i
                                         class="material-icons right">arrow_drop_down</i></a></li>
 
@@ -142,8 +142,9 @@
         </div>
     </ul>
     <ul class="sidenav" id="mobile-demo-left">
-        <li><a ui-sref="main">Home<i class="right small material-icons">home</i></a></li>
-        <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
+        <li ng-class="{active: $state.includes('service')}"><a ui-sref="main">Home<i class="right small material-icons">home</i></a></li>
+        <li ui-sref-active="active" ng-show="touchCheckboxModel.on && ready"><a ui-sref="inbox">Inbox<span style="float:none" class="badge new">{{inboxCounts.unread}}</span><i class="right small material-icons">message</i></a></li>
+        <li ng-class="{active: $state.includes('settings')}"><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
         <li class="divider"></li>
         <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
     </ul>

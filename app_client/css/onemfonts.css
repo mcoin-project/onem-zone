@@ -5,7 +5,7 @@
   font-weight: normal;
   font-style: normal; }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^="onem-icon-"], [class*=" onem-icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'onemservices' !important;
   speak: none;
@@ -18,145 +18,145 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.icon-convert:before {
+.onem-icon-convert:before {
   content: "\e923"; }
 
-.icon-radio:before {
+.onem-icon-radio:before {
   content: "\e924"; }
 
-.icon-shop:before {
+.onem-icon-shop:before {
   content: "\e925"; }
 
-.icon-football:before {
+.onem-icon-football:before {
   content: "\e926"; }
 
-.icon-tip:before {
+.onem-icon-tip:before {
   content: "\e927"; }
 
-.icon-quotes:before {
+.onem-icon-quotes:before {
   content: "\e928"; }
 
-.icon-dw:before {
+.onem-icon-dw:before {
   content: "\e929"; }
 
-.icon-quran:before {
+.onem-icon-quran:before {
   content: "\e92a"; }
 
-.icon-at:before {
+.onem-icon-at:before {
   content: "\e92b"; }
 
-.icon-account:before {
+.onem-icon-account:before {
   content: "\e920"; }
 
-.icon-onem:before {
+.onem-icon-onem:before {
   content: "\e921"; }
 
-.icon-xgroup:before {
+.onem-icon-xgroup:before {
   content: "\e922"; }
 
-.icon-aljazeera:before {
+.onem-icon-aljazeera:before {
   content: "\e900"; }
 
-.icon-call:before {
+.onem-icon-call:before {
   content: "\e901"; }
 
-.icon-cart:before {
+.onem-icon-cart:before {
   content: "\e902"; }
 
-.icon-chartgrow:before {
+.onem-icon-chartgrow:before {
   content: "\e903"; }
 
-.icon-clock:before {
+.onem-icon-clock:before {
   content: "\e904"; }
 
-.icon-contacts:before {
+.onem-icon-contacts:before {
   content: "\e905"; }
 
-.icon-exchange:before {
+.onem-icon-exchange:before {
   content: "\e906"; }
 
-.icon-france24:before {
+.onem-icon-france24:before {
   content: "\e907"; }
 
-.icon-hands:before {
+.onem-icon-hands:before {
   content: "\e908"; }
 
-.icon-home:before {
+.onem-icon-home:before {
   content: "\e909"; }
 
-.icon-mail:before {
+.onem-icon-mail:before {
   content: "\e90a"; }
 
-.icon-mcatalog:before {
+.onem-icon-mcatalog:before {
   content: "\e90b"; }
 
-.icon-mcoin:before {
+.onem-icon-mcoin:before {
   content: "\e90c"; }
 
-.icon-mcoinm:before {
+.onem-icon-mcoinm:before {
   content: "\e90d"; }
 
-.icon-message:before {
+.onem-icon-message:before {
   content: "\e90e"; }
 
-.icon-post:before {
+.onem-icon-post:before {
   content: "\e90f"; }
 
-.icon-reuters:before {
+.onem-icon-reuters:before {
   content: "\e910"; }
 
-.icon-salah:before {
+.onem-icon-salah:before {
   content: "\e911"; }
 
-.icon-settings:before {
+.onem-icon-settings:before {
   content: "\e912"; }
 
-.icon-subscribe:before {
+.onem-icon-subscribe:before {
   content: "\e913"; }
 
-.icon-suitcase:before {
+.onem-icon-suitcase:before {
   content: "\e914"; }
 
-.icon-sweb .path1:before {
+.onem-icon-sweb .path1:before {
   content: "\e915";
   color: #010101; }
 
-.icon-sweb .path2:before {
+.onem-icon-sweb .path2:before {
   content: "\e916";
   margin-left: -1.04296875em;
   color: #010101; }
 
-.icon-sweb .path3:before {
+.onem-icon-sweb .path3:before {
   content: "\e917";
   margin-left: -1.04296875em;
   color: #010101; }
 
-.icon-sweb .path4:before {
+.onem-icon-sweb .path4:before {
   content: "\e918";
   margin-left: -1.04296875em;
   color: #010101; }
 
-.icon-sweb .path5:before {
+.onem-icon-sweb .path5:before {
   content: "\e919";
   margin-left: -1.04296875em;
   color: #010101; }
 
-.icon-sweb .path6:before {
+.onem-icon-sweb .path6:before {
   content: "\e91a";
   margin-left: -1.04296875em;
   color: black; }
 
-.icon-translate:before {
+.onem-icon-translate:before {
   content: "\e91b"; }
 
-.icon-unsubscribe:before {
+.onem-icon-unsubscribe:before {
   content: "\e91c"; }
 
-.icon-wallet:before {
+.onem-icon-wallet:before {
   content: "\e91d"; }
 
-.icon-weather:before {
+.onem-icon-weather:before {
   content: "\e91e"; }
 
-.icon-wikipedia:before {
+.onem-icon-wikipedia:before {
   content: "\e91f"; }

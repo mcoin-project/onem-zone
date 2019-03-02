@@ -106,7 +106,7 @@ ONEmSimModule.factory('Cache', [
                 }
             },
             getLandingService: function () {
-                if (ServicesData.services) {
+                if (ServicesData.services()) {
                     return ServicesData.services().getLandingService();
                 } else {
                     return false;

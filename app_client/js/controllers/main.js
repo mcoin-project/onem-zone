@@ -9,13 +9,16 @@ ONEmSimModule.controller('mainController', [
     '$timeout',
     'Cache',
     'toastr',
-    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr) {
+    'DataModel',
+    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr, DataModel) {
         console.log("user:" + $rootScope.user);
         
         function resolveState() {
+
             console.log("$scope.$parent.touchCheckboxModel.on");
             console.log($scope.$parent.touchCheckboxModel.on);
             console.log("resolving state:" + $scope.$parent.touchCheckboxModel.on)
+            $scope.$parent.ready = true;
             if ($scope.$parent.touchCheckboxModel.on) {
                 $state.go('service', { initialize: true, service: Cache.getLandingService() });
             } else {
@@ -64,7 +67,7 @@ ONEmSimModule.controller('mainController', [
             return Cache.getServices();
         }).then(function (services) {
 
-            $scope.$parent.spinner = false;
+            if ($scope.$parent) $scope.$parent.spinner = false;
 
             $scope.$parent.services1 = [];
             $scope.$parent.services2 = [];
@@ -85,7 +88,7 @@ ONEmSimModule.controller('mainController', [
         }).catch(function (error) {
 
             //  debugger;
-            $scope.$parent.spinner = false;
+            if ($scope.$parent) $scope.$parent.spinner = false;
 
             console.log("error in main ");
             console.log(error);

@@ -1,12 +1,13 @@
 
 ONEmSimModule.factory('Request', [
+    '$rootScope',
     'Socket',
     '$timeout',
     '$interval',
     'DataModel',
     'MtText',
     'ServicesData',
-    function (Socket, $timeout, $interval, DataModel, MtText, ServicesData) {
+    function ($rootScope, Socket, $timeout, $interval, DataModel, MtText, ServicesData) {
 
         const SMS_TIMEOUT = 10000;
         var mtResponse;
@@ -16,6 +17,7 @@ ONEmSimModule.factory('Request', [
         var apiTimer;
         var apiCheckMt;
         var allResults = [];
+        var messagePending = false;
 
         var stopInterval = function () {
             $interval.cancel(checkMt);
@@ -30,9 +32,12 @@ ONEmSimModule.factory('Request', [
         var waitforMtSMS = function () {
             return new Promise(function (resolve, reject) {
 
+                messagePending = true;
+                
                 checkMt = $interval(function () {
                     console.log("checking:" + mtResponse);
                     if (mtResponse) {
+
                         var result = mtResponse;
                         mtResponse = undefined;
                         $timeout.cancel(timer);
@@ -48,6 +53,8 @@ ONEmSimModule.factory('Request', [
                     function () {
                         $interval.cancel(checkMt);
                         stopInterval();
+                        messagePending = false;
+
                         reject("no response to MO SMS");
                     }, SMS_TIMEOUT // run 10s timer to wait for response from server
                 );
@@ -148,6 +155,13 @@ ONEmSimModule.factory('Request', [
                 }
             },
             receivedMt: function (text) {
+                // if we weren't expecting a message, then add to inbox
+                if (messagePending) {
+                    console.log("*** received unexpected message **");
+                    messagePending = false;
+
+                    DataModel.addMessage(text);
+                }
                 console.log("receivedMt cancelling timer : " + text);
                 $timeout.cancel(timer);
                 //   stopInterval();
