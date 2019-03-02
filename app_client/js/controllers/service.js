@@ -7,34 +7,19 @@ ONEmSimModule.controller('serviceController', [
     '$timeout',
     'toastr',
     'screenSize',
-    function ($scope, Cache, $stateParams, $rootScope, $timeout, toastr, screenSize) {
+    'DataModel',
+    function ($scope, Cache, $stateParams, $rootScope, $timeout, toastr, screenSize, DataModel) {
 
         console.log("stateParams:");
         console.log($stateParams);
-
-        $scope.showPn = function() {
-            console.log("showPn");
-           return !(screenSize.is('xs, sm'));
-        }
-
-        $scope.$parent.spinner = false;
-
-        $scope.result = {};
+ 
+        var initialize = $stateParams.initialize;
         $scope.ready = false;
-
-        $scope.isSpinnerActive = function() {
-            return $scope.spinner;
-        }
-
-        $scope.activeService = $stateParams.service;
-
-        $scope.goCommand = Cache.getGoCommand();
-        console.log("go command:" + $scope.goCommand);
 
         var applyResult = function (response) {
             $timeout(function () {
                 // anything you want can go here and will safely be run on the next digest.
-                $scope.result = response;
+                $scope.result = DataModel.setTouchResult(response);
                 $scope.ready = true;
                 if ($scope.$parent) {
                     $scope.$parent.spinner = false;
@@ -43,14 +28,50 @@ ONEmSimModule.controller('serviceController', [
                 $rootScope.$apply();
             });
         }
+        $scope.activeService = $stateParams.service;
+        $scope.goCommand = Cache.getGoCommand();
+        console.log("go command:" + $scope.goCommand);
 
-        if ($stateParams.initialize) {
+        $scope.showPn = function() {
+            return !(screenSize.is('xs, sm'));
+         }
 
-            $scope.ready = false;
+         $scope.isSpinnerActive = function() {
+            return $scope.$parent.spinner;
+        }
+
+        $scope.$parent.spinner = false;
+
+        var serviceName;
+        try {
+            serviceName = $stateParams.service.getName();
+        } catch (error) {
+            console.log(error);
+            serviceName = Cache.getLandingService();
+            if (!serviceName) {
+                toastr.error("Can't resolve landing service");
+            }
+        }
+        $scope.result = DataModel.getTouchResult();
+
+        if ($scope.result) {
+            applyResult($scope.result);
+        }
+
+       // if initialize is true then home was clicked, if results already exist, just display them otherwise use the landing service passed as parameter
+        // if initialize is false, then a service was clicked explicitly
+
+        if ((!initialize && serviceName) || (initialize && !$scope.result)) {
+
+            $timeout(function () {
+                $scope.ready = false;
+                $scope.result = {};
+                $scope.$parent.spinner = true;
+
+                $rootScope.$apply();
+            });
 
             try {
-                $scope.$parent.spinner = true;
-                var serviceName = $stateParams.service.getName();
                 Cache.getService(serviceName).then(function (response) {
                     console.log("got response");
                     applyResult(response);

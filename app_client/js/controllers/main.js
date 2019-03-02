@@ -39,7 +39,6 @@ ONEmSimModule.controller('mainController', [
             console.log($scope.$parent.emailCheckboxModel.on);
             if (Cache.isInitialized()) {
                 console.log("already initialized");
-                resolveState();
                 throw null;
             } else if (!$rootScope.msisdn) {
                 return User.getMsisdn().$promise;
@@ -92,8 +91,9 @@ ONEmSimModule.controller('mainController', [
 
             console.log("error in main ");
             console.log(error);
-            
-            if (!$rootScope.msisdn) {
+            if (error == null) {
+                resolveState();
+            } else if (!$rootScope.msisdn) {
                 console.log("no msisdn, going to capture");
                 $state.go('captureMsisdn');
             } else {

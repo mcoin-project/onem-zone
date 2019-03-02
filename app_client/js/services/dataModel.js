@@ -10,7 +10,8 @@ ONEmSimModule.factory('DataModel', [
 
         var data = {
             results: [],
-            inbox: []
+            inbox: [],
+            touchResult: undefined
         };
 
         return {
@@ -28,6 +29,17 @@ ONEmSimModule.factory('DataModel', [
             },
             getInbox: function () {
                 return data.inbox;
+            },
+            getTouchResult: function () {
+                return data.touchResult;
+            },
+            setTouchResult: function (result) {
+                data.touchResult = result;
+                return data.touchResult;
+            },
+            clearTouchResult: function () {
+                data.touchResult = undefined;
+                return data.touchResult;
             },
             addMessage: function (message) {
 

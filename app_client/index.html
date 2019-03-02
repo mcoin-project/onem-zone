@@ -55,7 +55,7 @@
             <div ng-show="services1.length > 0 || services2.length > 0" class="row">
                 <div class="col s6">
                     <li ng-repeat="service in services1 track by $index">
-                        <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
+                        <a class="dropdown-icon-wrapper" ui-sref="service({initialize: false, service: service})">
                             <span class="onem-icon-{{service.getIcon()}}"></span>
                             <div>{{service.getName()}}</div>
                         </a>
@@ -63,7 +63,7 @@
                 </div>
                 <div class="col s6">
                     <li ng-repeat="service in services2 track by $index">
-                        <a class="dropdown-icon-wrapper" ui-sref="service({initialize: true, service: service})">
+                        <a class="dropdown-icon-wrapper" ui-sref="service({initialize: false, service: service})">
                             <span class="onem-icon-{{service.getIcon()}}"></span>
                             <div>{{service.getName()}}</div>
                         </a>
@@ -136,8 +136,8 @@
             <div style="text-align:center" class="col s6 center-align">
                 <li ng-repeat="service in services1 track by $index">
                     <a style="line-height:normal;padding:10px;height:auto"
-                        ui-sref="service({initialize: true, service: service})">
-                        <span style="font-size:24px" class="teal-text center-align icon-{{service.getIcon()}}"></span>
+                        ui-sref="service({initialize: false, service: service})">
+                        <span style="font-size:24px" class="teal-text center-align onem-icon-{{service.getIcon()}}"></span>
                         <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
                     </a>
                 </li>
@@ -145,8 +145,8 @@
             <div style="text-align:center" style="text-align:center" class="col s6 center-align">
                 <li ng-repeat="service in services2 track by $index">
                     <a style="line-height:normal;padding:10px;height:auto"
-                        ui-sref="service({initialize: true, service: service})">
-                        <span style="font-size:24px" class="teal-text center-align icon-{{service.getIcon()}}"></span>
+                        ui-sref="service({initialize: false, service: service})">
+                        <span style="font-size:24px" class="teal-text center-align onem-icon-{{service.getIcon()}}"></span>
                         <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
                     </a>
                 </li>
