@@ -37,6 +37,7 @@ ONEmSimModule.factory('Request', [
                 checkMt = $interval(function () {
                     console.log("checking:" + mtResponse);
                     if (mtResponse) {
+                        messagePending = false;
 
                         var result = mtResponse;
                         mtResponse = undefined;
@@ -158,7 +159,6 @@ ONEmSimModule.factory('Request', [
                 // if we weren't expecting a message, then add to inbox
                 if (messagePending) {
                     console.log("*** received unexpected message **");
-                    messagePending = false;
 
                     DataModel.addMessage(text);
                 }
