@@ -157,7 +157,7 @@ ONEmSimModule.factory('Request', [
             },
             receivedMt: function (text) {
                 // if we weren't expecting a message, then add to inbox
-                if (messagePending) {
+                if (!messagePending) {
                     console.log("*** received unexpected message **");
 
                     DataModel.addMessage(text);
