@@ -103,7 +103,7 @@ exports.setProfile = function (User) {
             });
         }
         debug(req.body);
-        if (typeof req.body.touchMode !== "undefined" && req.body.touchMode !== "boolean") {
+        if (typeof req.body.touchMode !== "undefined" && typeof req.body.touchMode !== "boolean") {
             debug(typeof req.body.touchMode);
             debug("/setProfile");
             debug("missing param");
@@ -131,11 +131,11 @@ exports.setProfile = function (User) {
         }
         
         if (typeof req.body.touchMode !== "undefined") {
-            setObj.touchMode = req.body.touchMode
+            setObj.touchMode = req.body.touchMode;
         }
 
         if (typeof req.body.dontSendEmails !== "undefined") {
-            setObj.dontSendEmails = req.body.dontSendEmails
+            setObj.dontSendEmails = req.body.dontSendEmails;
         }
 
         User.findOneAndUpdate({ _id: ObjectId(req.user) }, {
