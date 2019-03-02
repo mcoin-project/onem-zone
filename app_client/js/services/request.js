@@ -161,11 +161,13 @@ ONEmSimModule.factory('Request', [
                     console.log("*** received unexpected message **");
 
                     DataModel.addMessage(text);
+                } else {
+                    console.log("receivedMt cancelling timer : " + text);
+                    $timeout.cancel(timer);
+                    //   stopInterval();
+                    mtResponse = text;
                 }
-                console.log("receivedMt cancelling timer : " + text);
-                $timeout.cancel(timer);
-                //   stopInterval();
-                mtResponse = text;
+
             },
             apiReceivedMt: function (text) {
                 console.log("apiReceivedMt cancelling timer : " + text);
