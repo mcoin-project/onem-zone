@@ -25,6 +25,7 @@ ONEmSimModule.controller('inboxController', [
 
         $scope.deleteMessage = function(message, index) {
 
+            $('.collapsible').collapsible('close',index);
             var i = index + 1;  // the deleteMessage function expects an index starting with 1
             console.log("deleteMessage:"+i);
 
