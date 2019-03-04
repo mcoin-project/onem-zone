@@ -5,7 +5,8 @@ ONEmSimModule.controller('phoneController', [
     '$timeout',
     'dateFilter',
     '$stateParams',
-    function ($rootScope, $scope, $timeout, dateFilter, $stateParams) {
+    'Phone',
+    function ($rootScope, $scope, $timeout, dateFilter, $stateParams, Phone) {
 
         var msisdn = $rootScope.msisdn;
         var sipProxy = $rootScope.sipProxy;
@@ -232,8 +233,8 @@ ONEmSimModule.controller('phoneController', [
                 b.pressed = false;
             }, 400);
             $scope.dialerTypedNo += b.value;
-            if ($scope.globalsession) {
-                $scope.globalsession.sendDTMF(b.value);
+            if (Phone.phoneSession) {
+                Phone.phoneSession.sendDTMF(b.value);
                 console.log("[UI]: Sending DTMF " + b.value);
             }
         };
@@ -322,7 +323,7 @@ ONEmSimModule.controller('phoneController', [
         };
         var newRTCSession = function(data) {
             console.log("[WS]: newRTCSession");
-            $scope.globalsession = data.session; //session pointer
+            //Phone.phoneSession = data.session; //session pointer
 
             console.log("session data:");
             console.log(data);
@@ -330,33 +331,33 @@ ONEmSimModule.controller('phoneController', [
             $('.phone div.caller').addClass('open');
             $scope.callerOpen = true;
             //Identity display:
-            console.log("[WS]: Caller ID: " + $scope.globalsession.remote_identity.uri.user);
-            console.log("[WS]: User Name: " + $scope.globalsession.remote_identity.display_name);
+            console.log("[WS]: Caller ID: " + Phone.phoneSession.remote_identity.uri.user);
+            console.log("[WS]: User Name: " + Phone.phoneSession.remote_identity.display_name);
             //$('.phone .screen_wrp').addClass('open');
             $scope.screenOpen = true;
             $scope.dialerOpen = true;
-            $scope.answerTypedNo = $scope.globalsession.remote_identity.uri.user;
-            //$('.answer #typed_no').val($scope.globalsession.remote_identity.uri.user);
-            //$('.caller #typed_no').val($scope.globalsession.remote_identity.uri.user);
+            $scope.answerTypedNo = Phone.phoneSession.remote_identity.uri.user;
+            //$('.answer #typed_no').val(Phone.phoneSession.remote_identity.uri.user);
+            //$('.caller #typed_no').val(Phone.phoneSession.remote_identity.uri.user);
             console.log("remote_identity:");
-            console.log(JSON.stringify($scope.globalsession.remote_identity));
-            if ($scope.globalsession.remote_identity.display_name) {
-                document.getElementById("user_name").innerHTML = $scope.globalsession.remote_identity.display_name;
+            console.log(JSON.stringify(Phone.phoneSession.remote_identity));
+            if (Phone.phoneSession.remote_identity.display_name) {
+                document.getElementById("user_name").innerHTML = Phone.phoneSession.remote_identity.display_name;
             }
-            //$scope.usr_name = $scope.globalsession.remote_identity.display_name;
+            //$scope.usr_name = Phone.phoneSession.remote_identity.display_name;
 
-            $scope.globalsession.on("peerconnection", function (e) {
+            Phone.phoneSession.on("peerconnection", function (e) {
                 console.log("[WS]: newRTCSession - peerconnection");
             });
-            $scope.globalsession.on("connecting", function (e) {
+            Phone.phoneSession.on("connecting", function (e) {
                 console.log("[WS]: newRTCSession - connecting");
             });
-            $scope.globalsession.on("sending", function (e) {
+            Phone.phoneSession.on("sending", function (e) {
                 console.log("[WS]: newRTCSession - sending");
             });
-            $scope.globalsession.on("progress", function (e) {
+            Phone.phoneSession.on("progress", function (e) {
                 console.log("[WS]: newRTCSession - progress");
-                if ($scope.globalsession.direction === "incoming") {
+                if (Phone.phoneSession.direction === "incoming") {
                     console.log("[WS]: Playing incoming call ring:");
                     audioElement.src = "/sounds/old_british_phone.wav";
                     //attachMediaStream(audioElement,"/sounds/old_british_phone.wav");
@@ -369,7 +370,7 @@ ONEmSimModule.controller('phoneController', [
                     audioElement.play();
                 };
             });
-            $scope.globalsession.on("accepted", function (e) {
+            Phone.phoneSession.on("accepted", function (e) {
                 console.log("[WS]: newRTCSession - accepted");
                 audioElement.pause();
 
@@ -377,8 +378,8 @@ ONEmSimModule.controller('phoneController', [
                 talkTime = setInterval(updateTalkTime, 1000);
 
                 //RTCPeerConnection.getLocalStreams/getRemoteStreams are deprecated. Use RTCPeerConnection.getSenders/getReceivers instead.:
-                attachMediaStream(videoElement, $scope.globalsession.connection.getRemoteStreams()[0]);
-                if ($scope.globalsession.connection.getRemoteStreams()[0].getVideoTracks().length) {
+                attachMediaStream(videoElement, Phone.phoneSession.connection.getRemoteStreams()[0]);
+                if (Phone.phoneSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                     videoElement.hidden = false;
                     videoElement.style.visibility = 'visible';
                    // $('.phone div.answer .user').addClass('.off');
@@ -393,10 +394,10 @@ ONEmSimModule.controller('phoneController', [
                 };
                 isInCall = 1;
             });
-            $scope.globalsession.on("confirmed", function (e) {
+            Phone.phoneSession.on("confirmed", function (e) {
                 console.log("[WS]: newRTCSession - confirmed");
             });
-            $scope.globalsession.on("ended", function (e) {
+            Phone.phoneSession.on("ended", function (e) {
                 console.log("[WS]: newRTCSession - ended by " + e.originator);
                 audioElement.pause();
                 videoElement.pause();
@@ -424,7 +425,7 @@ ONEmSimModule.controller('phoneController', [
                 $('.caller #typed_no').val('');
                 options = jQuery.extend(true, {}, optionsMask);
             });
-            $scope.globalsession.on("failed", function (e) {
+            Phone.phoneSession.on("failed", function (e) {
                 console.log("[WS]: newRTCSession - failed from " + e.originator + " because " + e.cause);
                 audioElement.pause();
                 videoElement.pause();
@@ -453,39 +454,39 @@ ONEmSimModule.controller('phoneController', [
                 //$('.caller #typed_no').val('');
                 options = jQuery.extend(true, {}, optionsMask);
             });
-            $scope.globalsession.on("newDTMF", function (e) {
+            Phone.phoneSession.on("newDTMF", function (e) {
                 console.log("[WS]: newRTCSession - newDTMF: " + e.dtmf);
             });
-            $scope.globalsession.on("newInfo", function (e) {
+            Phone.phoneSession.on("newInfo", function (e) {
                 console.log("[WS]: newRTCSession - newInfo: " + e.info);
             });
-            $scope.globalsession.on("hold", function (e) {
+            Phone.phoneSession.on("hold", function (e) {
                 console.log("[WS]: newRTCSession - hold");
             });
-            $scope.globalsession.on("unhold", function (e) {
+            Phone.phoneSession.on("unhold", function (e) {
                 console.log("[WS]: newRTCSession - unhold");
             });
-            $scope.globalsession.on("muted", function (e) {
+            Phone.phoneSession.on("muted", function (e) {
                 console.log("[WS]: newRTCSession - muted");
             });
-            $scope.globalsession.on("unmuted", function (e) {
+            Phone.phoneSession.on("unmuted", function (e) {
                 console.log("[WS]: newRTCSession - unmuted");
             });
-            //$scope.globalsession.on("reinvite",function(e) { //can define callback
+            //Phone.phoneSession.on("reinvite",function(e) { //can define callback
             //    console.log("[WS]: newRTCSession - reinvite");
             //});
-            //$scope.globalsession.on("update",function(e) { //can define callback
+            //Phone.phoneSession.on("update",function(e) { //can define callback
             //    console.log("[WS]: newRTCSession - update");
             //});
-            $scope.globalsession.on("refer", function (e) {
+            Phone.phoneSession.on("refer", function (e) {
                 console.log("[WS]: newRTCSession - refer");
                 //e.accept(newRTCSession(globalSession)); //Is it?
             });
-            $scope.globalsession.on("replaces", function (e) {
+            Phone.phoneSession.on("replaces", function (e) {
                 console.log("[WS]: newRTCSession - replaces");
                 //e.accept(newRTCSession(globalSession)); //Is it?
             });
-            $scope.globalsession.on("sdp", function (e) {
+            Phone.phoneSession.on("sdp", function (e) {
                 console.log("[WS]: newRTCSession - sdp type " + e.type);
                 // I can modify SDP here!
                 // The SDP content is in the "sdp" string of "e"
@@ -494,19 +495,19 @@ ONEmSimModule.controller('phoneController', [
                     e.sdp = removeAllCryptoLines(e.sdp);
                 };
             });
-            $scope.globalsession.on("getusermediafailed", function (e) {
+            Phone.phoneSession.on("getusermediafailed", function (e) {
                 console.log("[WS]: newRTCSession - getusermediafailed");
             });
-            $scope.globalsession.on("peerconnection:createofferfailed", function (e) {
+            Phone.phoneSession.on("peerconnection:createofferfailed", function (e) {
                 console.log("[WS]: newRTCSession - peerconnection:createofferfailed");
             });
-            $scope.globalsession.on("peerconnection:createanswerfailed", function (e) {
+            Phone.phoneSession.on("peerconnection:createanswerfailed", function (e) {
                 console.log("[WS]: newRTCSession - peerconnection:createanswerfailed");
             });
-            $scope.globalsession.on("peerconnection:setlocaldescriptionfailed", function (e) {
+            Phone.phoneSession.on("peerconnection:setlocaldescriptionfailed", function (e) {
                 console.log("[WS]: newRTCSession - peerconnection:setlocaldescriptionfailed");
             });
-            $scope.globalsession.on("peerconnection:setremotedescriptionfailed", function (e) {
+            Phone.phoneSession.on("peerconnection:setremotedescriptionfailed", function (e) {
                 console.log("[WS]: newRTCSession - peerconnection:setremotedescriptionfailed");
             });
 
@@ -515,15 +516,14 @@ ONEmSimModule.controller('phoneController', [
 
             //function IncomingEndCall() {
             //  //phoneONEm.terminateSessions();
-            //  $scope.globalsession.terminate();
+            //  Phone.phoneSession.terminate();
             //};
 
         };
 
-        $rootScope.$on("progress", function (e, data) {
+        $rootScope.$on("progress", function (e) {
             console.log("[WS]: newRTCSession - progress");
-            console.log(data);
-            if ($scope.globalsession.direction === "incoming") {
+            if (Phone.phoneSession.direction === "incoming") {
                 console.log("[WS]: Playing incoming call ring:");
                 audioElement.src = "/sounds/old_british_phone.wav";
                 //attachMediaStream(audioElement,"/sounds/old_british_phone.wav");
@@ -583,7 +583,7 @@ ONEmSimModule.controller('phoneController', [
         $scope.answerCall = function () {
             //AnswerButton.click(function () {
             console.log("[UI]: AnswerButton - click");
-            $scope.globalsession.answer(options);
+            Phone.phoneSession.answer(options);
             $scope.dialerOpen = false;
             $scope.answerOpen = true;
             // $('.phone div.panel').removeClass('open');
@@ -597,7 +597,7 @@ ONEmSimModule.controller('phoneController', [
             console.log("[UI]: RejectButton - click");
             // ****
             //phoneONEm.terminateSessions();
-            $scope.globalsession.terminate();
+            Phone.phoneSession.terminate();
         };
 
         //Make a phone call:
@@ -624,7 +624,7 @@ ONEmSimModule.controller('phoneController', [
             $scope.dialerOpen = false;
 
         // ****    if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
-            //if(phoneONEm.isConnected()) $scope.globalsession.terminate();
+            //if(phoneONEm.isConnected()) Phone.phoneSession.terminate();
             if (isInCall == 1) $scope.dialerOpen = !$scope.dialerOpen;
         };
 

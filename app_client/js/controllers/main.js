@@ -12,8 +12,6 @@ ONEmSimModule.controller('mainController', [
     function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr) {
         console.log("user:" + $rootScope.user);
         
-        var phoneONEm;
-
         function resolveState() {
 
             console.log("$scope.$parent.touchCheckboxModel.on");
@@ -77,14 +75,14 @@ ONEmSimModule.controller('mainController', [
             // For debug run this in the browser's console and reload the page:
             // JsSIP.debug.enable('JsSIP:*');
     
-            phoneONEm = new JsSIP.UA(configuration);
+            Phone.phoneData = new JsSIP.UA(configuration);
     
-            phoneONEm.registrator().setExtraHeaders([
+            Phone.phoneData.registrator().setExtraHeaders([
                 'X-WEBRTC-UA: zoiper'
             ]);
 
-            phoneONEm.start();
-            phoneONEm.register();
+            Phone.phoneData..start();
+            Phone.phoneData..register();
 
             return Phone.start(response);
 
@@ -94,17 +92,20 @@ ONEmSimModule.controller('mainController', [
             return Cache.getServices();
         }).then(function (services) {
 
-            phoneONEm.on('newRTCSession', function (data) {
+            Phone.phoneData.on('newRTCSession', function (data) {
+                console.log("main: new RTC session");
 
-                data.session.on("progress", function (e, data) {
+                Phone.phoneSession = data.session;
+
+                Phone.phoneSession.on("progress", function (e) {
                     console.log("[WS]: newRTCSession - progress");
-                    $rootScope.$emit('progress', data);
+                    $rootScope.$emit('progress');
                 });
 
-                console.log("main: new RTC session");
                 //$rootScope.$emit('_onemNewRTCSession', data);
                 var cs = Cache.getCallService();
                 $state.go('service', { service: cs, initialize: false, template: cs.service.template, rtcData: data });
+
             });
 
             if ($scope.$parent) $scope.$parent.spinner = false;
