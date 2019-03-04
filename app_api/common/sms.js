@@ -127,7 +127,12 @@ var smppServer = smpp.createServer(function(session) {
             if (typeof client.moRecord.socket !== 'undefined') {
                 try {
                     debug("trying response: " + client.moRecord.mtText);
-                    client.moRecord.socket.emit('MT SMS', { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                    var channel = 'MT SMS';
+                    if (client.moRecord.api) {
+                        console.log("responding on MT API channel");
+                        channel = 'API MT SMS';
+                    }
+                    client.moRecord.socket.emit(channel, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
                     if (client.moRecord.mtText.length < 20) {
@@ -142,7 +147,11 @@ var smppServer = smpp.createServer(function(session) {
                     errMsg = '001'; // Error sending the message
                     dlvrdMsg = '000'; // No message was delivered
                     common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
-                    message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+
+                    // don't save api messages
+                    if (!client.moRecord.api) {
+                        message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+                    }
                 };
             } else {
                 common.sendEmail(pdu.destination_addr, client.moRecord.mtText);

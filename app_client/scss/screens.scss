@@ -1,11 +1,11 @@
-body {
-    color: #333;
-    font-size: 18px;
-    line-height: 1.3;
-    font-weight: 300; 
-    font-family: 'Merriweather', serif;
-    font-family: 'Open Sans', sans-serif;
-}
+// body {
+//     color: #333;
+//     font-size: 18px;
+//     line-height: 1.3;
+//     font-weight: 300; 
+//     font-family: 'Merriweather', serif;
+//     font-family: 'Open Sans', sans-serif;
+// }
 
 body.full {
     overflow: hidden;
@@ -21,7 +21,13 @@ body.full {
 
 .phone {
 /*    z-index: -1;*/
-    position: relative;
+color: #333;
+font-size: 18px;
+line-height: 1.3;
+font-weight: 300; 
+font-family: 'Merriweather', serif;
+font-family: 'Open Sans', sans-serif;
+position: relative;
     display: block;
     width: 400px;
     margin: 0px auto;
@@ -250,7 +256,7 @@ body.full {
     line-height: 50%;
 }
 
-.phone .keypad .num .txt { font-size: 60%; color: #b2b2b2; margin-top: -14%; }
+.phone .keypad .num .txt { font-size: 60%; color: #b2b2b2; margin-top: -10%; }
 
 .phone .keypad .more .no { font-size: 16px; padding: 40% 0; color: #b2b2b2; }
 
@@ -259,6 +265,8 @@ body.full {
 .phone .keypad .plus .no { font-size: 26px; padding: 30% 0; color: #b2b2b2; }
 
 .phone .keypad .zero .no { padding: 30% 0; }
+
+.phone .keypad .star .no { font-size: 60px; padding: 40% 0 }
 
 .phone .keypad .aste .no { padding: 30% 0; font-size: 26px; color: #b2b2b2; }
 

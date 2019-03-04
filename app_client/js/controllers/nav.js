@@ -1,44 +1,92 @@
 ONEmSimModule.controller('navbarController', [
     '$scope',
     '$rootScope',
-    '$templateCache',
     '$auth',
     '$state',
-    '$timeout',
-    function ($scope, $rootScope, $templateCache, $auth, $state, $timeout) {
+    'Request',
+    'DataModel',
+    function ($scope, $rootScope, $auth, $state, Request, DataModel) {
         $scope.isAuthenticated = function () {
             return $auth.isAuthenticated();
         }
 
-        $scope.agree = function() {
-            $state.go('logoutDelete');
-        }
+        $scope.$state = $state;
+        $scope.dropdown="My Profile";
+        $scope.user = {};
+        $scope.spinner = false;
+        $scope.ready = false;
 
-        // $rootScope.$watch('user', function (newVal, oldVal, scope) {
+        $scope.inboxCount = DataModel.getInbox().length || 0;
 
-        //     console.log("newVal");
-        //     console.log(newVal);
+        $rootScope.$on('_onemUpdateInbox', function(event, result) {
+            $scope.inboxCounts = DataModel.getInboxCounts();
+            console.log("inboxCounts");
+            console.log($scope.inboxCounts);
+        });
 
-        //     console.log("oldVal");
-        //     console.log(oldVal);
 
-        //     if (JSON.stringify(newVal) == JSON.stringify(oldVal)) return;
+        $rootScope.$watch('user', function(newVal, oldVal, scope) {
+            console.log("rootscope watch");
+            console.log(newVal);
+            if (newVal) {
+                if (newVal.email) $scope.user.email = newVal.email;
+                if (newVal.firstName) $scope.user.firstName = newVal.firstName;
+                if (newVal.lastName) $scope.user.lastName = newVal.lastName;
+            }
 
-        //     console.log("user changed:");
+            if ($rootScope.user) {
+                console.log($scope.dropdown);
+                if ($rootScope.user.firstName) {
+                    $scope.dropdown = $rootScope.user.firstName;
+                    console.log($scope.dropdown);
+    
+                    if ($rootScope.user.lastName) $scope.dropdown += ' ';
+                }
+                if ($rootScope.user.lastName) {
+                    console.log($scope.dropdown);
+    
+                    $scope.dropdown += $rootScope.user.lastName;
+                }
+                if (!$scope.dropdown) {
+                    console.log($scope.dropdown);
+    
+                    $scope.dropdown = $rootScope.user.email;
+                }
+            }
+        });
 
-        //     var currentPageTemplate;
-        //     if ($state.current) {
-        //         //if ($state.current.templateUrl == 'partials/index.html') {
-        //         //    $window.location.reload();
+        $scope.$on('error', function (ev, data) {
+            console.log("[MN]: socket error:" + ev);
+            console.log(ev);
+            console.log(data);
+        });
 
-        //        // } else {
-        //        //     currentPageTemplate = $state.current.templateUrl;
-        //        //     console.log("reloading:" + currentPageTemplate);
-        //        //     $templateCache.remove(currentPageTemplate);
-        //          //   $state.reload();
-        //        // }
+        $scope.$on('socket:LOGOUT', function (ev, data) {
+            $state.go('logout');
+        });
 
-        //     }
-        // });
+        $scope.$on('socket:MT SMS', function (ev, data) {
+            console.log("[MN]: MT received:");
+            console.log(data);
+            var outputObj = {
+                type: "mt",
+                value: data.mtText
+            };
+            $scope.results = DataModel.addResult(outputObj);
+            Request.receivedMt(data.mtText);
+        });
+
+        $scope.$on('socket:API MT SMS', function (ev, data) {
+            console.log("nav: received API MT");
+            console.log(data.mtText);
+            Request.apiReceivedMt(data.mtText);
+        });
+
+        $scope.$on('socket:INBOX MT SMS', function (ev, data) {
+            console.log("nav: received INBOX API MT");
+            console.log(data.mtText);
+            DataModel.addMessage(data.mtText);
+        });
+
     }
 ]);

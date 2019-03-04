@@ -1,0 +1,55 @@
+<div ng-show="ready" class="row col-centered">
+    <nav style="position:fixed;top:20;left:0;white-space:nowrap;z-index:995" class="navbar-fixed" ng-cloak
+        ng-show="result.breadcrumbs.length > 0">
+        <div class="nav-wrapper white">
+            <div class="col s12 truncate black-text">
+                <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
+                    ng-click="buttonSelected('#' + activeService.getName())" class="breadcrumb">{{result.breadcrumbs[0]}}</a>
+                <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}}</a>
+            </div>
+        </div>
+    </nav>
+    <div style="margin-top:70px;margin-bottom:70px" class="col s12 m12 l6 offset-l3">
+        <div class="ng-cloak" ng-show="result.type">
+            <div class="row">
+                <div class="results-mobile-wrapper" class="col s12">
+                    <div ng-repeat="line in result.preBody track by $index">{{line}}</div>
+                    <div ng-repeat="line in result.body track by $index">
+                        <div ng-show="line.type == 'content'">{{line.content}}</div>
+                        <div class="collection grey lighten-5" style="width:100%" ng-show="line.type == 'options'">
+                            <a style="padding-right:5px" class="collection-item" ng-click="optionSelected(option)"
+                                ng-repeat="option in line.options track by $index" ng-show="line.type == 'options'">
+                                {{option.desc}}<span style="float:right"><i
+                                        class="material-icons">chevron_right</i></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="ng-cloak" ng-show="result.type == 'input'">
+                        <form ng-submit="moSubmit()" name="inputForm">
+                            <div class="input-field">
+                                <div class="col s12">
+                                    <input close-keyboard type="text" auto-focus autocomplete="off"
+                                        ng-model="$parent.moText" placeholder="Message" required id="moText"
+                                        type="text">
+                                    <span class="helper-text">{{result.footer}}</span>
+                                    <input type="submit" style="visibility:hidden;position:absolute"/>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="pagination-mobile-wrapper">
+        <div ng-include="'partials/templates/pagination.html'"></div>
+    </div>
+    <div style=" position:fixed;z-index:995;left:0;bottom:0" class="navbar-fixed">
+        <nav class="red right-align">
+            <a class="waves-effect waves-light" style="margin-right:20px"
+                ng-repeat="button in result.buttons track by $index"
+                ng-click="buttonSelected(button)">{{button}}</a>
+        </nav>
+    </div>
+</div>

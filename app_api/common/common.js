@@ -73,6 +73,9 @@ exports.sendEmail = function (msisdn, text) {
             debug("can't find email user for: " + user._id);
             return;
         }
+        
+        if (user.dontSendEmails) return;
+
         data.TextBody = text;
         data.To = user.email;
         client.sendEmail(data, function (error, body) {

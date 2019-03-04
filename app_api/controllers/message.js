@@ -1,15 +1,9 @@
 const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
 const common = require('../common/common.js');
-
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
 
 var MessageSchema = require('../models/Model').MessageSchema;
 var Message = mongoose.model('messages', MessageSchema);
-
-var bluebird = require('bluebird');
 
 exports.save = function (from, to, text) {
     debug("messages.save");
@@ -45,7 +39,7 @@ exports.deliverPending = function (socket) {
             if (users && users.length > 0) {
                 debug("there are pending messages to deliver");
                 users.map(function (user) {
-                    socket.emit('MT SMS', { mtText: user.text });
+                    socket.emit('INBOX MT SMS', { mtText: user.text });
                 });
                 return Message.updateMany({ _user: savedUser._id, delivered: false }, { $set: { delivered: true } });
             } else {

@@ -13,7 +13,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'ui.router',
     'ngIntlTelInput',
     'mp.autoFocus',
-    'monospaced.elastic'
+    'monospaced.elastic',
+    'angularMoment',
 ]).filter('nl2br', ['$sanitize', function ($sanitize) {
     var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
     return function (msg) {
@@ -21,8 +22,8 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
         msg = (msg + '').replace(/(\r\n|\n\r|\r|\n|&#10;&#13;|&#13;&#10;|&#10;|&#13;)/g, tag + '$1');
         return $sanitize(msg);
     };
-}]).run(['$state', '$stateParams', function($state, $stateParams) {
-        //this solves page refresh and getting back to state
+    //}]).run(['$state', '$stateParams', function ($state, $stateParams) {
+    //this solves page refresh and getting back to state
 }]);
 
 ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$authProvider', 'ngIntlTelInputProvider',
@@ -36,24 +37,25 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         /**
        * Helper auth functions
        */
-        var landingRedirect = ['$q', '$location', '$auth', function ($q, $location, $auth) {
-            var deferred = $q.defer();
-            console.log("landingRedirect:" + $auth.isAuthenticated());
+        // var landingRedirect = ['$q', '$location', '$auth', '$state', function ($q, $location, $auth, $state) {
+        //     var deferred = $q.defer();
+        //     console.log("landingRedirect:" + $auth.isAuthenticated());
 
-            if ($auth.isAuthenticated()) {
-                $location.path('/home');
-            } else {
-                $location.path('/login');
-            }
-            return deferred.promise;
-        }];
-        
-        var skipIfLoggedIn = ['$q', '$location', '$auth', function ($q, $location, $auth) {
+        //     if ($auth.isAuthenticated()) {
+        //         //  $location.path('/main');
+        //         $state.go('main');
+        //     } else {
+        //         $state.go('login');
+        //     }
+        //     return deferred.promise;
+        // }];
+
+        var skipIfLoggedIn = ['$q', '$location', '$auth', '$state', function ($q, $location, $auth, $state) {
             var deferred = $q.defer();
             console.log("skipIfLoggedIn:" + $auth.isAuthenticated());
 
             if ($auth.isAuthenticated()) {
-                $location.path('/');
+                $state.go('main');
             } else {
                 deferred.resolve();
             }
@@ -87,28 +89,45 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
         $authProvider.facebook({
             clientId: FACEBOOK_CLIENT_ID,
             redirectUri: redirectUri
-          });
+        });
 
         console.log("auth header:");
         console.log($authProvider.tokenHeader);
         console.log($authProvider.tokenType);
 
         $stateProvider.
-            state('landing', {
-                url: '/',
-                templateUrl: 'partials/login.html',
-                controller: 'loginController',
-                resolve: {
-                    landingRedirect: landingRedirect
-                }
-            }).
+            // state('landing', {
+            //     url: '/',
+            //     templateUrl: 'partials/login.html',
+            //     controller: 'loginController',
+            //     resolve: {
+            //         landingRedirect: landingRedirect
+            //     }
+            // }).
             state('authEndpoint', {
                 url: '/auth-endpoint'
             }).
-            state('home', {
-                url: '/home',
-                templateUrl: 'partials/onemSim.html',
+            state('main', {
+                url: '/',
+                //      templateUrl: 'partials/onemSim_app.html',
                 controller: 'mainController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
+            state('console', {
+                url: '/',
+                templateUrl: 'partials/onemSim.html',
+                controller: 'phoneController',
+                resolve: {
+                    loginRequired: loginRequired
+                }
+            }).
+            state('service', {
+                url: '/',
+                templateUrl: 'partials/service.html',
+                controller: 'serviceController',
+                params: { service: null, initialize: null },
                 resolve: {
                     loginRequired: loginRequired
                 }
@@ -137,18 +156,33 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     loginRequired: loginRequired
                 }
             }).
+            state('settings', {
+                url: '/',
+                templateUrl: 'partials/settings.html',
+                controller: 'settingsController'
+            }).
+            state('inbox', {
+                url: '/',
+                templateUrl: 'partials/inbox.html',
+                controller: 'inboxController'
+            }).
             state('logoutDelete', {
-                url: '/logoutDelete',
+                url: '/',
                 templateUrl: null,
                 controller: 'logoutDeleteController'
             }).
             state('logout', {
-                url: '/logout',
+                url: '/',
                 templateUrl: null,
                 controller: 'logoutController'
             });
 
-        $urlRouterProvider.otherwise('/');
+        //        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise(function ($injector) {
+            var $state = $injector.get('$state');
+            console.log("caught default route");
+            $state.go('main');
+        });
         $locationProvider.html5Mode(true);
 
     }
@@ -189,4 +223,4 @@ ONEmSimModule.config(['$httpProvider',
 ]);
 
 
-     
+
