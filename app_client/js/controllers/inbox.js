@@ -8,6 +8,7 @@ ONEmSimModule.controller('inboxController', [
     function ($scope, $rootScope, DataModel, Cache, $timeout, toastr) {
         
         $scope.messages = [];
+        $scope.moTextInbox = "";
 
         var refreshInbox = function() {
             $scope.messages = DataModel.getInbox();
@@ -16,7 +17,6 @@ ONEmSimModule.controller('inboxController', [
         refreshInbox();
 
         $scope.readMessage = function(message, index) {
-            $scope.moTextInbox = "";
 
             message = DataModel.readMessage(index);
             var line0 = message.content.lines[0];
@@ -27,11 +27,11 @@ ONEmSimModule.controller('inboxController', [
         }
         
 
-        $scope.moSubmitFromInbox = function () {
-            console.log("motext:" + $scope.moText);
-            if (!$scope.moTextInbox || $scope.moTextInbox.length == 0) return;
+        $scope.moSubmitFromInbox = function (moText) {
+            console.log("moSubmitFromInbox motext:" + moText);
+            if (!moText || moText.length == 0) return;
             $scope.$parent.spinner = true;
-            Cache.selectOption($scope.moTextInbox).then(function (response) {
+            Cache.selectOption(moText).then(function (response) {
                 console.log("got response");
 
                 $timeout(function () {

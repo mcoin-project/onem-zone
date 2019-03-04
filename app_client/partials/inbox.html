@@ -36,7 +36,7 @@
                             <p ng-repeat="l in m.content.lines | limitTo: (1 - m.content.lines.length)">{{l}}</p>
                             <div class="ng-cloak">
                                 <div ng-show="m.content.lines[0].startsWith('@') && m.content.lines[0].includes(':')">
-                                    <form ng-submit="moSubmitFromInbox()" name="inputFormInbox">
+                                    <form ng-submit="moSubmitFromInbox(moTextInbox)" name="inputFormInbox">
                                         <div class="row input-field">
                                             <div class="col s12 m10 l10">
                                                 <input close-keyboard auto-focus autocomplete="off" ng-model="moTextInbox" required type="text">
