@@ -133,7 +133,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     }
                 },
                 controller: 'serviceController',
-                params: { service: null, initialize: null, template: null },
+                params: { service: null, initialize: null, template: null, rtcData: null },
                 resolve: {
                     loginRequired: loginRequired
                 }

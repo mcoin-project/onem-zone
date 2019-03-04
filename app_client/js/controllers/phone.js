@@ -4,7 +4,8 @@ ONEmSimModule.controller('phoneController', [
     '$scope',
     '$timeout',
     'dateFilter',
-    function ($rootScope, $scope, $timeout, dateFilter) {
+    '$stateParams',
+    function ($rootScope, $scope, $timeout, dateFilter, $stateParams) {
 
         var msisdn = $rootScope.msisdn;
         var sipProxy = $rootScope.sipProxy;
@@ -12,6 +13,9 @@ ONEmSimModule.controller('phoneController', [
         console.log("[WS]: msisdn: " + msisdn);
         console.log("[WS]: SIP Proxy: " + sipProxy);
         console.log("[WS]: web socket protocol: " + wsProtocol);
+
+        console.log("phoneController stateParams:");
+        console.log($stateParams);
 
         var isInCall = 0;
 
@@ -319,6 +323,10 @@ ONEmSimModule.controller('phoneController', [
             return false;
         };
 
+        if ($stateParams && $stateParams.rtcData) {
+            newRTCSession($stateParams.rtcData);
+        }
+
         // phoneONEm.start();
         // phoneONEm.register();
 
@@ -350,7 +358,8 @@ ONEmSimModule.controller('phoneController', [
         //    console.log("[WS]: registrationExpiring");       //it’s responsible of calling ua.register() within the registrationExpiring event
         //});                                                  //(otherwise the registration will expire).
 
-        $rootScope.$on('_onemNewRTCSession', function (event, data) {
+        //$rootScope.$on('_onemNewRTCSession', function (event, data) {
+        var newRTCSession = function(data);
             console.log("[WS]: newRTCSession");
             $rootScope.globalSession = data.session; //session pointer
 

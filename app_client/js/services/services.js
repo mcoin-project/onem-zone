@@ -19,9 +19,15 @@ ONEmSimModule.factory('Services', [
         Service.prototype.getTemplate = function() {
             return this.service.template;
         }
+
         Service.prototype.isDefault = function() {
             return this.service.default;
         }
+
+        Service.prototype.isCall = function() {
+            return this.service.call;
+        }
+
         function Services(hashResults) {
             this.goCommand = ServicesConfig.goCommand;
             this.hashResults = hashResults;
@@ -44,6 +50,19 @@ ONEmSimModule.factory('Services', [
                 }
             }
             console.log("getLandingService:");
+            console.log(result);
+            return result;
+        }
+
+        Services.prototype.getCallService = function() {
+            var result;
+            for (var i = 0; i < this.services.length; i++) {
+                if (this.services[i].isCall()) {
+                    result = this.services[i];
+                    break;
+                }
+            }
+            console.log("getCallService:");
             console.log(result);
             return result;
         }

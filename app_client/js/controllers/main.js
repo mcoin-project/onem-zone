@@ -87,11 +87,6 @@ ONEmSimModule.controller('mainController', [
             phoneONEm.start();
             phoneONEm.register();
 
-            phoneONEm.on('newRTCSession', function (data) {
-                console.log("main: new RTC session");
-                $rootScope.$emit('_onemNewRTCSession', data);
-            });
-
             return Phone.start(response);
 
         }).then(function (response) {
@@ -99,6 +94,13 @@ ONEmSimModule.controller('mainController', [
             $scope.$parent.spinner = true;
             return Cache.getServices();
         }).then(function (services) {
+
+            phoneONEm.on('newRTCSession', function (data) {
+                console.log("main: new RTC session");
+                //$rootScope.$emit('_onemNewRTCSession', data);
+                var cs = services.getCallService();
+                $state.go('service', { service: cs, initialize: false, template: service.getTemplate(), rtcData: data });
+            });
 
             if ($scope.$parent) $scope.$parent.spinner = false;
 

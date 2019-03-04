@@ -2,7 +2,7 @@ ONEmSimModule.constant('ServicesConfig',
     {
         services: [
             { name: ['onem'], icon: 'home' },
-            { name: ['call'], icon: 'call', template: 'partials/onemSim.html' },
+            { name: ['call'], icon: 'call', template: 'partials/onemSim.html', call: true },
             { name: ['account'], icon: 'account' },
             { name: ['subscribe'], icon: 'subscribe' },
             { name: ['market'], icon: 'cart', default: true },
