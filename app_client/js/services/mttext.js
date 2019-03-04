@@ -196,6 +196,13 @@ ONEmSimModule.factory('MtText', function () {
 		// there is at least one option
 	}
 
+	// returns true if this is a received p2p or group message
+	Text.prototype.isMsg = function () {
+		if (this.lines.length == 0) return false;
+		var result = this.lines[0].match(/@[a-zA-z][a-zA-Z0-9_-]+:/gm) || null;
+		return !result ? false : true;
+	}
+
 	// Analyses the text for a DYM menu
 	Text.prototype.isServicesList = function () {
 		if (!this.hasOptions()) {
