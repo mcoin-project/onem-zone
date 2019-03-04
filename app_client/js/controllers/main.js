@@ -89,7 +89,7 @@ ONEmSimModule.controller('mainController', [
 
             phoneONEm.on('newRTCSession', function (data) {
                 console.log("main: new RTC session");
-                $rootScope.$emit(_onemNewRTCSession, data);
+                $rootScope.$emit('_onemNewRTCSession', data);
             });
 
             return Phone.start(response);
