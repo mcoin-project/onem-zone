@@ -7,8 +7,8 @@ ONEmSimModule.controller('phoneController', [
     function ($rootScope, $scope, $timeout, dateFilter) {
 
         var msisdn = $rootScope.msisdn;
-        var sipProxy = $rootScope.sipproxy;
-        var wsProtocol = $rootScope.wsprotocol;
+        var sipProxy = $rootScope.sipProxy;
+        var wsProtocol = $rootScope.wsProtocol;
         console.log("[WS]: msisdn: " + msisdn);
         console.log("[WS]: SIP Proxy: " + sipProxy);
         console.log("[WS]: web socket protocol: " + wsProtocol);
