@@ -21,7 +21,7 @@ ONEmSimModule.controller('inboxController', [
             message = DataModel.readMessage(index);
             var line0 = message.content.lines[0];
             $rootScope.$broadcast('_onemUpdateInbox');
-            if (line0.startsWith('@') && line0.includes(':')) {
+            if (message.content.isMsg()) {
                 $scope.moTextInbox = line0.slice(0, line0.indexOf(':')) + ' ';
             }
         }
