@@ -359,7 +359,7 @@ ONEmSimModule.controller('phoneController', [
         //});                                                  //(otherwise the registration will expire).
 
         //$rootScope.$on('_onemNewRTCSession', function (event, data) {
-        var newRTCSession = function(data);
+        var newRTCSession = function(data) {
             console.log("[WS]: newRTCSession");
             $rootScope.globalSession = data.session; //session pointer
 
@@ -554,7 +554,7 @@ ONEmSimModule.controller('phoneController', [
             //  $rootScope.globalSession.terminate();
             //};
 
-        });
+        };
 
         // phoneONEm.on('newMessage', function (data) {
         //     console.log("[WS]: newMessage: " + data.message);
