@@ -322,43 +322,6 @@ ONEmSimModule.controller('phoneController', [
             console.log('[UI]: Answer panel maximized');
             return false;
         };
-
-        if ($stateParams && $stateParams.rtcData) {
-            newRTCSession($stateParams.rtcData);
-        }
-
-        // phoneONEm.start();
-        // phoneONEm.register();
-
-        // phoneONEm.on('connecting', function (data) {
-        //     console.log("[WS]: connecting");
-        // });
-
-        // phoneONEm.on('connected', function (data) {
-        //     console.log("[WS]: connected");
-        // });
-
-        // phoneONEm.on('disconnected', function (data) {
-        //     console.log("[WS]: disconnected");
-        // });
-
-        // phoneONEm.on('registered', function (data) {
-        //     console.log("[WS]: registered");
-        // });
-
-        // phoneONEm.on('unregistered', function (data) {
-        //     console.log("[WS]: unregistered");
-        // });
-
-        // phoneONEm.on('registrationFailed', function (data) {
-        //     console.log("[WS]: registrationFailed");
-        // });
-
-        //phoneONEm.on('registrationExpiring', function(data){ //If the application subscribes to this event,
-        //    console.log("[WS]: registrationExpiring");       //it’s responsible of calling ua.register() within the registrationExpiring event
-        //});                                                  //(otherwise the registration will expire).
-
-        //$rootScope.$on('_onemNewRTCSession', function (event, data) {
         var newRTCSession = function(data) {
             console.log("[WS]: newRTCSession");
             $rootScope.globalSession = data.session; //session pointer
@@ -555,6 +518,44 @@ ONEmSimModule.controller('phoneController', [
             //};
 
         };
+        
+        if ($stateParams && $stateParams.rtcData) {
+            newRTCSession($stateParams.rtcData);
+        }
+
+        // phoneONEm.start();
+        // phoneONEm.register();
+
+        // phoneONEm.on('connecting', function (data) {
+        //     console.log("[WS]: connecting");
+        // });
+
+        // phoneONEm.on('connected', function (data) {
+        //     console.log("[WS]: connected");
+        // });
+
+        // phoneONEm.on('disconnected', function (data) {
+        //     console.log("[WS]: disconnected");
+        // });
+
+        // phoneONEm.on('registered', function (data) {
+        //     console.log("[WS]: registered");
+        // });
+
+        // phoneONEm.on('unregistered', function (data) {
+        //     console.log("[WS]: unregistered");
+        // });
+
+        // phoneONEm.on('registrationFailed', function (data) {
+        //     console.log("[WS]: registrationFailed");
+        // });
+
+        //phoneONEm.on('registrationExpiring', function(data){ //If the application subscribes to this event,
+        //    console.log("[WS]: registrationExpiring");       //it’s responsible of calling ua.register() within the registrationExpiring event
+        //});                                                  //(otherwise the registration will expire).
+
+        //$rootScope.$on('_onemNewRTCSession', function (event, data) {
+
 
         // phoneONEm.on('newMessage', function (data) {
         //     console.log("[WS]: newMessage: " + data.message);
