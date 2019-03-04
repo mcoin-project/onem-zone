@@ -27,23 +27,26 @@ ONEmSimModule.controller('inboxController', [
         }
         
 
-        $scope.moSubmitFromInbox = function (moText) {
+        $scope.moSubmitFromInbox = function (moText, index) {
             console.log("moSubmitFromInbox motext:" + moText);
             if (!moText || moText.length == 0) return;
             $scope.$parent.spinner = true;
             Cache.selectOption(moText).then(function (response) {
                 console.log("got response");
+                $('.collapsible').collapsible('close',index);
 
                 $timeout(function () {
                     $scope.$parent.spinner = false;
+                    $scope.moTextInbox = "";
                     $rootScope.$apply();
                 });
 
-                $scope.moTextInbox = "";
              //   applyResult(response);
             }).catch(function (error) {
                 console.log("parent:")
                 console.log($scope.$parent);
+                $('.collapsible').collapsible('close',index);
+
                 $timeout(function () {
                     $scope.$parent.spinner = false;
                     $rootScope.$apply();
