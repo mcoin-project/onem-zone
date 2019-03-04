@@ -520,6 +520,23 @@ ONEmSimModule.controller('phoneController', [
 
         };
 
+        $rootScope.$on("progress", function (e, data) {
+            console.log("[WS]: newRTCSession - progress");
+            console.log(data);
+            if ($scope.globalsession.direction === "incoming") {
+                console.log("[WS]: Playing incoming call ring:");
+                audioElement.src = "/sounds/old_british_phone.wav";
+                //attachMediaStream(audioElement,"/sounds/old_british_phone.wav");
+            } else { //outgoing
+                console.log("[WS]: Playing outgoing callback tone:");
+                audioElement.src = "/sounds/ringing_tone_uk_new.wav";
+                //attachMediaStream(audioElement,"/sounds/ringing_tone_uk_new.wav");
+            };
+            if (webrtcDetectedBrowser == "firefox") {
+                audioElement.play();
+            };
+        });
+
         if ($stateParams && $stateParams.rtcData) {
             newRTCSession($stateParams.rtcData);
         }

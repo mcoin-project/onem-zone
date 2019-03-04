@@ -95,6 +95,12 @@ ONEmSimModule.controller('mainController', [
         }).then(function (services) {
 
             phoneONEm.on('newRTCSession', function (data) {
+
+                data.session.on("progress", function (e, data) {
+                    console.log("[WS]: newRTCSession - progress");
+                    $rootScope.$emit('progress', data);
+                });
+
                 console.log("main: new RTC session");
                 //$rootScope.$emit('_onemNewRTCSession', data);
                 var cs = Cache.getCallService();
