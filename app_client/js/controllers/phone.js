@@ -134,8 +134,6 @@ ONEmSimModule.controller('phoneController', [
         };
         var talkTime = null;
 
-        $scope.globalsession = null;
-
         //// Register callbacks to desired call events
         //var eventHandlers = {
         //    'progress'  : function(e) { },
