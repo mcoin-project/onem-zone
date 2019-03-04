@@ -98,7 +98,7 @@ ONEmSimModule.controller('mainController', [
                 console.log("main: new RTC session");
                 //$rootScope.$emit('_onemNewRTCSession', data);
                 var cs = Cache.getCallService();
-                $state.go('service', { service: cs, initialize: false, template: service.getTemplate(), rtcData: data });
+                $state.go('service', { service: cs, initialize: false, rtcData: data });
             });
 
             if ($scope.$parent) $scope.$parent.spinner = false;
