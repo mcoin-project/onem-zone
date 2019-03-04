@@ -105,6 +105,13 @@ ONEmSimModule.factory('Cache', [
                     return 'go';
                 }
             },
+            getCallService: function () {
+                if (ServicesData.services()) {
+                    return ServicesData.services().getCallService();
+                } else {
+                    return false;
+                }
+            },
             getLandingService: function () {
                 if (ServicesData.services()) {
                     return ServicesData.services().getLandingService();
