@@ -115,9 +115,9 @@ ONEmSimModule.controller('phoneController', [
                     return this.remoteStreams;
                 };
             }
-        } else {
-            console.log("[WS]: Browser does not appear to be WebRTC-capable");
-        };
+        // } else {
+        //     console.log("[WS]: Browser does not appear to be WebRTC-capable");
+        // };
 
         var TalkTimer = $('.answer .talktime');
 
