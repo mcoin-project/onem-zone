@@ -81,8 +81,8 @@ ONEmSimModule.controller('mainController', [
                 'X-WEBRTC-UA: zoiper'
             ]);
 
-            Phone.phoneData..start();
-            Phone.phoneData..register();
+            Phone.phoneData.start();
+            Phone.phoneData.register();
 
             return Phone.start(response);
 
