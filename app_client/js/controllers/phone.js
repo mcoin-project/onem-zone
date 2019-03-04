@@ -326,6 +326,9 @@ ONEmSimModule.controller('phoneController', [
             console.log("[WS]: newRTCSession");
             $rootScope.globalSession = data.session; //session pointer
 
+            console.log("session data:");
+            console.log(data);
+
             $('.phone div.caller').addClass('open');
             $scope.callerOpen = true;
             //Identity display:
@@ -518,7 +521,7 @@ ONEmSimModule.controller('phoneController', [
             //};
 
         };
-        
+
         if ($stateParams && $stateParams.rtcData) {
             newRTCSession($stateParams.rtcData);
         }
