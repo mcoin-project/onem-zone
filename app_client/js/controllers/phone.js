@@ -367,7 +367,7 @@ ONEmSimModule.controller('phoneController', [
                     //attachMediaStream(audioElement,"/sounds/ringing_tone_uk_new.wav");
                 };
                 if (webrtcDetectedBrowser == "firefox") {
-                    audioElement.play();
+                  //  audioElement.play();
                 };
             });
             Phone.phoneSession.on("accepted", function (e) {
