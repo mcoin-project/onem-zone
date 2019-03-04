@@ -350,7 +350,7 @@ ONEmSimModule.controller('phoneController', [
         //    console.log("[WS]: registrationExpiring");       //it’s responsible of calling ua.register() within the registrationExpiring event
         //});                                                  //(otherwise the registration will expire).
 
-        $rootScope.$on('_onemNewRTCSession', function (data) {
+        $rootScope.$on('_onemNewRTCSession', function (event, data) {
             console.log("[WS]: newRTCSession");
             $rootScope.globalSession = data.session; //session pointer
 
