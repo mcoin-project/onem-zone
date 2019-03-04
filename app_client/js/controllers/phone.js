@@ -48,29 +48,29 @@ ONEmSimModule.controller('phoneController', [
         $scope.dialerTypedNo = "";
         $scope.answerTypedNo = "";
 
-        if (navigator.mozGetUserMedia) {
-            console.log("[WS]: This appears to be Firefox");
-            webrtcDetectedBrowser = "firefox";
-            //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
-            // The RTCPeerConnection object.
-            RTCPeerConnection = mozRTCPeerConnection;
-            // The RTCSessionDescription object.
-            RTCSessionDescription = mozRTCSessionDescription;
-            // Get UserMedia (only difference is the prefix).
-            // Code from Adam Barth.
-            getUserMedia = navigator.mozGetUserMedia.bind(navigator);
-            // Attach a media stream to an element.
-            attachMediaStream = function (element, stream) {
-                console.log("[WS]: Attaching media stream");
-                element.mozSrcObject = stream;
-                element.play();
-            };
-            reattachMediaStream = function (to, from) {
-                console.log("[WS]: Reattaching media stream");
-                to.mozSrcObject = from.mozSrcObject;
-                to.play();
-            };
-        } else if (navigator.webkitGetUserMedia) {
+        // if (navigator.mozGetUserMedia) {
+        //     console.log("[WS]: This appears to be Firefox");
+        //     webrtcDetectedBrowser = "firefox";
+        //     //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Firefox\/([0-9]+)\./)[1]);
+        //     // The RTCPeerConnection object.
+        //     RTCPeerConnection = mozRTCPeerConnection;
+        //     // The RTCSessionDescription object.
+        //     RTCSessionDescription = mozRTCSessionDescription;
+        //     // Get UserMedia (only difference is the prefix).
+        //     // Code from Adam Barth.
+        //     getUserMedia = navigator.mozGetUserMedia.bind(navigator);
+        //     // Attach a media stream to an element.
+        //     attachMediaStream = function (element, stream) {
+        //         console.log("[WS]: Attaching media stream");
+        //         element.mozSrcObject = stream;
+        //         element.play();
+        //     };
+        //     reattachMediaStream = function (to, from) {
+        //         console.log("[WS]: Reattaching media stream");
+        //         to.mozSrcObject = from.mozSrcObject;
+        //         to.play();
+        //     };
+        // } else if (navigator.webkitGetUserMedia) {
             console.log("[WS]: This appears to be Chrome");
             webrtcDetectedBrowser = "chrome";
             //   webrtcDetectedVersion = parseInt(navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./)[2]);
@@ -366,9 +366,9 @@ ONEmSimModule.controller('phoneController', [
                     audioElement.src = "/sounds/ringing_tone_uk_new.wav";
                     //attachMediaStream(audioElement,"/sounds/ringing_tone_uk_new.wav");
                 };
-                if (webrtcDetectedBrowser == "firefox") {
+                //if (webrtcDetectedBrowser == "firefox") {
                   //  audioElement.play();
-                };
+                //};
             });
             Phone.phoneSession.on("accepted", function (e) {
                 console.log("[WS]: newRTCSession - accepted");
