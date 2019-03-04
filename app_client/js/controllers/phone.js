@@ -181,27 +181,27 @@ ONEmSimModule.controller('phoneController', [
             return sdp;
         };
 
-        var socket = new JsSIP.WebSocketInterface(wsProtocol + '://' + sipProxy);
+        // var socket = new JsSIP.WebSocketInterface(wsProtocol + '://' + sipProxy);
 
-        //JsSIP configuration:
-        var configuration = {
-            sockets: [socket],
-            uri: 'sip:' + msisdn + '@' + sipProxy,
-            password: 'ONEmP@$$w0rd2016',
-            useUpdate: false,
-            register: false,
-            use_preloaded_route: false,
-            register_expires: 120
-        };
+        // //JsSIP configuration:
+        // var configuration = {
+        //     sockets: [socket],
+        //     uri: 'sip:' + msisdn + '@' + sipProxy,
+        //     password: 'ONEmP@$$w0rd2016',
+        //     useUpdate: false,
+        //     register: false,
+        //     use_preloaded_route: false,
+        //     register_expires: 120
+        // };
 
-        // For debug run this in the browser's console and reload the page:
-        // JsSIP.debug.enable('JsSIP:*');
+        // // For debug run this in the browser's console and reload the page:
+        // // JsSIP.debug.enable('JsSIP:*');
 
-        phoneONEm = new JsSIP.UA(configuration);
+        // phoneONEm = new JsSIP.UA(configuration);
 
-        phoneONEm.registrator().setExtraHeaders([
-            'X-WEBRTC-UA: zoiper'
-        ]);
+        // phoneONEm.registrator().setExtraHeaders([
+        //     'X-WEBRTC-UA: zoiper'
+        // ]);
         $('a.full').click(function (e) {
             e.preventDefault();
             $('.phone').toggleClass('full');
@@ -319,38 +319,38 @@ ONEmSimModule.controller('phoneController', [
             return false;
         };
 
-        phoneONEm.start();
-        phoneONEm.register();
+        // phoneONEm.start();
+        // phoneONEm.register();
 
-        phoneONEm.on('connecting', function (data) {
-            console.log("[WS]: connecting");
-        });
+        // phoneONEm.on('connecting', function (data) {
+        //     console.log("[WS]: connecting");
+        // });
 
-        phoneONEm.on('connected', function (data) {
-            console.log("[WS]: connected");
-        });
+        // phoneONEm.on('connected', function (data) {
+        //     console.log("[WS]: connected");
+        // });
 
-        phoneONEm.on('disconnected', function (data) {
-            console.log("[WS]: disconnected");
-        });
+        // phoneONEm.on('disconnected', function (data) {
+        //     console.log("[WS]: disconnected");
+        // });
 
-        phoneONEm.on('registered', function (data) {
-            console.log("[WS]: registered");
-        });
+        // phoneONEm.on('registered', function (data) {
+        //     console.log("[WS]: registered");
+        // });
 
-        phoneONEm.on('unregistered', function (data) {
-            console.log("[WS]: unregistered");
-        });
+        // phoneONEm.on('unregistered', function (data) {
+        //     console.log("[WS]: unregistered");
+        // });
 
-        phoneONEm.on('registrationFailed', function (data) {
-            console.log("[WS]: registrationFailed");
-        });
+        // phoneONEm.on('registrationFailed', function (data) {
+        //     console.log("[WS]: registrationFailed");
+        // });
 
         //phoneONEm.on('registrationExpiring', function(data){ //If the application subscribes to this event,
         //    console.log("[WS]: registrationExpiring");       //it’s responsible of calling ua.register() within the registrationExpiring event
         //});                                                  //(otherwise the registration will expire).
 
-        phoneONEm.on('newRTCSession', function (data) {
+        $rootScope.$on('_onemNewRTCSession', function (data) {
             console.log("[WS]: newRTCSession");
             $rootScope.globalSession = data.session; //session pointer
 
@@ -547,9 +547,9 @@ ONEmSimModule.controller('phoneController', [
 
         });
 
-        phoneONEm.on('newMessage', function (data) {
-            console.log("[WS]: newMessage: " + data.message);
-        });
+        // phoneONEm.on('newMessage', function (data) {
+        //     console.log("[WS]: newMessage: " + data.message);
+        // });
 
         // Answer the call:
         $scope.answerCall = function () {
@@ -567,6 +567,7 @@ ONEmSimModule.controller('phoneController', [
         $scope.cancelCall = function () {
             //RejectButton.click(function () {
             console.log("[UI]: RejectButton - click");
+            // ****
             //phoneONEm.terminateSessions();
             $rootScope.globalSession.terminate();
         };
@@ -575,7 +576,7 @@ ONEmSimModule.controller('phoneController', [
         $scope.callButtonClicked = function() {
         //CallButton.click(function () {
             console.log("[UI]: CallButton - click; Call to " + $scope.dialerTypedNo);
-            phoneONEm.call('sip:' + $scope.dialerTypedNo + '@' + sipProxy, options);
+           // phoneONEm.call('sip:' + $scope.dialerTypedNo + '@' + sipProxy, options);
             isInCall = 1;
             //$('.answer #typed_no').val($scope.dialerTypedNo);
             $scope.answerTypedNo = $scope.dialerTypedNo;
@@ -594,15 +595,16 @@ ONEmSimModule.controller('phoneController', [
             // $('.phone div.panel').removeClass('open');
             $scope.dialerOpen = false;
 
-            if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
+        // ****    if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
             //if(phoneONEm.isConnected()) $rootScope.globalSession.terminate();
             if (isInCall == 1) $scope.dialerOpen = !$scope.dialerOpen;
         };
 
         window.onunload = function () {
-            if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
-            phoneONEm.stop();
-            phoneONEm.unregister();
+// ****
+            // if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
+            // phoneONEm.stop();
+            // phoneONEm.unregister();
         };
     }
 ]);

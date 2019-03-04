@@ -13,6 +13,8 @@ ONEmSimModule.controller('mainController', [
     function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr, DataModel) {
         console.log("user:" + $rootScope.user);
         
+        var phoneONEm;
+
         function resolveState() {
 
             console.log("$scope.$parent.touchCheckboxModel.on");
@@ -57,9 +59,41 @@ ONEmSimModule.controller('mainController', [
         }).then(function (response) {
             console.log("response fom smshandler.start");
             console.log(response);
-            $rootScope.sipproxy = response.sipproxy;
-            $rootScope.wsprotocol = response.wsprotocol;
+            $rootScope.sipProxy = response.sipproxy;
+            $rootScope.wsProtocol = response.wsprotocol;
+
+            var socket = new JsSIP.WebSocketInterface($rootScope.wsProtocol + '://' + $rootScope.sipProxy);
+
+            //JsSIP configuration:
+            var configuration = {
+                sockets: [socket],
+                uri: 'sip:' + $rootScope.msisdn + '@' + $rootScope.sipProxy,
+                password: 'ONEmP@$$w0rd2016',
+                useUpdate: false,
+                register: false,
+                use_preloaded_route: false,
+                register_expires: 120
+            };
+    
+            // For debug run this in the browser's console and reload the page:
+            // JsSIP.debug.enable('JsSIP:*');
+    
+            phoneONEm = new JsSIP.UA(configuration);
+    
+            phoneONEm.registrator().setExtraHeaders([
+                'X-WEBRTC-UA: zoiper'
+            ]);
+
+            phoneONEm.start();
+            phoneONEm.register();
+
+            phoneONEm.on('newRTCSession', function (data) {
+                console.log("main: new RTC session");
+                $rootScope.$emit(_onemNewRTCSession, data);
+            });
+
             return Phone.start(response);
+
         }).then(function (response) {
             console.log("finished call to phone.start");
             $scope.$parent.spinner = true;
@@ -100,5 +134,6 @@ ONEmSimModule.controller('mainController', [
                 if (error) toastr.error(error);
             }
         });
+
     }
 ]);

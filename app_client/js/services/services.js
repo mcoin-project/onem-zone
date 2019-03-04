@@ -16,6 +16,9 @@ ONEmSimModule.factory('Services', [
             return this.service.icon;
         }
 
+        Service.prototype.getTemplate = function() {
+            return this.service.template;
+        }
         Service.prototype.isDefault = function() {
             return this.service.default;
         }
