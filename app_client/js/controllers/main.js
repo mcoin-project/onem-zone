@@ -9,8 +9,8 @@ ONEmSimModule.controller('mainController', [
     '$timeout',
     'Cache',
     'toastr',
-    'DataModel',
-    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr, DataModel) {
+    'ServicesData',
+    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr, ServicesData) {
         console.log("user:" + $rootScope.user);
         
         var phoneONEm;
@@ -98,7 +98,7 @@ ONEmSimModule.controller('mainController', [
             phoneONEm.on('newRTCSession', function (data) {
                 console.log("main: new RTC session");
                 //$rootScope.$emit('_onemNewRTCSession', data);
-                var cs = services.getCallService();
+                var cs = ServicesData.services.getCallService();
                 $state.go('service', { service: cs, initialize: false, template: service.getTemplate(), rtcData: data });
             });
 
