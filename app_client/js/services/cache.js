@@ -95,8 +95,16 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
-            activeService: activeService,
-            previousService: previousService,
+            activeService: function(value) {
+                if (typeof value == "undefined") return value;
+                activeService = value;
+                return activeService; 
+            }, 
+            previousService: function(value) {
+                if (typeof value == "undefined") return value;
+                previousService = value;
+                return previousService; 
+            }, 
             reset: function () {
                 initialized = false;
                 activeServices = [];
