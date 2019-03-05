@@ -5,7 +5,7 @@
                 <div class="nav-wrapper white">
                     <div class="col s12 truncate black-text">
                         <a style="cursor:pointer" ng-click="buttonSelected('#' + activeService.getName())"
-                            class="breadcrumb">{{activeService.getName().toUpperCase()}}</a>
+                            class="breadcrumb">{{Cache.activeService().getName().toUpperCase()}}</a>
                         <span style="float:right"
                             class="teal-text onem-icon onem-icon-{{activeService.getIcon()}}"></span>
                     </div>
