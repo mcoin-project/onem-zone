@@ -6,7 +6,8 @@ ONEmSimModule.controller('phoneController', [
     'dateFilter',
     '$stateParams',
     'Phone',
-    function ($rootScope, $scope, $timeout, dateFilter, $stateParams, Phone) {
+    '$state',
+    function ($rootScope, $scope, $timeout, dateFilter, $stateParams, Phone, $state) {
 
         var msisdn = $rootScope.msisdn;
         var sipProxy = $rootScope.sipProxy;
@@ -36,6 +37,12 @@ ONEmSimModule.controller('phoneController', [
         ];
 
         var webrtcDetectedBrowser = null;
+
+        var resolveStateAfterEnd = function() {
+            if ($scope.$parent.touchCheckboxModel.on) {
+                $state.go('service', { service: $scope.$parent.activeService, initialize: true });
+            }
+        }
 
         if ($scope.$parent.touchCheckboxModel.on) {
             $scope.screenOpen = true;  // 'screen_wrp'
@@ -429,6 +436,7 @@ ONEmSimModule.controller('phoneController', [
                 $scope.dialerTypedNo = '';
                 $('.caller #typed_no').val('');
                 options = jQuery.extend(true, {}, optionsMask);
+                resolveStateAfterEnd();
             });
             Phone.phoneSession.on("failed", function (e) {
                 console.log("[WS]: newRTCSession - failed from " + e.originator + " because " + e.cause);
@@ -458,6 +466,8 @@ ONEmSimModule.controller('phoneController', [
                 $scope.answerTypedNo = '';
                 //$('.caller #typed_no').val('');
                 options = jQuery.extend(true, {}, optionsMask);
+                resolveStateAfterEnd();
+
             });
             Phone.phoneSession.on("newDTMF", function (e) {
                 console.log("[WS]: newRTCSession - newDTMF: " + e.dtmf);
@@ -603,6 +613,8 @@ ONEmSimModule.controller('phoneController', [
             // ****
             //phoneONEm.terminateSessions();
             Phone.phoneSession.terminate();
+            resolveStateAfterEnd();
+
         };
 
         //Make a phone call:
