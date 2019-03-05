@@ -41,7 +41,7 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.$parent.spinner = false;
 
-        var service = !$stateParams.service || Cache.getLandingService();
+        var service = $stateParams.service || Cache.getLandingService();
 
         $scope.result = DataModel.getTouchResult();
 
