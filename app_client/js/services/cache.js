@@ -96,12 +96,12 @@ ONEmSimModule.factory('Cache', [
         return {
 
             activeService: function(value) {
-                if (typeof value == "undefined") return value;
+                if (typeof value == "undefined") return activeService;
                 activeService = value;
                 return activeService; 
             }, 
             previousService: function(value) {
-                if (typeof value == "undefined") return value;
+                if (typeof value == "undefined") return previousService;
                 previousService = value;
                 return previousService; 
             }, 
