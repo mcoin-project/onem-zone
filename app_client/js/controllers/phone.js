@@ -42,10 +42,10 @@ ONEmSimModule.controller('phoneController', [
         var resolveStateAfterEnd = function () {
             if ($scope.$parent.$parent.touchCheckboxModel.on) {
                 console.log("switching:");
-                console.log(Cache.previousService());
+                console.log(Cache.activeService());
                 $state.go('service', {
-                    service: Cache.previousService(),
-                    template: Cache.previousService().getTemplate(),
+                    service: Cache.activeService(),
+                    template: Cache.activeService().getTemplate(),
                     initialize: false
                 });
             }
