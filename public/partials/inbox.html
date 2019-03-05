@@ -35,7 +35,7 @@
                         <div class="collapsible-body">
                             <p ng-repeat="l in m.content.lines | limitTo: (1 - m.content.lines.length)">{{l}}</p>
                             <div class="ng-cloak">
-                                <div ng-show="m.content.lines[0].startsWith('@') && m.content.lines[0].includes(':')">
+                                <div ng-show="m.content.isMsg()">
                                     <form ng-submit="moSubmitFromInbox($index)" name="inputFormInbox">
                                         <div class="row input-field">
                                             <div class="col s12 m10 l10">
@@ -43,16 +43,17 @@
                                             </div>
                                             <div class="hide-on-small-only col m2 l2">
                                                 <button ng-disabled="inputFormInbox.$invalid" 
-                                                    class="btn waves-effect waves-light" name="submit">Submit</button>
-                                                    <input type="submit" style="visibility:hidden;position:absolute"/>
-                                                </div>
+                                                    class="btn waves-effect waves-light" name="submit">Submit
+                                                </button>
+                                                <input type="submit" style="visibility:hidden;position:absolute"/>
+                                            </div>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="right-align">
-                                        <a ng-click="deleteMessage(m, $index)" class="waves-effect waves-light btn red"><i
-                                                class="material-icons right">delete</i>Delete</a>
-                                    </div>
+                                    <a ng-click="deleteMessage(m, $index)" class="waves-effect waves-light btn red">
+                                        <i class="material-icons right">delete</i>Delete</a>
+                                </div>
                             </div>
                         </div>
                     </li>

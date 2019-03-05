@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'onemservices';
-  src:  url('../fonts/onemservices.eot?9w8ngu');
-  src:  url('../fonts/onemservices.eot?9w8ngu#iefix') format('embedded-opentype'),
-    url('../fonts/onemservices.ttf?9w8ngu') format('truetype'),
-    url('../fonts/onemservices.woff?9w8ngu') format('woff'),
-    url('../fonts/onemservices.svg?9w8ngu#onemservices') format('svg');
+  src:  url('../fonts/onemservices.eot?cvi38w');
+  src:  url('../fonts/onemservices.eot?cvi38w#iefix') format('embedded-opentype'),
+    url('../fonts/onemservices.ttf?cvi38w') format('truetype'),
+    url('../fonts/onemservices.woff?cvi38w') format('woff'),
+    url('../fonts/onemservices.svg?cvi38w#onemservices') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,24 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.onem-icon-dialer:before {
+  content: "\e931";
+}
+.onem-icon-finance:before {
+  content: "\e92c";
+}
+.onem-icon-hangman:before {
+  content: "\e92d";
+}
+.onem-icon-jokes:before {
+  content: "\e92e";
+}
+.onem-icon-points:before {
+  content: "\e92f";
+}
+.onem-icon-crossword:before {
+  content: "\e930";
+}
 .onem-icon-convert:before {
   content: "\e923";
 }

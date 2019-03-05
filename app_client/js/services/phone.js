@@ -1,20 +1,20 @@
 ONEmSimModule.factory('Phone', [
     'Socket',
-    '$rootScope',
-    'dateFilter',
-    function (Socket, $rootScope, dateFilter) {
+    function (Socket) {
 
-        var phoneONEm;
+        var phoneData, phoneSession;
 
         return {
+            phoneData: phoneData,
+            phoneSession: phoneSession,
             stop: function () {
-                if (!phoneONEm) {
-                    console.log("phoneONEm not defined")
+                if (!phoneData) {
+                    console.log("phoneData not defined")
                     return;
                 }
-                if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
-                phoneONEm.stop();
-                phoneONEm.unregister();
+                if (phoneData.isConnected()) phoneData.terminateSessions();
+                phoneData.stop();
+                phoneData.unregister();
             },
             start: function (response) {
                 console.log("got start response");
