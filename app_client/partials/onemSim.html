@@ -4,10 +4,10 @@
             <nav style="z-index:995" class="navbar-fixed ng-cloak">
                 <div class="nav-wrapper white">
                     <div class="col s12 truncate black-text">
-                        <a style="cursor:pointer" ng-click="buttonSelected('#' + Cache.activeService().getName())"
-                            class="breadcrumb">{{Cache.activeService().getName().toUpperCase()}}</a>
+                        <a style="cursor:pointer" ng-click="buttonSelected('#' + $parent.cache.activeService().getName())"
+                            class="breadcrumb">{{$parent.cache.activeService().getName().toUpperCase()}}</a>
                         <span style="float:right"
-                            class="teal-text onem-icon onem-icon-{{Cache.activeService().getIcon()}}"></span>
+                            class="teal-text onem-icon onem-icon-{{$parent.cache.activeService().getIcon()}}"></span>
                     </div>
                 </div>
             </nav>
