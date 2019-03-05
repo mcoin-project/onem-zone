@@ -100,21 +100,19 @@ nav ul a {
 .dropdown-content-services.dropdown-content li > a {
   padding: 10px 5px 5px 5px; }
 
-.dropdown-content {
-  width: auto; }
-  .dropdown-content p {
-    font-size: 16px;
-    color: #004d40;
-    display: block;
-    line-height: 18px;
-    padding-left: 16px; }
-  .dropdown-content li a {
-    text-transform: capitalize;
-    margin-right: 0;
-    padding-right: 0; }
+.dropdown-content p {
+  font-size: 16px;
+  color: #004d40;
+  display: block;
+  line-height: 18px;
+  padding-left: 16px; }
+
+.dropdown-content li a {
+  text-transform: capitalize;
+  margin-right: 0;
+  padding-right: 0; }
 
 #services {
-  min-width: 220px;
   max-height: 90vh; }
 
 .dropdown-icon-wrapper {

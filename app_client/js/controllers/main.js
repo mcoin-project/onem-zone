@@ -26,6 +26,10 @@ ONEmSimModule.controller('mainController', [
         }
         $scope.$parent.touchCheckboxModel = {};
         $scope.$parent.emailCheckboxModel = {};
+        $scope.$parent.servicesCols = 1; 
+        $scope.$parent.services1 = [];
+        $scope.$parent.services2 = [];
+        $scope.$parent.services = [];
 
         User.getProfile().$promise.then(function (response) {
             $scope.$parent.touchCheckboxModel = {
@@ -112,16 +116,13 @@ ONEmSimModule.controller('mainController', [
 
             $scope.$parent.services = services;
 
-            if ($scope.$parent.services.length < 7) {
+            if (!$scope.$parent.services || $scope.$parent.services.length < 7) {
                 $scope.$parent.servicesCols = 1; 
             } else if ($scope.$parent.services.length >=7 && $scope.$parent.services.length <=14) {
                 $scope.$parent.servicesCols = 2;              
             } else {
                 $scope.$parent.servicesCols = 3;              
             }
-
-            $scope.$parent.services1 = [];
-            $scope.$parent.services2 = [];
 
             console.log("cache got response");
             console.log(services);
@@ -143,7 +144,7 @@ ONEmSimModule.controller('mainController', [
 
             console.log("error in main ");
             console.log(error);
-            if (error == null) {
+            if ($scope.$parent.services.length > 0 ) {
                 resolveState();
             } else if (!$rootScope.msisdn) {
                 console.log("no msisdn, going to capture");

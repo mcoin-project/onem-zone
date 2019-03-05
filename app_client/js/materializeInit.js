@@ -5,7 +5,9 @@ $(document).ready(function () {
     edge: 'right'
   });
   $('#mobile-demo-left').sidenav();
-  $('.dropdown-trigger').dropdown({ constrainWidth: false, hover: false, coverTrigger: false });
+  $('.dropdown-trigger').dropdown({ hover: false, coverTrigger: false });
+  $('.dropdown-trigger-services').dropdown({ constrainWidth: false, hover: false, coverTrigger: false });
+
   $('.modal').modal();
   $('.collapsible').collapsible();
 });

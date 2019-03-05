@@ -47,7 +47,7 @@
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
         <ul id="services" class="services-cols-{{servicesCols}} dropdown-content dropdown-content-services">
-            <li ng-show="services.length == 0"><a ui-sref="main">Click here to load menu</a></li>
+            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load menu</a></li>
             <li ng-repeat="service in services track by $index">
                         <a class="dropdown-icon-wrapper"
                         ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
@@ -74,7 +74,7 @@
                                 class="material-icons">more_vert</i></a>
                         <ul class="right hide-on-med-and-down">
                             <!-- Dropdown Trigger -->
-                            <li><a class="dropdown-trigger" href="#!" data-target="services"><i
+                            <li><a class="dropdown-trigger-services" href="#!" data-target="services"><i
                                         class="material-icons">apps</i> Services<i
                                         class="material-icons right">arrow_drop_down</i></a></li>
                         </ul>
@@ -119,8 +119,8 @@
     <ul class="sidenav" id="services-target">
         <h6 class="teal-text">Services</h6>
         <div style="padding-top:15px" class="row ">
-            <div ng-show="services1.length == 0 && services2.length == 0">
-                <li><a ui-sref="main">Click here to load menu</a></li>
+            <div ng-show="services.length == 0">
+                <li><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load menu</a></li>
             </div>
             <div style="text-align:center" class="col s6 center-align">
                 <li ng-repeat="service in services1 track by $index">

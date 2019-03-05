@@ -147,7 +147,7 @@ ONEmSimModule.factory('Cache', [
                     serviceState.previousService = serviceState.activeService;
                     return result;
                 } catch (error) {
-                    throw error;
+                    throw "Error getting services, try again later";
                 }
             },
             getService: async function (service) {
