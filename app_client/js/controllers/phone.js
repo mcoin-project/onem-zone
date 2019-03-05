@@ -39,6 +39,8 @@ ONEmSimModule.controller('phoneController', [
         var webrtcDetectedBrowser = null;
 
         var resolveStateAfterEnd = function() {
+            console.log("resolveState");
+            console.log($scope.$parent);
             if ($scope.$parent.touchCheckboxModel.on) {
                 console.log("switching:");
                 console.log($scope.$parent.activeService);
