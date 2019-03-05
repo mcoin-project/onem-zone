@@ -6,7 +6,12 @@ ONEmSimModule.factory('Cache', [
     'ServicesData',
     function (Services, MtText, Request, ServicesData) {
 
+        var self = this;
+
         var initialized = false;
+
+        var activeService;
+        var previousService;
 
         var processServicesList = function (text) {
 
@@ -90,6 +95,8 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
+            activeService: activeService,
+            previousService: previousService,
             reset: function () {
                 initialized = false;
                 activeServices = [];
@@ -125,7 +132,10 @@ ONEmSimModule.factory('Cache', [
                     var mt = await Request.get('#', { method: 'api', all: true });
                     console.log("back from api request:");
                     console.log(mt);
-                    return processServicesList(mt);
+                    var result = processServicesList(mt);
+                    activeService = ServicesData.services().getLandingService();
+                    previousService = activeService;
+                    return result;
                 } catch (error) {
                     throw error;
                 }
@@ -140,7 +150,9 @@ ONEmSimModule.factory('Cache', [
                 }
 
                 try {
+                    previousService = activeService;
                     var mt = await Request.get('#' + service.getName());
+                    activeService = service;
                     console.log("back from getService request:");
                     console.log(mt);
                     return processService(mt);

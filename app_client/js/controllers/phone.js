@@ -7,7 +7,8 @@ ONEmSimModule.controller('phoneController', [
     '$stateParams',
     'Phone',
     '$state',
-    function ($rootScope, $scope, $timeout, dateFilter, $stateParams, Phone, $state) {
+    'Cache',
+    function ($rootScope, $scope, $timeout, dateFilter, $stateParams, Phone, $state, Cache) {
 
         var msisdn = $rootScope.msisdn;
         var sipProxy = $rootScope.sipProxy;
@@ -41,10 +42,10 @@ ONEmSimModule.controller('phoneController', [
         var resolveStateAfterEnd = function () {
             if ($scope.$parent.$parent.touchCheckboxModel.on) {
                 console.log("switching:");
-                console.log($scope.$parent.previousService);
+                console.log(Cache.previousService);
                 $state.go('service', {
-                    service: $scope.$parent.previousService,
-                    template: $scope.$parent.previousService.getTemplate(),
+                    service: Cache.previousService,
+                    template: Cache.previousService.getTemplate(),
                     initialize: false
                 });
             }

@@ -40,17 +40,8 @@ ONEmSimModule.controller('serviceController', [
         }
 
         $scope.$parent.spinner = false;
-        $scope.previousService = $scope.activeService || Cache.getLandingService();
 
-        if (!$stateParams.service) {
-            $scope.activeService = Cache.getLandingService();
-        } else {
-            $scope.activeService = $stateParams.service;
-        }
-        if (!$scope.activeService) {
-            toastr.error("Can't resolve landing service");
-        }
-        var service = $scope.activeService;
+        var service = !$stateParams.service || Cache.getLandingService();
 
         $scope.result = DataModel.getTouchResult();
 

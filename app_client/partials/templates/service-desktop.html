@@ -6,10 +6,10 @@
                 <div class="nav-wrapper white">
                     <div class="col s12 truncate black-text">
                         <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
-                            ng-click="buttonSelected('#' + activeService.getName())"
+                            ng-click="buttonSelected('#' + Cache.activeService.getName())"
                             class="breadcrumb">{{result.breadcrumbs[0]}}</a>
                         <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}}</a>
-                        <span style="float:right" class="teal-text onem-icon onem-icon-{{activeService.getIcon()}}"></span>
+                        <span style="float:right" class="teal-text onem-icon onem-icon-{{Cache.activeService.getIcon()}}"></span>
                     </div>
                 </div>
             </nav>
