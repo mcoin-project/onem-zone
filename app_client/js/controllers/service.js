@@ -64,8 +64,16 @@ ONEmSimModule.controller('serviceController', [
             });
 
             try {
+                console.log("previous:");
+                console.log(Cache.previousService());
+                console.log("active:");
+                console.log(Cache.activeService());
                 Cache.getService(service).then(function (response) {
                     console.log("got response");
+                    console.log("previous:");
+                    console.log(Cache.previousService());
+                    console.log("active:");
+                    console.log(Cache.activeService());
                     applyResult(response);
 
                 }).catch(function (error) {
