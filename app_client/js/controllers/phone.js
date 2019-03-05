@@ -615,7 +615,7 @@ ONEmSimModule.controller('phoneController', [
             // ****
             //phoneONEm.terminateSessions();
             Phone.phoneSession.terminate();
-            resolveStateAfterEnd();
+            //resolveStateAfterEnd();
 
         };
 
