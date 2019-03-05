@@ -38,11 +38,15 @@ ONEmSimModule.controller('phoneController', [
 
         var webrtcDetectedBrowser = null;
 
-        var resolveStateAfterEnd = function() {
+        var resolveStateAfterEnd = function () {
             if ($scope.$parent.$parent.touchCheckboxModel.on) {
                 console.log("switching:");
                 console.log($scope.$parent.previousService);
-                $state.go('service', { service: $scope.$parent.previousService, initialize: false });
+                $state.go('service', {
+                    service: $scope.$parent.previousService,
+                    template: $scope.$parent.previousService.getTemplate(),
+                    initialize: false
+                });
             }
         }
 
@@ -239,7 +243,7 @@ ONEmSimModule.controller('phoneController', [
             console.log('[UI]: Close Dialer state changed!');
         };
 
-        $scope.dialButtonClicked = function(b) {
+        $scope.dialButtonClicked = function (b) {
             console.log("clicked");
             console.log(b);
             b.pressed = true;
@@ -301,20 +305,20 @@ ONEmSimModule.controller('phoneController', [
             if (!(a.indexOf(k) >= 0)) e.preventDefault();
         });
 
-        $scope.showNumpad = function() {
+        $scope.showNumpad = function () {
             console.log("show numpad");
             $scope.showKeypad = !$scope.showKeypad;
             return $scope.showKeypad;
         }
 
-        $scope.deleteNum = function(num) {
-            num = num.slice(0,-1);
-            console.log("delete:"+num);
+        $scope.deleteNum = function (num) {
+            num = num.slice(0, -1);
+            console.log("delete:" + num);
             return num;
         }
 
-        $scope.minimizeClicked = function() {
-//        $('.answer a.minimize').click(function (e) {
+        $scope.minimizeClicked = function () {
+            //        $('.answer a.minimize').click(function (e) {
             //$('.phone .screen_wrp').removeClass('open');
             $scope.screenOpen = false;
             //$('.call_notif').addClass('on');
@@ -324,9 +328,9 @@ ONEmSimModule.controller('phoneController', [
             console.log('[UI]: Panels minimized from answer panel');
         };
 
-        $scope.callNotifClicked = function() {
-       // $('.call_notif a.resume').click(function (e) {
-           $scope.dialerOpen = true;
+        $scope.callNotifClicked = function () {
+            // $('.call_notif a.resume').click(function (e) {
+            $scope.dialerOpen = true;
             //$('.phone .screen_wrp').addClass('open');
             //$('.call_notif').removeClass('on');
             $scope.callNotif = false;
@@ -335,7 +339,7 @@ ONEmSimModule.controller('phoneController', [
             console.log('[UI]: Answer panel maximized');
             return false;
         };
-        var newRTCSession = function(data) {
+        var newRTCSession = function (data) {
             console.log("[WS]: newRTCSession");
             //Phone.phoneSession = data.session; //session pointer
 
@@ -381,7 +385,7 @@ ONEmSimModule.controller('phoneController', [
                     //attachMediaStream(audioElement,"/sounds/ringing_tone_uk_new.wav");
                 };
                 if (webrtcDetectedBrowser == "firefox") {
-                   audioElement.play();
+                    audioElement.play();
                 };
             });
             Phone.phoneSession.on("accepted", function (e) {
@@ -396,14 +400,14 @@ ONEmSimModule.controller('phoneController', [
                 if (Phone.phoneSession.connection.getRemoteStreams()[0].getVideoTracks().length) {
                     videoElement.hidden = false;
                     videoElement.style.visibility = 'visible';
-                   // $('.phone div.answer .user').addClass('.off');
+                    // $('.phone div.answer .user').addClass('.off');
                     $scope.userOff = true;
                     console.log("[WS]: with video");
                 } else {
                     videoElement.hidden = true;
                     videoElement.style.visibility = 'hidden';
                     $scope.userOff = false;
-                  //  $('.phone div.answer .user').removeClass('.off');
+                    //  $('.phone div.answer .user').removeClass('.off');
                     console.log("[WS]: no video");
                 };
                 isInCall = 1;
@@ -620,10 +624,10 @@ ONEmSimModule.controller('phoneController', [
         };
 
         //Make a phone call:
-        $scope.callButtonClicked = function() {
-        //CallButton.click(function () {
+        $scope.callButtonClicked = function () {
+            //CallButton.click(function () {
             console.log("[UI]: CallButton - click; Call to " + $scope.dialerTypedNo);
-           // phoneONEm.call('sip:' + $scope.dialerTypedNo + '@' + sipProxy, options);
+            // phoneONEm.call('sip:' + $scope.dialerTypedNo + '@' + sipProxy, options);
             isInCall = 1;
             //$('.answer #typed_no').val($scope.dialerTypedNo);
             $scope.answerTypedNo = $scope.dialerTypedNo;
@@ -642,13 +646,13 @@ ONEmSimModule.controller('phoneController', [
             // $('.phone div.panel').removeClass('open');
             $scope.dialerOpen = false;
 
-        // ****    if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
+            // ****    if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
             //if(phoneONEm.isConnected()) Phone.phoneSession.terminate();
             if (isInCall == 1) $scope.dialerOpen = !$scope.dialerOpen;
         };
 
         window.onunload = function () {
-// ****
+            // ****
             // if (phoneONEm.isConnected()) phoneONEm.terminateSessions();
             // phoneONEm.stop();
             // phoneONEm.unregister();
