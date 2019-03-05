@@ -10,8 +10,10 @@ ONEmSimModule.factory('Cache', [
 
         var initialized = false;
 
-        var activeService;
-        var previousService;
+        var serviceState = {
+            activeService: undefined,
+            previousService: undefined
+        }
 
         var processServicesList = function (text) {
 
@@ -96,14 +98,14 @@ ONEmSimModule.factory('Cache', [
         return {
 
             activeService: function(value) {
-                if (typeof value == "undefined") return activeService;
-                activeService = value;
-                return activeService; 
+                if (typeof value == "undefined") return serviceState.activeService;
+                serviceState.activeService = value;
+                return serviceState.activeService; 
             }, 
             previousService: function(value) {
-                if (typeof value == "undefined") return previousService;
-                previousService = value;
-                return previousService; 
+                if (typeof value == "undefined") return serviceState.previousService;
+                serviceState.previousService = value;
+                return serviceState.previousService; 
             }, 
             reset: function () {
                 initialized = false;
@@ -158,9 +160,9 @@ ONEmSimModule.factory('Cache', [
                 }
 
                 try {
-                    previousService = activeService;
+                    serviceState.previousService = serviceState.activeService;
                     var mt = await Request.get('#' + service.getName());
-                    activeService = service;
+                    serviceState.activeService = service;
                     console.log("back from getService request:");
                     console.log(mt);
                     return processService(mt);
