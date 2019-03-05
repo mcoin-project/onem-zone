@@ -111,11 +111,15 @@ ONEmSimModule.factory('Services', [
         Services.prototype.generateMenuItems = function() {
             var results = [];
             for (var i = 0; i < this.services.length; i++) {
-                for (var j = 0; j < this.hashResults.length; j++) {
-                    var n = this.services[i].getName();
-                    if (n && n.length > 1 && n.includes(this.hashResults[j])) {
-                        results.push(this.services[i]);
-                        break;
+                if (this.services[i].service.always) {
+                    results.push(this.services[i]);
+                } else {
+                    for (var j = 0; j < this.hashResults.length; j++) {
+                        var n = this.services[i].getName();
+                        if (n && n.length > 1 && n.includes(this.hashResults[j])) {
+                            results.push(this.services[i]);
+                            break;
+                        }
                     }
                 }
             }

@@ -37,8 +37,13 @@ ONEmSimModule.controller('phoneController', [
 
         var webrtcDetectedBrowser = null;
 
-        $scope.screenOpen = false;  // 'screen_wrp'
-        $scope.dialerOpen = false;  // 'phone'
+        if ($scope.$parent.touchCheckboxModel.on) {
+            $scope.screenOpen = true;  // 'screen_wrp'
+            $scope.dialerOpen = true;  // 'phone'
+        } else {
+            $scope.screenOpen = false;  // 'screen_wrp'
+            $scope.dialerOpen = false;  // 'phone'
+        }
         $scope.answerOpen = false;  // 'panel answer'
         $scope.showKeypad = false;  // 'ul nums'
         $scope.callNotif = false; // 'call_notif'

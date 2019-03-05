@@ -43,6 +43,39 @@
  *
  *----------------------------------------------------------------------------------------*/
 
+ nav ul .services-cols-3 {
+    -moz-column-count: 3;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 3;
+    -webkit-column-gap: 20px;
+    column-count: 3;
+    column-gap: 20px; 
+ }
+
+ nav ul .services-cols-2 {
+    -moz-column-count: 2;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 2;
+    -webkit-column-gap: 20px;
+    column-count: 2;
+    column-gap: 20px; 
+ }
+
+ nav ul .services-cols-1 {
+    -moz-column-count: 1;
+    -moz-column-gap: 20px;
+    -webkit-column-count: 1;
+    -webkit-column-gap: 20px;
+    column-count: 1;
+    column-gap: 20px; 
+ }
+
+ nav ul li {
+    -webkit-column-break-inside: avoid;
+    page-break-inside: avoid;
+         break-inside: avoid;
+ }
+
 nav ul a {
     text-transform: uppercase;
     font-size: 12px;
@@ -54,6 +87,8 @@ nav ul a {
         margin-left: 0;
     }
 }
+
+
 
 .logo {
     display: inline-block;
@@ -113,6 +148,7 @@ nav ul a {
 }
 
 .dropdown-icon-wrapper {
+    display: block;
     padding:5px;
     text-align: center;
     line-height: 45px;
