@@ -132,10 +132,15 @@ ONEmSimModule.factory('Cache', [
             },
             getService: async function (service) {
 
-                console.log("requesting:" + '#' + service);
+                console.log("requesting:" + '#' + service.getName());
+
+                if (service.service.blockRequest) {
+                    console.log("blocking request");
+                    return false;
+                }
 
                 try {
-                    var mt = await Request.get('#' + service);
+                    var mt = await Request.get('#' + service.getName());
                     console.log("back from getService request:");
                     console.log(mt);
                     return processService(mt);

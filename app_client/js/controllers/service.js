@@ -12,7 +12,7 @@ ONEmSimModule.controller('serviceController', [
 
         console.log("stateParams:");
         console.log($stateParams);
- 
+
         var initialize = $stateParams.initialize;
         $scope.ready = false;
 
@@ -28,40 +28,41 @@ ONEmSimModule.controller('serviceController', [
                 $rootScope.$apply();
             });
         }
-        $scope.activeService = $stateParams.service;
         $scope.goCommand = Cache.getGoCommand();
         console.log("go command:" + $scope.goCommand);
 
-        $scope.showPn = function() {
+        $scope.showPn = function () {
             return !(screenSize.is('xs, sm'));
-         }
+        }
 
-         $scope.isSpinnerActive = function() {
+        $scope.isSpinnerActive = function () {
             return $scope.$parent.spinner;
         }
 
         $scope.$parent.spinner = false;
+        $scope.previousService = $scope.activeService || Cache.getLandingService();
 
-        var serviceName;
-        try {
-            serviceName = $stateParams.service.getName();
-        } catch (error) {
-            console.log(error);
-            serviceName = Cache.getLandingService();
-            if (!serviceName) {
-                toastr.error("Can't resolve landing service");
-            }
+        if (!$stateParams.service) {
+            $scope.activeService = Cache.getLandingService();
+        } else {
+            $scope.activeService = $stateParams.service;
         }
+        if (!$scope.activeService) {
+            toastr.error("Can't resolve landing service");
+        }
+        var service = $scope.activeService;
+
         $scope.result = DataModel.getTouchResult();
 
         if ($scope.result) {
             applyResult($scope.result);
         }
 
-       // if initialize is true then home was clicked, if results already exist, just display them otherwise use the landing service passed as parameter
+        // if the service is of type block request, then don't bother, the page will just render with the configured template
+        // if initialize is true then home was clicked, if results already exist, just display them otherwise use the landing service passed as parameter
         // if initialize is false, then a service was clicked explicitly
 
-        if ((!initialize && serviceName) || (initialize && !$scope.result)) {
+        if (!service.service.blockRequest && ((!initialize && service) || (initialize && !$scope.result))) {
 
             $timeout(function () {
                 $scope.ready = false;
@@ -72,30 +73,30 @@ ONEmSimModule.controller('serviceController', [
             });
 
             try {
-                Cache.getService(serviceName).then(function (response) {
+                Cache.getService(service).then(function (response) {
                     console.log("got response");
                     applyResult(response);
 
                 }).catch(function (error) {
                     console.log("catch error");
 
-                    Cache.selectOption('#').then(function(response) {
+                    Cache.selectOption('#').then(function (response) {
                         console.log("apply result");
 
-                        applyResult(response);                      
+                        applyResult(response);
                     })
                     $scope.$parent.spinner = false;
-         //           toastr.error(error);
+                    //           toastr.error(error);
                     console.log(error);
                 });
             } catch (error) {
-                Cache.selectOption('#').then(function(response) {
+                Cache.selectOption('#').then(function (response) {
                     console.log("apply result");
 
-                    applyResult(response);                      
+                    applyResult(response);
                 });
                 $scope.$parent.spinner = false;
-          //      toastr.error(error);
+                //      toastr.error(error);
                 console.log(error);
                 $scope.$parent.spinner = false;
                 console.log(error);
