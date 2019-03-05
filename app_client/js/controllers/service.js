@@ -13,6 +13,8 @@ ONEmSimModule.controller('serviceController', [
         console.log("stateParams:");
         console.log($stateParams);
 
+        $scope.cache = Cache;
+
         var initialize = $stateParams.initialize;
         $scope.ready = false;
 
