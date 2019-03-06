@@ -27,7 +27,7 @@ var idMsg = 0;
 var listen = function() {
     try {
         debug("smpp listening on port:"+smppPort);
-        smppServer.listen(smppPort);
+        exports.initialize.listen(smppPort);
     } catch(err){
         debug("smpp connection failed:");
         debug(err);
@@ -118,8 +118,7 @@ exports.sendSMS = function (from, to, text) {
     };
 }
 var smppServer;
-exports.initialize = function (from, to, text) {
-    smppServer = smpp.createServer(function (session) {
+exports.initialize = smpp.createServer(function (session) {
 
         // if (!session) {
         //     debug("no session");
@@ -311,7 +310,7 @@ exports.initialize = function (from, to, text) {
                 smppSession.send(pdu.response());
             }
         });
-    });
+});
     listen();
 }
 
