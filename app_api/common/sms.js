@@ -121,10 +121,10 @@ var smppServer;
 exports.initialize = function (from, to, text) {
     smppServer = smpp.createServer(function (session) {
 
-        if (!session) {
-            debug("no session");
-            return;
-        }
+        // if (!session) {
+        //     debug("no session");
+        //     return;
+        // }
 
         debug("smppPort:" + smppPort);
         debug(smppServer);
