@@ -311,7 +311,7 @@ exports.initialize = function (from, to, text) {
                 smppSession.send(pdu.response());
             }
         });
-        listen();
     });
+    listen();
 }
 
