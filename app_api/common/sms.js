@@ -302,11 +302,12 @@ exports.initialize = function (from, to, text) {
         });
     
     });
+}
 
-    try {
-        debug("smpp listening on port:"+smppPort);
-        smppServer.listen(smppPort);
-    } catch(err){
-        debug("smpp connection failed:");
-    }
+try {
+    debug("smpp listening on port:"+smppPort);
+    smppServer.listen(smppPort);
+} catch(err){
+    debug("smpp connection failed:");
+    debug(err);
 }
