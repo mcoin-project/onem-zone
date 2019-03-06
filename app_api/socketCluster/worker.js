@@ -6,7 +6,6 @@ var morgan = require('morgan');
 var healthChecker = require('sc-framework-health-check');
 var debug = require('debug')('onemzone');
 var clients = require('../common/clients.js');
-var sms = require('../common/sms.js');
 var common = require('../common/common.js');
 var user = require('../controllers/user.js');
 
@@ -117,6 +116,8 @@ class Worker extends SCWorker {
 
         debug("isLeader:"+self.isLeader);
         if (self.isLeader) {
+            var sms = require('../common/sms.js');
+
             var smsMochannel = scServer.exchange.subscribe('smsMoChannel');
             debug("subscribed to sms mo channel");
             debug("subscribed to sms mo channel");
