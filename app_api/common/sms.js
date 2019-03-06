@@ -107,9 +107,9 @@ exports.sendSMS = function (from, to, text) {
         };
     };
 }
-
+var smppServer;
 exports.initialize = function (from, to, text) {
-    var smppServer = smpp.createServer(function (session) {
+    smppServer = smpp.createServer(function (session) {
 
         if (!session) {
             debug("no session");
