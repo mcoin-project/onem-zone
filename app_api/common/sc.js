@@ -15,6 +15,7 @@ var waitForFile = fsUtil.waitForFile;
 
 var SocketCluster = require('socketcluster');
 
+
 exports.initialize = function (server) {
 
     var workerControllerPath = argv.wc || process.env.SOCKETCLUSTER_WORKER_CONTROLLER;
@@ -72,6 +73,12 @@ exports.initialize = function (server) {
             console.log('   >> WorkerCluster PID:', workerClusterInfo.pid);
         });
 
+        // socketCluster.on('workerMessage', (payload, data,callback) => {
+        //     console.log("workerMessage received");
+        //     console.log(data);
+        //     callback();
+        // });
+        
         if (socketCluster.options.environment === 'dev') {
             // This will cause SC workers to reboot when code changes anywhere in the app directory.
             // The second options argument here is passed directly to chokidar.

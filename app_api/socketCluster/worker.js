@@ -21,6 +21,8 @@ class Worker extends SCWorker {
 
         debug("inside worker, authKey: " + this.options.authKey);
 
+        var self = this;
+
         var app = express();
 
         var httpServer = this.httpServer;
@@ -113,6 +115,14 @@ class Worker extends SCWorker {
             });
         });
 
+        console.log("isLeader:"+self.isLeader);
+        if (self.isLeader) {
+            sms.initialize();
+            var smsMochannel = scServer.exchange.subscribe('smsMoChannel');
+            console.log("subscribed to sms mo channel");
+            console.log(smsMochannel);
+        }
+
         /*
           In here we handle our incoming realtime connections and listen for events.
         */
@@ -200,7 +210,13 @@ class Worker extends SCWorker {
                 clients.clients[msisdn].moRecord = moRecord;
 
                 debug("sending SMS to Short Number " + common.shortNumber + " from: " + msisdn);
-                sms.sendSMS(msisdn, common.shortNumber, moText);
+
+                // this should be broadcast to the sms channel that the lead worker is listening on
+                var data = {
+                    msisdn: msisdn,
+                    shortNumber: common.shortNumber,
+                    moText: moText
+                }
 
             });
 
@@ -220,6 +236,7 @@ class Worker extends SCWorker {
                 if (msisdn) delete clients.clients[msisdn].moRecord.socket;
             });
         });
+
     }
 }
 

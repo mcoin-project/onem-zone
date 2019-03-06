@@ -12,7 +12,6 @@ var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var helmet = require('helmet');
 var compression = require('compression');
-var sms = require('./app_api/common/sms.js');
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
@@ -55,7 +54,7 @@ if (process.env.HTTPS === 'ON') {
 }
 
 sc.initialize(server);
-sms.initialize();
+
 require('./app_api/models/db');
 
 
