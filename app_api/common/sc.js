@@ -108,7 +108,10 @@ exports.initialize = function (server) {
         startWhenFileIsReady(workerClusterControllerPath)
     ];
     Promise.all(filesReadyPromises).then(() => {
-        start();
+        return start();
+    }).then(function() {
+        var sms = require('../common/sms.js');
+    
     }).catch((err) => {
         console.error(err.stack);
         process.exit(1);
