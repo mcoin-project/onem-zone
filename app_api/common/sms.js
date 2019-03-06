@@ -125,7 +125,7 @@ exports.initialize = function (from, to, text) {
             debug("no session");
             return;
         }
-        listen();
+
         debug("smppPort:" + smppPort);
         debug(smppServer);
 
@@ -311,7 +311,7 @@ exports.initialize = function (from, to, text) {
                 smppSession.send(pdu.response());
             }
         });
-    
+        listen();
     });
 }
 
