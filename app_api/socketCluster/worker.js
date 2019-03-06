@@ -117,7 +117,6 @@ class Worker extends SCWorker {
 
         debug("isLeader:"+self.isLeader);
         if (self.isLeader) {
-            sms.initialize();
             var smsMochannel = scServer.exchange.subscribe('smsMoChannel');
             debug("subscribed to sms mo channel");
             debug("subscribed to sms mo channel");
