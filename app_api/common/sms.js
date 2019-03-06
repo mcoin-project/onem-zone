@@ -24,16 +24,6 @@ var dlrFeature = process.env.DLR || 'on';
 var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
 var idMsg = 0;
 
-var listen = function() {
-    try {
-        debug("smpp listening on port:"+smppPort);
-        exports.initialize.listen(smppPort);
-    } catch(err){
-        debug("smpp connection failed:");
-        debug(err);
-    }
-}
-
 var smppSession; // the SMPP session context saved globally.
 
 exports.sendSMS = function (from, to, text) {
@@ -310,5 +300,5 @@ var smppServer = smpp.createServer(function (session) {
             }
         });
 });
-
+debug("smpp listening on port:"+smppPort);
 smppServer.listen(smppPort);
