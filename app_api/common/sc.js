@@ -14,7 +14,7 @@ var fsUtil = require('socketcluster/fsutil');
 var waitForFile = fsUtil.waitForFile;
 
 var SocketCluster = require('socketcluster');
-
+var debug = require('debug')('onemzone');
 
 exports.initialize = function (server) {
 
@@ -51,7 +51,7 @@ exports.initialize = function (server) {
     };
 
     options.authKey = options.clusterAuthKey;
-    console.log("authkey:" + options.clusterAuthKey);
+    debug("authkey:" + options.clusterAuthKey);
 
     var bootTimeout = Number(process.env.SOCKETCLUSTER_CONTROLLER_BOOT_TIMEOUT) || 10000;
     var SOCKETCLUSTER_OPTIONS;
@@ -70,12 +70,12 @@ exports.initialize = function (server) {
         var socketCluster = new SocketCluster(options);
 
         socketCluster.on(socketCluster.EVENT_WORKER_CLUSTER_START, function (workerClusterInfo) {
-            console.log('   >> WorkerCluster PID:', workerClusterInfo.pid);
+            debug('   >> WorkerCluster PID:', workerClusterInfo.pid);
         });
 
         // socketCluster.on('workerMessage', (payload, data,callback) => {
-        //     console.log("workerMessage received");
-        //     console.log(data);
+        //     debug("workerMessage received");
+        //     debug(data);
         //     callback();
         // });
         
@@ -83,7 +83,7 @@ exports.initialize = function (server) {
             // This will cause SC workers to reboot when code changes anywhere in the app directory.
             // The second options argument here is passed directly to chokidar.
             // See https://github.com/paulmillr/chokidar#api for details.
-            console.log('!! The sc-hot-reboot plugin is watching for code changes in the $' + path.join(__dirname, '/..') + ' directory');
+            debug('!! The sc-hot-reboot plugin is watching for code changes in the $' + path.join(__dirname, '/..') + ' directory');
             scHotReboot.attach(socketCluster, {
                 cwd: path.join(__dirname, '/..'),
                 ignored: ['public', 'node_modules', 'README.md', 'Dockerfile', 'server.js', 'broker.js', /[\/\\]\./, '*.log']

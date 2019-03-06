@@ -115,12 +115,12 @@ class Worker extends SCWorker {
             });
         });
 
-        console.log("isLeader:"+self.isLeader);
+        debug("isLeader:"+self.isLeader);
         if (self.isLeader) {
             sms.initialize();
             var smsMochannel = scServer.exchange.subscribe('smsMoChannel');
-            console.log("subscribed to sms mo channel");
-            console.log(smsMochannel);
+            debug("subscribed to sms mo channel");
+            debug("subscribed to sms mo channel");
         }
 
         /*
@@ -134,7 +134,7 @@ class Worker extends SCWorker {
 
             //   socket.on('sampleClientEvent', function (data) {
             //     count++;
-            //     console.log('Handled sampleClientEvent', data);
+            //     debug('Handled sampleClientEvent', data);
             //     scServer.exchange.publish('sample', count);
             //   });
 
