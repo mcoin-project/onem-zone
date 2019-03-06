@@ -304,15 +304,4 @@ exports.sendSMS = function(from, to, text) {
 }
 
 smppServer.listen(smppPort);
-© 2019 GitHub, Inc.
-Terms
-Privacy
-Security
-Status
-Help
-Contact GitHub
-Pricing
-API
-Training
-Blog
-About
+
