@@ -311,6 +311,6 @@ exports.initialize = smpp.createServer(function (session) {
             }
         });
 });
-    listen();
-}
 
+
+exports.initialize.listen(smppPort);
