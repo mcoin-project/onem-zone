@@ -85,8 +85,13 @@ exports.googleAuth = function (User) {
         User.findOne({ google: googleJWTToken.sub }, function (err, existingUser) {
           if (existingUser && existingUser.email) {
             debug("creating jwt (no token)");
-            debug(user);
-            return res.send({ token: common.createJWT(existingUser) });
+
+            var token = common.createJWT(existingUser);
+            var tokenValid = common.decodeJWT(token);
+            debug(token);
+            debug("valid:");
+            debug(tokenValid);
+            return res.send({ token: token });
           }
           var user = new User();
           user.secret = speakeasy.generateSecret({ length: 20 }).base32;
