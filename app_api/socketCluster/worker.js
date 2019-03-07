@@ -7,10 +7,15 @@ var healthChecker = require('sc-framework-health-check');
 var debug = require('debug')('onemzone');
 var clients = require('../common/clients.js');
 var common = require('../common/common.js');
+
 var user = require('../controllers/user.js');
+var net = require('net');
+
+const smppPort = process.env.SMPP_PORT || 2775;
 
 class Worker extends SCWorker {
     run() {
+        debugger;
         //The message state to be used in receipts:
         // Bring in the data model & connect to db
         require('../models/db');
@@ -18,7 +23,10 @@ class Worker extends SCWorker {
         debug('   >> Worker PID:', process.pid);
         var environment = this.options.environment;
 
-        debug("inside worker, authKey: " + this.options.authKey);
+    //    debug("environment:" + environment);
+    //    debug(process.env);
+
+        //debug("inside worker, authKey: " + this.options.authKey);
 
         var self = this;
 
@@ -117,8 +125,29 @@ class Worker extends SCWorker {
         debug("isLeader:"+self.isLeader);
         if (self.isLeader) {
 
+           require('../common/sms.js');
+            var textChunk = '';
+            // var server = net.createServer(function(socket) {
+            //     socket.write('Echo server\r\n');
+            //     socket.on('data', function(data){
+            //         console.log(data);
+            //         textChunk = data.toString('utf8');
+            //         console.log(textChunk);
+            //         socket.write(textChunk);
+            //     });
+            //     socket.on('error', function(err) {
+            //         console.log(err);
+            //     });
+                
+            //     socket.on('close', function() {
+            //         console.log('Connection closed');
+            //     });
+
+            // });
+
+            // server.listen(smppPort, '127.0.0.1');
+
             var smsMochannel = scServer.exchange.subscribe('smsMoChannel');
-            debug("subscribed to sms mo channel");
             debug("subscribed to sms mo channel");
         }
 
@@ -240,3 +269,4 @@ class Worker extends SCWorker {
 }
 
 new Worker();
+

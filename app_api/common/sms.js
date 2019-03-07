@@ -1,3 +1,5 @@
+debugger;
+
 const debug = require('debug')('onemzone');
 const moment = require('moment');
 const smppSystemId = process.env.SMPP_SYSTEMID || "autotest";
@@ -25,6 +27,8 @@ var referenceCSMS = 0; // CSMS reference number that uniquely identify a split s
 var idMsg = 0;
 
 var smppSession; // the SMPP session context saved globally.
+
+debug("smppport:"+smppPort)
 
 var smppServer = smpp.createServer(function(session) {
 

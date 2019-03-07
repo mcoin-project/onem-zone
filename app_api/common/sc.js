@@ -15,7 +15,7 @@ var waitForFile = fsUtil.waitForFile;
 
 var SocketCluster = require('socketcluster');
 var debug = require('debug')('onemzone');
-
+debugger;
 exports.initialize = function (server) {
 
     var workerControllerPath = argv.wc || process.env.SOCKETCLUSTER_WORKER_CONTROLLER;
@@ -51,8 +51,9 @@ exports.initialize = function (server) {
     };
 
     options.authKey = options.clusterAuthKey;
-    debug("authkey:" + options.clusterAuthKey);
-
+    //debug("authkey:" + options.clusterAuthKey);
+    debug("process.env");
+    debug(process.env);
     var bootTimeout = Number(process.env.SOCKETCLUSTER_CONTROLLER_BOOT_TIMEOUT) || 10000;
     var SOCKETCLUSTER_OPTIONS;
 
@@ -108,9 +109,9 @@ exports.initialize = function (server) {
         startWhenFileIsReady(workerClusterControllerPath)
     ];
     Promise.all(filesReadyPromises).then(() => {
-        return start();
+         return start();
     }).then(function() {
-        var sms = require('../common/sms.js');
+       // var sms = require('../common/sms.js');
     
     }).catch((err) => {
         console.error(err.stack);
