@@ -32,7 +32,7 @@
     "sc-hot-reboot": "^1.0.0",
     "scc-broker-client": "^6.1.0",
     "serve-static": "1.13.2",
-    "smpp": "^0.3.1",
+    "smpp": "https://chrishornmem:a9d42d026e2f4ed5fa1d09db41692327f6c94dd9@github.com/mcoin-project/node-smpp.git",
     "socket.io": "^2.2.0",
     "socketcluster": "^14.3.2",
     "socketcluster-client": "^14.2.1",
