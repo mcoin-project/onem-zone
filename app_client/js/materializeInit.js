@@ -5,6 +5,9 @@ $(document).ready(function () {
     edge: 'right'
   });
   $('#mobile-demo-left').sidenav();
+  $('#mobile-demo-left').sidenav().on('click tap', 'li a', () => {
+    $('.sidenav').sidenav('close');
+  });
   $('.dropdown-trigger').dropdown({ hover: false, coverTrigger: false });
   $('.dropdown-trigger-services').dropdown({ constrainWidth: false, hover: false, coverTrigger: false });
 
