@@ -3,11 +3,9 @@ $(document).ready(function () {
   console.log("doc ready");
   $('#services-target').sidenav({
     edge: 'right'
-  });
-  $('#services-target').sidenav().on('click tap', 'li a', () => {
+  }).on('click tap', 'li a', () => {
     $('.sidenav').sidenav('close');
   });
-  $('#mobile-demo-left').sidenav();
   $('#mobile-demo-left').sidenav().on('click tap', 'li a', () => {
     $('.sidenav').sidenav('close');
   });
