@@ -78,7 +78,7 @@ ONEmSimModule.factory('Socket', [
                 return mySocket;
             },
             emit: function (param1, param2) {
-                return mySocket.publish($rootScope.msisdn, param2, function(result) {
+                return mySocket.emit($rootScope.msisdn, param2, function(result) {
                     console.log(result);
                 });
             }
