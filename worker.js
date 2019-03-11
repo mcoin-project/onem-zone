@@ -127,7 +127,7 @@ class Worker extends SCWorker {
                             scServer.exchange.subscribe(req.channel);
                             scServer.exchange.watch(req.channel, function (d) {
                                 debug("received message on watched channel:");
-                                debug(d.data);
+                                debug(d);
                                 if (d.data) {
                                     sms.sendSMS(req.channel, common.shortNumber, d.data);
                                 }
