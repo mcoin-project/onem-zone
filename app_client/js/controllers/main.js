@@ -56,7 +56,7 @@ ONEmSimModule.controller('mainController', [
             };
             $scope.results = DataModel.addResult(inputObj);
             console.log("[MN]: calling emit");
-            Socket.emit(inputObj);
+            Socket.emit(JSON.stringify(inputObj));
             $scope.smsText = '';
         };
 
