@@ -44,7 +44,7 @@ class Worker extends SCWorker {
 
         if (self.isLeader) {
             sms.setWorker(self.scServer);
-            clients = require('../common/clients.js');
+            clients = require('./app_api/common/clients.js');
         }
 
         var app = express();
