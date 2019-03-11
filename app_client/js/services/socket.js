@@ -74,6 +74,10 @@ ONEmSimModule.factory('Socket', [
                     channel.watch(function (data) {
                         console.log('Client received data from pong channel:');
                         console.log(data);
+                        var outputObj = {
+                            type: "mt",
+                            value: data.mtText
+                        };
                         $scope.results = DataModel.addResult(outputObj);
                     });
                     // pongChannel.watch(function (count) {
