@@ -1,12 +1,12 @@
 <div class="container">
   <div style="padding-top:100px" class="row">
     <div class="col s12">
-      <div class="">
+      <div class="card-panel hoverable">
         <img src="/images/onem_zone_logo_thumb.png" class="responsive-img center-block" />
         <h5 class="center-align">Sign in / Register</h5>
         <br>
-        <div class="row">
-          <div ng-mobile-click="authenticate('google')" class="customBtn">
+        <div style="display:none" class="row">
+          <div ng-click="authenticate('google')" class="customBtn">
             <div class="col s2 l2 m2  offset-l1 offset-m1">
               <img style="padding:10px;vertical-align: middle" src="/images/g-logo.png" width="auto" height="40px" />
             </div>
@@ -14,9 +14,19 @@
               <span class="buttonText">Sign in with Google</span>
             </div>
           </div>
-        </div>
+        </div>          
         <div class="row">
-          <div ng-mobile-click="authenticate('facebook')" class="customBtn fbblue">
+          <div ng-click="authenticate('google')" class="customBtn">
+            <div class="col s2 l2 m2  offset-l1 offset-m1">
+              <img style="padding:10px;vertical-align: middle" src="/images/g-logo.png" width="auto" height="40px" />
+            </div>
+            <div class="col s10 s7 m7 l7 text-left" style="padding-top:10px">
+              <span class="buttonText">Sign in with Google</span>
+            </div>
+          </div>
+        </div>  
+        <div class="row">
+          <div ng-click="authenticate('facebook')" class="customBtn fbblue">
             <div class="col s2 l2 m2 offset-l1 offset-m1">
               <img style="padding:10px;vertical-align: middle" src="/images/fb-logo.png" width="auto" height="40px" />
             </div>
