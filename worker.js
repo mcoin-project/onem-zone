@@ -121,15 +121,15 @@ class Worker extends SCWorker {
                         if (self.isLeader) {
                             //scServer.exchange.on('subscribe', function(data) {
                             //    debug("subscribe event");
-                             //   debug(data);
-                                debug("setting up watch on : " + req.channel);      
-                                scServer.exchange.subscribe(req.channel);
-                                scServer.exchange.watch(req.channel, function(d){
-                                    debug("received message on watched channel:" + d);
-                                    debug(d);
-                                    sms.sendSMS(req.channel, common.shortNumber, d);
-                                });
-                           // });
+                            //   debug(data);
+                            debug("setting up watch on : " + req.channel);
+                            scServer.exchange.subscribe(req.channel);
+                            scServer.exchange.watch(req.channel, function (d) {
+                                debug("received message on watched channel:" + d);
+                                debug(d);
+                                sms.sendSMS(req.channel, common.shortNumber, d);
+                            });
+                            // });
                         }
                         next();
                     } else {
@@ -156,7 +156,7 @@ class Worker extends SCWorker {
                 return next(new Error("No token"), 4500);
             }
             debug("querying:" + authToken.sub);
-        
+
             user.getUser(authToken.sub).then(function (user) {
                 debug("user found, returning next");
                 if (!user.msisdn) {
@@ -197,28 +197,34 @@ class Worker extends SCWorker {
 
             var authToken = socket.getAuthToken();
 
-            // need to check if token hasn't expired
-            user.getUser(authToken.sub).then(function (user) {
-                debug("user found, returning next");
+            if (authToken) {
+                // need to check if token hasn't expired
+                user.getUser(authToken.sub).then(function (user) {
+                    debug("user found, returning next");
 
-                var msisdn = user.msisdn;
-                if (!msisdn) {
-                    throw "msisdn is missing";
-                }
-                if (!user) {
-                    throw "user not found!";
-                }
-                debug("socket on: "+ msisdn);
+                    var msisdn = user.msisdn;
+                    if (!msisdn) {
+                        throw "msisdn is missing";
+                    }
+                    if (!user) {
+                        throw "user not found!";
+                    }
+                    debug("socket on: " + msisdn);
 
-                socket.on(msisdn, function(data) {
-                    console.log("message received from: " + msisdn);
-                    console.log(data);
-                    scServer.exchange.publish(msisdn, {data: data});
+                    socket.on(msisdn, function (data, res) {
+                        console.log("message received from: " + msisdn);
+                        console.log(data);
+                        res(null, 'OK');
+                        scServer.exchange.publish(msisdn, { data: data });
+                    });
+
+                }).catch(function (error) {
+                    debug(error);
                 });
+            } else {
+                console.log("no auth token");
+            }
 
-            }).catch(function (error) {
-                debug(error);
-            });
 
             socket.on('disconnect', function () {
                 debug('Client gone (id=' + socket.id + ').');
