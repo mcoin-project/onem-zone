@@ -129,7 +129,7 @@ class Worker extends SCWorker {
                                 debug("received message on watched channel:");
                                 debug(d);
                                 if (d.type = "mo") {
-                                    sms.sendSMS(req.channel, common.shortNumber, d.data);
+                                    sms.sendSMS(req.channel, common.shortNumber, d.value);
                                 }
                             });
                             // });
