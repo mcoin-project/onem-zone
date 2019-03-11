@@ -6,7 +6,7 @@ ONEmSimModule.factory('Socket', [
     'DataModel',
     function ($window, $auth, $rootScope, DataModel) {
 
-        var mySocket;
+        var mySocket, channel;
         //debugger;
         return {
             disconnect: function () {
@@ -66,20 +66,30 @@ ONEmSimModule.factory('Socket', [
                 // mySocket.forward('MT SMS');
                 // mySocket.forward('LOGOUT');
 
-                mySocket.on('subscribe', function(channel){
+
+
+                mySocket.on('subscribe', function(data){
                     console.log('SUBSCRIBED TO CHANNEL');
-                    console.log(channel);
-                    mySocket.on(channel, function(data) {
-                        console.log("Mysocket MT received:");
+                    console.log(data);
+                    channel.watch(function (data) {
+                        console.log('Client received data from pong channel:');
                         console.log(data);
-            
-                        var outputObj = {
-                            type: "mt",
-                            value: data.mtText
-                        };
-            
                         $scope.results = DataModel.addResult(outputObj);
-                    })
+                    });
+                    // pongChannel.watch(function (count) {
+                    //     console.log('Client received data from pong channel:', count);
+                    //   });
+                    // mySocket.on(channel, function(data) {
+                    //     console.log("Mysocket MT received:");
+                    //     console.log(data);
+            
+                    //     var outputObj = {
+                    //         type: "mt",
+                    //         value: data.mtText
+                    //     };
+            
+                    //     $scope.results = DataModel.addResult(outputObj);
+                    // })
                 });
 
 
@@ -87,7 +97,7 @@ ONEmSimModule.factory('Socket', [
                     console.log("isAuthenticated:");
                     console.log(status.isAuthenticated)
                     console.log('SOCKET CONNECTED');
-                    mySocket.subscribe($rootScope.msisdn, { waitForAuth: true })
+                    channel = mySocket.subscribe($rootScope.msisdn, { waitForAuth: true });
                 });
 
                 return mySocket;
