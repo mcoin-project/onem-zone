@@ -14,8 +14,6 @@ ONEmSimModule.factory('MtText', function () {
 	Text.prototype.initialize = function (text) {
 
 		if (typeof text == "undefined" || typeof text !== "string") {
-			console.log("text:" + typeof text);
-			console.log(text);
 			return false;
 		}
 
@@ -84,7 +82,7 @@ ONEmSimModule.factory('MtText', function () {
 	Text.prototype.isChunkedPage = function () {
 		var p = this.getPages();
 
-		if (typeof p.numPages !== 'undefined' ) {
+		if (typeof p.numPages !== 'undefined') {
 			return true;
 		} else {
 			return false;
@@ -154,6 +152,8 @@ ONEmSimModule.factory('MtText', function () {
 
 	Text.prototype.getOption = function (lineNumber) {
 
+		var self = this;
+
 		var optionFormats = [
 			/^([A-Z]) ([*'A-Z#a-z0-9].+)/gm,  // check for basic option A-Z
 			/^(\d+) (['+*A-Z#a-z0-9].+)/gm,   // check for basic numbering options 0-9
@@ -163,17 +163,51 @@ ONEmSimModule.factory('MtText', function () {
 		var result;
 		if (typeof lineNumber == "undefined" || lineNumber > this.lines.length - 1) return undefined;
 
-		var text = this.lines[lineNumber];
+		var checkifOption = function (regexArray, t) {
 
-		optionFormats.some(function (regexp) {
-			var r = regexp.exec(text);
-			if (r && r[2] && r[2].split(' ').length <= WORD_THRESHOLD) {
-				var option = r[1].trim();
-				var desc = r[2].trim();
-				result = { option: option, desc: desc };
-				return true;
+			var r, res = undefined;
+
+			for (var i = 0; i < regexArray.length; i++) {
+				optionFormats[i].lastIndex = 0;
+				r = optionFormats[i].exec(t);
+				if (r && r[2] && r[2].split(' ').length <= WORD_THRESHOLD) {
+					var option = r[1].trim();
+					var desc = r[2].trim();
+					var numeric = i !== 0 ? true : false;
+					res = { option: option, desc: desc, numeric: numeric };
+					//return true;
+					break;
+				}
 			}
-		})
+			return res;
+
+		}
+
+		var text = this.lines[lineNumber];
+		var previousFound = false;
+		var nextFound = false;
+		result = checkifOption(optionFormats, text);
+
+		// if then option is numeric, it can't be on its own, meaning that there should be an option above or below this one that is also numeric
+		// so this is a false positivie in that case
+		if (result && result.numeric) {
+			// check the line above if there is one
+			if (lineNumber > 0) {
+				var previous = checkifOption(optionFormats, self.lines[lineNumber - 1]);
+				if (previous && previous.numeric) {
+					previousFound = true;
+				}
+			}
+			// check the line below if there is one
+			if (lineNumber + 1 < this.lines.length) {
+				var next = checkifOption(optionFormats, self.lines[lineNumber + 1]);
+				if (next && next.numeric) {
+					nextFound = true;
+				}
+			}
+
+			if (!previousFound && !nextFound) result = undefined;
+		}
 
 		return result;
 
@@ -182,8 +216,6 @@ ONEmSimModule.factory('MtText', function () {
 	Text.prototype.hasOptions = function () {
 		var i = 0;
 		var result = false;
-
-		//console.log(this.lines);
 
 		for (var i = 0; i < this.lines.length; i++) {
 			if (this.getOption(i)) {
@@ -199,7 +231,7 @@ ONEmSimModule.factory('MtText', function () {
 	// returns true if this is a received p2p or group message
 	Text.prototype.isMsg = function () {
 		if (this.lines.length == 0) return false;
-		var result = this.lines[0].match(/@[a-zA-z][a-zA-Z0-9_-]+:/gm) || null;
+		var result = this.lines[0].match(/[@a-zA-Z][a-zA-Z.0-9_\- ]+:/gm) || null;
 		return !result ? false : true;
 	}
 
@@ -281,11 +313,11 @@ ONEmSimModule.factory('MtText', function () {
 		while (!this.getOption(i) && i < this.lines.length) {
 			i++;
 		}
+
 		if (i == this.lines.length) return [];
 
 		// there is at least one option
 		var opt = this.getOption(i);
-
 		var options = [];
 		while (!this.isFooter(i) && i < this.lines.length) {
 

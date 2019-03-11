@@ -15,6 +15,7 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'mp.autoFocus',
     'monospaced.elastic',
     'angularMoment',
+    'hmTouchEvents',
 ]).filter('nl2br', ['$sanitize', function ($sanitize) {
     var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
     return function (msg) {

@@ -1,10 +1,10 @@
 @font-face {
   font-family: 'onemservices';
-  src:  url('../fonts/onemservices.eot?cvi38w');
-  src:  url('../fonts/onemservices.eot?cvi38w#iefix') format('embedded-opentype'),
-    url('../fonts/onemservices.ttf?cvi38w') format('truetype'),
-    url('../fonts/onemservices.woff?cvi38w') format('woff'),
-    url('../fonts/onemservices.svg?cvi38w#onemservices') format('svg');
+  src:  url('../fonts/onemservices.eot?eb1vwa');
+  src:  url('../fonts/onemservices.eot?eb1vwa#iefix') format('embedded-opentype'),
+    url('../fonts/onemservices.ttf?eb1vwa') format('truetype'),
+    url('../fonts/onemservices.woff?eb1vwa') format('woff'),
+    url('../fonts/onemservices.svg?eb1vwa#onemservices') format('svg');
   font-weight: normal;
   font-style: normal;
 }
@@ -24,6 +24,9 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+.onem-icon-pig:before {
+  content: "\e932";
+}
 .onem-icon-dialer:before {
   content: "\e931";
 }

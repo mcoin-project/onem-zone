@@ -19,6 +19,7 @@ var testMessages = [
     "DID YOU MEAN?\n   1 #account\n    2 #aljazeera\n    3 #arabic\n    4 #call\n    5 #contacts\n    6 #convert\n    7 #crossword\n    8 #duas\n    9 #dw\n   10 #exchange\n   11 #finance\n   12 #france24\n   13 #hangman\n   14 #jokes\n   15 #market\n   ..1/3\n   --MORE",
     "#MARKET SELL\nA Sell Something\nB Active listings(1)\nC De-listed(0)\nD Orders to approve(0)\nE Orders to dispatch(0)\nF My profile\n--Reply A-F or BUY or search words",
     "#FRANCE24 EUROPE\nTitle: US urges Europe to quit Iran deal, stop busting sanctions\nStory: The US lashed out at some of its closest allies Thursday, accusing Britain, France and Germany of trying to bust US sanctions against Iran and calling on\n..01/29\n--MORE/BACK",
+    "#MARKET\nAdlai is a delicious grain that is high in fiber. https://tinyurl.com/y6d587y9\n7844.32 MCN / 300 GBP\nYour balance 0.0 MCN\n--Reply BACK",
     "#MARKET NEW ITEM STEP(1/3)\n    Listing expires in 7 days\n    Describe your item (100 chars).\n    Example:\n    iPhone 6 64GB Silver, unlocked\n    --Reply with description or CANCEL",
     "#ACCOUNT\n  1 Afrikaans\n  2 Akan\n  3 Albanian\n  4 Amharic\n  5 Arabic\n  6 Armenian\n  7 Assamese\n  8 Azerbaijani\n  9 Bambara\n 10 Basque\n 11 Belarusian\n 12 Bengali\n 13 Bosnian\n 14 Breton\n 15 Bulgarian\n 16 Burmese\n 17 Catalan\n 18 Chechen\n 19 Chinese\n..1/7\n--MORE/BACK",
     "#POST TUTORIAL\n1 Introduction\n2 How to use\n3 Categories\n4 Credits\n--Reply with prefix/HELP/BACK",
@@ -137,22 +138,6 @@ exports.initialize = function (server) {
                             if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
                             index++;
                         }, 1000
-                    );
-
-                    // send another
-                    var timer2 = setTimeout(
-                        function () {
-                            if (testMessages[testMessages.length-1]) socket.emit('MT SMS', { mtText: testMessages[testMessages.length-1] });
-                            index++;
-                        }, 1500
-                    );
-
-                    // send another
-                    var timer3 = setTimeout(
-                        function () {
-                            if (testMessages[testMessages.length-2]) socket.emit('MT SMS', { mtText: testMessages[testMessages.length-2] });
-                            index++;
-                        }, 1600
                     );
 
                 }
