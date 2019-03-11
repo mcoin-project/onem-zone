@@ -229,6 +229,8 @@ exports.sendSMS = function(from, to, text) {
 
     var textLength = text.length;
 
+    debug("sending sms from:" + from + " to:" + to + " text: " + text);
+
     if (smppSession) {
         if (text.length <= 70) {
 
