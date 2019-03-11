@@ -35,7 +35,9 @@ ONEmSimModule.factory('Socket', [
                 if ($window.location.protocol == "https:") {
                     port = 443;
                     secure = true;
-                } else  {
+                } else if ($window.location.port.length > 0) {
+                    port = $window.location.port;
+                } else {
                     port = 8000;
                 }
                 console.log("using port:" + port);
