@@ -26,6 +26,7 @@ var dlrFeature = process.env.DLR || 'on';
 var referenceCSMS = 0; // CSMS reference number that uniquely identify a split sequence of SMSes.
 var idMsg = 0;
 
+var worker;
 var smppSession; // the SMPP session context saved globally.
 
 debug("smppport:"+smppPort)
@@ -131,12 +132,12 @@ var smppServer = smpp.createServer(function(session) {
             if (typeof client.moRecord.socket !== 'undefined') {
                 try {
                     debug("trying response: " + client.moRecord.mtText);
-                    var channel = 'MT SMS';
+                    var channel = pdu.destination_addr;
                     if (client.moRecord.api) {
                         console.log("responding on MT API channel");
-                        channel = 'API MT SMS';
+                        channel = 'API ' + channel;
                     }
-                    client.moRecord.socket.emit(pdu.destination_addr, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                    worker.exchange.publish(pdu.destination_addr, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
                     if (client.moRecord.mtText.length < 20) {
@@ -313,3 +314,6 @@ exports.initialize = function() {
     smppServer.listen(smppPort);
 }
 
+exports.leadWorker = function(leadWorkerInstance) {
+    worker = leadWorkerInstance;
+}

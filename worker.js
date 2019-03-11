@@ -40,6 +40,10 @@ class Worker extends SCWorker {
 
         var self = this;
 
+        if (self.isLeader) {
+            sms.leadWorker(self.scServer);
+        }
+
         var app = express();
 
         var public_folder = environment == 'production' ? 'public' : 'app_client';
@@ -110,7 +114,7 @@ class Worker extends SCWorker {
                 next(new Error("No token"), 4500);
             } else {
 
-                debug("SUBSCRIBE - worker, authToken");
+            debug("SUBSCRIBE - worker, authToken");
                 debug("querying:" + authToken.sub);
 
                 user.getUser(authToken.sub).then(function (user) {
@@ -119,9 +123,6 @@ class Worker extends SCWorker {
                     req.msisdn = user.msisdn;
                     if (req.channel == req.msisdn) {
                         if (self.isLeader) {
-                            //scServer.exchange.on('subscribe', function(data) {
-                            //    debug("subscribe event");
-                            //   debug(data);
                             debug("setting up watch on : " + req.channel);
                             scServer.exchange.subscribe(req.channel);
                             scServer.exchange.watch(req.channel, function (d) {
