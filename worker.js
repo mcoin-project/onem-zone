@@ -211,7 +211,7 @@ class Worker extends SCWorker {
                 socket.on(msisdn, function(data) {
                     console.log("message received from: " + msisdn);
                     console.log(data);
-                    scServer.exchange.publish(msisdn, {data: data});
+       //             scServer.exchange.publish(msisdn, {data: data});
                 });
 
             }).catch(function (error) {

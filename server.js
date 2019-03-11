@@ -83,12 +83,12 @@ var start = function () {
         // This will cause SC workers to reboot when code changes anywhere in the app directory.
         // The second options argument here is passed directly to chokidar.
         // See https://github.com/paulmillr/chokidar#api for details.
-        debug('!! The sc-hot-reboot plugin is watching for code changes in the $' + path.join(__dirname, '/..') + ' directory');
+        console.log(`   !! The sc-hot-reboot plugin is watching for code changes in the ${__dirname} directory`);
         scHotReboot.attach(socketCluster, {
-            cwd: path.join(__dirname, '/..'),
-            ignored: ['public', 'node_modules', 'README.md', 'Dockerfile', 'server.js', 'broker.js', /[\/\\]\./, '*.log']
+          cwd: __dirname,
+          ignored: ['public', 'node_modules', 'README.md', 'Dockerfile', 'server.js', 'broker.js', /[\/\\]\./, '*.log']
         });
-    }
+      }
 };
 
 var bootCheckInterval = Number(process.env.SOCKETCLUSTER_BOOT_CHECK_INTERVAL) || 200;
