@@ -314,6 +314,6 @@ exports.initialize = function() {
     smppServer.listen(smppPort);
 }
 
-exports.leadWorker = function(leadWorkerInstance) {
+exports.setWorker = function(leadWorkerInstance) {
     worker = leadWorkerInstance;
 }

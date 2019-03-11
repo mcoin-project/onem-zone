@@ -23,6 +23,8 @@ var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var routesApi = require('./app_api/routes/index.js');
 
+var clients;
+
 class Worker extends SCWorker {
     run() {
         debugger;
@@ -41,7 +43,8 @@ class Worker extends SCWorker {
         var self = this;
 
         if (self.isLeader) {
-            sms.leadWorker(self.scServer);
+            sms.setWorker(self.scServer);
+            clients = require('../common/clients.js');
         }
 
         var app = express();
@@ -128,11 +131,15 @@ class Worker extends SCWorker {
                             scServer.exchange.watch(req.channel, function (d) {
                                 debug("received message on watched channel:");
                                 debug(d);
+                                var moRecord = {
+                                    mtText: '' // the pending sms text - built up if more-messages-to-send
+                                };
+                                clients.clients[req.channel] = {};
+                                clients.clients[req.channel].moRecord = moRecord;
                                 if (d.type == "mo") {
                                     sms.sendSMS(req.channel, common.shortNumber, d.value);
                                 }
                             });
-                            // });
                         }
                         next();
                     } else {
