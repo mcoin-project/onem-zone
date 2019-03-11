@@ -176,9 +176,9 @@ nav ul a {
   border-radius: 5px;
   border: thin solid #4267B2; }
 
-.customBtn:hover {
-  cursor: pointer; }
-
+/* .customBtn:hover {
+    cursor: pointer;
+  }*/
 span.label {
   font-family: serif;
   font-weight: normal; }
