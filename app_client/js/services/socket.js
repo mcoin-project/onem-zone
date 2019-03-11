@@ -74,7 +74,7 @@ ONEmSimModule.factory('Socket', [
                     channel.watch(function (data) {
                         console.log('Client received data from pong channel:');
                         console.log(data);
-                        if (data.type = 'mt') {
+                        if (data.type == 'mt') {
                             DataModel.addResult(data);
                         }
                     });
