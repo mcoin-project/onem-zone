@@ -307,5 +307,7 @@ exports.sendSMS = function(from, to, text) {
     };
 }
 
-smppServer.listen(smppPort);
+exports.initialize = function() {
+    smppServer.listen(smppPort);
+}
 

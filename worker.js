@@ -8,6 +8,7 @@ var morgan = require('morgan');
 var healthChecker = require('sc-framework-health-check');
 var clients = require('./app_api/common/clients.js');
 var common = require('./app_api/common/common.js');
+var sms = require('./app_api/common/sms.js');
 
 var user = require('./app_api/controllers/user.js');
 var net = require('net');
@@ -97,7 +98,7 @@ class Worker extends SCWorker {
 
         debug("isLeader:" + self.isLeader);
         if (self.isLeader && process.env.TEST !== 'on') {
-            require('./app_api/common/sms.js');
+            sms.initialize();
         }
 
         scServer.addMiddleware(scServer.MIDDLEWARE_SUBSCRIBE, function (req, next) {
@@ -126,6 +127,7 @@ class Worker extends SCWorker {
                                 scServer.exchange.watch(req.channel, function(d){
                                     debug("received message on watched channel:" + d);
                                     debug(d);
+                                    sms.sendSMS(req.channel, common.shortNumber, d);
                                 });
                            // });
                         }
