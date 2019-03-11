@@ -129,7 +129,7 @@ var smppServer = smpp.createServer(function(session) {
         //   4) send the result back to the client using the saved session
         if (pdu.more_messages_to_send === 0 || typeof pdu.more_messages_to_send === 'undefined') {
             debug("There are no more messages to be received for it!");
-            if (typeof client.moRecord.socket !== 'undefined') {
+        //    if (typeof client.moRecord.socket !== 'undefined') {
                 try {
                     debug("trying response: " + client.moRecord.mtText);
                     var channel = pdu.destination_addr;
@@ -158,10 +158,10 @@ var smppServer = smpp.createServer(function(session) {
                         message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
                     }
                 };
-            } else {
-                common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
-                message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
-            }
+      //      } else {
+      //          common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
+      //          message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+      //      }
             client.moRecord.mtText = '';
         } else {
             doneDate = moment().format('YYMMDDHHmm');
