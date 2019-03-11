@@ -106,8 +106,8 @@ ONEmSimModule.factory('Socket', [
 
                 return mySocket;
             },
-            emit: function (param1, param2) {
-                return mySocket.emit($rootScope.msisdn, param2, function(result) {
+            emit: function (data) {
+                return mySocket.emit(channel, data, function(result) {
                     console.log(result);
                 });
             }
