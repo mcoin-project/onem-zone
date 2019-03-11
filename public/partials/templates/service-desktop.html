@@ -17,15 +17,15 @@
                 <div class="card-content">
                     <div class="row valign-wrapper">
                         <div class="col s12">
-                            <div ng-bind-html="line | linky:'_blank':{rel: 'noopener'}" ng-repeat="line in result.preBody track by $index">{{line}}</div>
+                            <div ng-bind-html="line | linky:'_blank':{rel: 'noopener noreferrer'}" ng-repeat="line in result.preBody track by $index">{{line}}</div>
                             <div ng-repeat="line in result.body track by $index">
-                                <div ng-bind-html="line.content | linky:'_blank':{rel: 'noopener'}" ng-show="line.type == 'content'">{{line.content}}</div>
+                                <div ng-bind-html="line.content | linky:'_blank':{rel: 'noopener noreferrer'}" ng-show="line.type == 'content'">{{line.content}}</div>
                                 <div class="collection grey lighten-5" style="width:100%"
                                     ng-show="line.type == 'options'">
                                     <a style="padding-right:5px" class="collection-item"
                                         ng-click="optionSelected(option)"
                                         ng-repeat="option in line.options track by $index"
-                                        ng-bind-html="option.desc | linky:'_blank':{rel: 'noopener'}" 
+                                        ng-bind-html="option.desc | linky:'_blank':{rel: 'noopener noreferrer'}" 
                                         ng-show="line.type == 'options'">
                                         {{option.desc}}<span style="float:right"><i
                                                 class="material-icons">chevron_right</i></span>
