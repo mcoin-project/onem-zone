@@ -107,7 +107,7 @@ ONEmSimModule.factory('Socket', [
                 return mySocket;
             },
             emit: function (data) {
-                return mySocket.publish(channel, data, function(result) {
+                return mySocket.publish($rootScope.msisdn, data, function(result) {
                     console.log(result);
                 });
             }
