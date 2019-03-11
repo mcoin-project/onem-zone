@@ -96,7 +96,7 @@ class Worker extends SCWorker {
         httpServer.on('request', app);
 
         debug("isLeader:" + self.isLeader);
-        if (self.isLeader) {
+        if (self.isLeader && process.env.TEST !== 'on') {
             require('./app_api/common/sms.js');
         }
 
@@ -211,7 +211,7 @@ class Worker extends SCWorker {
                 socket.on(msisdn, function(data) {
                     console.log("message received from: " + msisdn);
                     console.log(data);
-       //             scServer.exchange.publish(msisdn, {data: data});
+                    scServer.exchange.publish(msisdn, {data: data});
                 });
 
             }).catch(function (error) {
