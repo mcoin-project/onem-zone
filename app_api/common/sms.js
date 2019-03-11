@@ -136,7 +136,7 @@ var smppServer = smpp.createServer(function(session) {
                         console.log("responding on MT API channel");
                         channel = 'API MT SMS';
                     }
-                    client.moRecord.socket.emit(channel, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                    client.moRecord.socket.emit(pdu.destination_addr, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
                     if (client.moRecord.mtText.length < 20) {

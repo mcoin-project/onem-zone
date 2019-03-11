@@ -3,7 +3,8 @@ ONEmSimModule.factory('Socket', [
     '$window',
     '$auth',
     '$rootScope',
-    function ($window, $auth, $rootScope) {
+    'DataModel',
+    function ($window, $auth, $rootScope, DataModel) {
 
         var mySocket;
         //debugger;
@@ -63,10 +64,22 @@ ONEmSimModule.factory('Socket', [
                 // mySocket.forward('MT SMS');
                 // mySocket.forward('LOGOUT');
 
-                mySocket.on('subscribe', function(status){
+                mySocket.on('subscribe', function(channel){
                     console.log('SUBSCRIBED TO CHANNEL');
-                    console.log(status);
+                    console.log(channel);
+                    mySocket.on(channel, function(data) {
+                        console.log("Mysocket MT received:");
+                        console.log(data);
+            
+                        var outputObj = {
+                            type: "mt",
+                            value: data.mtText
+                        };
+            
+                        $scope.results = DataModel.addResult(outputObj);
+                    })
                 });
+
 
                 mySocket.on('connect', function (status) {
                     console.log("isAuthenticated:");
