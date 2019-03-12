@@ -3,6 +3,9 @@
  *    GENERAL
  *
  *----------------------------------------------------------------------------------------*/
+body {
+  height: 100vh; }
+
 /* Google signin  - check if used*/
 @media only screen and (max-width: 320px) {
   .container.small {
