@@ -147,8 +147,8 @@
 
     <div class="container">
         <div ui-view></div>
-        <div class="spinner-container">
-            <div ng-class="{active : spinner}" class="preloader-wrapper">
+        <div ng-show="spinner" ng-class="{active : spinner}" class="spinner-container">
+            <div class="preloader-wrapper">
                 <div class="spinner-layer spinner-red-only">
                     <div class="circle-clipper left">
                         <div class="circle"></div>
