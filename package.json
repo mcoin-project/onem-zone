@@ -27,6 +27,7 @@
     "nexmo": "^2.4.0",
     "postmark": "^2.2.4",
     "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "smpp": "^0.3.1",
     "socket.io": "^2.2.0",
     "speakeasy": "^2.0.0",
