@@ -110,7 +110,7 @@ exports.initialize = function (server) {
             message.deliverPending(socket);
         }
 
-        socket.on('MO SMS', function (moText) {
+        socket.on('MO SMS', async function (moText) {
             debug('moText: ');
             debug(moText);
 
@@ -138,6 +138,9 @@ exports.initialize = function (server) {
                 }
 
                 if (nautilus.services.includes(clients.clients[socket.msisdn].currentService)) {
+                    clients.clients[socket.msisdn].verbs = await nautilus.loadVerbs(clients.clients[socket.msisdn].currentService);
+                    debug("got verbs:");
+                    debug(clients.clients[socket.msisdn].verbs);
                     debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
                     nautilus.sendSMS(socket.msisdn, common.shortNumber, moText);
                 } else {

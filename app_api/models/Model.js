@@ -42,3 +42,36 @@ exports.MessageSchema = new Mongoose.Schema({
 }, {
     timestamps: true
 });
+
+exports.DeveloperSchema = new Mongoose.Schema({
+    _user: { // the one to whom the bonus is due
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
+    },
+    apiKey: { type: String, required: true, unique: true }
+}, {
+    timestamps: true
+});
+
+exports.ServiceSchema = new Mongoose.Schema({
+    name: { type: String, lowercase: true, minlength: 3, maxlength: 20, unique: true, required: true },
+    _developer: {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'developers'
+    }
+}, {
+    timestamps: true
+});
+
+exports.VerbSchema = new Mongoose.Schema({
+    name: { type: String, lowercase: true, minlength: 3, maxlength: 20, required: true },
+    _service: {
+        type: Mongoose.Schema.Types.ObjectId,
+        ref: 'services',
+        required: true
+    },
+    route: { type: String, required: true }
+}, {
+    timestamps: true
+});
