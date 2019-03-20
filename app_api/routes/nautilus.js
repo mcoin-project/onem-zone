@@ -43,14 +43,15 @@ function ensureAuthenticated(req, res, next) {
 }
 
 naut.post('/service', function (req, res) {
-    var savedDeveloper;
+    var savedDeveloper, savedService;
 
     var saveVerb = function (v) {
-        var verb = new Verb();
-        verb.name = v.name;
-        verb._service = v.serviceId;
-        verb.route = v.route;
-        return verb.save();
+        return Verb.findOneAndUpdate({ name: v.name, _service: v.serviceId },
+            { name: v.name,
+             _service: v.serviceId,
+             route: v.route,
+             footer: v.footer
+            }, {upsert:true});
     }
 
     if (!req.body.apiKey || !req.body.serviceName || !req.body.verbs || (req.body.verbs && req.body.verbs.length == 0)) {
@@ -65,23 +66,31 @@ naut.post('/service', function (req, res) {
             throw { code: 401, message: "developer not found" };
         }
         savedDeveloper = developer;
-        return Service.findOne({ name: req.body.serviceName });
+        return Service.findOne({ name: req.body.serviceName }).populate('_developer');
     }).then(function (service) {
-        if (service) {
+        debug("service:");
+        debug(service);
+        debug("service._developer.email:"+ service._developer.email);
+        debug("savedDeveloper.email:"+savedDeveloper.email);
+        if (service && service._developer.email !== savedDeveloper.email) {
             debug("/service - service name already registered");
             throw { code: 401, message: "service name already registered" };
         }
-        var service = new Service();
         service.name = req.body.serviceName;
         service._developer = savedDeveloper._id;
-        return service.save();
+        return Service.findOneAndUpdate({ name: req.body.serviceName }, {name: req.body.serviceName,_developer: savedDeveloper._id }, {upsert:true});
     }).then(function (service) {
+        savedService = service;
+        // remove all the verbs first because we'll overwrite them
+        return Verb.deleteMany({_service: service._id});
+    }).then(function() {
         var verbsArray = [];
         req.body.verbs.map(function (verb) {
             verbsArray.push({
                 name: verb.name,
-                serviceId: service._id,
-                route: verb.route
+                serviceId: savedService._id,
+                route: verb.route,
+                footer: verb.footer || false
             })
         });
         return bluebird.map(verbsArray, saveVerb);

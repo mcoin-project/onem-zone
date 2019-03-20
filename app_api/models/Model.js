@@ -71,7 +71,8 @@ exports.VerbSchema = new Mongoose.Schema({
         ref: 'services',
         required: true
     },
-    route: { type: String, required: true }
+    route: { type: String, required: true },
+    footer: { type: Boolean, default: false }
 }, {
     timestamps: true
 });

@@ -73,10 +73,10 @@ exports.Context.prototype.makeMTResponse = function() {
     }
 
     if (this.isMenu() && !this.data.footer && optionIndex >= 0) {
-        result += '--Reply A-' + options[optionIndex].toUpperCase();
+        result += '--Reply A-' + options[optionIndex].toUpperCase() + this.footerVerbs();
         return result;
     } else if (this.isMenu() && !this.data.footer && optionIndex == 0) {
-        result += '--Reply A';
+        result += '--Reply A' + this.footerVerbs();
         return result;
     }
 
@@ -85,7 +85,7 @@ exports.Context.prototype.makeMTResponse = function() {
     }
 
     if (this.isForm() && !this.data.footer) {
-        result += '--Reply with ' + this.data.body[0].name;
+        result += '--Reply with ' + this.data.body[0].name + this.footerVerbs();
     }
 
     if (this.data.footer) {
@@ -109,6 +109,20 @@ exports.Context.prototype.getVerb = function(verb) {
     return i < this.verbs.length ? this.verbs[i] : false;
 }
 
+exports.Context.prototype.footerVerbs = function() {
+    var result = "";
+    var verbs = [];
+    for (var i=0; i<this.verbs.length; i++) {
+        if (this.verbs[i].footer) {
+            verbs.push(this.verbs[i].name.toUpperCase());
+        }
+    }
+    result = verbs.join('/'); 
+    if (result.length > 0) {
+        result = ' or ' + result;
+    }
+    return result;
+}
 
 exports.Context.prototype.lastOption = function() {
     var optionIndex = -1;
@@ -139,7 +153,7 @@ exports.Context.prototype.getRequestParams = function(user, moText) {
         debug("nswym: " + header);
         throw {invalidOption: header + 
             "Not sure what you meant. Send an option from A to " +
-            lastOption + "\n--Reply A to " + lastOption
+            lastOption + "\n--Reply A to " + lastOption + this.footerVerbs()
          };
     }
 
