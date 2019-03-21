@@ -332,6 +332,7 @@ ONEmSimModule.controller('phoneController', [
         $scope.callNotifClicked = function () {
             // $('.call_notif a.resume').click(function (e) {
             $scope.dialerOpen = true;
+            $scope.screenOpen = true;
             //$('.phone .screen_wrp').addClass('open');
             //$('.call_notif').removeClass('on');
             $scope.callNotif = false;
