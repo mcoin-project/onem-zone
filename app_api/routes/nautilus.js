@@ -47,11 +47,12 @@ naut.post('/service', function (req, res) {
 
     var saveVerb = function (v) {
         return Verb.findOneAndUpdate({ name: v.name, _service: v.serviceId },
-            { name: v.name,
-             _service: v.serviceId,
-             route: v.route,
-             footer: v.footer
-            }, {upsert:true});
+            {
+                name: v.name,
+                _service: v.serviceId,
+                route: v.route,
+                footer: v.footer
+            }, { upsert: true });
     }
 
     if (!req.body.apiKey || !req.body.serviceName || !req.body.verbs || (req.body.verbs && req.body.verbs.length == 0)) {
@@ -60,30 +61,40 @@ naut.post('/service', function (req, res) {
         return res.status(400).send({ error: "malformed request" });
     }
 
-    Developer.findOne({ apiKey: req.body.apiKey }).then(function (developer) {
+    Developer.findOne({ apiKey: req.body.apiKey }).populate('_user').then(function (developer) {
         if (!developer) {
             debug("/service - developer not found");
             throw { code: 401, message: "developer not found" };
         }
         savedDeveloper = developer;
+        debug("savedDeveloper");
+        debug(savedDeveloper);
         return Service.findOne({ name: req.body.serviceName }).populate('_developer');
     }).then(function (service) {
         debug("service:");
         debug(service);
-        debug("service._developer.email:"+ service._developer.email);
-        debug("savedDeveloper.email:"+savedDeveloper.email);
-        if (service && service._developer.email !== savedDeveloper.email) {
+        savedService = service;
+        return Developer.findOne({ _id: service._developer}).populate('_user');
+    }).then(function(developer) {
+        debug("developer._user.email:" + developer._user.email);
+        debug("savedDeveloper._user.email:" + savedDeveloper._user.email);
+        if (developer && developer._user.email !== savedDeveloper._user.email) {
             debug("/service - service name already registered");
             throw { code: 401, message: "service name already registered" };
         }
-        service.name = req.body.serviceName;
-        service._developer = savedDeveloper._id;
-        return Service.findOneAndUpdate({ name: req.body.serviceName }, {name: req.body.serviceName,_developer: savedDeveloper._id }, {upsert:true});
+        savedService.name = req.body.serviceName;
+        savedService._developer = savedDeveloper._id;
+        savedService.callbackPath = req.body.callbackPath;
+        return Service.findOneAndUpdate({ name: req.body.serviceName },
+            { name: req.body.serviceName,
+              _developer: savedDeveloper._id,
+              callbackPath: req.body.callbackPath
+             },
+            { upsert: true });
     }).then(function (service) {
-        savedService = service;
         // remove all the verbs first because we'll overwrite them
-        return Verb.deleteMany({_service: service._id});
-    }).then(function() {
+        return Verb.deleteMany({ _service: service._id });
+    }).then(function () {
         var verbsArray = [];
         req.body.verbs.map(function (verb) {
             verbsArray.push({

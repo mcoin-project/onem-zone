@@ -42,10 +42,11 @@ exports.sendSMS = async function (from, to, moText) {
     var client = clients.clients[from];
 
     try {
-        var ctext = new context.Context(apiUrl, client.context, client.verbs);
+        var ctext = new context.Context(client.currentService, client.context, client.verbs);
+        await ctext.initialize();
         var requestParams = ctext.getRequestParams(from, moText);
         var body = await request(requestParams);
-        client.moRecord.mtText = new context.Context(apiUrl, body.data, client.verbs).makeMTResponse();
+        client.moRecord.mtText = new context.Context(client.currentService, body.data, client.verbs).makeMTResponse();
         client.context = Object.assign({}, body.data);
     } catch (err) {
         debug(err);

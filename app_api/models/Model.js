@@ -26,8 +26,8 @@ exports.UserSchema = new Mongoose.Schema({
     //   picture: String,
     //   bitbucket: String,
 }, {
-    timestamps: true
-});
+        timestamps: true
+    });
 
 exports.MessageSchema = new Mongoose.Schema({
     _user: { // the one to whom the bonus is due
@@ -40,8 +40,8 @@ exports.MessageSchema = new Mongoose.Schema({
     text: { type: String, required: true },
     delivered: { type: Boolean, required: true }
 }, {
-    timestamps: true
-});
+        timestamps: true
+    });
 
 exports.DeveloperSchema = new Mongoose.Schema({
     _user: { // the one to whom the bonus is due
@@ -51,18 +51,20 @@ exports.DeveloperSchema = new Mongoose.Schema({
     },
     apiKey: { type: String, required: true, unique: true }
 }, {
-    timestamps: true
-});
+        timestamps: true
+    });
 
 exports.ServiceSchema = new Mongoose.Schema({
     name: { type: String, lowercase: true, minlength: 3, maxlength: 20, unique: true, required: true },
+    callbackPath: { type: String, required: true },
     _developer: {
         type: Mongoose.Schema.Types.ObjectId,
-        ref: 'developers'
+        ref: 'developers',
+        required: true
     }
 }, {
-    timestamps: true
-});
+        timestamps: true
+    });
 
 exports.VerbSchema = new Mongoose.Schema({
     name: { type: String, lowercase: true, minlength: 3, maxlength: 20, required: true },
@@ -74,5 +76,5 @@ exports.VerbSchema = new Mongoose.Schema({
     route: { type: String, required: true },
     footer: { type: Boolean, default: false }
 }, {
-    timestamps: true
-});
+        timestamps: true
+    });
