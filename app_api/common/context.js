@@ -148,6 +148,16 @@ exports.Context.prototype.lastOption = function () {
 }
 exports.Context.prototype.getRequestParams = function (user, moText) {
 
+    var makeQs = function (userInput) {
+        var result = {};
+        var words = userInput.split(' ');
+        for (var i = 1; i < words.length; i++) {
+            var paramValue = "param" + i;
+            result[paramValue] = words[i];
+        }
+        return words.length > 0 ? result : undefined;
+    }
+
     var self = this;
     var result = {
         url: '',
@@ -171,11 +181,10 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
 
     // check if it's a service switch, include any text after the service as query params
     if (moText.startsWith('#')) {
-        result.url = this.callbackPath + '/' + moText.substring(1, moText.length);
-        result.qs = moText.split(' ').slice(1).join(' ');
-
-        if (result.qs.length == 0) result.qs = undefined;
-
+        result.url = this.callbackPath + '/' + this.service.name;
+        result.qs = makeQs(moText);
+        debug("service switch:");
+        debug(result);
         return result;
     }
 
