@@ -57,6 +57,7 @@ ONEmSimModule.controller('serviceController', [
 
         if (!service.service.blockRequest && ((!initialize && service) || (initialize && !$scope.result))) {
 
+            $scope.$parent.forceRefresh = false;
             $timeout(function () {
                 $scope.ready = false;
                 $scope.result = {};
