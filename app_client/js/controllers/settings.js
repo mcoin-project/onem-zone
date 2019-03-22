@@ -2,7 +2,8 @@ ONEmSimModule.controller('settingsController', [
     '$scope',
     'User',
     '$state',
-    function ($scope, User, $state) {
+    'DataModel',
+    function ($scope, User, $state, DataModel) {
 
         User.getProfile().$promise.then(function (response) {
             $scope.$parent.touchCheckboxModel = {
@@ -25,6 +26,8 @@ ONEmSimModule.controller('settingsController', [
                 $scope.$parent.touchCheckboxModel = {
                     on: response.user.touchMode
                 };
+                DataModel.clearTouchResult();
+
             });
             console.log($scope.$parent.touchCheckboxModel);
         }
