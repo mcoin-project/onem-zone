@@ -73,7 +73,9 @@ ONEmSimModule.controller('navbarController', [
                 value: data.mtText
             };
             $scope.results = DataModel.addResult(outputObj);
-            Request.receivedMt(data.mtText);
+            console.log("touchMode:");
+            console.log($scope.touchCheckboxModel);
+            Request.receivedMt(data.mtText, $scope.touchCheckboxModel.on);
         });
 
         $scope.$on('socket:API MT SMS', function (ev, data) {
