@@ -27,7 +27,6 @@ ONEmSimModule.controller('settingsController', [
                     on: response.user.touchMode
                 };
                 DataModel.clearTouchResult();
-
             });
             console.log($scope.$parent.touchCheckboxModel);
         }
@@ -39,6 +38,7 @@ ONEmSimModule.controller('settingsController', [
                 $scope.$parent.emailCheckboxModel = {
                     on: !response.user.dontSendEmails
                 };
+                DataModel.clearTouchResult();
             });
             console.log($scope.$parent.emailCheckboxModel);
         }
