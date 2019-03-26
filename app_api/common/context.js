@@ -92,11 +92,11 @@ exports.Context.prototype.makeMTResponse = function () {
     }
 
     if (this.isForm()) {
-        result += this.data.body[0].description + '\n';
+        result += this.data.body.formItems[0].description + '\n';
     }
 
     if (this.isForm() && !this.data.footer) {
-        result += '--Reply with ' + this.data.body[0].name + this.footerVerbs();
+        result += '--Reply with ' + this.data.body.formItems[0].name + this.footerVerbs();
     }
 
     if (this.data.footer) {
@@ -225,9 +225,9 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
 
     if (this.isForm()) {
         var bodyData = {}
-        bodyData[this.data.body[0].name] = moText;
-        result.url = this.callbackPath + this.data.nextRoute;   // todo properly join to handle optional '/'
-        result.method = this.data.method || 'POST';
+        bodyData[this.data.body.formItems[0].name] = moText;
+        result.url = this.callbackPath + this.data.body.nextRoute;   // todo properly join to handle optional '/'
+        result.method = this.data.body.method || 'POST';
         result.body = bodyData;
     }
 

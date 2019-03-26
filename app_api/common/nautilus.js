@@ -46,8 +46,8 @@ exports.sendSMS = async function (from, to, moText) {
         await ctext.initialize();
         var requestParams = ctext.getRequestParams(from, moText);
         var body = await request(requestParams);
-        client.moRecord.mtText = new context.Context(client.currentService, body.data, client.verbs).makeMTResponse();
-        client.context = Object.assign({}, body.data);
+        client.moRecord.mtText = new context.Context(client.currentService, body, client.verbs).makeMTResponse();
+        client.context = Object.assign({}, body);
     } catch (err) {
         debug(err);
         if (err.invalidOption) {
