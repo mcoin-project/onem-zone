@@ -175,7 +175,7 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
         throw {
             invalidOption: header +
                 "Not sure what you meant. Send an option from A to " +
-                lastOption + "\n--Reply A to " + lastOption + this.footerVerbs()
+                lastOption + "\n--Reply A to " + lastOption + self.footerVerbs()
         };
     }
 
