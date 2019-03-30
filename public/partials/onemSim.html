@@ -1,4 +1,19 @@
-
+<div class="hide-on-small-only ng-cloak" style="padding-top:20px">
+    <div class="row col-centered">
+        <div ng-show="touchCheckboxModel.on" class="col s12 m12 l8 offset-l2">
+            <nav style="z-index:995" class="navbar-fixed ng-cloak">
+                <div class="nav-wrapper white">
+                    <div class="col s12 truncate black-text">
+                        <a style="cursor:pointer" ng-click="buttonSelected('#' + cache.activeService().getName())"
+                            class="breadcrumb">{{cache.activeService().getName().toUpperCase()}}</a>
+                        <span style="float:right"
+                            class="teal-text onem-icon onem-icon-{{cache.activeService().getIcon()}}"></span>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</div>
 <div ng-controller="phoneController" class="phone">
 
     <div class="wireframe">
@@ -19,16 +34,21 @@
                     <!---<p class="title">Who you gonna call?</p>-->
                     <p class="inp">
                         <!-- <input id="typed_no" type="text" value=""> -->
-                        <textarea ng-model="dialerTypedNo" id="typed_no" data-autoresize rows="1" maxlength="21"></textarea>
-                        <a ng-click="dialerTypedNo=deleteNum(dialerTypedNo)" class="delete" href="#"><img class="clicky" src="images/icn_delete.svg" /></a>
+                        <textarea ng-model="dialerTypedNo" id="typed_no" data-autoresize rows="1"
+                            maxlength="21"></textarea>
+                        <a ng-click="dialerTypedNo=deleteNum(dialerTypedNo)" class="delete" href="#"><img class="clicky"
+                                src="images/icn_delete.svg" /></a>
                     </p>
                     <p class="msg">Type the number you want to call.</p>
-                    <p class="call_no"><a ng-click="callButtonClicked()" class="call" href="#"><img src="images/icn_answer.svg" /></a></p>
+                    <p class="call_no"><a ng-click="callButtonClicked()" class="call" href="#"><img
+                                src="images/icn_answer.svg" /></a></p>
                 </div> <!-- /preview -->
 
                 <ul ng-class="showKeypad ? 'on' : ''" class="keypad dialpad nums squared">
-                    <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value" class="clicky"><a data-val="b.value" ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span class="no">{{b.value}}</span><span class="txt">{{b.label}}</span></a></li>
-<!----
+                    <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value" class="clicky"><a
+                            data-val="b.value" ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span
+                                class="no">{{b.value}}</span><span class="txt">{{b.label}}</span></a></li>
+                    <!----
                     <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
                     <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>
                     <li class="clicky"><a id="num_3" class="num" data-val="3" href="#"><span class="no">3</span><span class="txt">DEF</span></a></li>
@@ -43,7 +63,8 @@
                     <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li>
                     <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>-->
                 </ul> <!-- /keypad dialpad nums squared-->
-                <a ng-click="closeDialer()" class="closer" href="#"><img src="images/icn_close.svg" /></a>
+                <a ng-hide="touchCheckboxModel.on" ng-click="closeDialer()" class="closer" href="#"><img
+                        src="images/icn_close.svg" /></a>
 
             </div> <!-- /panel dialer -->
 
@@ -51,13 +72,15 @@
                 <div class="preview">
                     <p class="title">Somebody is calling you!</p>
                     <p class="user"><a class="answer" href=""><img src="images/icn_usr.svg" /></a></p>
-                    <p class="inp"><input ng-model="answerTypedNo" id="typed_no" type="text" value="100" disabled="disabled"></p>
+                    <p class="inp"><input ng-model="answerTypedNo" id="typed_no" type="text" value="100"
+                            disabled="disabled"></p>
                     <!-- <p class="msg">Unknown number</p> -->
                     <p class="msg" id="user_name"></p>
                     <p class="call_tools">
                         <a ng-click="cancelCall()" class="clicky cancel" href=""><img src="images/icn_reject.svg" /></a>
                         <a ng-click="closePanel()" class="clicky closer" href=""><img src="images/num_x.svg" /></a>
-                        <a ng-click="answerCall()" class="clicky answer" href=""><img src="images/icn_call_ok.svg" /></a>
+                        <a ng-click="answerCall()" class="clicky answer" href=""><img
+                                src="images/icn_call_ok.svg" /></a>
                     </p>
                 </div> <!-- /preview -->
                 <a class="closer" href="#"><img src="images/icn_close.svg" /></a>
@@ -75,10 +98,12 @@
                             Your browser does not support the video tag.
                         </video>
                     </p> <!-- /video -->
-                    <p class="inp"><input ng-model="answerTypedNo" id="typed_no" type="text" value="100" disabled="disabled"></p>
+                    <p class="inp"><input ng-model="answerTypedNo" id="typed_no" type="text" value="100"
+                            disabled="disabled"></p>
                     <!-- <p class="msg">Unknown number</p> -->
                     <p class="call_tools">
-                        <a ng-click="showNumpad()" class="clicky numpad" href="#"><img src="images/icn_numpad.svg" /></a>
+                        <a ng-click="showNumpad()" class="clicky numpad" href="#"><img
+                                src="images/icn_numpad.svg" /></a>
                         <a ng-click="cancelCall()" class="clicky cancel" href=""><img src="images/icn_reject.svg" /></a>
                         <a class="clicky mute" href="#"><img src="images/icn_mute.svg" /></a>
                     </p> <!-- /call_tools -->
@@ -90,9 +115,12 @@
                         <source type="video/webm">
                         Your browser does not support the video tag.
                     </video>
-                </div> --> <!-- /video -->
+                </div> -->
+                <!-- /video -->
                 <ul ng-class="showKeypad ? 'on' : ''" class="keypad dialpad nums squared">
-                    <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value" class="clicky"><a data-val="b.value" ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span class="no">{{b.value}}</span><span class="txt">{{b.label}}</span></a></li>
+                    <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value" class="clicky"><a
+                            data-val="b.value" ng-class="b.pressed ? 'pressed' : ''" class="{{b.class}}" href="#"><span
+                                class="no">{{b.value}}</span><span class="txt">{{b.label}}</span></a></li>
                 </ul> <!-- /keypad dialpad nums squared-->
                 <a ng-click="minimizeClicked() " class="minimize" href="#"><img src="images/icn_mini.svg" /></a>
             </div> <!-- /panel answer -->
@@ -123,23 +151,26 @@
             </div> <!-- /sms-response-pos -->
         </div> <!-- /sms-response -->
 
-        <div ng-controller="consoleController" class="sms-input">
+        <div ng-hide="touchCheckboxModel.on" ng-controller="consoleController" class="sms-input">
             <form ng-submit="smsInput()">
                 <!-- <label for="sms"></label> -->
-                <span class="dial"><a ng-click="openDialer()" class="open_dialer" href=""><img src="images/icn_dialer.svg"></a></span>
+                <span class="dial"><a ng-click="openDialer()" class="open_dialer" href=""><img
+                            src="images/icn_dialer.svg"></a></span>
                 <span class="input">
-                    <input close-keyboard input-history history="history" ng-model="smsText" type="text" placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
+                    <input close-keyboard input-history history="history" ng-model="smsText" type="text"
+                        placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
                     <!---<textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea>-->
                 </span> <!-- /input -->
                 <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->
             </form> <!-- /smsInput() -->
         </div> <!-- /sms-input -->
 
-        <p ng-class="callNotif ? 'on' : ''" class="call_notif"><a href="#" ng-click="callNotifClicked()" class="resume">Click here to resume the call</a></p>
+        <p ng-class="callNotif ? 'on' : ''" class="call_notif"><a href="#" ng-click="callNotifClicked()"
+                class="resume">Click here to resume the call</a></p>
 
     </div> <!-- /screen -->
 
 </div> <!-- /phone -->
 
-<a class="full" href="#"><img class="enter" src="images/icn_fs_enter.svg" /><img class="exit" src="images/icn_fs_exit.svg" /></a>
-
+<a class="full" href="#"><img class="enter" src="images/icn_fs_enter.svg" /><img class="exit"
+        src="images/icn_fs_exit.svg" /></a>

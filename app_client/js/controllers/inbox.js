@@ -9,6 +9,7 @@ ONEmSimModule.controller('inboxController', [
         
         $scope.messages = [];
         $scope.moTextInbox = "";
+        $scope.receivedONEmName = "";
 
         var refreshInbox = function() {
             $scope.messages = DataModel.getInbox();
@@ -22,7 +23,10 @@ ONEmSimModule.controller('inboxController', [
             var line0 = message.content.lines[0];
             $rootScope.$broadcast('_onemUpdateInbox');
             if (message.content.isMsg()) {
-                $scope.moTextInbox = line0.slice(0, line0.indexOf(':')) + ' ';
+                $scope.receivedONEmName = line0.slice(0, line0.indexOf(':'));
+                if (!$scope.receivedONEmName.startsWith('@')) {
+                    $scope.receivedONEmName = '@' + $scope.receivedONEmName;
+                }
             }
         }
         
@@ -31,13 +35,16 @@ ONEmSimModule.controller('inboxController', [
             console.log("moSubmitFromInbox motext:" + $scope.moTextInbox);
             if (!$scope.moTextInbox || $scope.moTextInbox.length == 0) return;
             $scope.$parent.spinner = true;
-            Cache.selectOption($scope.moTextInbox).then(function (response) {
+            var moText = $scope.receivedONEmName + ' ' + $scope.moTextInbox;
+            console.log("sending:" + moText);
+            Cache.selectOption(moText).then(function (response) {
                 console.log("got response");
                 $('.collapsible').collapsible('close',index);
 
                 $timeout(function () {
                     $scope.$parent.spinner = false;
                     $scope.moTextInbox = "";
+                    $scope.receivedONEmName = "";
                     $rootScope.$apply();
                 });
 
@@ -47,6 +54,7 @@ ONEmSimModule.controller('inboxController', [
                 console.log($scope.$parent);
                 $('.collapsible').collapsible('close',index);
                 $scope.moTextInbox = "";
+                $scope.receivedONEmName = "";
 
                 $timeout(function () {
                     $scope.$parent.spinner = false;

@@ -6,7 +6,14 @@ ONEmSimModule.factory('Cache', [
     'ServicesData',
     function (Services, MtText, Request, ServicesData) {
 
+        var self = this;
+
         var initialized = false;
+
+        var serviceState = {
+            activeService: undefined,
+            previousService: undefined
+        }
 
         var processServicesList = function (text) {
 
@@ -90,6 +97,16 @@ ONEmSimModule.factory('Cache', [
 
         return {
 
+            activeService: function(value) {
+                if (typeof value == "undefined") return serviceState.activeService;
+                serviceState.activeService = value;
+                return serviceState.activeService; 
+            }, 
+            previousService: function(value) {
+                if (typeof value == "undefined") return serviceState.previousService;
+                serviceState.previousService = value;
+                return serviceState.previousService; 
+            }, 
             reset: function () {
                 initialized = false;
                 activeServices = [];
@@ -105,6 +122,13 @@ ONEmSimModule.factory('Cache', [
                     return 'go';
                 }
             },
+            getCallService: function () {
+                if (ServicesData.services()) {
+                    return ServicesData.services().getCallService();
+                } else {
+                    return false;
+                }
+            },
             getLandingService: function () {
                 if (ServicesData.services()) {
                     return ServicesData.services().getLandingService();
@@ -118,18 +142,29 @@ ONEmSimModule.factory('Cache', [
                     var mt = await Request.get('#', { method: 'api', all: true });
                     console.log("back from api request:");
                     console.log(mt);
-                    return processServicesList(mt);
+                    var result = processServicesList(mt);
+                    serviceState.activeService = ServicesData.services().getLandingService();
+                    serviceState.previousService = serviceState.activeService;
+                    return result;
                 } catch (error) {
-                    throw error;
+                    throw "Error getting services, try again later";
                 }
             },
             getService: async function (service) {
 
-                console.log("requesting:" + '#' + service);
+                console.log("requesting:" + '#' + service.getName());
+
+                if (service.service.blockRequest) {
+                    console.log("blocking request");
+                    return false;
+                }
 
                 try {
-                    var mt = await Request.get('#' + service);
+                    serviceState.previousService = serviceState.activeService;
+                    var mt = await Request.get('#' + service.getName());
+                    serviceState.activeService = service;
                     console.log("back from getService request:");
+                    console.log(serviceState);
                     console.log(mt);
                     return processService(mt);
                 } catch (error) {

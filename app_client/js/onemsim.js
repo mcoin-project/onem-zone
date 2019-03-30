@@ -15,6 +15,7 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'mp.autoFocus',
     'monospaced.elastic',
     'angularMoment',
+    'hmTouchEvents',
 ]).filter('nl2br', ['$sanitize', function ($sanitize) {
     var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
     return function (msg) {
@@ -125,9 +126,15 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             }).
             state('service', {
                 url: '/',
-                templateUrl: 'partials/service.html',
+                templateUrl: function ($stateParams) {
+                    if (!$stateParams.template) {
+                        return 'partials/service.html';
+                    } else {
+                        return $stateParams.template
+                    }
+                },
                 controller: 'serviceController',
-                params: { service: null, initialize: null },
+                params: { service: null, initialize: null, template: null, rtcData: null },
                 resolve: {
                     loginRequired: loginRequired
                 }

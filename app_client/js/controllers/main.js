@@ -9,8 +9,7 @@ ONEmSimModule.controller('mainController', [
     '$timeout',
     'Cache',
     'toastr',
-    'DataModel',
-    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr, DataModel) {
+    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr) {
         console.log("user:" + $rootScope.user);
         
         function resolveState() {
@@ -57,19 +56,73 @@ ONEmSimModule.controller('mainController', [
         }).then(function (response) {
             console.log("response fom smshandler.start");
             console.log(response);
-            $rootScope.sipproxy = response.sipproxy;
-            $rootScope.wsprotocol = response.wsprotocol;
+            $rootScope.sipProxy = response.sipproxy;
+            $rootScope.wsProtocol = response.wsprotocol;
+
+            var socket = new JsSIP.WebSocketInterface($rootScope.wsProtocol + '://' + $rootScope.sipProxy);
+
+            //JsSIP configuration:
+            var configuration = {
+                sockets: [socket],
+                uri: 'sip:' + $rootScope.msisdn + '@' + $rootScope.sipProxy,
+                password: 'ONEmP@$$w0rd2016',
+                useUpdate: false,
+                register: false,
+                use_preloaded_route: false,
+                register_expires: 120
+            };
+    
+            // For debug run this in the browser's console and reload the page:
+            // JsSIP.debug.enable('JsSIP:*');
+    
+            Phone.phoneData = new JsSIP.UA(configuration);
+    
+            Phone.phoneData.registrator().setExtraHeaders([
+                'X-WEBRTC-UA: zoiper'
+            ]);
+
+            Phone.phoneData.start();
+            Phone.phoneData.register();
+
             return Phone.start(response);
+
         }).then(function (response) {
             console.log("finished call to phone.start");
             $scope.$parent.spinner = true;
+            $scope.$parent.servicesCols = 1; 
+            $scope.$parent.services1 = [];
+            $scope.$parent.services2 = [];
+            $scope.$parent.services = [];
             return Cache.getServices();
         }).then(function (services) {
 
+            Phone.phoneData.on('newRTCSession', function (data) {
+                console.log("main: new RTC session");
+
+                Phone.phoneSession = data.session;
+
+                Phone.phoneSession.on("progress", function (e) {
+                    console.log("[WS]: newRTCSession - progress");
+                    $rootScope.$emit('progress');
+                });
+
+                //$rootScope.$emit('_onemNewRTCSession', data);
+                var cs = Cache.getCallService();
+                $state.go('service', { service: cs, initialize: true, template: cs.service.template, rtcData: data });
+
+            });
+
             if ($scope.$parent) $scope.$parent.spinner = false;
 
-            $scope.$parent.services1 = [];
-            $scope.$parent.services2 = [];
+            $scope.$parent.services = services;
+
+            if (!$scope.$parent.services || $scope.$parent.services.length < 7) {
+                $scope.$parent.servicesCols = 1; 
+            } else if ($scope.$parent.services.length >=7 && $scope.$parent.services.length <=14) {
+                $scope.$parent.servicesCols = 2;              
+            } else {
+                $scope.$parent.servicesCols = 3;              
+            }
 
             console.log("cache got response");
             console.log(services);
@@ -100,5 +153,6 @@ ONEmSimModule.controller('mainController', [
                 if (error) toastr.error(error);
             }
         });
+
     }
 ]);

@@ -15,6 +15,7 @@ var compression = require('compression');
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
+var nautilusApi = require('./app_api/routes/nautilus.js');
 var io = require('./app_api/common/io.js');
 
 // The http server will listen to an appropriate port, or default to
@@ -60,6 +61,7 @@ io.initialize(server);
 
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
+app.use('/naut', nautilusApi);
 
 app.get('/', function(req, res, next) {
     res.sendFile('/' + public_folder + '/index.html', { root: __dirname });

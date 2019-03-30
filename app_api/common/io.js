@@ -7,18 +7,21 @@ var user = require('../controllers/user.js');
 var message = require('../controllers/message.js');
 
 var sms = require('../common/sms.js');
+var nautilus = require('../common/nautilus.js');
+
 var clients = require('../common/clients.js');
 
 var io = null;
 
 var index = 0;
 var testMessages = [
-    "DID YOU MEAN?\n1 #account\n2 #aljazeera\n3 #arabic\n4 #call\n5 #contacts\n6 #convert\n7 #crossword\n8 #duas\n9 #dw\n10 #exchange\n11 #finance\n12 #france24\n13 #hangman\n14 #jokes\n15 #market\n16 #mcat\n17 #mine\n18 #moderate\n19 #msg\n20 #news\n21 #onem\n22 #points\n23 #poll\n24 #post\n25 #quotes\n26 #quran\n27 #radio\n28 #reuters\n..1/2\n--MORE",
+    "DID YOU MEAN?\n1 #account\n2 #aljazeera\n3 #arabic\n4 #call\n5 #contacts\n6 #convert\n7 #crossword\n8 #duas\n9 #dw\n10 #exchange\n11 #finance\n12 #france24\n13 #hangman\n14 #jokes\n15 #market\n16 #mcat\n17 #mine\n18 #moderate\n19 #msg\n20 #news\n21 #onem\n22 #points\n23 #poll\n24 #post\n25 #quotes\n26 #quran\n27 #radio\n28 #todo\n..1/2\n--MORE",
     "29 #rewards\n30 #salah\n31 #scores\n32 #stock\n33 #stories\n34 #subscribe\n35 #time\n36 #translate\n37 #viacom\n38 #wallet\n39 #weather\n40 #wiki\n41 #words\n42 #xgroup\n43 #unsubscribe\n..2/2\n--Reply 1-43",
     "DID YOU MEAN?\nA #account\nB #aljazeera\nC #contacts\nD #france24\nE #market\nF #msg\nG #onem\nH #post\nI #reuters\nJ #subscribe\nK #wiki\nL #xgroup\nM #unsubscribe\n--Reply A-M",
     "DID YOU MEAN?\n   1 #account\n    2 #aljazeera\n    3 #arabic\n    4 #call\n    5 #contacts\n    6 #convert\n    7 #crossword\n    8 #duas\n    9 #dw\n   10 #exchange\n   11 #finance\n   12 #france24\n   13 #hangman\n   14 #jokes\n   15 #market\n   ..1/3\n   --MORE",
     "#MARKET SELL\nA Sell Something\nB Active listings(1)\nC De-listed(0)\nD Orders to approve(0)\nE Orders to dispatch(0)\nF My profile\n--Reply A-F or BUY or search words",
     "#FRANCE24 EUROPE\nTitle: US urges Europe to quit Iran deal, stop busting sanctions\nStory: The US lashed out at some of its closest allies Thursday, accusing Britain, France and Germany of trying to bust US sanctions against Iran and calling on\n..01/29\n--MORE/BACK",
+    "#MARKET\nAdlai is a delicious grain that is high in fiber. https://tinyurl.com/y6d587y9\n7844.32 MCN / 300 GBP\nYour balance 0.0 MCN\n--Reply BACK",
     "#MARKET NEW ITEM STEP(1/3)\n    Listing expires in 7 days\n    Describe your item (100 chars).\n    Example:\n    iPhone 6 64GB Silver, unlocked\n    --Reply with description or CANCEL",
     "#ACCOUNT\n  1 Afrikaans\n  2 Akan\n  3 Albanian\n  4 Amharic\n  5 Arabic\n  6 Armenian\n  7 Assamese\n  8 Azerbaijani\n  9 Bambara\n 10 Basque\n 11 Belarusian\n 12 Bengali\n 13 Bosnian\n 14 Breton\n 15 Bulgarian\n 16 Burmese\n 17 Catalan\n 18 Chechen\n 19 Chinese\n..1/7\n--MORE/BACK",
     "#POST TUTORIAL\n1 Introduction\n2 How to use\n3 Categories\n4 Credits\n--Reply with prefix/HELP/BACK",
@@ -107,7 +110,7 @@ exports.initialize = function (server) {
             message.deliverPending(socket);
         }
 
-        socket.on('MO SMS', function (moText) {
+        socket.on('MO SMS', async function (moText) {
             debug('moText: ');
             debug(moText);
 
@@ -124,37 +127,37 @@ exports.initialize = function (server) {
                     socket: socket, // presence of this indicates that client is connected
                     mtText: '', // the pending sms text - built up if more-messages-to-send
                 };
-                clients.clients[socket.msisdn] = {};
+                if (!clients.clients[socket.msisdn]) {
+                    clients.clients[socket.msisdn] = {};
+                }
                 clients.clients[socket.msisdn].moRecord = moRecord;
 
-                debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
-                sms.sendSMS(socket.msisdn, common.shortNumber, moText);
-                if (process.env.TEST == 'on') {
+                if (moText.trim().startsWith('#')) {
+                    clients.clients[socket.msisdn].currentService = moText.trim().split(' ')[0].toLowerCase();
+                    debug("switching service:" + clients.clients[socket.msisdn].currentService)
+                }
 
-                    var timer = setTimeout(
-                        function () {
-                            if (index == testMessages.length) index = 0;
-                            if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
-                            index++;
-                        }, 1000
-                    );
+                if (nautilus.services.includes(clients.clients[socket.msisdn].currentService)) {
+                    clients.clients[socket.msisdn].verbs = await nautilus.loadVerbs(clients.clients[socket.msisdn].currentService);
+                    debug("got verbs:");
+                    debug(clients.clients[socket.msisdn].verbs);
+                    debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
+                    nautilus.sendSMS(socket.msisdn, common.shortNumber, moText);
+                } else {
 
-                    // send another
-                    var timer2 = setTimeout(
-                        function () {
-                            if (testMessages[testMessages.length-1]) socket.emit('MT SMS', { mtText: testMessages[testMessages.length-1] });
-                            index++;
-                        }, 1500
-                    );
+                    debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
+                    sms.sendSMS(socket.msisdn, common.shortNumber, moText);
+                    if (process.env.TEST == 'on') {
 
-                    // send another
-                    var timer3 = setTimeout(
-                        function () {
-                            if (testMessages[testMessages.length-2]) socket.emit('MT SMS', { mtText: testMessages[testMessages.length-2] });
-                            index++;
-                        }, 1600
-                    );
+                        var timer = setTimeout(
+                            function () {
+                                if (index == testMessages.length) index = 0;
+                                if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
+                                index++;
+                            }, 1000
+                        );
 
+                    }
                 }
 
             } else {
