@@ -5,6 +5,7 @@ var mongoose = require('mongoose');
 
 var common = require('../common/common.js');
 var user = require('../controllers/user.js');
+var wallet = require('../controllers/wallet.js');
 var auth = require('../controllers/auth');
 var api = express.Router();
 
@@ -93,7 +94,28 @@ api.get('/start', ensureAuthenticated, function (req, res) {
 
 });
 
+api.get('/wallet/getAccounts', ensureAuthenticated, wallet.getAccounts(User));
+api.post('/wallet/topUp', ensureAuthenticated, wallet.topUp(User));
+
 api.post('/auth/google', auth.googleAuth(User));
 api.post('/auth/facebook', auth.facebookAuth(User));
+
+api.get('/gcash/order_success', function(req, res) {
+    debug("got order_success");
+    debug(req.body);
+    res.status(200).send();
+});
+api.get('/gcash/order_fail', function(req, res) {
+    debug("got order_fail");
+    debug(req.body);
+    res.status(200).send();
+
+});
+api.get('/gcash/order_order_not_available', function(req, res) {
+    debug("got order_not_available");
+    debug(req.body);
+    res.status(200).send();
+
+});
 
 module.exports = api;

@@ -6,6 +6,7 @@ sessions/
 # Local development
 *.env
 *.dev
+*.pem
 .DS_Store
 restartlog.txt
 npm-debug.log.3419865986
