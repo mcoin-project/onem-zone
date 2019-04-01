@@ -3,7 +3,8 @@ ONEmSimModule.controller('settingsController', [
     'User',
     '$state',
     'DataModel',
-    function ($scope, User, $state, DataModel) {
+    'ngDialog',
+    function ($scope, User, $state, DataModel, ngDialog) {
 
         User.getProfile().$promise.then(function (response) {
             $scope.$parent.touchCheckboxModel = {
@@ -41,6 +42,20 @@ ONEmSimModule.controller('settingsController', [
                 DataModel.clearTouchResult();
             });
             console.log($scope.$parent.emailCheckboxModel);
+        }
+
+        $scope.unlink = function () {
+            ngDialog.open({
+                template: 'partials/modals/modal-unlink.html',
+                className: 'ngdialog-theme-default',
+                controller: ['$scope', 'ngDialog', '$state', function($scope, ngDialog, $state) {
+                    $scope.confirm = function() {
+                        ngDialog.close();
+                        $state.go('logoutDelete');
+                    }
+                }],
+                showClose: true
+            });
         }
 
     }

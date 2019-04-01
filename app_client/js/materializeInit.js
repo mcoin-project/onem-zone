@@ -12,6 +12,6 @@ $(document).ready(function () {
   $('.dropdown-trigger').dropdown({ hover: false, coverTrigger: false });
   $('.dropdown-trigger-services').dropdown({ constrainWidth: false, hover: false, coverTrigger: false });
 
- // $('.modal').modal();
+  //$('.modal').modal();
   $('.collapsible').collapsible();
 });
