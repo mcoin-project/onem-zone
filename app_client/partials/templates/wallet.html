@@ -3,7 +3,7 @@
                 <li ng-repeat="account in accounts" class="collection-item avatar">
                     <img ng-src="./images/account-logo-{{account.name.toLowerCase()}}.png" alt="{{account.name}} logo">
                     <div class="secondary-content">
-                        <a class="waves-effect waves-light btn" ng-click="topUp()">Top up</a>
+                        <a class="waves-effect waves-light btn" ng-click="topUp($index)" href="">Top up</a>
                     </div>
                     <p class="title">
                         {{account.balance.toLocaleString()}} {{account.currency.toUpperCase()}}

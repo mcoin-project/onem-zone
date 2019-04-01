@@ -1,0 +1,27 @@
+<div class="container ngdialog-message">
+    <h5 translate ng-style="alignRtl()">Top up {{account.name | capitalize }}</h5>
+    <form action="#">
+        <p>
+            <label>
+                <input name="group1" type="radio" ng-model="user.value" checked value="1000" />
+                <span>1,000 PHP</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="group1" type="radio" ng-model="user.value" value="2000" />
+                <span>2,000 PHP</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="group1" type="radio" ng-model="user.value" value="5000" />
+                <span>5,000 PHP</span>
+            </label>
+        </p>
+    </form>
+    <div class="modal-footer ngdialog-buttons">
+        <a class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
+        <a href="" ng-click="confirm()" class="modal-close waves-effect waves-green right btn-flat">Confirm</a>
+    </div>
+</div>

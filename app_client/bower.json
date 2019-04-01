@@ -31,7 +31,8 @@
     "angular-moment": "^1.3.0",
     "moment": "^2.24.0",
     "AngularHammer": "ryanmullins-angular-hammer#^2.2.0",
-    "angular-hammer": "monospaced/angular-hammer#^1.2.4"
+    "angular-hammer": "monospaced/angular-hammer#^1.2.4",
+    "ng-dialog": "^1.4.0"
   },
   "resolutions": {
     "hammerjs": ">=2.0.0"

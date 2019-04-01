@@ -16,7 +16,12 @@ var ONEmSimModule = angular.module('ONEmSimModule', [
     'monospaced.elastic',
     'angularMoment',
     'hmTouchEvents',
-]).filter('nl2br', ['$sanitize', function ($sanitize) {
+    'ngDialog',
+]).filter('capitalize', function() {
+    return function(input) {
+      return (!!input) ? input.charAt(0).toUpperCase() + input.substr(1).toLowerCase() : '';
+    }
+}).filter('nl2br', ['$sanitize', function ($sanitize) {
     var tag = (/xhtml/i).test(document.doctype) ? '<br />' : '<br>';
     return function (msg) {
         // ngSanitize's linky filter changes \r and \n to &#10; and &#13; respectively

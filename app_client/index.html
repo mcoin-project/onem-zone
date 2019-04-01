@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
     <link rel="stylesheet"
         href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
+    <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css">
+    <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.min.css">
     <!-- endbuild -->
     <!--build:css css/app.min.css -->
     <link rel="stylesheet" href="css/onemfonts.css" />
@@ -48,13 +50,14 @@
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
         <ul id="services" class="services-cols-{{servicesCols}} dropdown-content dropdown-content-services">
-            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load menu</a></li>
+            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load
+                    menu</a></li>
             <li ng-repeat="service in services track by $index">
-                        <a class="dropdown-icon-wrapper"
-                        ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
-                            <span class="onem-icon-{{service.getIcon()}}"></span>
-                            <div>{{service.getName()}}</div>
-                    </a>
+                <a class="dropdown-icon-wrapper"
+                    ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
+                    <span class="onem-icon-{{service.getIcon()}}"></span>
+                    <div>{{service.getName()}}</div>
+                </a>
             </li>
         </ul>
         <div class="navbar-fixed">
@@ -114,7 +117,6 @@
                     Logout</a>
             </div>
         </div>
-
     </div>
 
     <ul class="sidenav" id="services-target">
@@ -216,6 +218,7 @@
 <script type="text/javascript" src="bower_components/angular-moment/angular-moment.js"></script>
 <script type="text/javascript" src="bower_components/hammerjs/hammer.js"></script>
 <script type="text/javascript" src="bower_components/angular-hammer/angular-hammer.js"></script>
+<script type="text/javascript" src="bower_components/ng-dialog/js/ngDialog.js"></script>
 
 <!--<script type="text/javascript" src="bower_components/angular-materialize/src/angular-materialize.js"></script>-->
 <script type="text/javascript" src="js/onemsim.js"></script>
@@ -244,6 +247,7 @@
 <script type="text/javascript" src="js/controllers/console.js"></script>
 <script type="text/javascript" src="js/controllers/phone.js"></script>
 <script type="text/javascript" src="js/controllers/inbox.js"></script>
+<script type="text/javascript" src="js/controllers/modalTopUp.js"></script>
 <script type="text/javascript" src="js/directives/closeKeyboard.js"></script>
 <script type="text/javascript" src="js/directives/myClock.js"></script>
 <script type="text/javascript" src="js/directives/scrollBottom.js"></script>

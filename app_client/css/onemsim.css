@@ -31,6 +31,10 @@ body {
   left: 50%;
   transform: translate(-50%, 0); }
 
+.ngdialog.ngdialog-theme-default {
+  padding-left: 20px;
+  padding-right: 20px; }
+
 /*------------------------------------------------------------------------------------------
  *
  *    NAV
@@ -270,5 +274,10 @@ i.icon-blue {
     margin-top: 0.5rem;
     margin-bottom: 0.5rem; }
 
+/*------------------------------------------------------------------------------------------
+ *
+ *    WALLET SCREEN
+ *
+ *----------------------------------------------------------------------------------------*/
 .collection .collection-item.avatar {
   padding-left: 20px; }
