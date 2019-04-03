@@ -123,8 +123,10 @@ exports.Gcash.prototype.placeOrder = async function (productCode, orderObject, m
     try {
         console.log("url:" + API_BASE_PATH + '/create.htm');
         var response = await request({ method: 'POST', url: API_BASE_PATH + '/create.htm', json: true, body: r });
-        console.log(response.response.body.resultInfo);
-        return response.response.body.resultInfo;
+        console.log(response.response.body);
+        var result = response.response.body.resultInfo;
+        result.checkoutUrl = response.response.body.checkoutUrl;
+        return result;
         //console.log(response);
     } catch (error) {
         console.log("got error:");

@@ -52,7 +52,8 @@ exports.topUp = function (User) {
                 value: req.body.amount
             },
             buyer: {
-                userId: req.userProfile.msisdn,
+            //    userId: req.userProfile.msisdn,
+                userId: "",  // should be left blank according to gcash team
                 externalUserId: req.userProfile.email,
                 externalUserType: "online_customer"
             }
