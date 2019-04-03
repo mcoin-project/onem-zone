@@ -103,15 +103,22 @@ api.post('/auth/facebook', auth.facebookAuth(User));
 api.get('/gcash/order_success', function(req, res) {
     debug("got order_success");
     debug(req.body);
-    res.status(200).send();
+    res.redirect('/');
+    //res.status(200).send();
 });
 api.get('/gcash/order_fail', function(req, res) {
-    debug("got order_fail");
+    debug("got get order_fail");
     debug(req.body);
     res.status(200).send();
 
 });
-api.get('/gcash/order_order_not_available', function(req, res) {
+api.post('/gcash/order_fail', function(req, res) {
+    debug("got post order_fail");
+    debug(req.body);
+    res.status(200).send();
+
+});
+api.post('/gcash/order_not_available', function(req, res) {
     debug("got order_not_available");
     debug(req.body);
     res.status(200).send();
