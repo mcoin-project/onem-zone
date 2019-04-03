@@ -86,11 +86,11 @@ exports.Gcash.prototype.placeOrder = async function (productCode, orderObject, m
                     {
                         type: "CANCEL_RETURN",
                         url: self.cancelReturnUrl
-                    },
-                    {
-                        type: "NOTIFICATION",
-                        url: self.notificationUrl
                     }
+                    // {
+                    //     type: "NOTIFICATION",
+                    //     url: self.notificationUrl
+                    // }
                 ],
                 envInfo: {
                     orderTerminalType: "WEB",
