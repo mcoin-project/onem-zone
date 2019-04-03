@@ -131,6 +131,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             }).
             state('order_success', {
                 url: '/gcash/order_success',
+                controller: 'mainController',
                 templateUrl: 'partials/order-success.html',
                 resolve: {
                     loginRequired: loginRequired
