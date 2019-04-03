@@ -9,9 +9,9 @@ const PRODUCT_CODE = process.env.PRODUCT_CODE;
 const API_BASE_PATH = process.env.API_BASE_PATH;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const PRIVATE_KEY_PATH = process.env.PRIVATE_KEY_PATH;
-const PAY_RETURN_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_success';
-const CANCEL_RETURN_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_fail';
-const NOTIFICATION_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_not_available';
+const PAY_RETURN_URL = 'https://onem-gcash.herokuapp.com/gcash/order_success';
+const CANCEL_RETURN_URL = 'https://onem-gcash.herokuapp.com/gcash/order_fail';
+const NOTIFICATION_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_notify';
 
 var fs = require('fs');
 var privateKey;

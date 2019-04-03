@@ -129,6 +129,13 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     loginRequired: loginRequired
                 }
             }).
+            state('order_success', {
+                url: '/order_success',
+                templateUrl: 'partials/order-success.html',
+                resolve: {
+                    loginRequired: loginRequired
+                }               
+            }).
             state('service', {
                 url: '/',
                 templateUrl: function ($stateParams) {
