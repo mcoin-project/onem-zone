@@ -13,7 +13,7 @@ ONEmSimModule.controller('navbarController', [
         $scope.$state = $state;
         $scope.dropdown="My Profile";
         $scope.user = {};
-        $scope.spinner = false;
+        $scope.spinner = DataModel.getSpinner();
         $scope.ready = false;
 
         $scope.inboxCount = DataModel.getInbox().length || 0;

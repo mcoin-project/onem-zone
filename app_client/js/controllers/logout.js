@@ -10,7 +10,7 @@ ONEmSimModule.controller('logoutController', [
     'Cache',
     'Request',
     function($scope, $auth, toastr, $state, $rootScope, Phone, Socket, DataModel, Cache, Request) {
-        $scope.$parent.spinner = false;
+        DataModel.setSpinner(false);
 
         if ($auth.isAuthenticated()) { 
             $auth.logout().then(function() {

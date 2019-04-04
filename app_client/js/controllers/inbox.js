@@ -34,7 +34,7 @@ ONEmSimModule.controller('inboxController', [
         $scope.moSubmitFromInbox = function (index) {
             console.log("moSubmitFromInbox motext:" + $scope.moTextInbox);
             if (!$scope.moTextInbox || $scope.moTextInbox.length == 0) return;
-            $scope.$parent.spinner = true;
+            DataModel.setSpinner(true);
             var moText = $scope.receivedONEmName + ' ' + $scope.moTextInbox;
             console.log("sending:" + moText);
             Cache.selectOption(moText).then(function (response) {
@@ -42,7 +42,7 @@ ONEmSimModule.controller('inboxController', [
                 $('.collapsible').collapsible('close',index);
 
                 $timeout(function () {
-                    $scope.$parent.spinner = false;
+                    DataModel.setSpinner(false);
                     $scope.moTextInbox = "";
                     $scope.receivedONEmName = "";
                     $rootScope.$apply();
@@ -57,7 +57,7 @@ ONEmSimModule.controller('inboxController', [
                 $scope.receivedONEmName = "";
 
                 $timeout(function () {
-                    $scope.$parent.spinner = false;
+                    DataModel.setSpinner(false);
                     $rootScope.$apply();
                 });
                 console.log(error);

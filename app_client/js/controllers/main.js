@@ -9,7 +9,8 @@ ONEmSimModule.controller('mainController', [
     '$timeout',
     'Cache',
     'toastr',
-    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr) {
+    'DataModel',
+    function ($scope, $rootScope, $state, Cache, SmsHandler, User, Phone, $timeout, Cache, toastr, DataModel) {
         console.log("user:" + $rootScope.user);
         
         function resolveState() {
@@ -88,7 +89,7 @@ ONEmSimModule.controller('mainController', [
 
         }).then(function (response) {
             console.log("finished call to phone.start");
-            $scope.$parent.spinner = true;
+            DataModel.setSpinner(true);
             $scope.$parent.servicesCols = 1; 
             $scope.$parent.services1 = [];
             $scope.$parent.services2 = [];
@@ -112,7 +113,7 @@ ONEmSimModule.controller('mainController', [
 
             });
 
-            if ($scope.$parent) $scope.$parent.spinner = false;
+            DataModel.setSpinner(false);
 
             $scope.$parent.services = services;
 
@@ -140,7 +141,7 @@ ONEmSimModule.controller('mainController', [
         }).catch(function (error) {
 
             //  debugger;
-            if ($scope.$parent) $scope.$parent.spinner = false;
+            DataModel.setSpinner(false);
 
             console.log("error in main ");
             console.log(error);

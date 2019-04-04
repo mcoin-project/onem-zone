@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const API_BASE_PATH = process.env.API_BASE_PATH;
+const GCASH_API_BASE_PATH = process.env.GCASH_API_BASE_PATH;
 
 const DEFAULT_SIGNING_SCHEME = 'pkcs1';
 const DEFAULT_SIGNING_ALGORITHM = 'sha256';
@@ -121,8 +121,8 @@ exports.Gcash.prototype.placeOrder = async function (productCode, orderObject, m
     console.log(JSON.stringify(r, {}, 4));
 
     try {
-        console.log("url:" + API_BASE_PATH + '/create.htm');
-        var response = await request({ method: 'POST', url: API_BASE_PATH + '/create.htm', json: true, body: r });
+        console.log("url:" + GCASH_API_BASE_PATH + '/create.htm');
+        var response = await request({ method: 'POST', url: GCASH_API_BASE_PATH + '/create.htm', json: true, body: r });
         console.log(response.response.body);
         var result = response.response.body.resultInfo;
         result.checkoutUrl = response.response.body.checkoutUrl;

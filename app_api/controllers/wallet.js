@@ -1,17 +1,18 @@
 const debug = require('debug')('onemzone');
 const Gcash = require('../common/gcash').Gcash;
 
-
-const CLIENT_ID = process.env.CLIENT_ID;
-const CLIENT_SECRET = process.env.CLIENT_SECRET;
-const MERCHANT_ID = process.env.MERCHANT_ID;
-const PRODUCT_CODE = process.env.PRODUCT_CODE;
-const API_BASE_PATH = process.env.API_BASE_PATH;
+const GCASH_CLIENT_ID = process.env.GCASH_CLIENT_ID;
+const GCASH_CLIENT_SECRET = process.env.GCASH_CLIENT_SECRET;
+const GCASH_MERCHANT_ID = process.env.GCASH_MERCHANT_ID;
+const GCASH_PRODUCT_CODE = process.env.GCASH_PRODUCT_CODE;
+const GCASH_API_BASE_PATH = process.env.GCASH_API_BASE_PATH;
 const PRIVATE_KEY = process.env.PRIVATE_KEY;
 const PRIVATE_KEY_PATH = process.env.PRIVATE_KEY_PATH;
-const PAY_RETURN_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_success';
-const CANCEL_RETURN_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_fail';
-const NOTIFICATION_URL = 'https://onem-gcash.herokuapp.com/api/gcash/order_notify';
+
+var hostUrl = process.env.HOST_URL;
+const PAY_RETURN_URL = hostUrl + '/api/gcash/order_success';
+const CANCEL_RETURN_URL = hostUrl + '/api/gcash/order_fail';
+const NOTIFICATION_URL = hostUrl + '/api/gcash/order_notify';
 
 var fs = require('fs');
 var privateKey;
@@ -25,10 +26,10 @@ if (PRIVATE_KEY_PATH) {
 }
 
 var gcash = new Gcash(
-    CLIENT_ID,
-    CLIENT_SECRET,
-    MERCHANT_ID,
-    API_BASE_PATH,
+    GCASH_CLIENT_ID,
+    GCASH_CLIENT_SECRET,
+    GCASH_MERCHANT_ID,
+    GCASH_API_BASE_PATH,
     privateKey,
     PAY_RETURN_URL,
     CANCEL_RETURN_URL,
@@ -62,7 +63,7 @@ exports.topUp = function (User) {
         debug("placing order");
         debug(JSON.stringify(order, {}, 4));
 
-        gcash.placeOrder(PRODUCT_CODE, order).then(function (response) {
+        gcash.placeOrder(GCASH_PRODUCT_CODE, order).then(function (response) {
             debug("success");
             debug(response);
             if (response.resultStatus == 'F' || response.resultStatus == 'f' || !response.checkoutUrl) {

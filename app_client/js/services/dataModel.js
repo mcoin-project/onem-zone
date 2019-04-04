@@ -11,7 +11,8 @@ ONEmSimModule.factory('DataModel', [
         var data = {
             results: [],
             inbox: [],
-            touchResult: undefined
+            touchResult: undefined,
+            spinner: false
         };
 
         return {
@@ -26,6 +27,13 @@ ONEmSimModule.factory('DataModel', [
             clearResults: function () {
                 data.results = [];
                 return data.results;
+            },
+            setSpinner: function (s) {
+                data.spinner = s;
+                return data.spinner;
+            },
+            getSpinner: function () {
+                return data.spinner;
             },
             getInbox: function () {
                 return data.inbox;

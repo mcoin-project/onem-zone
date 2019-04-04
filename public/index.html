@@ -36,13 +36,14 @@
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
         <ul id="services" class="services-cols-{{servicesCols}} dropdown-content dropdown-content-services">
-            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load menu</a></li>
+            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load
+                    menu</a></li>
             <li ng-repeat="service in services track by $index">
-                        <a class="dropdown-icon-wrapper"
-                        ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
-                            <span class="onem-icon-{{service.getIcon()}}"></span>
-                            <div>{{service.getName()}}</div>
-                    </a>
+                <a class="dropdown-icon-wrapper"
+                    ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
+                    <span class="onem-icon-{{service.getIcon()}}"></span>
+                    <div>{{service.getName()}}</div>
+                </a>
             </li>
         </ul>
         <div class="navbar-fixed">
@@ -88,21 +89,6 @@
                 </div>
             </nav>
         </div>
-        <!-- Modal Structure -->
-        <div id="unlinkModal" class="modal">
-            <div class="modal-content">
-                <h4>Unlink account</h4>
-                <p>This will unlink your email account and log you out of ONEm.zone.</p>
-                <p>You can still text ONEm from your real mobile phone and you will not lose any data.</p>
-                <p>You will be able re-register to ONEm.zone again later.</p>
-            </div>
-            <div class="modal-footer">
-                <a class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
-                <a ui-sref="logoutDelete" class="modal-close waves-effect waves-green btn-flat">Confirm &
-                    Logout</a>
-            </div>
-        </div>
-
     </div>
 
     <ul class="sidenav" id="services-target">
@@ -149,8 +135,8 @@
 
     <div class="container">
         <div ui-view></div>
-        <div ng-show="spinner" ng-class="{active : spinner}" class="spinner-container">
-            <div class="preloader-wrapper">
+        <div ng-show="spinner" class="spinner-container">
+            <div class="preloader-wrapper" ng-class="{active : spinner}">
                 <div class="spinner-layer spinner-red-only">
                     <div class="circle-clipper left">
                         <div class="circle"></div>
