@@ -37,11 +37,13 @@ var gcash = new Gcash(
     NOTIFICATION_URL);
 
 exports.getAccounts = function (User) {
-    return function (req, res) {
-        var accounts = [
-            { name: 'gcash', balance: 2345, currency: 'PHP' }
-        ];
-        res.json({ result: true, accounts: accounts });
+    return async function (req, res) {
+        try {
+            var accounts = await junction.getAccounts(req.userProfile.msisdn);
+            res.json({ result: true, accounts: accounts });
+        } catch (error) {
+            res.status(500).send({result: false, message: error});
+        }
     }
 }
 

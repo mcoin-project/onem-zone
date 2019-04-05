@@ -138,6 +138,15 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                     loginRequired: loginRequired
                 }               
             }).
+            state('order_fail', {
+                url: '/gcash/order_fail/:msgId?=amount&=currency',
+                controller: 'orderController',
+                params: { result: false, msgId: null, amount: null, currency: null},
+                templateUrl: 'partials/order.html',
+                resolve: {
+                    loginRequired: loginRequired
+                }               
+            }).
             state('service', {
                 url: '/',
                 templateUrl: function ($stateParams) {

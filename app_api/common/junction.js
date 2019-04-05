@@ -3,8 +3,31 @@ const debug = require('debug')('onemzone');
 const junctionPath = process.env.JUNCTION_BASE_PATH;
 
 const request = function() {
-    return Promise.resolve({result:true, amount: 1000, currency: 'PHP'});
+    return Promise.resolve({result:true, amount: 100012, currency: 'PHP'});
 }
+
+var accountsTest = [
+    { name: 'gcash', balance: 12345, currency: 'PHP' }
+];
+
+exports.getAccounts = async function (msisdn) {
+    try {
+        var accounts = await request({
+            method: 'GET',
+            url: junctionPath + '/accounts/' + msisdn
+        });
+        debug("got accounts");
+        debug(accounts);
+        return accountsTest;
+//        return accounts;
+
+    } catch (error) {
+        debug("/getAccounts");
+        debug(error);
+        throw error;
+    }
+}
+
 
 exports.createOrder = async function (account, msisdn, amount, currency) {
     try {

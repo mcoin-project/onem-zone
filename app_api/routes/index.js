@@ -120,13 +120,18 @@ api.get('/gcash/order_success/:msgId', async function (req, res) {
         debug(error);
         res.redirect('/gcash/order_fail/' + req.params.msgId);
     }
-
-    //res.status(200).send();
 });
-api.get('/gcash/order_fail/:msgId', function (req, res) {
-    debug("got get order_fail:" + req.params.msgId);
-    res.redirect('/gcash/order_fail/' + req.params.msgId);
 
+api.get('/gcash/order_fail/:msgId', async function (req, res) {
+    debug("got get order_fail:" + req.params.msgId);
+    try {
+        var order = await junction.getOrder(req.params.msgId);
+        res.redirect('/gcash/order_fail/' + req.params.msgId + '?amount=' + order.amount + '&currency=' + order.currency);
+    } catch (error) {
+        debug("/gcash/order_fail");
+        debug(error);
+        res.redirect('/gcash/order_fail/' + req.params.msgId);
+    }
 });
 
 module.exports = api;
