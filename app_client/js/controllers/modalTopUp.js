@@ -4,10 +4,11 @@ ONEmSimModule.controller('modalTopUpController', [
     '$window',
     'Wallet',
     'toastr',
-    function ($scope, $window, Wallet, toastr) {
+    'DataModel',
+    function ($scope, $window, Wallet, toastr, DataModel) {
 
-        var i = $scope.$parent.selectedAccount;
-        $scope.account = $scope.$parent.accounts[i];
+        var i = DataModel.selectedAccount();
+        $scope.account = DataModel.accounts()[i];
         console.log("account:");
         console.log($scope);
 
@@ -16,11 +17,11 @@ ONEmSimModule.controller('modalTopUpController', [
         }
         $scope.spinner = false;
 
-        $scope.confirm = function (type) {
+        $scope.confirm = function (account) {
             var amount = parseInt($scope.user.value);
             console.log("amount:"+amount);
             $scope.spinner = true;
-            Wallet.topUp({ account: type, amount: amount }).$promise.then(function (response) {
+            Wallet.topUp({ account: account.name, amount: amount, currency: account.currency }).$promise.then(function (response) {
                 $scope.spinner = false;
                 console.log("topup:");
                 console.log(response);
@@ -32,6 +33,8 @@ ONEmSimModule.controller('modalTopUpController', [
             }).catch(function (error) {
                 console.log("error");
                 console.log(error.data);
+                $scope.spinner = false;
+
                 if (!error.data.message) {
                     toastr.error("Unknown error");
                 } else {

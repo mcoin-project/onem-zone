@@ -1,0 +1,23 @@
+<div style="padding-left:10px;padding-right:10px" class="container row">
+    <div class="col s12 m12 l12" style="padding-top:50px">
+        <div ng-show="order.result" class="row left-align">
+            <h5>Gcash Order Confirmation</h5>
+        </div>
+        <div ng-show="!order.result" class="row">
+            <h5 class="red-text">Gcash Payment Failed</h5>
+        </div>
+        <p>
+            Order ref: {{order.msgId}}
+        </p>
+        <p>
+            Amount: {{amount}} {{order.currency.toUpperCase()}}
+        </p>
+        <div class="col s12">
+            <div style="padding-top:30px" class="row">
+                <div class="col s12 left-align">
+                    <a class="waves-effect waves-light btn" ui-sref="main">OK</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

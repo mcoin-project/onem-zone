@@ -1,5 +1,6 @@
 const debug = require('debug')('onemzone');
 const Gcash = require('../common/gcash').Gcash;
+const junction = require('../common/junction');
 
 const GCASH_CLIENT_ID = process.env.GCASH_CLIENT_ID;
 const GCASH_CLIENT_SECRET = process.env.GCASH_CLIENT_SECRET;
@@ -38,42 +39,57 @@ var gcash = new Gcash(
 exports.getAccounts = function (User) {
     return function (req, res) {
         var accounts = [
-            {name: 'gcash', balance: 2345, currency: 'PHP'}
+            { name: 'gcash', balance: 2345, currency: 'PHP' }
         ];
         res.json({ result: true, accounts: accounts });
     }
 }
 
 exports.topUp = function (User) {
-    return function (req, res) {
-        var order = {
-            orderTitle: "ONEm wallet top up",
-            orderAmount: {
-                currency: "PHP",
-                value: req.body.amount
-            },
-            buyer: {
-            //    userId: req.userProfile.msisdn,
-                userId: "",  // should be left blank according to gcash team
-                externalUserId: req.userProfile.email,
-                externalUserType: "online_customer"
+    return async function (req, res) {
+
+        try {
+            var orderResult;
+            var krakenOrder = await junction.createOrder(req.body.account,
+                req.userProfile.msisdn,
+                req.body.amount,
+                req.body.currency);
+    
+            debug("topping up:" + req.body.account);
+            var order = {
+                orderTitle: "ONEm wallet top up",
+                orderAmount: {
+                    currency: req.body.currency,
+                    value: req.body.amount
+                },
+                buyer: {
+                    //    userId: req.userProfile.msisdn,
+                    userId: "",  // should be left blank according to gcash team
+                    externalUserId: req.userProfile.email,
+                    externalUserType: "online_customer"
+                }
             }
-        }
-
-        debug("placing order");
-        debug(JSON.stringify(order, {}, 4));
-
-        gcash.placeOrder(GCASH_PRODUCT_CODE, order).then(function (response) {
+    
+            debug("placing order");
+            debug(JSON.stringify(order, {}, 4));
+            debug("ref:" + krakenOrder.orderRef);
+    
+            var response = await gcash.placeOrder(GCASH_PRODUCT_CODE, order, krakenOrder.orderRef);
             debug("success");
             debug(response);
             if (response.resultStatus == 'F' || response.resultStatus == 'f' || !response.checkoutUrl) {
+                orderResult = false;
                 res.status(502).send({ result: false, message: response.resultMsg });
             } else {
-                res.json({ result: true, order: response, message: response.resultMsg });
+                orderResult = true;
+                order.orderRef = krakenOrder.orderRef;
+                order.checkoutUrl = response.checkoutUrl;
+                res.json({ result: true, order: order, message: response.resultMsg });
             }
-        }).catch(function (error) {
+            await junction.updateOrder(krakenOrder.orderRef, orderResult, response.resultMsg);
+        } catch (error) {
             debug(error);
             res.status(500).send({ result: false, message: "Server error" });
-        });
+        }
     };
 }

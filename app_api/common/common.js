@@ -1,6 +1,5 @@
 const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
 const moment = require('moment');
 const jwt = require('jwt-simple');
 const postmark = require("postmark");

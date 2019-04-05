@@ -3,7 +3,6 @@ const clients = require('../common/clients.js');
 const common = require('../common/common.js');
 const context = require('../common/context.js');
 const message = require('../controllers/message.js');
-const apiUrl = process.env.API_BASE_PATH || 'localhost:5000/api';
 const request = require('request-promise');
 var mongoose = require('mongoose');
 

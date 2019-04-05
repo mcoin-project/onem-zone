@@ -12,11 +12,18 @@ ONEmSimModule.factory('DataModel', [
             results: [],
             inbox: [],
             touchResult: undefined,
-            spinner: false
+            spinner: false,
+            accounts: [],
+            selectedAccount: 0,
         };
 
         return {
             data: data,
+            selectedAccount: function (index) {
+                if (typeof index == "undefined") return data.selectedAccount;
+                data.selectedAccount = index;
+                return data.selectedAccount;
+            },
             getResults: function () {
                 return data.results;
             },
@@ -27,6 +34,19 @@ ONEmSimModule.factory('DataModel', [
             clearResults: function () {
                 data.results = [];
                 return data.results;
+            },
+            accounts: function (accounts) {
+                if (typeof accounts == "undefined") return data.accounts;
+                data.accounts = accounts;
+                return data.accounts;
+            },
+            addAccount: function (account) {
+                data.accounts.push(account);
+                return data.accounts;
+            },
+            clearAccounts: function () {
+                data.accounts = [];
+                return data.accounts;
             },
             setSpinner: function (s) {
                 data.spinner = s;

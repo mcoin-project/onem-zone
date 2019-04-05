@@ -13,7 +13,7 @@ var UserSchema = require('../models/Model').UserSchema;
 var User = mongoose.model('users', UserSchema);
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
-
+var junction = require('../common/junction');
 /*
  |--------------------------------------------------------------------------
  | Login Required Middleware
@@ -45,13 +45,13 @@ function ensureAuthenticated(req, res, next) {
 
 api.get('/user', ensureAuthenticated, function (req, res) {
     if (req.user) {
-        User.findById({_id: req.user}).then(function(user) {
+        User.findById({ _id: req.user }).then(function (user) {
             if (!user) {
                 debug("/user - user not found");
-                return res.status(401).send({error: "user not found"});
+                return res.status(401).send({ error: "user not found" });
             }
             res.status(200).send({ msisdn: user.msisdn, user: req.user });
-        }).catch(function(error) {
+        }).catch(function (error) {
             debug("/user - user not found");
             debug(error);
             res.status(500).send({ error: "server error" });
@@ -100,22 +100,32 @@ api.post('/wallet/topUp', ensureAuthenticated, wallet.topUp(User));
 api.post('/auth/google', auth.googleAuth(User));
 api.post('/auth/facebook', auth.facebookAuth(User));
 
-api.get('/gcash/order_success', function(req, res) {
-    debug("got get order_success");
-    debug(req.body);
-    res.redirect('/gcash/order_success');
+api.post('/gcash/order_notify', async function (req, res) {
+    res.status(200).send();
+    try {
+        await junction.updateOrder(req.body.merchantTransId, req.body);
+    } catch (error) {
+        debug('/order_notify');
+        debug(error);
+    }
+});
+
+api.get('/gcash/order_success/:msgId', async function (req, res) {
+    debug("got get order_success: " + req.params.msgId);
+    try {
+        var order = await junction.getOrder(req.params.msgId);
+        res.redirect('/gcash/order_success/' + req.params.msgId + '?amount=' + order.amount + '&currency=' + order.currency);
+    } catch (error) {
+        debug("/gcash/order_success");
+        debug(error);
+        res.redirect('/gcash/order_fail/' + req.params.msgId);
+    }
+
     //res.status(200).send();
 });
-api.get('/gcash/order_fail', function(req, res) {
-    debug("got get order_fail");
-    debug(req.body);
-    res.status(200).send();
-
-});
-api.post('/gcash/order_fail', function(req, res) {
-    debug("got post order_fail");
-    debug(req.body);
-    res.status(200).send();
+api.get('/gcash/order_fail/:msgId', function (req, res) {
+    debug("got get order_fail:" + req.params.msgId);
+    res.redirect('/gcash/order_fail/' + req.params.msgId);
 
 });
 

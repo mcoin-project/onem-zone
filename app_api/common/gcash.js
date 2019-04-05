@@ -6,7 +6,19 @@ const DEFAULT_SIGNING_SCHEME = 'pkcs1';
 const DEFAULT_SIGNING_ALGORITHM = 'sha256';
 
 const nodeRSA = require('node-rsa');
-const request = require('request-promise');
+//const request = require('request-promise');
+
+const request = function() {
+    return Promise.resolve({
+        response:{
+            body:{
+                resultInfo: {
+                    resultStatus: 'S'
+                },
+                checkoutUrl:'/api/gcash/order_success/123456'
+            }
+        }});
+}
 
 exports.Gcash = function (clientId,
     clientSecret,
@@ -66,6 +78,7 @@ exports.Gcash.prototype.placeOrder = async function (productCode, orderObject, m
             head: {
                 version: "2.0",
                 function: "alipayplus.acquiring.order.create",
+           //     function:"gcash.acquiring.order.create",
                 clientId: self.clientId,
                 clientSecret: self.clientSecret,
                 reqTime: now.toISOString(),
@@ -81,11 +94,11 @@ exports.Gcash.prototype.placeOrder = async function (productCode, orderObject, m
                 notificationUrls: [
                     {
                         type: "PAY_RETURN",
-                        url: self.payReturnUrl
+                        url: self.payReturnUrl + '/' + msgId
                     },
                     {
                         type: "CANCEL_RETURN",
-                        url: self.cancelReturnUrl
+                        url: self.cancelReturnUrl + '/' + msgId
                     }
                     // {
                     //     type: "NOTIFICATION",
@@ -122,12 +135,16 @@ exports.Gcash.prototype.placeOrder = async function (productCode, orderObject, m
 
     try {
         console.log("url:" + GCASH_API_BASE_PATH + '/create.htm');
-        var response = await request({ method: 'POST', url: GCASH_API_BASE_PATH + '/create.htm', json: true, body: r });
+        var response = await request({
+            method: 'POST',
+            url: GCASH_API_BASE_PATH + '/create.htm',
+            json: true,
+            body: r
+        });
         console.log(response.response.body);
         var result = response.response.body.resultInfo;
         result.checkoutUrl = response.response.body.checkoutUrl;
         return result;
-        //console.log(response);
     } catch (error) {
         console.log("got error:");
         console.log(error);
