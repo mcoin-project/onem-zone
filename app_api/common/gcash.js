@@ -6,19 +6,19 @@ const DEFAULT_SIGNING_SCHEME = 'pkcs1';
 const DEFAULT_SIGNING_ALGORITHM = 'sha256';
 
 const nodeRSA = require('node-rsa');
-//const request = require('request-promise');
+const request = require('request-promise');
 
-const request = function() {
-    return Promise.resolve({
-        response:{
-            body:{
-                resultInfo: {
-                    resultStatus: 'S'
-                },
-                checkoutUrl:'/api/gcash/order_success/123456'
-            }
-        }});
-}
+// const request = function() {
+//     return Promise.resolve({
+//         response:{
+//             body:{
+//                 resultInfo: {
+//                     resultStatus: 'S'
+//                 },
+//                 checkoutUrl:'/api/gcash/order_success/123456'
+//             }
+//         }});
+// }
 
 exports.Gcash = function (clientId,
     clientSecret,
