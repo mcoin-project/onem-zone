@@ -88,6 +88,8 @@ ONEmSimModule.controller('navbarController', [
             console.log("nav: received INBOX API MT");
             console.log(data.mtText);
             DataModel.addMessage(data.mtText);
+            DataModel.addResult(data.mtText);
+
         });
 
     }
