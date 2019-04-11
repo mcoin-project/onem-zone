@@ -15,6 +15,8 @@ const PAY_RETURN_URL = hostUrl + '/api/gcash/order_success';
 const CANCEL_RETURN_URL = hostUrl + '/api/gcash/order_fail';
 const NOTIFICATION_URL = hostUrl + '/api/gcash/order_notify';
 
+const validAmounts = [100000, 200000, 500000];
+
 var fs = require('fs');
 var privateKey;
 var fs = require('fs');
@@ -49,6 +51,10 @@ exports.getAccounts = function (User) {
 
 exports.topUp = function (User) {
     return async function (req, res) {
+
+        if (!req.body.amount || !validAmounts.includes(req.body.amount)) {
+            return res.status(400).send({message: 'Malformed request'});
+        }
 
         try {
             var orderResult;

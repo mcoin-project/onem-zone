@@ -13,7 +13,7 @@ ONEmSimModule.controller('modalTopUpController', [
         console.log($scope);
 
         $scope.user = {
-            value: "100"
+            value: "100000"
         }
         $scope.spinner = false;
 
