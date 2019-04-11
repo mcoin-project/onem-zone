@@ -155,9 +155,9 @@ ONEmSimModule.factory('MtText', function () {
 		var self = this;
 
 		var optionFormats = [
-			/^([A-Z]) ([*'A-Z#a-z0-9].+)/gm,  // check for basic option A-Z
-			/^(\d+) (['+*A-Z#a-z0-9].+)/gm,   // check for basic numbering options 0-9
-			/^(\d+[\.\d]+) ([+*A-Z#a-z0-9].+)/gm  // check for wiki-style section numbering
+			/^([A-Z]) ([*@'A-Z#a-z0-9].+)/gm,  // check for basic option A-Z
+			/^(\d+) (['+*@A-Z#a-z0-9].+)/gm,   // check for basic numbering options 0-9
+			/^(\d+[\.\d]+) ([+*@A-Z#a-z0-9].+)/gm  // check for wiki-style section numbering
 		];
 
 		var result;

@@ -110,6 +110,18 @@ api.post('/gcash/order_notify', async function (req, res) {
     }
 });
 
+api.post('/gcash/order_success/:msgId', async function (req, res) {
+    debug("got post order_success: " + req.params.msgId);
+    try {
+        var order = await junction.getOrder(req.params.msgId);
+        res.redirect('/gcash/order_success/' + req.params.msgId + '?amount=' + order.amount + '&currency=' + order.currency);
+    } catch (error) {
+        debug("/gcash/order_success");
+        debug(error);
+        res.redirect('/gcash/order_fail/' + req.params.msgId);
+    }
+});
+
 api.get('/gcash/order_success/:msgId', async function (req, res) {
     debug("got get order_success: " + req.params.msgId);
     try {
