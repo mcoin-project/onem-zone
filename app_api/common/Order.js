@@ -1,6 +1,6 @@
 const debug = require('debug')('onemzone');
 const junction = require('../common/junction');
-const Gcash = require('../common/gcash').Gcash;
+const Gcash = require('../common/Gcash').Gcash;
 const ACCOUNT_GCASH = "gcash";
 
 var gcash = new Gcash();
