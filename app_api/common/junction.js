@@ -2,8 +2,19 @@ const debug = require('debug')('onemzone');
 //const request = require('request-promise');
 const junctionPath = process.env.JUNCTION_BASE_PATH;
 
-const request = function() {
-    return Promise.resolve({result:true, amount: 100012, currency: 'PHP'});
+const request = function () {
+
+    function makeid(length) {
+        var text = "";
+        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+        for (var i = 0; i < length; i++)
+            text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+        return text;
+    }
+    var orderRef = makeid(10);
+    return Promise.resolve({ result: true, orderRef: orderRef, amount: 100000, currency: 'PHP' });
 }
 
 var accountsTest = [
@@ -19,7 +30,7 @@ exports.getAccounts = async function (msisdn) {
         debug("got accounts");
         debug(accounts);
         return accountsTest;
-//        return accounts;
+        //        return accounts;
 
     } catch (error) {
         debug("/getAccounts");
@@ -28,13 +39,21 @@ exports.getAccounts = async function (msisdn) {
     }
 }
 
-
+//
+// returns
+//  {result:boolean, orderRef: string}
+// example
+//  {result:true, orderRef: 'DD34334323'}
+//
 exports.createOrder = async function (account, msisdn, amount, currency) {
+    if (!account || !msisdn || !amount || !currency) {
+        throw "missing params";
+    }
     try {
         var order = await request({
             method: 'POST',
             url: junctionPath + '/order',
-            json:true,
+            json: true,
             body: {
                 account: account,
                 msisdn: msisdn,
@@ -44,7 +63,13 @@ exports.createOrder = async function (account, msisdn, amount, currency) {
         });
         debug("created order");
         debug(order);
-        return order;
+        if (!order.result) {
+            throw "failed to create order"
+        }
+        var result = {};
+        result.result = order.result;
+        result.orderRef = order.orderRef;
+        return result;
     } catch (error) {
         debug("/createOrder");
         debug(error);
@@ -57,7 +82,7 @@ exports.updateOrder = async function (orderRef, moreInfo) {
         var order = await request({
             method: 'PUT',
             url: junctionPath + '/order/' + orderRef,
-            json:true,
+            json: true,
             body: {
                 moreInfo: moreInfo
             }
