@@ -32,8 +32,8 @@ exports.topUp = function (User) {
             );
             await order.create();
             var orderResult = await order.place();
-            debug("OrderResult:");
-            debug(OrderResult);
+            debug("orderResult:");
+            debug(orderResult);
             if (!orderResult.result) {
                 res.status(502).send({ result: false, message: orderResult.message });
             } else {
