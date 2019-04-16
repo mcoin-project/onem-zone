@@ -5,13 +5,14 @@ const ACCOUNT_GCASH = "gcash";
 
 var gcash = new Gcash();
 
-exports.Order = function (msisdn, email, account, amount, currency) {
-    if (!msisdn || !email || !account || !amount || !currency) {
+exports.Order = function (msisdn, email, accountId, accountType, amount, currency) {
+    if (!msisdn || !email || !accountId || !accountType || !amount || !currency) {
         throw "missing params";
     }
     this.msisdn = msisdn;
     this.email = email;
-    this.account = account;
+    this.accountId = accountId;
+    this.accountType = accountType;
     this.amount = amount;
     this.currency = currency;
     this.orderRef = undefined;
@@ -20,7 +21,7 @@ exports.Order.prototype.create = async function () {
     var self = this;
     try {
         var krakenOrder = await junction.createOrder(
-            self.account,
+            self.accountId,
             self.msisdn,
             self.amount,
             self.currency
@@ -34,7 +35,7 @@ exports.Order.prototype.create = async function () {
 exports.Order.prototype.place = async function () {
     var self = this;
     if (!self.orderRef) throw "missing order reference";
-    switch (self.account.toLowerCase()) {
+    switch (self.accountType.toLowerCase()) {
         case ACCOUNT_GCASH:
             try {
                 var result = await gcash.placeOrder(
@@ -50,7 +51,7 @@ exports.Order.prototype.place = async function () {
             }
             break;
         default:
-            throw "unknown account type: " + self.account;
+            throw "unsupported account type: " + self.account;
     }
 }
 

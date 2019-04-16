@@ -13,7 +13,7 @@ ONEmSimModule.controller('modalTopUpController', [
         console.log($scope);
 
         $scope.user = {
-            value: "100000"
+            value: "1000"
         }
         $scope.spinner = false;
 
@@ -21,7 +21,7 @@ ONEmSimModule.controller('modalTopUpController', [
             var amount = parseInt($scope.user.value);
             console.log("amount:"+amount);
             $scope.spinner = true;
-            Wallet.topUp({ account: account.name, amount: amount, currency: account.currency }).$promise.then(function (response) {
+            Wallet.topUp({ accountId: account.bank_account_id, accountType: account.type, amount: amount, currency: account.currency }).$promise.then(function (response) {
                 $scope.spinner = false;
                 console.log("topup:");
                 console.log(response);

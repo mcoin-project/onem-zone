@@ -2,7 +2,7 @@ const debug = require('debug')('onemzone');
 const Order = require('../common/Order').Order;
 const junction = require('../common/junction');
 //const validAmounts = [100000, 200000, 500000];
-const validAmounts = [100, 200000, 500000];
+const validAmounts = [1000, 2000, 5000];
 
 exports.getAccounts = function (User) {
     return async function (req, res) {
@@ -18,7 +18,10 @@ exports.getAccounts = function (User) {
 exports.topUp = function (User) {
     return async function (req, res) {
 
-        if (!req.body.amount || !req.body.account || !validAmounts.includes(req.body.amount)) {
+        if (!req.body.amount ||
+            !req.body.accountId ||
+            !req.body.accountType ||
+            !validAmounts.includes(req.body.amount)) {
             return res.status(400).send({message: 'Malformed request'});
         }
 
@@ -26,7 +29,8 @@ exports.topUp = function (User) {
             var order = await new Order(
                 req.userProfile.msisdn,
                 req.userProfile.email,
-                req.body.account.toLowerCase(),
+                req.body.accountId,
+                req.body.accountType,
                 req.body.amount,
                 req.body.currency
             );

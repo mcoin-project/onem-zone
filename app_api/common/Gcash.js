@@ -81,7 +81,7 @@ exports.Gcash.prototype.placeOrder = async function (amount, currency, email, or
         orderTitle: GCASH_ORDER_TITLE,
         orderAmount: {
             currency: currency,
-            value: amount
+            value: amount * 100
         },
         buyer: {
             userId: "",  // should be left blank according to gcash team

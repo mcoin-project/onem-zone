@@ -1,35 +1,36 @@
 const debug = require('debug')('onemzone');
-//const request = require('request-promise');
+const request = require('request-promise');
 const junctionPath = process.env.JUNCTION_BASE_PATH;
 
-const request = function () {
+// const request = function () {
 
-    function makeid(length) {
-        var text = "";
-        var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+//     function makeid(length) {
+//         var text = "";
+//         var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-        for (var i = 0; i < length; i++)
-            text += possible.charAt(Math.floor(Math.random() * possible.length));
+//         for (var i = 0; i < length; i++)
+//             text += possible.charAt(Math.floor(Math.random() * possible.length));
 
-        return text;
-    }
-    var orderRef = makeid(10);
-    return Promise.resolve({ result: true, orderRef: orderRef, amount: 100000, currency: 'PHP' });
-}
+//         return text;
+//     }
+//     var orderRef = makeid(10);
+//     return Promise.resolve({ result: true, orderRef: orderRef, amount: 100000, currency: 'PHP' });
+// }
 
 var accountsTest = [
-    { name: 'gcash', balance: 12345, currency: 'PHP' }
+    { id: '11', type:'gcash', name: 'gcash', balance: 12345, currency: 'PHP' }
 ];
 
 exports.getAccounts = async function (msisdn) {
     try {
         var accounts = await request({
             method: 'GET',
+            json: true,
             url: junctionPath + '/accounts/' + msisdn
         });
         debug("got accounts");
         debug(accounts);
-        return accountsTest;
+        return accounts;
         //        return accounts;
 
     } catch (error) {
@@ -45,17 +46,17 @@ exports.getAccounts = async function (msisdn) {
 // example
 //  {result:true, orderRef: 'DD34334323'}
 //
-exports.createOrder = async function (account, msisdn, amount, currency) {
-    if (!account || !msisdn || !amount || !currency) {
+exports.createOrder = async function (accountId, msisdn, amount, currency) {
+    if (!accountId || !msisdn || !amount || !currency) {
         throw "missing params";
     }
     try {
         var order = await request({
             method: 'POST',
-            url: junctionPath + '/order',
+            url: junctionPath + '/merchantOrder',
             json: true,
             body: {
-                account: account,
+                accountId: accountId,
                 msisdn: msisdn,
                 amount: amount,
                 currency: currency
