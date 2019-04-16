@@ -3,20 +3,20 @@
     <form action="#">
         <p>
             <label>
-                <input name="group1" type="radio" ng-model="user.value" checked value="100000" />
-                <span>1,000 PHP</span>
+                <input name="group1" type="radio" ng-model="user.value" checked value="1000" />
+                <span>1,000 {{account.currency.toUpperCase()}}</span>
             </label>
         </p>
         <p>
             <label>
-                <input name="group1" type="radio" ng-model="user.value" value="200000" />
-                <span>2,000 PHP</span>
+                <input name="group1" type="radio" ng-model="user.value" value="2000" />
+                <span>2,000 {{account.currency.toUpperCase()}}</span>
             </label>
         </p>
         <p>
             <label>
-                <input name="group1" type="radio" ng-model="user.value" value="500000" />
-                <span>5,000 PHP</span>
+                <input name="group1" type="radio" ng-model="user.value" value="5000" />
+                <span>5,000 {{account.currency.toUpperCase()}}</span>
             </label>
         </p>
     </form>
