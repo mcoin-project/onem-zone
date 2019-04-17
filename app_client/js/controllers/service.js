@@ -107,10 +107,11 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.moText = "";
 
-        $scope.moSubmit = function (moText) {
+        $scope.moSubmit = function () {
             console.log("motext:" + $scope.moText);
-            console.log("motext param:" + moText);
             if (!$scope.moText || $scope.moText.length == 0) return;
+            console.log("motext param:" + moText);
+
             $scope.$parent.spinner = true;
             Cache.selectOption($scope.moText).then(function (response) {
                 console.log("got response");

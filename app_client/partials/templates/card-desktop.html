@@ -21,12 +21,12 @@
                                 <form name="inputForm">
                                     <div class="input-field">
                                         <div class="col s9">
-                                            <input auto-focus autocomplete="off" ng-model="$parent.moText"
+                                            <input auto-focus autocomplete="off" ng-model="$parent.$parent.moText"
                                                 placeholder="Message" required id="moText" type="text">
                                             <span class="helper-text">{{result.footer}}</span>
                                         </div>
                                         <div class="col s3">
-                                            <button ng-disabled="inputForm.$invalid" ng-click="moSubmit(moText)"
+                                            <button ng-disabled="inputForm.$invalid" ng-click="moSubmit()"
                                                 class="btn waves-effect waves-light" name="submit">Submit</button>
                                         </div>
                                     </div>

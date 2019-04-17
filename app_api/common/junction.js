@@ -88,6 +88,7 @@ exports.updateOrder = async function (orderRef, moreInfo) {
                 moreInfo: moreInfo
             }
         });
+        //  should check success 
         debug("updated order");
         debug(order);
         return order;
