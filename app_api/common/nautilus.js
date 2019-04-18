@@ -14,7 +14,7 @@ var VerbSchema = require('../models/Model').VerbSchema;
 var Verb = mongoose.model('verbs', VerbSchema);
 
 exports.services = [
-    '#todo'
+    '#todo', '#coop'
 ];
 
 //return the verbs for the provided service
