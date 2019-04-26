@@ -309,6 +309,16 @@
 },
 {
 	"_id": {
+		"$oid": "5cc0840dfe01763302004720"
+	},
+	"names": [
+		"translate"
+	],
+	"icon": "translate",
+	"__v": 0
+},
+{
+	"_id": {
 		"$oid": "5cc0840dfe0176330200471f"
 	},
 	"names": [
