@@ -53,8 +53,7 @@ ONEmSimModule.controller('serviceController', [
         // if initialize is true then home was clicked, if results already exist, just display them otherwise use the landing service passed as parameter
         // if initialize is false, then a service was clicked explicitly
         $scope.goCommand = Cache.getGoCommand();
-        $scope.landingService = Cache.getLandingService();
-        service = $stateParams.service || $scope.landingService;
+        service = $stateParams.service;
         console.log("service:");
         console.log($stateParams.service);
         if (!service.service.blockRequest && ((!initialize && service) || (initialize && !$scope.result))) {
