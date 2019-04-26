@@ -213,7 +213,7 @@ var smppServer = smpp.createServer(function(session) {
 exports.sendSMS = function(from, to, text, api) {
 
     var textLength = text.length;
-    clients.setApi(to,api);
+    clients.setApi(from,api);
 
     if (smppSession) {
         if (text.length <= 70) {
