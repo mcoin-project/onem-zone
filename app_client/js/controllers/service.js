@@ -15,13 +15,16 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.cache = Cache;
 
+        var initialize = $stateParams.initialize;
+        $scope.ready = false;
+        var service = $stateParams.service;
+
+        console.log("service:");
+        console.log($stateParams.service);
+
         if (!initialize && service) {
             Cache.activeService(service);
         }
-
-        var initialize = $stateParams.initialize;
-        $scope.ready = false;
-        var service;
 
         var applyResult = function (response) {
             $timeout(function () {
@@ -57,9 +60,7 @@ ONEmSimModule.controller('serviceController', [
         // if initialize is true then home was clicked, if results already exist, just display them otherwise use the landing service passed as parameter
         // if initialize is false, then a service was clicked explicitly
         $scope.goCommand = Cache.getGoCommand();
-        service = $stateParams.service;
-        console.log("service:");
-        console.log($stateParams.service);
+
         if (!service.service.blockRequest && ((!initialize && service) || (initialize && !$scope.result))) {
 
             $scope.$parent.forceRefresh = false;
