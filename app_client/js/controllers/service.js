@@ -15,9 +15,13 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.cache = Cache;
 
+        if (!initialize && service) {
+            Cache.activeService(service);
+        }
+
         var initialize = $stateParams.initialize;
         $scope.ready = false;
-        var landingService, service;
+        var service;
 
         var applyResult = function (response) {
             $timeout(function () {
