@@ -103,7 +103,7 @@ var smppServer = smpp.createServer(function(session) {
         debug("mtText: " + mtText);
         debug("more messages: " + pdu.more_messages_to_send);
 
-        client.concatMessage(from, mtText); // build up the text to be sent to the web client.
+        clients.concatMessage(from, mtText); // build up the text to be sent to the web client.
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (pdu.more_messages_to_send === 1) {
@@ -118,17 +118,17 @@ var smppServer = smpp.createServer(function(session) {
         //   4) send the result back to the client using the saved session
         if (pdu.more_messages_to_send === 0 || typeof pdu.more_messages_to_send === 'undefined') {
             debug("There are no more messages to be received for it!");
-            if (client.isConnected(from)) {
+            if (clients.isConnected(from)) {
                 try {
                     debug("trying response: " + client.getMtText(from));
 
-                    client.sendMessage(from); //Send the whole message at once to the web exports.clients.
+                    clients.sendMessage(from); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
                     if (client.getMtText(from).length < 20) {
-                        endmsgText = client.getMtText(from).length;
+                        endmsgText = clients.getMtText(from).length;
                     };
-                    msgText = client.getMtText(from).substring(0, endmsgText);
+                    msgText = clients.getMtText(from).substring(0, endmsgText);
                 } catch (err) {
                     debug("oops no session: " + err);
                     doneDate = moment().format('YYMMDDHHmm');
@@ -136,16 +136,16 @@ var smppServer = smpp.createServer(function(session) {
                     statMsgValue = stateMsg.DELETED.Value;
                     errMsg = '001'; // Error sending the message
                     dlvrdMsg = '000'; // No message was delivered
-                    common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
+                    common.sendEmail(from, clients.getMtText(from));
 
                     // don't save api messages
-                    if (!client.moRecord.api) {
-                        message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+                    if (!clients.getApi(from)) {
+                        message.save(pdu.source_addr, from, clients.getMtText(from));
                     }
                 };
             } else {
-                common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
-                message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
+                common.sendEmail(from, clients.getMtText(from));
+                message.save(pdu.source_addr, from, clients.getMtText(from));
             }
         } else {
             doneDate = moment().format('YYMMDDHHmm');
@@ -210,9 +210,10 @@ var smppServer = smpp.createServer(function(session) {
 
 });
 
-exports.sendSMS = function(from, to, text) {
+exports.sendSMS = function(from, to, text, api) {
 
     var textLength = text.length;
+    clients.setApi(to,api);
 
     if (smppSession) {
         if (text.length <= 70) {

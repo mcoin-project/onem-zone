@@ -73,6 +73,17 @@ var setContext = function(msisdn, context) {
 	return clients[msisdn].context;
 }
 
+var setApi = function(msisdn, api) {
+	if (!clients[msisdn]) return false;
+	clients[msisdn].api = api;
+	return clients[msisdn].api;
+}
+
+var getApi = function(msisdn) {
+	if (!clients[msisdn]) return false;
+	return clients[msisdn].api;
+}
+
 var getMtText = function(msisdn) {
 	if (!clients[msisdn]) return false;
 	return clients[msisdn].mtText;
@@ -90,5 +101,7 @@ module.exports = {
 	currentService,
 	getContext,
 	setContext,
-	getMtText
+	getMtText,
+	getApi,
+	setApi
 };
