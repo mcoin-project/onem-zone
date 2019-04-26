@@ -194,7 +194,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             state('wallet', {
                 url: '/',
                 templateUrl: 'partials/wallet.html',
-                controller: 'walletController'
+                controller: null,
             }).
             state('inbox', {
                 url: '/',
