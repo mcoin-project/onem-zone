@@ -85,12 +85,13 @@ var smppServer = smpp.createServer(function(session) {
         var hexidMsg = idMsg.toString(16); //idMsg is a global identifier, at the server level. It will be sent back to submitter
         //in both the submit response and in the delivery reports; it is the same for a certain message.
         var pad = '00000000000000000000'; //idMsg should be sent as 20 hex digits zero padded.
-        var client = clients.clients[pdu.destination_addr];
 
         hexidMsg = pad.substring(0, pad.length - hexidMsg.length) + hexidMsg; //TODO: If hexidMsg longer than 20 digits (!!!) display its last 20 digits
         smppSession.send(pdu.response({ message_id: hexidMsg })); //submit_response; we've received the submit from the ESME and we confirm it with the message_id
 
         debug("submit_sm received, sequence_number: " + pdu.sequence_number + " isResponse: " + pdu.isResponse());
+
+        var from = pdu.destination_addr;
 
         if (pdu.short_message.length === 0) {
             debug("** payload being used **");
@@ -102,14 +103,7 @@ var smppServer = smpp.createServer(function(session) {
         debug("mtText: " + mtText);
         debug("more messages: " + pdu.more_messages_to_send);
 
-        if (!client) {
-            client = {};
-            client.moRecord = {
-                mtText: ''
-            }
-        }
-        debug("Client found!");
-        client.moRecord.mtText = client.moRecord.mtText + mtText; // build up the text to be sent to the web client.
+        client.concatMessage(from, mtText); // build up the text to be sent to the web client.
 
         // if the session is found but there are more messages to come, then concatenate the message and stop (wait for final message before sending)
         if (pdu.more_messages_to_send === 1) {
@@ -124,21 +118,17 @@ var smppServer = smpp.createServer(function(session) {
         //   4) send the result back to the client using the saved session
         if (pdu.more_messages_to_send === 0 || typeof pdu.more_messages_to_send === 'undefined') {
             debug("There are no more messages to be received for it!");
-            if (typeof client.moRecord.socket !== 'undefined') {
+            if (client.isConnected(from)) {
                 try {
-                    debug("trying response: " + client.moRecord.mtText);
-                    var channel = 'MT SMS';
-                    if (client.moRecord.api) {
-                        debug("responding on MT API channel");
-                        channel = 'API MT SMS';
-                    }
-                    client.moRecord.socket.emit(channel, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
+                    debug("trying response: " + client.getMtText(from));
+
+                    client.sendMessage(from); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
-                    if (client.moRecord.mtText.length < 20) {
-                        endmsgText = client.moRecord.mtText.length;
+                    if (client.getMtText(from).length < 20) {
+                        endmsgText = client.getMtText(from).length;
                     };
-                    msgText = client.moRecord.mtText.substring(0, endmsgText);
+                    msgText = client.getMtText(from).substring(0, endmsgText);
                 } catch (err) {
                     debug("oops no session: " + err);
                     doneDate = moment().format('YYMMDDHHmm');
@@ -157,7 +147,6 @@ var smppServer = smpp.createServer(function(session) {
                 common.sendEmail(pdu.destination_addr, client.moRecord.mtText);
                 message.save(pdu.source_addr, pdu.destination_addr, client.moRecord.mtText);
             }
-            client.moRecord.mtText = '';
         } else {
             doneDate = moment().format('YYMMDDHHmm');
             statMsg = stateMsg.UNDELIVERABLE.Status; //'UNDELIV'; //If no exports.clients.found to send this message to, this message is undeliverable.
