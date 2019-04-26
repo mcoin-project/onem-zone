@@ -82,6 +82,7 @@ var ServiceSchema = new Mongoose.Schema({
     template: { type: String },
     blockRequest: { type: Boolean },
     always: { type: Boolean },
+    call: { type: Boolean },
     default: { type: Boolean }
 });
     
