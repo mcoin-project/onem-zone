@@ -3,13 +3,9 @@ const common = require('./common');
 const options = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 const Service = require('../dbMethods/service').Service;
 
-exports.Context = function (serviceName, JSONdata, verbs) {
+exports.Context = function (serviceName, JSONdata) {
     this.data = Object.assign({}, JSONdata);
-    this.verbs = verbs;
-    if (!this.verbs) this.verbs = [];
-
-    debug("this.verbs");
-    debug(this.verbs);
+    this.verbs = [];
 
     debug("this.data");
     debug(JSON.stringify(this.data, {}, 4));
@@ -24,12 +20,18 @@ exports.Context = function (serviceName, JSONdata, verbs) {
 }
 
 exports.Context.prototype.initialize = async function () {
-    var obj = await this.service.get();
-    debug("obj");
-    debug(obj);
-    this.callbackPath = obj.callbackPath;
-    debug("this.callbackPath");
-    debug(this.callbackPath);
+    try {
+        var obj = await this.service.get();
+        debug("obj");
+        debug(obj);
+        this.callbackPath = obj.callbackPath;
+        this.verbs = await this.service.getVerbs();
+        debug("this.callbackPath");
+        debug(this.callbackPath);
+    } catch (error) {
+        console.log(error);
+        throw error;
+    }
 }
 
 exports.Context.prototype.isForm = function () {

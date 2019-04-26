@@ -2,8 +2,7 @@ const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
 const common = require('../common/common.js');
 
-var MessageSchema = require('../models/Model').MessageSchema;
-var Message = mongoose.model('messages', MessageSchema);
+var Message = require('../models/Model').Message;
 
 exports.save = function (from, to, text) {
     debug("messages.save");

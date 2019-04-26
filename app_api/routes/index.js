@@ -9,8 +9,9 @@ var wallet = require('../controllers/wallet.js');
 var auth = require('../controllers/auth');
 var api = express.Router();
 
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
+var User = require('../models/Model').User;
+var ServicesList = require('../models/Model').ServicesList;
+
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var junction = require('../common/junction');
@@ -42,6 +43,16 @@ function ensureAuthenticated(req, res, next) {
         return res.status(401).send({ message: 'Unauthorized request' });
     });
 }
+api.get('/services', function (req, res) {
+    ServicesList.find().then(function(services) {
+        res.json({services: services});
+    }).catch(function(error) {
+        debug("/services");
+        debug(error);
+        res.status(500).send({ error: "server error" });       
+    });
+});
+
 
 api.get('/user', ensureAuthenticated, function (req, res) {
     if (req.user) {

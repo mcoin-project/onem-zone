@@ -15,7 +15,7 @@ ONEmSimModule.factory('Cache', [
             previousService: undefined
         }
 
-        var processServicesList = function (text) {
+        var processServicesList = async function (text) {
 
             if (!text) throw "missing parameter";
 
@@ -50,8 +50,9 @@ ONEmSimModule.factory('Cache', [
             if (results.length > 0) {
                 console.log("results");
                 console.log(results);
+                //debugger;
 
-                ServicesData.services(results);
+                await ServicesData.loadServices(results);
                 activeServices = ServicesData.services().generateMenuItems();
             }
 

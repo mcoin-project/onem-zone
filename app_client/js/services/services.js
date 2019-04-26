@@ -1,30 +1,34 @@
 
 ONEmSimModule.factory('Services', [
     'ServicesConfig',
-    function (ServicesConfig) {
+    '$http',
+    function (ServicesConfig, $http) {
         function Service(service) {
+            console.log("adding service:");
             this.service = service;
             this.languageIndex = 0;
+            console.log(this.service);
+
         };
-        
-        Service.prototype.getName = function() {
+
+        Service.prototype.getName = function () {
             var i = this.languageIndex;
-            return this.service.name[i];
+            return this.service.names[i];
         }
 
-        Service.prototype.getIcon = function() {
+        Service.prototype.getIcon = function () {
             return this.service.icon;
         }
 
-        Service.prototype.getTemplate = function() {
+        Service.prototype.getTemplate = function () {
             return this.service.template;
         }
 
-        Service.prototype.isDefault = function() {
+        Service.prototype.isDefault = function () {
             return this.service.default;
         }
 
-        Service.prototype.isCall = function() {
+        Service.prototype.isCall = function () {
             return this.service.call;
         }
 
@@ -32,16 +36,28 @@ ONEmSimModule.factory('Services', [
             this.goCommand = ServicesConfig.goCommand;
             this.hashResults = hashResults;
             this.services = [];
-            for (var i = 0; i < ServicesConfig.services.length; i++) {
-                var s = new Service(ServicesConfig.services[i]);
-                this.services.push(s);
-            }
             this.languageIndex = this.detectLanguage();
             this.language(this.languageIndex);
             console.log(this);
         };
-        
-        Services.prototype.getLandingService = function() {
+
+        Services.prototype.initialize = async function () {
+            var self = this;
+            try {
+                var response = await $http.get('/api/services');
+                for (var i = 0; i < response.data.services.length; i++) {
+                    var s = new Service(response.data.services[i]);
+                    self.services.push(s);
+                }
+                console.log("got services:");
+                console.log(self.services);
+            } catch (error) {
+                console.log("/api/services - error");
+                console.log(error);
+            };
+        }
+
+        Services.prototype.getLandingService = function () {
             var result;
             for (var i = 0; i < this.services.length; i++) {
                 if (this.services[i].isDefault()) {
@@ -54,7 +70,7 @@ ONEmSimModule.factory('Services', [
             return result;
         }
 
-        Services.prototype.getCallService = function() {
+        Services.prototype.getCallService = function () {
             var result;
             for (var i = 0; i < this.services.length; i++) {
                 if (this.services[i].isCall()) {
@@ -67,27 +83,27 @@ ONEmSimModule.factory('Services', [
             return result;
         }
 
-        Services.prototype.getGoCommand = function() {
+        Services.prototype.getGoCommand = function () {
             var i = this.languageIndex;
             return this.goCommand[i];
         }
 
-        Services.prototype.detectLanguage = function() {
+        Services.prototype.detectLanguage = function () {
             // grab the first service in the hashresults and see if we can find a matching index in the services config, else return default of 0
             // maybe this can be improved later
             var result = 0; // default language is 0 (usually English)
-        
+
             if (!this.hashresults || this.hashresults.length == 0) return result;
-        
+
             for (var i = 0; i < this.services.length; i++) {
-                if (this.services[i].name.includes(this.hashresults[0])) {
+                if (this.services[i].names.includes(this.hashresults[0])) {
                     result = i;
                     break;
                 }
             }
             return result;
         }
-        
+
         Services.prototype.getDefault = function () {
             for (var i = 0; i < this.services.length; i++) {
                 if (this.services[i].default) {
@@ -95,10 +111,10 @@ ONEmSimModule.factory('Services', [
                 }
             }
             return undefined;
-        };  
+        };
 
         // setter and getter depending if index param is present
-        Services.prototype.language = function(index) {
+        Services.prototype.language = function (index) {
             if (!index) return this.languageIndex;
             if (index < 0 || index >= this.goCommand.length) return false;
             for (var i = 0; i < this.services.length; i++) {
@@ -107,8 +123,11 @@ ONEmSimModule.factory('Services', [
             this.languageIndex = index;
             return true;
         };
-        
-        Services.prototype.generateMenuItems = function() {
+
+        Services.prototype.generateMenuItems = function () {
+            console.log("generating menu items");
+            console.log(this.services);
+            //debugger;
             var results = [];
             for (var i = 0; i < this.services.length; i++) {
                 if (this.services[i].service.always) {
@@ -123,9 +142,11 @@ ONEmSimModule.factory('Services', [
                     }
                 }
             }
+            console.log("returning:");
+            console.log(results);
             return results;
         };
-        
+
         return Services;
     }
 ]);

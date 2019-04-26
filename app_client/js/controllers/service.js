@@ -17,6 +17,7 @@ ONEmSimModule.controller('serviceController', [
 
         var initialize = $stateParams.initialize;
         $scope.ready = false;
+        var landingService, service;
 
         var applyResult = function (response) {
             $timeout(function () {
@@ -30,8 +31,6 @@ ONEmSimModule.controller('serviceController', [
                 $rootScope.$apply();
             });
         }
-        $scope.goCommand = Cache.getGoCommand();
-        console.log("go command:" + $scope.goCommand);
 
         $scope.showPn = function () {
             return !(screenSize.is('xs, sm'));
@@ -43,7 +42,6 @@ ONEmSimModule.controller('serviceController', [
 
         $scope.$parent.spinner = false;
 
-        var service = $stateParams.service || Cache.getLandingService();
 
         $scope.result = DataModel.getTouchResult();
 
@@ -54,7 +52,11 @@ ONEmSimModule.controller('serviceController', [
         // if the service is of type block request, then don't bother, the page will just render with the configured template
         // if initialize is true then home was clicked, if results already exist, just display them otherwise use the landing service passed as parameter
         // if initialize is false, then a service was clicked explicitly
-
+        $scope.goCommand = Cache.getGoCommand();
+        $scope.landingService = Cache.getLandingService();
+        service = $stateParams.service || $scope.landingService;
+        console.log("service:");
+        console.log($stateParams.service);
         if (!service.service.blockRequest && ((!initialize && service) || (initialize && !$scope.result))) {
 
             $scope.$parent.forceRefresh = false;
@@ -86,7 +88,9 @@ ONEmSimModule.controller('serviceController', [
                         console.log("apply result");
 
                         applyResult(response);
-                    })
+                    }).catch(function(error) {
+                        console.log(error);
+                    });
                     $scope.$parent.spinner = false;
                     //           toastr.error(error);
                     console.log(error);

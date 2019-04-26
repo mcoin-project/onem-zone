@@ -13,8 +13,7 @@ const smsVerify = process.env.NEXMO_ENABLED || "false";
 
 const from = 'ONEm';
 
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
+const User = require('../models/Model').User;
 
 exports.checkMsisdn = function (User) {
     return function (req, res) {

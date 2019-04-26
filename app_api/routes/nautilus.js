@@ -9,11 +9,9 @@ var common = require('../common/common.js');
 //var service = require('../controllers/service.js');
 var naut = express.Router();
 
-var ServiceSchema = require('../models/Model').ServiceSchema;
-var Service = mongoose.model('services', ServiceSchema);
+var Service = require('../models/Model').Service;
 
-var DeveloperSchema = require('../models/Model').DeveloperSchema;
-var Developer = mongoose.model('developers', DeveloperSchema);
+var Developer = require('../models/Model').Developer;
 
 var VerbSchema = require('../models/Model').VerbSchema;
 var Verb = mongoose.model('verbs', VerbSchema);
@@ -69,10 +67,11 @@ naut.post('/service', function (req, res) {
         savedDeveloper = developer;
         debug("savedDeveloper");
         debug(savedDeveloper);
-        return Service.findOne({ name: req.body.serviceName }).populate('_developer');
+        return Service.findOne({ name: req.body.serviceName.toLowerCase() }).populate('_developer');
     }).then(function (service) {
         debug("service:");
         debug(service);
+        if (!service) throw "service not found";
         savedService = service;
         return Developer.findOne({ _id: service._developer}).populate('_user');
     }).then(function(developer) {

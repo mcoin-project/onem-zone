@@ -10,6 +10,7 @@ var sms = require('../common/sms.js');
 var nautilus = require('../common/nautilus.js');
 
 var clients = require('../common/clients.js');
+var dbMethods = require('../dbMethods/service');
 
 var io = null;
 
@@ -87,25 +88,16 @@ exports.initialize = function (server) {
         //sms.clients.push(socket);    
 
         debug(socket.msisdn);
-        debug(clients.clients[socket.msisdn]);
+        debug("isConnected:" + clients.isConnected(socket.msisdn));
 
         // check for existing connection from msisdn already logged in (on another device) and kick them off
         if (socket.msisdn) {
             debug("found existing user");
-            if (process.env.TEST !== 'on' && typeof clients.clients[socket.msisdn] !== 'undefined' && clients.clients[socket.msisdn].moRecord.socket) {
-                try {
-                    clients.clients[socket.msisdn].moRecord.socket.emit('LOGOUT'); //Send the whole message at once to the web exports.clients.
-                } catch (error) {
-                    debug(error);
-                    debug("could not kill client");
-                }
+            if (process.env.TEST !== 'on' && clients.isConnected(socket.msisdn)) {
+                clients.forceLogout(socket.msisdn);
             }
-            clients.clients[socket.msisdn] = {};
-            var moRecord = {
-                socket: socket,
-                mtText: '',
-            };
-            clients.clients[socket.msisdn].moRecord = moRecord;
+            clients.newConnection(socket.msisdn, socket)
+
             // deliver any saved messages for this user
             message.deliverPending(socket);
         }
@@ -114,52 +106,38 @@ exports.initialize = function (server) {
             debug('moText: ');
             debug(moText);
 
-            // todo santizie the moText
-
             debug("socket.id");
             debug(socket.id);
 
-            //debug("socket");
-            //debug(socket);
-
             if (socket.msisdn) {
-                var moRecord = {
-                    socket: socket, // presence of this indicates that client is connected
-                    mtText: '', // the pending sms text - built up if more-messages-to-send
-                };
-                if (!clients.clients[socket.msisdn]) {
-                    clients.clients[socket.msisdn] = {};
-                }
-                clients.clients[socket.msisdn].moRecord = moRecord;
 
-                if (moText.trim().startsWith('#')) {
-                    clients.clients[socket.msisdn].currentService = moText.trim().split(' ')[0].toLowerCase();
-                    debug("switching service:" + clients.clients[socket.msisdn].currentService)
-                }
-
-                if (nautilus.services.includes(clients.clients[socket.msisdn].currentService)) {
-                    clients.clients[socket.msisdn].verbs = await nautilus.loadVerbs(clients.clients[socket.msisdn].currentService);
-                    debug("got verbs:");
-                    debug(clients.clients[socket.msisdn].verbs);
-                    debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
-                    nautilus.sendSMS(socket.msisdn, common.shortNumber, moText);
-                } else {
-
-                    debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
-                    sms.sendSMS(socket.msisdn, common.shortNumber, moText);
-                    if (process.env.TEST == 'on') {
-
-                        var timer = setTimeout(
-                            function () {
-                                if (index == testMessages.length) index = 0;
-                                if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
-                                index++;
-                            }, 1000
-                        );
-
+                try {
+                    if (moText.trim().startsWith('#')) {
+                        clients.switchService(socket.msisdn, moText);
                     }
+    
+                    // Todo implement caching in dbmethods
+                    if (await dbMethods.serviceIncludes(clients.currentService(socket.msisdn))) {
+                        debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
+                        nautilus.sendSMS(socket.msisdn, common.shortNumber, moText, false);
+                    } else {
+    
+                        debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
+                        sms.sendSMS(socket.msisdn, common.shortNumber, moText, false);
+                        if (process.env.TEST == 'on') {
+    
+                            var timer = setTimeout(
+                                function () {
+                                    if (index == testMessages.length) index = 0;
+                                    if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
+                                    index++;
+                                }, 1000
+                            );
+                        }
+                    }
+                } catch (error) {
+                    console.log(error);
                 }
-
             } else {
                 debug("can't locate msisdn for user");
             }
@@ -170,25 +148,13 @@ exports.initialize = function (server) {
             debug('moText: ');
             debug(moText);
 
-            // todo santizie the moText
-
             debug("socket.id");
             debug(socket.id);
 
-            //debug("socket");
-            //debug(socket);
-
             if (socket.msisdn) {
-                var moRecord = {
-                    socket: socket, // presence of this indicates that client is connected
-                    mtText: '', // the pending sms text - built up if more-messages-to-send
-                    api: true
-                };
-                clients.clients[socket.msisdn] = {};
-                clients.clients[socket.msisdn].moRecord = moRecord;
 
                 debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
-                sms.sendSMS(socket.msisdn, common.shortNumber, moText);
+                sms.sendSMS(socket.msisdn, common.shortNumber, moText, true);
 
                 if (process.env.TEST == 'on') {
 
@@ -204,14 +170,12 @@ exports.initialize = function (server) {
             } else {
                 debug("can't locate msisdn for user");
             }
-
         });
 
         socket.on('disconnect', function () {
             debug('Client gone (id=' + socket.id + ').');
-            if (socket.msisdn) delete clients.clients[socket.msisdn].moRecord.socket;
+            if (socket.msisdn) delete clients.disconnected(socket.msisdn);
             delete socket.msisdn;
         });
-
     });
 }

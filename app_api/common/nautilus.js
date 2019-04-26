@@ -8,49 +8,30 @@ var mongoose = require('mongoose');
 
 const options = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 
-var ServiceSchema = require('../models/Model').ServiceSchema;
-var Service = mongoose.model('services', ServiceSchema);
-var VerbSchema = require('../models/Model').VerbSchema;
-var Verb = mongoose.model('verbs', VerbSchema);
+var Service = require('../models/Model').Service;
+var ServicesList = require('../models/Model').ServicesList;
+var Verb = require('../models/Model').Verb;
 
 exports.services = [
     '#todo', '#coop'
 ];
 
-//return the verbs for the provided service
-exports.loadVerbs = async function (service) {
-    var service = service.substring(1, service.length);
-    debug("looking up service: " + service);
-    try {
-        var s = await Service.findOne({ name: service.toLowerCase() });
-        if (!s) throw { code: 200, message: 'no service with name: ' + service }
-        debug("result from service lookup:");
-        debug(s);
-        var verbs = await Verb.find({ _service: s._id });
-        return verbs;
-    } catch (error) {
-        debug(error);
-        if (error.code == 200) return [];
-        throw error;
-    };
-}
-
-exports.sendSMS = async function (from, to, moText) {
+exports.sendSMS = async function (from, to, moText, api) {
     debug("Naut: moText:" + moText)
     var trimmedText = moText.trim();
-    var client = clients.clients[from];
+    var mtText;
 
     try {
-        var ctext = new context.Context(client.currentService, client.context, client.verbs);
+        var ctext = new context.Context(clients.currentService(from), clients.getContext(from));
         await ctext.initialize();
         var requestParams = ctext.getRequestParams(from, moText);
         var body = await request(requestParams);
-        client.moRecord.mtText = new context.Context(client.currentService, body, client.verbs).makeMTResponse();
-        client.context = Object.assign({}, body);
+        mtText = new context.Context(clients.currentService(from), body).makeMTResponse();
+        clients.setContext(from, body);
     } catch (err) {
         debug(err);
         if (err.invalidOption) {
-            client.moRecord.mtText = err.invalidOption
+            mtText = err.invalidOption;
         } else {
             debug("error:");
             debug(err);
@@ -58,31 +39,23 @@ exports.sendSMS = async function (from, to, moText) {
         }
     }
 
-    if (typeof client.moRecord.socket !== 'undefined') {
+    if (typeof clients.isConnected(from)) {
 
         try {
-            debug("trying response: " + client.moRecord.mtText);
-            var channel = 'MT SMS';
-            if (client.moRecord.api) {
-                debug("responding on MT API channel");
-                channel = 'API MT SMS';
-            }
-            client.moRecord.socket.emit(channel, { mtText: client.moRecord.mtText }); //Send the whole message at once to the web exports.clients.
-
+            clients.newMtMessage(from, mtText, api);
+            clients.sendMessage(from);
         } catch (err) {
             debug("oops no session: " + err);
-            common.sendEmail(to, client.moRecord.mtText);
+            common.sendEmail(to, mtText);
 
             // don't save api messages
-            if (!client.moRecord.api) {
-                message.save(from, to, client.moRecord.mtText);
+            if (!api) {
+                message.save(from, to, mtText);
             }
         };
     } else {
-        common.sendEmail(to, client.moRecord.mtText);
-        message.save(from, to, client.moRecord.mtText);
+        common.sendEmail(to, mtText);
+        message.save(from, to, mtText);
     }
-    client.moRecord.mtText = '';
-
 
 }

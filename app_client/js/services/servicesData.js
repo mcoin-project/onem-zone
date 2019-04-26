@@ -2,16 +2,25 @@
 ONEmSimModule.factory('ServicesData', ['Services',
     function (Services) {
 
-        var services;
+        var servicesData;
 
         return {
-            services: function (data) {
-                if (typeof data == "undefined") {
-                    return services;
-                } else {
-                    services = new Services(data);
-                    return services;
+            loadServices: async function (data) {
+                try {
+                    servicesData = new Services(data);
+                    await servicesData.initialize();
+                    console.log("initialised services");
+                    console.log(servicesData);
+                    return servicesData;
+                } catch (error) {
+                    console.log("/servicesData");
+                    console.log(error);
+                    throw error;
                 }
+            },
+
+            services: function () {
+                return servicesData;
             },
         }
     }

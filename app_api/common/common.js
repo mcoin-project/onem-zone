@@ -5,11 +5,10 @@ const jwt = require('jwt-simple');
 const postmark = require("postmark");
 
 const tokenValidity = process.env.TOKEN_VALIDITY || 14 * 24 * 3600;
+const User = require('../models/Model').User;
 
 exports.shortNumber = process.env.SHORT_NUMBER || "444100";
 
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
 /*
  |--------------------------------------------------------------------------
  | Generate JSON Web Token
