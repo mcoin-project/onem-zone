@@ -120,12 +120,12 @@ var smppServer = smpp.createServer(function(session) {
             debug("There are no more messages to be received for it!");
             if (clients.isConnected(from)) {
                 try {
-                    debug("trying response: " + client.getMtText(from));
+                    debug("trying response: " + clients.getMtText(from));
 
                     clients.sendMessage(from); //Send the whole message at once to the web exports.clients.
                     doneDate = moment().format('YYMMDDHHmm'); // This is the delivery moment. Record it for delivery reporting.
 
-                    if (client.getMtText(from).length < 20) {
+                    if (clients.getMtText(from).length < 20) {
                         endmsgText = clients.getMtText(from).length;
                     };
                     msgText = clients.getMtText(from).substring(0, endmsgText);
