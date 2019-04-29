@@ -119,10 +119,12 @@ ONEmSimModule.controller('mainController', [
 
             if (!$scope.$parent.services || $scope.$parent.services.length < 7) {
                 $scope.$parent.servicesCols = 1; 
-            } else if ($scope.$parent.services.length >=7 && $scope.$parent.services.length <=14) {
+            } else if ($scope.$parent.services.length >=7 && $scope.$parent.services.length <14) {
                 $scope.$parent.servicesCols = 2;              
-            } else {
+            } else if ($scope.$parent.services.length >=14 && $scope.$parent.services.length <21) {
                 $scope.$parent.servicesCols = 3;              
+            } else {
+                $scope.$parent.servicesCols = 4;
             }
 
             console.log("cache got response");

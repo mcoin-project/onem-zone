@@ -1,3 +1,6 @@
+const context = require('./context.js');
+const debug = require('debug')('onemzone');
+
 var clients = {};
 
 var isConnected = function(msisdn) {
@@ -63,8 +66,21 @@ var currentService = function(msisdn) {
 }
 
 var getContext = function(msisdn) {
-    if (!clients[msisdn]) return false;
+	if (!clients[msisdn]) return false;
+	debug("getContext:");
+	debug(clients[msisdn].context);
 	return clients[msisdn].context;
+}
+
+var setBody = function(msisdn, body) {
+	if (!clients[msisdn]) return false;
+	clients[msisdn].body = Object.assign({}, body);
+	return clients[msisdn].body;
+}
+
+var getBody = function(msisdn) {
+    if (!clients[msisdn]) return false;
+	return clients[msisdn].body;
 }
 
 var setContext = function(msisdn, context) {
@@ -89,6 +105,31 @@ var getMtText = function(msisdn) {
 	return clients[msisdn].mtText;
 }
 
+var newContext = async function(msisdn, body) {
+	if (!clients[msisdn]) return false;
+	var service = clients[msisdn].currentService;
+	clients[msisdn].context = new context.Context(service, body);
+	if (!clients[msisdn].contextStack) {
+		clients[msisdn].contextStack = [];
+	}
+	await clients[msisdn].context.initialize();
+	clients[msisdn].contextStack.push(clients[msisdn].context);
+	return clients[msisdn].context;
+}
+
+var goBack = function (msisdn) {
+	if (!clients[msisdn]) return false;
+
+	if (clients[msisdn].context.isForm()) {
+		clients[msisdn].context.goBackInForm();
+    } else if (clients[msisdn].contextStack.length > 1) {
+		debug("Popping context");
+        clients[msisdn].context = clients[msisdn].contextStack.pop();
+        clients[msisdn].context = clients[msisdn].contextStack.pop();
+
+	}
+}
+
 module.exports = {
 	isConnected,
 	newConnection,
@@ -101,7 +142,11 @@ module.exports = {
 	currentService,
 	getContext,
 	setContext,
+	getBody,
+	setBody,
 	getMtText,
 	getApi,
-	setApi
+	setApi,
+	newContext,
+	goBack
 };

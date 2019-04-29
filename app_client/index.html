@@ -49,6 +49,7 @@
             <li class="divider"></li>
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
+        <div style="overflow-y: scroll; overflow-x: hidden">
         <ul id="services" class="services-cols-{{servicesCols}} dropdown-content dropdown-content-services">
             <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load
                     menu</a></li>
@@ -60,6 +61,7 @@
                 </a>
             </li>
         </ul>
+        </div>
         <div class="navbar-fixed">
             <nav class="red">
                 <div class="container">
@@ -76,13 +78,15 @@
                     <div ng-show="touchCheckboxModel.on" class="nav-wrapper">
                         <a href="#" data-target="services-target" class="sidenav-trigger right"><i
                                 class="material-icons">more_vert</i></a>
-                        <ul class="right hide-on-med-and-down">
+                        <ul style="overflow-y: scroll; overflow-x: hidden" class="right hide-on-med-and-down">
                             <!-- Dropdown Trigger -->
                             <li><a class="dropdown-trigger-services" href="#!" data-target="services"><i
                                         class="material-icons">apps</i> Services<i
-                                        class="material-icons right">arrow_drop_down</i></a></li>
+                                        class="material-icons right">arrow_drop_down</i></a>
+                            </li>
                         </ul>
                     </div>
+
                     <div class="nav-wrapper">
                         <a href="#" data-target="mobile-demo-left" class="sidenav-trigger"><i
                                 class="material-icons">menu</i></a>

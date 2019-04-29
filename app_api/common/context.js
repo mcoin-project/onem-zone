@@ -6,6 +6,9 @@ const Service = require('../dbMethods/service').Service;
 exports.Context = function (serviceName, JSONdata) {
     this.data = Object.assign({}, JSONdata);
     this.verbs = [];
+    this.formInputParams = {};
+    this.request = true;
+    this.formIndex = 0;
 
     debug("this.data");
     debug(JSON.stringify(this.data, {}, 4));
@@ -94,11 +97,16 @@ exports.Context.prototype.makeMTResponse = function () {
     }
 
     if (this.isForm()) {
-        result += this.data.body.formItems[0].description + '\n';
-    }
-
-    if (this.isForm() && !this.data.footer) {
-        result += '--Reply with ' + this.data.body.formItems[0].name + this.footerVerbs();
+        result += this.data.body.formItems[this.formIndex].description + '\n';
+        if (!this.data.footer) {
+            result += '--Reply with ' + this.data.body.formItems[this.formIndex].name + this.footerVerbs();
+        }
+        if (this.formIndex + 1 < this.data.body.formItems.length) {
+            this.request = false;
+            debug("REQUEST IS NOT NEEDED");
+        } else {
+            this.request = true;
+        }
     }
 
     if (this.data.footer) {
@@ -109,6 +117,10 @@ exports.Context.prototype.makeMTResponse = function () {
 
     return result;
 
+}
+
+exports.Context.prototype.requestNeeded = function () {
+    return this.request;
 }
 
 exports.Context.prototype.getVerb = function (verb) {
@@ -226,12 +238,31 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
     }
 
     if (this.isForm()) {
-        var bodyData = {}
-        bodyData[this.data.body.formItems[0].name] = moText;
+        debug("setting formInputParams");
+        debug(this.data.body.formItems[this.formIndex].name);
+        this.formInputParams[this.data.body.formItems[this.formIndex].name] = moText;
         result.url = this.callbackPath + this.data.body.nextRoute;   // todo properly join to handle optional '/'
         result.method = this.data.body.method || 'POST';
-        result.body = bodyData;
+        result.body = this.formInputParams;
+        this.formIndex++;
     }
 
     return result;
+}
+
+exports.Context.prototype.goBackInForm = function () {
+    if (this.isForm()) {
+        if (this.formIndex - 1 >= 0) {
+            this.formIndex--;
+            this.request = false;
+            debug("REQUEST IS NOT NEEDED");
+        } else {
+            this.request = true;
+        }
+    } else {
+        if (clients[msisdn].contextStack) {
+            clients[msisdn].context = clients[msisdn].contextStack.pop();
+            this.request = true;
+        }
+    }
 }

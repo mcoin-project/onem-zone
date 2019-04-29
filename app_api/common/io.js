@@ -103,6 +103,9 @@ exports.initialize = function (server) {
         }
 
         socket.on('MO SMS', async function (moText) {
+
+            moText = moText.trim().toLowerCase();
+
             debug('moText: ');
             debug(moText);
 
@@ -112,16 +115,19 @@ exports.initialize = function (server) {
             if (socket.msisdn) {
 
                 try {
-                    if (moText.trim().startsWith('#')) {
+                    if (moText.startsWith('#')) {
                         clients.switchService(socket.msisdn, moText);
                     }
-    
-                    // Todo implement caching in dbmethods
+                     // Todo implement caching in dbmethods
                     if (await dbMethods.serviceIncludes(clients.currentService(socket.msisdn))) {
-                        debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
-                        nautilus.sendSMS(socket.msisdn, common.shortNumber, moText, false);
+                        if (nautilus.systemVerbs.includes(moText)) {
+                            debug("executing system verb in nautilus");
+                            nautilus.executeSystemVerb(socket.msisdn, common.shortNumber, moText, false);
+                        } else {
+                            debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
+                            nautilus.processMessage(socket.msisdn, common.shortNumber, moText, false);
+                        }
                     } else {
-    
                         debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
                         sms.sendSMS(socket.msisdn, common.shortNumber, moText, false);
                         if (process.env.TEST == 'on') {

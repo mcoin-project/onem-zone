@@ -22,9 +22,9 @@ exports.Service.prototype.getVerbs = async function () {
     try {
         var s = await Service.findOne({ name: this.name });
         if (!s) throw { code: 200, message: 'no service with name: ' + service }
-        debug("result from service lookup:");
-        debug(s);
         var verbs = await Verb.find({ _service: s._id });
+        debug("result from service lookup:");
+        debug(verbs);
         return verbs;
     } catch (error) {
         debug(error);
@@ -35,6 +35,8 @@ exports.Service.prototype.getVerbs = async function () {
 
 // returns true if @name is found in serviceslist collection
 exports.serviceIncludes = async function (name) {
+    if (arguments.length !== 1 || !name) return false;
+     
     var n = name;
     if (name.startsWith('#')) {
         n = n.slice(1);
