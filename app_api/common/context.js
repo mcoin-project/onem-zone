@@ -105,8 +105,13 @@ exports.Context.prototype.makeMTResponse = function () {
             if (this.data.body[i].type == "content") {
                 result += this.data.body[i].description + '\n'
             } else if (this.data.body[i].type == "option") {
-                if (numMenuOptions >= OPTIONS.length) {
-                    menuOption = optionIndex + 1;
+                if (numMenuOptions > OPTIONS.length) {
+                    if (optionIndex < 9) {
+                        menuOption = ' ';
+                    } else {
+                        menuOption = '';
+                    }
+                    menuOption = menuOption + (optionIndex + 1);
                 } else {
                     menuOption = OPTIONS[optionIndex].toUpperCase();
                 }
@@ -198,11 +203,9 @@ exports.Context.prototype.lastOption = function () {
 exports.Context.prototype.getOptionInputIndex = function (moText) {
     var numberOfOptions = this.numMenuOptions();
     var optionInputIndex = OPTIONS.indexOf(moText.toLowerCase());
-
-    if (optionInputIndex !== -1 && numberOfOptions > OPTIONS.length) return false;
-
     var optionNum = parseInt(moText);
 
+    if (optionInputIndex !== -1 && numberOfOptions > OPTIONS.length) return false;
     if (optionNum == NaN || optionNum > numberOfOptions || optionNum < 1) return false;
 
     if (typeof optionNum == "number" && optionNum <= numberOfOptions) {
@@ -231,7 +234,7 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
         throw {
             invalidOption: header +
                 "Not sure what you meant. Send an option from " + firstOption + " to " +
-                lastOption + "\n--Reply " +  firstOption + " to " + lastOption + self.footerVerbs()
+                lastOption + "\n--Reply " + firstOption + " to " + lastOption + self.footerVerbs()
         };
     }
 
