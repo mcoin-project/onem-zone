@@ -1,6 +1,6 @@
 const debug = require('debug')('onemzone');
 const common = require('./common');
-const options = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+const OPTIONS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 const Service = require('../dbMethods/service').Service;
 
 exports.Context = function (serviceName, JSONdata) {
@@ -67,32 +67,68 @@ exports.Context.prototype.hasOptions = function () {
     return false;
 }
 
+exports.Context.prototype.numMenuOptions = function () {
+    var count = 0;
+    if (this.isMenu() && this.data.body && this.data.body.length > 0) {
+        for (var i = 0; i < this.data.body.length; i++) {
+            if (this.data.body[i].type == "option") {
+                count++;
+            }
+        }
+        return count;
+    } else {
+        return 0;
+    }
+}
+
+exports.Context.prototype.firstOption = function () {
+    if (this.numMenuOptions() > OPTIONS.length) {
+        return '1';
+    } else {
+        return 'A';
+    }
+}
+
 exports.Context.prototype.makeMTResponse = function () {
 
-    var result = '';
-    var optionIndex = 0;
+    var menuOption, result = '';
+    var optionIndex = 0, optionStart = OPTIONS[0].toUpperCase();
 
     if (this.data.header) {
         result += this.data.header;
     }
+
+    var numMenuOptions = this.numMenuOptions();
 
     if (this.isMenu() && this.data.body && this.data.body.length > 0) {
         for (var i = 0; i < this.data.body.length; i++) {
             if (this.data.body[i].type == "content") {
                 result += this.data.body[i].description + '\n'
             } else if (this.data.body[i].type == "option") {
-                result += options[optionIndex].toUpperCase() + ' ' + this.data.body[i].description + '\n'
+                if (numMenuOptions >= OPTIONS.length) {
+                    menuOption = optionIndex + 1;
+                } else {
+                    menuOption = OPTIONS[optionIndex].toUpperCase();
+                }
+                result += menuOption + ' ' + this.data.body[i].description + '\n'
                 optionIndex++;
             }
         }
         optionIndex--;
     }
 
+    if (numMenuOptions > OPTIONS.length) {
+        optionStart = '1';
+        optionEnd = optionIndex + 1;
+    } else {
+        optionEnd = OPTIONS[optionIndex].toUpperCase();
+    }
+
     if (this.isMenu() && !this.data.footer && optionIndex >= 0) {
-        result += '--Reply A-' + options[optionIndex].toUpperCase() + this.footerVerbs();
+        result += '--Reply' + ' ' + optionStart + '-' + optionEnd + this.footerVerbs();
         return result;
     } else if (this.isMenu() && !this.data.footer && optionIndex == 0) {
-        result += '--Reply A' + this.footerVerbs();
+        result += '--Reply' + ' ' + optionStart + this.footerVerbs();
         return result;
     }
 
@@ -150,16 +186,32 @@ exports.Context.prototype.footerVerbs = function () {
 }
 
 exports.Context.prototype.lastOption = function () {
-    var optionIndex = -1;
-    for (var i = 0; i < this.data.body.length; i++) {
-        // debug("type:" + context.body[i].type + "optionBodyIndex:" + optionBodyIndex + " optionInputIndex:" + optionBodyIndex );
-        if (this.data.body[i].type == 'option') {
-            optionIndex++;
-        }
-    }
+    var optionCount = this.numMenuOptions();
 
-    return optionIndex == -1 ? options[0].toUpperCase() : options[optionIndex].toUpperCase();
+    if (optionCount > OPTIONS.length) {
+        return optionCount.toString();
+    } else {
+        return OPTIONS[optionCount - 1].toUpperCase();
+    }
 }
+
+exports.Context.prototype.getOptionInputIndex = function (moText) {
+    var numberOfOptions = this.numMenuOptions();
+    var optionInputIndex = OPTIONS.indexOf(moText.toLowerCase());
+
+    if (optionInputIndex !== -1 && numberOfOptions > OPTIONS.length) return false;
+
+    var optionNum = parseInt(moText);
+
+    if (optionNum == NaN || optionNum > numberOfOptions || optionNum < 1) return false;
+
+    if (typeof optionNum == "number" && optionNum <= numberOfOptions) {
+        return optionNum - 1;
+    } else {
+        return optionInputIndex;
+    }
+}
+
 exports.Context.prototype.getRequestParams = function (user, moText) {
 
     var makeQs = function (userInput) {
@@ -172,6 +224,17 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
         return words.length > 0 ? result : undefined;
     }
 
+    var nswymError = function (header) {
+        var lastOption = self.lastOption();
+        var firstOption = self.firstOption();
+        debug("nswym: " + header);
+        throw {
+            invalidOption: header +
+                "Not sure what you meant. Send an option from " + firstOption + " to " +
+                lastOption + "\n--Reply " +  firstOption + " to " + lastOption + self.footerVerbs()
+        };
+    }
+
     var self = this;
     var result = {
         url: '',
@@ -182,16 +245,6 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
 
     var token = common.createJWT({ _id: user });
     result.headers = { Authorization: 'token ' + token };
-
-    var nswymError = function (header) {
-        var lastOption = self.lastOption();
-        debug("nswym: " + header);
-        throw {
-            invalidOption: header +
-                "Not sure what you meant. Send an option from A to " +
-                lastOption + "\n--Reply A to " + lastOption + self.footerVerbs()
-        };
-    }
 
     // check if it's a service switch, include any text after the service as query params
     if (moText.startsWith('#')) {
@@ -212,9 +265,13 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
     }
 
     if (moText.length <= 2 && this.isMenu() && this.hasOptions()) {
-        var optionInputIndex = options.indexOf(moText.toLowerCase());
-        var optionBodyIndex = 0;
 
+        var optionInputIndex = this.getOptionInputIndex(moText);
+
+        if (optionInputIndex === false) {
+            nswymError(this.data.header);
+        }
+        var optionBodyIndex = 0;
         // try to locate a matching option
         for (var i = 0; i < this.data.body.length; i++) {
             // debug("type:" + context.body[i].type + "optionBodyIndex:" + optionBodyIndex + " optionInputIndex:" + optionBodyIndex );
