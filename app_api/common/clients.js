@@ -1,5 +1,7 @@
 const context = require('./context.js');
 const debug = require('debug')('onemzone');
+const DEFAULT_MSG_SIZE = 2;
+const MAX_MSG_SIZE = 5;
 
 var clients = {};
 
@@ -130,6 +132,29 @@ var goBack = function (msisdn) {
 	}
 }
 
+var size = function (msisdn, moText) {
+	if (!clients[msisdn]) return false;
+
+	var params = moText.split(' ');
+	var size = parseInt(params[1]);
+	var currentSize = clients[msisdn].size || DEFAULT_MSG_SIZE;
+	var header;
+
+	try {
+		header = clients[msisdn].context.data.header;
+	} catch (error) {
+		header = '';
+	}
+	if (params.length == 1) {
+		return header + "Current message size is " +currentSize + " (minimum is 1, maximum is " + MAX_MSG_SIZE + ").";
+	} else if (typeof size !== "number" || (typeof size == "number" && size <1 || size >5)){
+		return header + "SMS supports sizes between 1 and 5. Message size is now " + currentSize + ".";
+	} else {
+		clients[msisdn].size = size;
+		return header + "Message size is now " + size + ".";
+	}
+}
+
 module.exports = {
 	isConnected,
 	newConnection,
@@ -148,5 +173,6 @@ module.exports = {
 	getApi,
 	setApi,
 	newContext,
-	goBack
+	goBack,
+	size
 };

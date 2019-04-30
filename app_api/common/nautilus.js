@@ -7,10 +7,11 @@ const request = require('request-promise');
 const BACK_VERB = 'back';
 const GO_VERB = 'go';
 const MORE_VERB = 'more';
+const SIZE_VERB = 'size';
 
 exports.systemVerbs = [
-    GO_VERB, MORE_VERB, BACK_VERB
-]
+    GO_VERB, MORE_VERB, BACK_VERB, SIZE_VERB
+];
 
 exports.sendSMS = function (from, mtText, api) {
     if (typeof clients.isConnected(from)) {
@@ -32,16 +33,33 @@ exports.sendSMS = function (from, mtText, api) {
     }
 }
 
+exports.isSystemVerb = function (moText) {
+    var words = moText.split(' ');
+
+    if (words.length == 1 && words[0] == BACK_VERB) {
+        return true;
+    }
+    if (words.length == 1 && words[0] == MORE_VERB) {
+        return true;
+    }
+    if (words[0] == SIZE_VERB || words[0] == GO_VERB) {
+        return true;
+    }
+    return false;
+}
+
 exports.executeSystemVerb = async function (from, to, moText, api) {
     var mtText;
 
-    switch (moText) {
-        case BACK_VERB:
-            clients.goBack(from);
-            mtText = clients.getContext(from).makeMTResponse();
+    if (moText == BACK_VERB) {
+        clients.goBack(from);
+        mtText = clients.getContext(from).makeMTResponse();
+        exports.sendSMS(from, mtText, api);
+    } else if (moText.split(' ')[0] == SIZE_VERB) {
+        mtText = clients.size(from, moText);
+        if (mtText) {
             exports.sendSMS(from, mtText, api);
-            break;
-        default:
+        }
     }
 }
 

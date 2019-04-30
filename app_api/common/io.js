@@ -120,7 +120,7 @@ exports.initialize = function (server) {
                     }
                      // Todo implement caching in dbmethods
                     if (await dbMethods.serviceIncludes(clients.currentService(socket.msisdn))) {
-                        if (nautilus.systemVerbs.includes(moText)) {
+                        if (nautilus.isSystemVerb(moText)) {
                             debug("executing system verb in nautilus");
                             nautilus.executeSystemVerb(socket.msisdn, common.shortNumber, moText, false);
                         } else {
