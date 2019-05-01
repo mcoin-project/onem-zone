@@ -9,6 +9,7 @@ exports.Context = function (serviceName, JSONdata) {
     this.formInputParams = {};
     this.request = true;
     this.formIndex = 0;
+    this.chunkPos = 0;
 
     debug("this.data");
     debug(JSON.stringify(this.data, {}, 4));
@@ -89,6 +90,23 @@ exports.Context.prototype.firstOption = function () {
     }
 }
 
+exports.Context.prototype.makeFooter = function () {
+    if (this.data.footer) {
+        debug("adding custom footer");
+        return this.data.footer;
+    }
+    if (this.isMenu() && typeof this.optionEnd !== 'undefined') {
+        return '--Reply' + ' ' + this.optionStart + '-' + this.optionEnd + this.footerVerbs(true);
+    } else if (this.isMenu() && typeof this.optionEnd == 'undefined') {
+        return '--Reply' + ' ' + this.optionStart + this.footerVerbs(true);
+    }
+    if (this.isForm()) {
+        return '--Reply with ' + this.data.body.formItems[this.formIndex].name + this.footerVerbs(true);
+    } else {
+        return '';
+    }
+}
+
 exports.Context.prototype.makeMTResponse = function () {
 
     var menuOption, result = '';
@@ -103,7 +121,8 @@ exports.Context.prototype.makeMTResponse = function () {
     if (this.isMenu() && this.data.body && this.data.body.length > 0) {
         for (var i = 0; i < this.data.body.length; i++) {
             if (this.data.body[i].type == "content") {
-                result += this.data.body[i].description + '\n'
+                this.data.body[i].formatted = this.data.body[i].description + '\n';
+                result += this.data.body[i].formatted;
             } else if (this.data.body[i].type == "option") {
                 if (numMenuOptions > OPTIONS.length) {
                     if (optionIndex < 9) {
@@ -115,7 +134,8 @@ exports.Context.prototype.makeMTResponse = function () {
                 } else {
                     menuOption = OPTIONS[optionIndex].toUpperCase();
                 }
-                result += menuOption + ' ' + this.data.body[i].description + '\n'
+                this.data.body[i].formatted = menuOption + ' ' + this.data.body[i].description + '\n';
+                result += this.data.body[i].formatted;
                 optionIndex++;
             }
         }
@@ -123,37 +143,30 @@ exports.Context.prototype.makeMTResponse = function () {
     }
 
     if (numMenuOptions > OPTIONS.length) {
-        optionStart = '1';
-        optionEnd = optionIndex + 1;
+        this.optionStart = '1';
+        this.optionEnd = optionIndex + 1;
     } else {
-        optionEnd = OPTIONS[optionIndex].toUpperCase();
+        this.optionStart = OPTIONS[0].toUpperCase();
+        this.optionEnd = OPTIONS[optionIndex].toUpperCase();
     }
 
-    if (this.isMenu() && !this.data.footer && optionIndex >= 0) {
-        result += '--Reply' + ' ' + optionStart + '-' + optionEnd + this.footerVerbs();
-        return result;
-    } else if (this.isMenu() && !this.data.footer && optionIndex == 0) {
-        result += '--Reply' + ' ' + optionStart + this.footerVerbs();
+    if (optionIndex == 0) {
+        this.optionEnd = undefined;
+    }
+    if (this.isMenu()) {
+        result += this.makeFooter();
         return result;
     }
 
     if (this.isForm()) {
         result += this.data.body.formItems[this.formIndex].description + '\n';
-        if (!this.data.footer) {
-            result += '--Reply with ' + this.data.body.formItems[this.formIndex].name + this.footerVerbs();
-        }
+        result += this.makeFooter();
         if (this.formIndex + 1 < this.data.body.formItems.length) {
             this.request = false;
             debug("REQUEST IS NOT NEEDED");
         } else {
             this.request = true;
         }
-    }
-
-    if (this.data.footer) {
-        debug("adding footer");
-        result += this.data.footer;
-        return result;
     }
 
     return result;
@@ -175,7 +188,7 @@ exports.Context.prototype.getVerb = function (verb) {
     return i < this.verbs.length ? this.verbs[i] : false;
 }
 
-exports.Context.prototype.footerVerbs = function () {
+exports.Context.prototype.footerVerbs = function (prefix) {
     var result = "";
     var verbs = [];
     for (var i = 0; i < this.verbs.length; i++) {
@@ -184,7 +197,7 @@ exports.Context.prototype.footerVerbs = function () {
         }
     }
     result = verbs.join('/');
-    if (result.length > 0) {
+    if (result.length > 0 && prefix) {
         result = ' or ' + result;
     }
     return result;
@@ -234,7 +247,7 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
         throw {
             invalidOption: header +
                 "Not sure what you meant. Send an option from " + firstOption + " to " +
-                lastOption + "\n--Reply " + firstOption + " to " + lastOption + self.footerVerbs()
+                lastOption + "\n--Reply " + firstOption + " to " + lastOption + self.footerVerbs(true)
         };
     }
 
@@ -301,28 +314,44 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
         debug("setting formInputParams");
         debug(this.data.body.formItems[this.formIndex].name);
         this.formInputParams[this.data.body.formItems[this.formIndex].name] = moText;
+        debug(this.formInputParams);
         result.url = this.callbackPath + this.data.body.nextRoute;   // todo properly join to handle optional '/'
         result.method = this.data.body.method || 'POST';
         result.body = this.formInputParams;
-        this.formIndex++;
+        if (this.formIndex + 1 < this.data.body.formItems.length) {
+            this.formIndex++;
+        }
     }
 
     return result;
 }
 
 exports.Context.prototype.goBackInForm = function () {
-    if (this.isForm()) {
-        if (this.formIndex - 1 >= 0) {
-            this.formIndex--;
-            this.request = false;
-            debug("REQUEST IS NOT NEEDED");
-        } else {
-            this.request = true;
-        }
+    if (this.formIndex - 1 >= 0) {
+        this.formIndex--;
+        this.request = false;
+        debug("REQUEST IS NOT NEEDED");
     } else {
-        if (clients[msisdn].contextStack) {
-            clients[msisdn].context = clients[msisdn].contextStack.pop();
-            this.request = true;
-        }
+        debug("REQUEST IS NEEDED");
+        this.formIndex = 0;
+        this.request = true;
     }
+}
+
+exports.Context.prototype.more = function () {
+    if (this.chunks.length > 0) {
+        this.chunkPos++;
+    }
+    return this.chunkPos;
+}
+
+exports.Context.prototype.prev = function () {
+    if (this.chunkPos > 0) {
+        this.chunkPos--;
+    }
+    return this.chunkPos;
+}
+
+exports.Context.prototype.isMoreChunks = function () {
+    return this.chunkPos < this.chunks.length && this.chunks.length > 0;
 }

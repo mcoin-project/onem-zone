@@ -1,26 +1,18 @@
 const debug = require('debug')('onemzone');
 const clients = require('../common/clients.js');
 const common = require('../common/common.js');
+const verbs = require('../common/verbs.js');
 const message = require('../controllers/message.js');
 const request = require('request-promise');
 
-const BACK_VERB = 'back';
-const GO_VERB = 'go';
-const MORE_VERB = 'more';
-const SIZE_VERB = 'size';
-
-exports.systemVerbs = [
-    GO_VERB, MORE_VERB, BACK_VERB, SIZE_VERB
-];
-
-exports.sendSMS = function (from, mtText, api) {
+exports.sendSMS = function (from, to, mtText, api) {
     if (typeof clients.isConnected(from)) {
         try {
             clients.newMtMessage(from, mtText, api);
             clients.sendMessage(from);
         } catch (err) {
             debug("oops no session: " + err);
-            common.sendEmail(to, mtText);
+            common.sendEmail(from, mtText);
 
             // don't save api messages
             if (!api) {
@@ -28,7 +20,7 @@ exports.sendSMS = function (from, mtText, api) {
             }
         };
     } else {
-        common.sendEmail(to, mtText);
+        common.sendEmail(from, mtText);
         message.save(from, to, mtText);
     }
 }
@@ -36,13 +28,13 @@ exports.sendSMS = function (from, mtText, api) {
 exports.isSystemVerb = function (moText) {
     var words = moText.split(' ');
 
-    if (words.length == 1 && words[0] == BACK_VERB) {
+    if (words.length == 1 && words[0] == verbs.BACK_VERB) {
         return true;
     }
-    if (words.length == 1 && words[0] == MORE_VERB) {
+    if (words.length == 1 && words[0] == verbs.MORE_VERB) {
         return true;
     }
-    if (words[0] == SIZE_VERB || words[0] == GO_VERB) {
+    if (words[0] == verbs.SIZE_VERB || words[0] == verbs.GO_VERB) {
         return true;
     }
     return false;
@@ -51,35 +43,51 @@ exports.isSystemVerb = function (moText) {
 exports.executeSystemVerb = async function (from, to, moText, api) {
     var mtText;
 
-    if (moText == BACK_VERB) {
+    if (moText == verbs.MORE_VERB) {
+        if (clients.getContext(from).isMoreChunks()) {
+            clients.more(from);
+            clients.sendMessage(from);
+        } else {
+            exports.sendSMS(from, to, "No chunks available.", api);
+        }
+    } else if (moText == verbs.BACK_VERB) {
         clients.goBack(from);
-        mtText = clients.getContext(from).makeMTResponse();
-        exports.sendSMS(from, mtText, api);
-    } else if (moText.split(' ')[0] == SIZE_VERB) {
+        // var ctext = clients.getContext(from);
+        // exports.sendSMS(from, to, mtText, api);
+        try {
+            var ctext = clients.getContext(from);
+            mtText = ctext.makeMTResponse();
+            exports.sendSMS(from, to, mtText, api);
+        } catch (error) {
+            debug(error);
+        }
+    } else if (moText.split(' ')[0] == verbs.SIZE_VERB) {
         mtText = clients.size(from, moText);
         if (mtText) {
-            exports.sendSMS(from, mtText, api);
+            exports.sendSMS(from, to, mtText, api);
         }
     }
 }
 
 exports.processMessage = async function (from, to, moText, api) {
     debug("Naut: moText:" + moText)
-    var mtText, ctext = clients.getContext(from);
 
+    var mtText, ctext = clients.getContext(from);
+    debug("ctext:");
+    debug(ctext);
     try {
         if (moText.startsWith('#') || (ctext && ctext.getVerb(moText) !== false)) {
             debug("service switch or service-specific verb");
             ctext = await clients.newContext(from, clients.getBody(from));
         }
-        debug("ctext:");
-        debug(ctext);
         debug("requestNeeded:" + ctext.requestNeeded());
         if (ctext.requestNeeded()) {
             var requestParams = ctext.getRequestParams(from, moText);
             var body = await request(requestParams);
-            clients.setBody(from, body);
-            ctext = await clients.newContext(from, body);
+            //ctext = await clients.newContext(from, body);
+            ctext = await clients.setContext(from, body);
+            //clients.setBody(from, body);
+
             mtText = ctext.makeMTResponse();
         } else {
             ctext.getRequestParams(from, moText);  // this can be improved, should be necessary to call the entire thing!
@@ -97,5 +105,5 @@ exports.processMessage = async function (from, to, moText, api) {
             return;
         }
     }
-    exports.sendSMS(from, mtText, api);
+    exports.sendSMS(from, to, mtText, api);
 }

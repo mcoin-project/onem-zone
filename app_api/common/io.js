@@ -88,7 +88,7 @@ exports.initialize = function (server) {
         //sms.clients.push(socket);    
 
         debug(socket.msisdn);
-        debug("isConnected:" + clients.isConnected(socket.msisdn));
+
 
         // check for existing connection from msisdn already logged in (on another device) and kick them off
         if (socket.msisdn) {
@@ -97,7 +97,7 @@ exports.initialize = function (server) {
                 clients.forceLogout(socket.msisdn);
             }
             clients.newConnection(socket.msisdn, socket)
-
+            debug("isConnected:" + clients.isConnected(socket.msisdn));
             // deliver any saved messages for this user
             message.deliverPending(socket);
         }
