@@ -134,6 +134,7 @@ var chunkMenu = function (mtText, start, chunkSize, context) {
     if (i < context.data.body.length - 1) {
         return chunkMenu(mtText, i, chunkSize, context);
     }
+    context.setChunkingFooterPages();
     return;
 }
 

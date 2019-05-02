@@ -219,7 +219,7 @@ exports.Context.prototype.getOptionInputIndex = function (moText) {
     var optionNum = parseInt(moText);
 
     if (optionInputIndex !== -1 && numberOfOptions > OPTIONS.length) return false;
-    if (optionNum == NaN || optionNum > numberOfOptions || optionNum < 1) return false;
+    if (isNaN(optionNum) || optionNum > numberOfOptions || optionNum < 1) return false;
 
     if (typeof optionNum == "number" && optionNum <= numberOfOptions) {
         return optionNum - 1;
@@ -338,6 +338,25 @@ exports.Context.prototype.goBackInForm = function () {
     }
 }
 
+exports.Context.prototype.go = function (page) {
+    debug("page:"+page);
+    debug(typeof page);
+    if (arguments.length == 0 || isNaN(page) || typeof page !== "number" || page < 1 || page > this.chunks.length) {
+        page = 0;
+    } else {
+        page = page -1;
+    }
+    this.chunkPos = page;
+    debug("chunkPos:"+this.chunkPos);
+    return this.chunkPos;
+}
+
+exports.Context.prototype.clearChunks = function () {
+    this.chunks = [];
+    this.chunkPos = 0;
+    return true;
+}
+
 exports.Context.prototype.more = function () {
     if (this.chunks.length > 0) {
         this.chunkPos++;
@@ -354,4 +373,20 @@ exports.Context.prototype.prev = function () {
 
 exports.Context.prototype.isMoreChunks = function () {
     return this.chunkPos < this.chunks.length && this.chunks.length > 0;
+}
+
+exports.Context.prototype.hasChunks = function () {
+    return this.chunks && this.chunks.length && this.chunks.length > 0;
+}
+
+exports.Context.prototype.setChunkingFooterPages = function () {
+    if (this.chunks.length > 1) {
+        // locate footer
+        for (var i=0; i< this.chunks.length; i++) {
+            var lines = this.chunks[i].split('\n');
+            lastLine = lines[lines.length-2];
+            lines[lines.length-2] = lastLine.replace('/xx', '/' + this.chunks.length);
+            this.chunks[i] = lines.join('\n');
+        }
+    }
 }

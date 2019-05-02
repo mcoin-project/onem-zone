@@ -29,11 +29,12 @@ var newMtMessage = function (msisdn, mtText, api) {
 
 	var size = clients[msisdn].size || DEFAULT_MSG_SIZE;
 	clients[msisdn].mtText = mtText;
+	debug("/newMtMessage:"+ clients[msisdn].mtText);
 	clients[msisdn].api = api;
-	if (mtText.length > MAX_MSG_CHARS) {
+	if (mtText.length > size * MAX_MSG_CHARS) {
 		chunking.chunkText(mtText, size * MAX_MSG_CHARS, clients[msisdn].context);
 	} else {
-		clients[msisdn].context.chunkPos = 0;
+		clients[msisdn].context.clearChunks();
 	}
 }
 
@@ -179,6 +180,21 @@ var more = function (msisdn) {
 	}
 }
 
+var go = function (msisdn, moText) {
+	if (!clients[msisdn]) return false;
+	if (clients[msisdn].context.hasChunks()) {
+		var params = moText.split(' ');
+		var page = parseInt(params[1]);
+		if (params.length == 1) {
+			clients[msisdn].context.go();
+		} else if (isNaN(page) || (typeof page == "number" && size < 1 || size > clients[msisdn].context.chunks.length)) {
+			clients[msisdn].context.go();
+		} else {
+			clients[msisdn].context.go(page);
+		}
+	}
+}
+
 var size = function (msisdn, moText) {
 	if (!clients[msisdn]) return false;
 
@@ -222,5 +238,6 @@ module.exports = {
 	newContext,
 	goBack,
 	size,
-	more
+	more,
+	go
 };

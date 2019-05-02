@@ -42,8 +42,14 @@ exports.isSystemVerb = function (moText) {
 
 exports.executeSystemVerb = async function (from, to, moText, api) {
     var mtText;
-
-    if (moText == verbs.MORE_VERB) {
+    if (moText.split(' ')[0] == verbs.GO_VERB) {
+        if (clients.getContext(from).hasChunks()) {
+            clients.go(from, moText);
+            clients.sendMessage(from);
+        } else {
+            exports.sendSMS(from, to, "No chunks available.", api);
+        }
+    } else if (moText == verbs.MORE_VERB) {
         if (clients.getContext(from).isMoreChunks()) {
             clients.more(from);
             clients.sendMessage(from);
@@ -105,5 +111,6 @@ exports.processMessage = async function (from, to, moText, api) {
             return;
         }
     }
+    debug("sending SMS:"+ mtText);
     exports.sendSMS(from, to, mtText, api);
 }
