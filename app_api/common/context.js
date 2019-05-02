@@ -38,6 +38,22 @@ exports.Context.prototype.initialize = async function () {
     }
 }
 
+exports.Context.prototype.getHeader = function () {
+    if (this.data.header) {
+        return this.data.header;
+    } else {
+        return '';
+    }
+}
+
+exports.Context.prototype.getFooter = function () {
+    if (this.data.footer) {
+        return this.data.footer;
+    } else {
+        return '';
+    }
+}
+
 exports.Context.prototype.isForm = function () {
     if (!this.data || !this.data.type) {
         debug("no data or type");
@@ -371,8 +387,28 @@ exports.Context.prototype.prev = function () {
     return this.chunkPos;
 }
 
+exports.Context.prototype.getChunk = function () {
+    if (this.hasChunks()) {
+        return this.chunks[this.chunkPos];
+    } else {
+        return "No chunks available.";
+    }
+}
+
 exports.Context.prototype.isMoreChunks = function () {
     return this.chunkPos < this.chunks.length && this.chunks.length > 0;
+}
+
+exports.Context.prototype.numChunks = function () {
+    if (this.chunks) {
+        return this.chunks.length;
+    } else {
+        return 0;
+    }
+}
+
+exports.Context.prototype.isLessChunks = function () {
+    return this.chunkPos > 0 && this.chunks.length > 0;
 }
 
 exports.Context.prototype.hasChunks = function () {

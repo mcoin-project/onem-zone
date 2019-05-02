@@ -46,11 +46,8 @@ var concatMessage = function (msisdn, mtText) {
 var sendMessage = function (msisdn) {
 	if (!clients[msisdn] || !clients[msisdn].socket) throw "no session";
 	var text;
-	debug("context:");
-	debug(clients[msisdn].context);
-	if (clients[msisdn].context && clients[msisdn].context.chunks && clients[msisdn].context.chunks.length > 0) {
-		var index = clients[msisdn].context.chunkPos;
-		text = clients[msisdn].context.chunks[index];
+	if (clients[msisdn].context.hasChunks()) {
+		text = clients[msisdn].context.getChunk();
 	} else {
 		text = clients[msisdn].mtText;
 	}
@@ -165,7 +162,7 @@ var goBack = function (msisdn) {
 		if (clients[msisdn].context.requestNeeded()) {
 			popContext(msisdn);
 		}
-	} else if (clients[msisdn].context.chunkPos > 0) {
+	} else if (clients[msisdn].context.isLessChunks()) {
 		clients[msisdn].context.prev();
 	} else {
 		//   clients[msisdn].context = clients[msisdn].contextStack.pop();
@@ -182,15 +179,16 @@ var more = function (msisdn) {
 
 var go = function (msisdn, moText) {
 	if (!clients[msisdn]) return false;
-	if (clients[msisdn].context.hasChunks()) {
+	var context = clients[msisdn].context;
+	if (context.hasChunks()) {
 		var params = moText.split(' ');
 		var page = parseInt(params[1]);
 		if (params.length == 1) {
-			clients[msisdn].context.go();
-		} else if (isNaN(page) || (typeof page == "number" && size < 1 || size > clients[msisdn].context.chunks.length)) {
-			clients[msisdn].context.go();
+			context.go();
+		} else if (isNaN(page) || (typeof page == "number" && size < 1 || size > context.numChunks())) {
+			context.go();
 		} else {
-			clients[msisdn].context.go(page);
+			context.go(page);
 		}
 	}
 }
@@ -201,13 +199,8 @@ var size = function (msisdn, moText) {
 	var params = moText.split(' ');
 	var size = parseInt(params[1]);
 	var currentSize = clients[msisdn].size || DEFAULT_MSG_SIZE;
-	var header;
+	var header = clients[msisdn].context.getHeader();
 
-	try {
-		header = clients[msisdn].context.data.header;
-	} catch (error) {
-		header = '';
-	}
 	if (params.length == 1) {
 		return header + "Current message size is " + currentSize + " (minimum is 1, maximum is " + MAX_MSG_SIZE + ").";
 	} else if (typeof size !== "number" || (typeof size == "number" && size < 1 || size > 5)) {
