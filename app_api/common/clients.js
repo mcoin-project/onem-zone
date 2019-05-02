@@ -1,6 +1,4 @@
 const context = require('./context.js');
-const chunking = require('./chunking.js');
-
 const debug = require('debug')('onemzone');
 const DEFAULT_MSG_SIZE = 2;
 const MAX_MSG_SIZE = 5;
@@ -32,7 +30,7 @@ var newMtMessage = function (msisdn, mtText, api) {
 	debug("/newMtMessage:"+ clients[msisdn].mtText);
 	clients[msisdn].api = api;
 	if (mtText.length > size * MAX_MSG_CHARS) {
-		chunking.chunkText(mtText, size * MAX_MSG_CHARS, clients[msisdn].context);
+		clients[msisdn].context.chunkText(mtText, size * MAX_MSG_CHARS);
 	} else {
 		clients[msisdn].context.clearChunks();
 	}
