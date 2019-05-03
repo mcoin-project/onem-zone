@@ -1,16 +1,14 @@
 const debug = require('debug')('onemzone');
 const mongoose = require('mongoose');
-const ObjectId = require('mongoose').Types.ObjectId;
 const moment = require('moment');
 const jwt = require('jwt-simple');
 const postmark = require("postmark");
 
 const tokenValidity = process.env.TOKEN_VALIDITY || 14 * 24 * 3600;
+const User = require('../models/Model').User;
 
 exports.shortNumber = process.env.SHORT_NUMBER || "444100";
 
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
 /*
  |--------------------------------------------------------------------------
  | Generate JSON Web Token
@@ -73,6 +71,9 @@ exports.sendEmail = function (msisdn, text) {
             debug("can't find email user for: " + user._id);
             return;
         }
+        
+        if (user.dontSendEmails) return;
+
         data.TextBody = text;
         data.To = user.email;
         client.sendEmail(data, function (error, body) {

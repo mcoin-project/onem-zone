@@ -15,13 +15,14 @@ ONEmSimModule.controller('captureTokenController', [
                 }
             }).then(function (response) {
                 toastr.success("Mobile number linked successfully");
-                console.log("mobile linked:")
+                console.log("mobile linked response:")
+                console.log(response);
                 $timeout(function () {
                     $rootScope.user = response.user;
                     $rootScope.$apply();
+
                 });
-                console.log($rootScope.user);
-                $state.go('home');
+                $state.go('main');
             }).catch(function (error) {
                 toastr.error(error);
             });

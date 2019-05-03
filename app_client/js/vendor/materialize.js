@@ -2661,7 +2661,8 @@ $jscomp.polyfill = function (e, r, p, m) {
           y: idealYPos,
           verticalAlignment: verticalAlignment,
           horizontalAlignment: horizontalAlignment,
-          height: idealHeight,
+        //  height: idealHeight,
+          height: 'auto',
           width: idealWidth
         };
       }

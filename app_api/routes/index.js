@@ -5,14 +5,16 @@ var mongoose = require('mongoose');
 
 var common = require('../common/common.js');
 var user = require('../controllers/user.js');
+var wallet = require('../controllers/wallet.js');
 var auth = require('../controllers/auth');
 var api = express.Router();
 
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
+var User = require('../models/Model').User;
+var ServicesList = require('../models/Model').ServicesList;
+
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
-
+var junction = require('../common/junction');
 /*
  |--------------------------------------------------------------------------
  | Login Required Middleware
@@ -33,6 +35,7 @@ function ensureAuthenticated(req, res, next) {
     }
     user.getUser(payload.sub).then(function (user) {
         req.user = user._id;
+        req.userProfile = user;
         next();
     }).catch(function (error) {
         debug(error);
@@ -40,16 +43,26 @@ function ensureAuthenticated(req, res, next) {
         return res.status(401).send({ message: 'Unauthorized request' });
     });
 }
+api.get('/services', function (req, res) {
+    ServicesList.find().then(function(services) {
+        res.json({services: services});
+    }).catch(function(error) {
+        debug("/services");
+        debug(error);
+        res.status(500).send({ error: "server error" });       
+    });
+});
+
 
 api.get('/user', ensureAuthenticated, function (req, res) {
     if (req.user) {
-        User.findById({_id: req.user}).then(function(user) {
+        User.findById({ _id: req.user }).then(function (user) {
             if (!user) {
                 debug("/user - user not found");
-                return res.status(401).send({error: "user not found"});
+                return res.status(401).send({ error: "user not found" });
             }
             res.status(200).send({ msisdn: user.msisdn, user: req.user });
-        }).catch(function(error) {
+        }).catch(function (error) {
             debug("/user - user not found");
             debug(error);
             res.status(500).send({ error: "server error" });
@@ -65,13 +78,14 @@ api.get('/user/sendToken', ensureAuthenticated, user.sendToken(User));
 api.get('/user/verifyToken', ensureAuthenticated, user.verifyToken(User));
 api.get('/user/msisdn', ensureAuthenticated, user.getMsisdn(User));
 api.get('/user/checkMsisdn', ensureAuthenticated, user.checkMsisdn(User));
+api.get('/user/profile', ensureAuthenticated, user.getProfile(User));
 
 api.put('/user/msisdn', ensureAuthenticated, user.updateMsisdn(User));
+api.put('/user/profile', ensureAuthenticated, user.setProfile(User));
 
 api.get('/start', ensureAuthenticated, function (req, res) {
     var httpProtocol = req.get('Referer').split(":")[0];
     debug(httpProtocol);
-    debug(wsProtocol);
 
     if (httpProtocol == 'https') {
         // the used protocol is HTTPS
@@ -91,7 +105,74 @@ api.get('/start', ensureAuthenticated, function (req, res) {
 
 });
 
+api.get('/wallet/getAccounts', ensureAuthenticated, wallet.getAccounts(User));
+api.post('/wallet/topUp', ensureAuthenticated, wallet.topUp(User));
+
 api.post('/auth/google', auth.googleAuth(User));
 api.post('/auth/facebook', auth.facebookAuth(User));
+
+api.post('/gcash/order_notify', async function (req, res) {
+    res.status(200).send();
+    try {
+        await junction.updateOrder(req.body.merchantTransId, req.body);
+    } catch (error) {
+        debug('/order_notify');
+        debug(error);
+    }
+});
+
+api.post('/gcash/order_notify/:msgId', async function (req, res) {
+    debug("got post order_notify: " + req.params.msgId);
+    debug("req.body:");
+    debug(req.body);
+    try {
+        var order = await junction.getOrder(req.params.msgId);
+        res.json(
+            {
+                resultStatus: "S",
+                resultCodeId: "00000000",
+                resultCode: "SUCCESS",
+                resultMsg: "payment successful"
+            }
+        );
+    } catch (error) {
+        debug("/gcash/order_notify");
+        debug(error);
+        res.json(
+            {
+                resultStatus: "U",
+                resultCodeId: "00000900",
+                resultCode: "SYSTEM_ERROR",
+                resultMsg: "System error"
+            }
+        );
+    }
+});
+
+api.get('/gcash/order_success/:msgId', async function (req, res) {
+    debug("got get order_success: " + req.params.msgId);
+    debug("req.body:");
+    debug(req.body);
+    try {
+        var order = await junction.getOrder(req.params.msgId);
+        res.redirect('/gcash/order_success/' + req.params.msgId + '?amount=' + order.amount + '&currency=' + order.currency);
+    } catch (error) {
+        debug("/gcash/order_success");
+        debug(error);
+        res.redirect('/gcash/order_fail/' + req.params.msgId);
+    }
+});
+
+api.get('/gcash/order_fail/:msgId', async function (req, res) {
+    debug("got get order_fail:" + req.params.msgId);
+    try {
+        var order = await junction.getOrder(req.params.msgId);
+        res.redirect('/gcash/order_fail/' + req.params.msgId + '?amount=' + order.amount + '&currency=' + order.currency);
+    } catch (error) {
+        debug("/gcash/order_fail");
+        debug(error);
+        res.redirect('/gcash/order_fail/' + req.params.msgId);
+    }
+});
 
 module.exports = api;

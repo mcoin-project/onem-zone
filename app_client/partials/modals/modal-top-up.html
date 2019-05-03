@@ -1,0 +1,44 @@
+<div class="container ngdialog-message">
+    <h5 translate ng-style="alignRtl()">Top up {{account.name | capitalize }}</h5>
+    <form action="#">
+        <p>
+            <label>
+                <input name="group1" type="radio" ng-model="user.value" checked value="1000" />
+                <span>1,000 {{account.currency.toUpperCase()}}</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="group1" type="radio" ng-model="user.value" value="2000" />
+                <span>2,000 {{account.currency.toUpperCase()}}</span>
+            </label>
+        </p>
+        <p>
+            <label>
+                <input name="group1" type="radio" ng-model="user.value" value="5000" />
+                <span>5,000 {{account.currency.toUpperCase()}}</span>
+            </label>
+        </p>
+    </form>
+    <div class="modal-footer ngdialog-buttons">
+        <a href="" ng-click="closeThisDialog()"
+            class="modal-close waves-effect waves-red red-text left btn-flat">Cancel</a>
+        <a href="" ng-click="confirm(account)" class="modal-close waves-effect waves-green right btn-flat">Confirm</a>
+    </div>
+
+    <div ng-show="spinner" class="spinner-container">
+        <div class="preloader-wrapper" ng-class="{active : spinner}">
+            <div class="spinner-layer spinner-red-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

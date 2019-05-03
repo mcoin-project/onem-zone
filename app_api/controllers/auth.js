@@ -6,8 +6,7 @@ const request = require('request');
 const common = require('../common/common.js');
 const speakeasy = require('speakeasy');
 
-var UserSchema = require('../models/Model').UserSchema;
-var User = mongoose.model('users', UserSchema);
+const User = require('../models/Model').User;
 
 exports.googleAuth = function (User) {
   return function (req, res) {

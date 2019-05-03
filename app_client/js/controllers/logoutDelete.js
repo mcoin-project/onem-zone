@@ -7,7 +7,8 @@ ONEmSimModule.controller('logoutDeleteController', [
     'Socket',
     'DataModel',
     'User',
-    function($auth, toastr, $state, $rootScope, Phone, Socket, DataModel, User) {
+    'Cache',
+    function($auth, toastr, $state, $rootScope, Phone, Socket, DataModel, User, Cache) {
 
         Promise.resolve().then(function() {
             if ($auth.isAuthenticated()) { 
@@ -28,11 +29,12 @@ ONEmSimModule.controller('logoutDeleteController', [
             $rootScope.msisdn = undefined;
             $rootScope.user = undefined;
             DataModel.clearResults();
-            $state.go('home');
+            Cache.reset();
+            $state.go('login');
         }).catch(function(error) {
             console.log(error);
             toastr.info('Error logging out - close browser tab');
-            $state.go('home');
+            $state.go('main');
         });
     }
 ]);

@@ -1,0 +1,330 @@
+[
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004701"
+	},
+	"names": [
+		"onem"
+	],
+	"icon": "home",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004702"
+	},
+	"names": [
+		"phone"
+	],
+	"icon": "dialer",
+	"template": "partials/onemSim.html",
+	"blockRequest": true,
+	"always": true,
+	"call": true,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004703"
+	},
+	"names": [
+		"account"
+	],
+	"icon": "account",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004704"
+	},
+	"names": [
+		"call"
+	],
+	"icon": "call",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004705"
+	},
+	"names": [
+		"subscribe"
+	],
+	"icon": "subscribe",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004706"
+	},
+	"names": [
+		"market"
+	],
+	"icon": "cart",
+	"default": true,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004707"
+	},
+	"names": [
+		"wallet"
+	],
+	"icon": "wallet",
+	"template": "/partials/service-wallet.html",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004708"
+	},
+	"names": [
+		"msg"
+	],
+	"icon": "message",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004709"
+	},
+	"names": [
+		"xgroup"
+	],
+	"icon": "xgroup",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200470a"
+	},
+	"names": [
+		"post"
+	],
+	"icon": "post",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200470b"
+	},
+	"names": [
+		"wiki"
+	],
+	"icon": "wikipedia",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200470c"
+	},
+	"names": [
+		"jokes"
+	],
+	"icon": "jokes",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200470d"
+	},
+	"names": [
+		"radio"
+	],
+	"icon": "radio",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200470e"
+	},
+	"names": [
+		"france24"
+	],
+	"icon": "france24",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200470f"
+	},
+	"names": [
+		"football"
+	],
+	"icon": "football",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004710"
+	},
+	"names": [
+		"dw"
+	],
+	"icon": "dw",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004711"
+	},
+	"names": [
+		"weather"
+	],
+	"icon": "weather",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004712"
+	},
+	"names": [
+		"time"
+	],
+	"icon": "clock",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004713"
+	},
+	"names": [
+		"stock"
+	],
+	"icon": "chartgrow",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004714"
+	},
+	"names": [
+		"hangman"
+	],
+	"icon": "hangman",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004715"
+	},
+	"names": [
+		"finance"
+	],
+	"icon": "finance",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004716"
+	},
+	"names": [
+		"crossword"
+	],
+	"icon": "crossword",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004717"
+	},
+	"names": [
+		"convert"
+	],
+	"icon": "convert",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004718"
+	},
+	"names": [
+		"quotes"
+	],
+	"icon": "quotes",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004719"
+	},
+	"names": [
+		"tip"
+	],
+	"icon": "tip",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200471a"
+	},
+	"names": [
+		"todo"
+	],
+	"icon": "tip",
+	"always": true,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200471b"
+	},
+	"names": [
+		"coop"
+	],
+	"icon": "tip",
+	"always": true,
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200471c"
+	},
+	"names": [
+		"mcat"
+	],
+	"icon": "mcatalog",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200471d"
+	},
+	"names": [
+		"exchange"
+	],
+	"icon": "exchange",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200471e"
+	},
+	"names": [
+		"contacts"
+	],
+	"icon": "contacts",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe01763302004720"
+	},
+	"names": [
+		"translate"
+	],
+	"icon": "translate",
+	"__v": 0
+},
+{
+	"_id": {
+		"$oid": "5cc0840dfe0176330200471f"
+	},
+	"names": [
+		"unsubscribe"
+	],
+	"icon": "unsubscribe",
+	"__v": 0
+}
+]

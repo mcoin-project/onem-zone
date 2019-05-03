@@ -1,0 +1,28 @@
+<div ng-show="ready" class="row col-centered">
+    <nav style="position:fixed;top:20;left:0;white-space:nowrap;z-index:995" class="navbar-fixed" ng-cloak
+        ng-show="result.breadcrumbs.length > 0">
+        <div class="nav-wrapper white">
+            <div class="col s12 truncate black-text">
+                <a style="cursor:pointer" ng-show="result.breadcrumbs[0]"
+                    ng-click="buttonSelected('#' + cache.activeService().getName())"
+                    class="breadcrumb">{{result.breadcrumbs[0]}}</a>
+                <a ng-show="result.breadcrumbs[1]" class="breadcrumb">{{result.breadcrumbs[1]}}</a>
+            </div>
+        </div>
+    </nav>
+    <div style="margin-top:70px;margin-bottom:70px" class="col s12 m12 l6 offset-l3">
+        <div class="ng-cloak" ng-show="result.type">
+            <div ng-include="'partials/templates/wallet.html'"></div>
+            <div ng-include="'partials/templates/body-mobile.html'"></div>
+        </div>
+    </div>
+    <div class="pagination-mobile-wrapper">
+        <div ng-include="'partials/templates/pagination.html'"></div>
+    </div>
+    <div style=" position:fixed;z-index:995;left:0;bottom:0" class="navbar-fixed">
+        <nav class="red right-align">
+            <a class="waves-effect waves-light" style="margin-right:20px"
+                ng-repeat="button in result.buttons track by $index" ng-click="buttonSelected(button)">{{button}}</a>
+        </nav>
+    </div>
+</div>

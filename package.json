@@ -12,6 +12,7 @@
     "start-dev": "DEBUG=onemzone node app"
   },
   "dependencies": {
+    "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
     "debug": "^4.1.1",
@@ -25,8 +26,10 @@
     "mongoose": "^5.4.2",
     "morgan": "^1.9.1",
     "nexmo": "^2.4.0",
+    "node-rsa": "^1.0.5",
     "postmark": "^2.2.4",
     "request": "^2.88.0",
+    "request-promise": "^4.2.4",
     "smpp": "^0.3.1",
     "socket.io": "^2.2.0",
     "speakeasy": "^2.0.0",
@@ -50,7 +53,7 @@
     "gulp-imagemin": "^4.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
-    "gulp-sourcemaps": "^2.6.4",
+    "gulp-sourcemaps": "^2.6.5",
     "gulp-strip-debug": "^3.0.0",
     "gulp-uglify": "^3.0.1",
     "gulp-uglify-es": "^1.0.4",
