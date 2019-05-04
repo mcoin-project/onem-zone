@@ -1,4 +1,5 @@
 const context = require('./context.js');
+const cache = require('./cache.js');
 const debug = require('debug')('onemzone');
 const DEFAULT_MSG_SIZE = 2;
 const MAX_MSG_SIZE = 5;
@@ -6,29 +7,49 @@ const MAX_MSG_CHARS = 160;
 
 var clients = {};
 
-var isConnected = function (msisdn) {
-	if (!clients[msisdn]) return false;
-	if (!clients[msisdn].socket) return false;
-	return true;
+var isConnected = async function (msisdn) {
+	try {
+		if (!(await cache.read(msisdn))) return false;
+		if (!clients[msisdn].socket) return false;
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
 }
 
-var newConnection = function (msisdn, socket) {
-	if (!clients[msisdn]) clients[msisdn] = {};
-	clients[msisdn].socket = socket;
+var newConnection = async function (msisdn, socket) {
+	try {
+		await cache.write(msisdn, {});
+		if (!clients[msisdn].socket) return false;
+		clients[msisdn].socket = socket;
+		return true;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
 }
 
-var disconnected = function (msisdn) {
-	if (!clients[msisdn]) clients[msisdn] = {};
-	clients[msisdn].socket = undefined;
+var disconnected = async function (msisdn) {
+	try {
+		await cache.remove(msisdn);
+		clients[msisdn].socket = undefined;
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
 }
 
-var newMtMessage = function (msisdn, mtText, api) {
-	if (!clients[msisdn]) clients[msisdn] = {};
+var newMtMessage = async function (msisdn, mtText, api) {
 
-	var size = clients[msisdn].size || DEFAULT_MSG_SIZE;
-	clients[msisdn].mtText = mtText;
+	var record = await cache.read(msisdn)
+	var size = record.size || DEFAULT_MSG_SIZE;
+	var obj = {
+		size: record.size || DEFAULT_MSG_SIZE,
+		mtText: mtText,
+		api: api
+	}
 	debug("/newMtMessage:"+ clients[msisdn].mtText);
-	clients[msisdn].api = api;
 	if (mtText.length > size * MAX_MSG_CHARS) {
 		clients[msisdn].context.chunkText(mtText, size * MAX_MSG_CHARS);
 	} else {
