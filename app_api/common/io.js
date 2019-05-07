@@ -5,6 +5,7 @@ var sio = require('socket.io');
 var common = require('../common/common.js');
 var user = require('../controllers/user.js');
 var message = require('../controllers/message.js');
+const cache = require('./cache.js');
 
 var sms = require('../common/sms.js');
 var nautilus = require('../common/nautilus.js');
@@ -51,6 +52,8 @@ exports.io = function () {
 
 exports.initialize = function (server) {
 
+    cache.connect();
+
     io = sio(server);
 
     // io.use(function(socket, next) {
@@ -82,7 +85,7 @@ exports.initialize = function (server) {
             debug("missing jwt");
             next(new Error('Authentication error'));
         }
-    }).on('connection', function (socket) {
+    }).on('connection', async function (socket) {
 
         debug("Connection received: " + socket.id);
         //sms.clients.push(socket);    
@@ -93,11 +96,11 @@ exports.initialize = function (server) {
         // check for existing connection from msisdn already logged in (on another device) and kick them off
         if (socket.msisdn) {
             debug("found existing user");
-            if (process.env.TEST !== 'on' && clients.isConnected(socket.msisdn)) {
-                clients.forceLogout(socket.msisdn);
+            if (process.env.TEST !== 'on' && await clients.isConnected(socket.msisdn)) {
+                await clients.forceLogout(socket.msisdn);
             }
-            clients.newConnection(socket.msisdn, socket)
-            debug("isConnected:" + clients.isConnected(socket.msisdn));
+            await clients.newConnection(socket.msisdn, socket);
+            debug("isConnected:" + await clients.isConnected(socket.msisdn));
             // deliver any saved messages for this user
             message.deliverPending(socket);
         }
@@ -116,16 +119,16 @@ exports.initialize = function (server) {
 
                 try {
                     if (moText.startsWith('#')) {
-                        clients.switchService(socket.msisdn, moText);
+                        await clients.switchService(socket.msisdn, moText);
                     }
                      // Todo implement caching in dbmethods
-                    if (await dbMethods.serviceIncludes(clients.currentService(socket.msisdn))) {
+                    if (await dbMethods.serviceIncludes(await clients.currentService(socket.msisdn))) {
                         if (nautilus.isSystemVerb(moText)) {
                             debug("executing system verb in nautilus");
-                            nautilus.executeSystemVerb(socket.msisdn, common.shortNumber, moText, false);
+                            await nautilus.executeSystemVerb(socket.msisdn, common.shortNumber, moText, false);
                         } else {
                             debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
-                            nautilus.processMessage(socket.msisdn, common.shortNumber, moText, false);
+                            await nautilus.processMessage(socket.msisdn, common.shortNumber, moText, false);
                         }
                     } else {
                         debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
@@ -150,7 +153,7 @@ exports.initialize = function (server) {
 
         });
 
-        socket.on('API MO SMS', function (moText) {
+        socket.on('API MO SMS', async function (moText) {
             debug('moText: ');
             debug(moText);
 
@@ -178,9 +181,9 @@ exports.initialize = function (server) {
             }
         });
 
-        socket.on('disconnect', function () {
+        socket.on('disconnect', async function () {
             debug('Client gone (id=' + socket.id + ').');
-            if (socket.msisdn) delete clients.disconnected(socket.msisdn);
+            if (socket.msisdn) await clients.disconnected(socket.msisdn);
             delete socket.msisdn;
         });
     });

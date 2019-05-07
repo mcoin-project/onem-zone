@@ -2,6 +2,7 @@ const Aerospike = require('aerospike')
 const client = Aerospike.client()
 const defaultNamespace = process.env.AEROSPIKE_NAMESPACE
 const defaultSet = process.env.AEROSPIKE_SET
+const debug = require('debug')('onemzone');
 
 // Establish connection to the cluster
 exports.connect = function () {
@@ -13,11 +14,21 @@ exports.write = async function (k, obj) {
 	let key = new Aerospike.Key(defaultNamespace, defaultSet, k)
 	try {
 		if (typeof obj !== "object") throw "Param 2 must be an object"
+		for (var prop in obj) {
+			if (typeof obj[prop] == "boolean") {
+				obj[prop] = obj[prop] ? 1 : 0;
+			}
+		}
+	//	debug("putting object:");
+	//	debug(obj);
 		await client.put(key, obj)
-		return true
+		let result = await client.get(key)
+		debug("returning:");
+		debug(result.bins);
+		return result.bins
 	} catch (error) {
 		console.log(error)
-		return false;
+		throw error
 	}
 }
 // Read a record
@@ -25,12 +36,14 @@ exports.read = async function (k) {
 	let key = new Aerospike.Key(defaultNamespace, defaultSet, k)
 	try {
 		let record = await client.get(key)
-		console.log(record.bins);
+	//	debug("cache.read")
+	//	debug(record.bins)
 		return record.bins
 	} catch (error) {
-		// Check for errors
-		console.log(error)
-		return false;
+		if (error.code == Aerospike.status.ERR_RECORD_NOT_FOUND) {
+			return null
+		}
+		throw error
 	}
 }
 
@@ -43,6 +56,6 @@ exports.remove = async function (k) {
 	} catch (error) {
 		// Check for errors
 		console.log(error)
-		return false;
+		throw error
 	}
 }

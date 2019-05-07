@@ -4,8 +4,9 @@ const Service = require('../dbMethods/service').Service;
 const verbs = require('./verbs');
 const OPTIONS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
 const MIN_CHUNK_PERCENTAGE = 20 // the minimum % size of a chunk that should be left at the end
+const cache = require('./cache.js');
 
-exports.Context = function (serviceName, JSONdata) {
+exports.Context = function (msisdn, serviceName, JSONdata) {
     this.data = Object.assign({}, JSONdata);
     this.verbs = [];
     this.chunks = [];
@@ -13,9 +14,11 @@ exports.Context = function (serviceName, JSONdata) {
     this.request = true;
     this.formIndex = 0;
     this.chunkPos = 0;
+    this.msisdn = msisdn;
+    this.serviceName = serviceName;
 
-    debug("this.data");
-    debug(JSON.stringify(this.data, {}, 4));
+    //  debug("this.data");
+    //  debug(JSON.stringify(this.data, {}, 4));
 
     if (!this.data) this.data = {};
 
@@ -26,6 +29,46 @@ exports.Context = function (serviceName, JSONdata) {
     }
 }
 
+exports.Context.prototype.save = async function () {
+
+    var thisData = {
+        verbs: this.verbs,
+        chunks: this.chunks,
+        formInputParams: this.formInputParams,
+        request: this.request,
+        formIndex: this.formIndex,
+        chunkPos: this.chunkPos,
+        msisdn: this.msisdn,
+        serviceName: this.serviceName,
+        optionStart: this.optionStart,
+        optionEnd: this.optionEnd
+    }
+    thisData.data = Object.assign({}, this.data);
+    if (this.data.body && this.data.body[0].formatted) {
+        debug("**************SAVING:************");
+        debug(this.data.body[0].formatted);
+    }
+    try {
+        await cache.write(this.msisdn, { context: thisData });
+    } catch (error) {
+        throw error;
+    }
+}
+
+exports.Context.prototype.get = function () {
+    return {
+        verbs: this.verbs,
+        chunks: this.chunks,
+        formInputParams: this.formInputParams,
+        request: this.request,
+        formIndex: this.formIndex,
+        chunkPos: this.chunkPos,
+        msisdn: this.msisdn,
+        serviceName: this.serviceName,
+        data: this.data
+    }
+}
+
 exports.Context.prototype.initialize = async function () {
     try {
         var obj = await this.service.get();
@@ -33,6 +76,18 @@ exports.Context.prototype.initialize = async function () {
         debug(obj);
         this.callbackPath = obj.callbackPath;
         this.verbs = await this.service.getVerbs();
+        var record = await cache.read(this.msisdn);
+        if (record.context) {
+            this.optionStart = record.context.optionStart;
+            this.optionEnd = record.context.optionEnd;
+            if (record.context.chunks && record.context.chunks.length > 0) {
+                this.chunks = record.context.chunks;
+                this.chunkPos = record.context.chunkPos;
+            }
+        } else {
+            this.chunkPos = 0;
+        }
+
         debug("this.callbackPath");
         debug(this.callbackPath);
     } catch (error) {
@@ -126,10 +181,10 @@ exports.Context.prototype.makeFooter = function () {
     }
 }
 
-exports.Context.prototype.makeMTResponse = function () {
+exports.Context.prototype.makeMTResponse = async function () {
 
     var menuOption, result = '';
-    var optionIndex = 0, optionStart = OPTIONS[0].toUpperCase();
+    var optionIndex = 0;
 
     if (this.data.header) {
         result += this.data.header;
@@ -154,6 +209,7 @@ exports.Context.prototype.makeMTResponse = function () {
                     menuOption = OPTIONS[optionIndex].toUpperCase();
                 }
                 this.data.body[i].formatted = menuOption + ' ' + this.data.body[i].description + '\n';
+                debug("formatted: " + this.data.body[i].formatted)
                 result += this.data.body[i].formatted;
                 optionIndex++;
             }
@@ -170,10 +226,16 @@ exports.Context.prototype.makeMTResponse = function () {
     }
 
     if (optionIndex == 0) {
-        this.optionEnd = undefined;
+        this.optionEnd = null;
     }
     if (this.isMenu()) {
         result += this.makeFooter();
+        try {
+            await this.save();
+        } catch (error) {
+            debug(error);
+            throw error;
+        }
         return result;
     }
 
@@ -187,9 +249,13 @@ exports.Context.prototype.makeMTResponse = function () {
             this.request = true;
         }
     }
-
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
     return result;
-
 }
 
 exports.Context.prototype.requestNeeded = function () {
@@ -247,7 +313,7 @@ exports.Context.prototype.getOptionInputIndex = function (moText) {
     }
 }
 
-exports.Context.prototype.getRequestParams = function (user, moText) {
+exports.Context.prototype.getRequestParams = async function (user, moText) {
 
     var makeQs = function (userInput) {
         var result = {};
@@ -342,10 +408,17 @@ exports.Context.prototype.getRequestParams = function (user, moText) {
         }
     }
 
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
     return result;
 }
 
-exports.Context.prototype.goBackInForm = function () {
+exports.Context.prototype.goBackInForm = async function () {
     if (this.formIndex - 1 >= 0) {
         this.formIndex--;
         this.request = false;
@@ -355,42 +428,91 @@ exports.Context.prototype.goBackInForm = function () {
         this.formIndex = 0;
         this.request = true;
     }
+
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
 }
 
-exports.Context.prototype.go = function (page) {
-    debug("page:"+page);
+exports.Context.prototype.go = async function (page) {
+    debug("page:" + page);
     debug(typeof page);
     if (arguments.length == 0 || isNaN(page) || typeof page !== "number" || page < 1 || page > this.chunks.length) {
         page = 0;
     } else {
-        page = page -1;
+        page = page - 1;
     }
     this.chunkPos = page;
-    debug("chunkPos:"+this.chunkPos);
+    debug("chunkPos:" + this.chunkPos);
+
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
     return this.chunkPos;
 }
 
-exports.Context.prototype.clearChunks = function () {
+exports.Context.prototype.clearChunks = async function () {
     this.chunks = [];
     this.chunkPos = 0;
+
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
     return true;
 }
 
-exports.Context.prototype.more = function () {
-    if (this.chunks.length > 0) {
+exports.Context.prototype.more = async function () {
+    debug("inside /context.more");
+    debug(this.chunkPos);
+    if (this.chunks.length > 0 && this.chunkPos < this.chunks.length - 1) {
         this.chunkPos++;
+    } else {
+        this.chunkPos = 0;
     }
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
     return this.chunkPos;
 }
 
-exports.Context.prototype.prev = function () {
+exports.Context.prototype.prev = async function () {
+    debug("inside /context.prev");
+    debug(this.chunkPos);
     if (this.chunkPos > 0) {
         this.chunkPos--;
+    } else {
+        this.chunkPos = 0;
     }
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
     return this.chunkPos;
 }
 
 exports.Context.prototype.getChunk = function () {
+
+    debug("/getChunk: chunkPos:" + this.chunkPos);
+
     if (this.hasChunks()) {
         return this.chunks[this.chunkPos];
     } else {
@@ -415,22 +537,30 @@ exports.Context.prototype.isLessChunks = function () {
 }
 
 exports.Context.prototype.hasChunks = function () {
+    debug("inside haschunks");
+    debug(this.chunks);
     return this.chunks && this.chunks.length && this.chunks.length > 0;
 }
 
-exports.Context.prototype.setChunkingFooterPages = function () {
+exports.Context.prototype.setChunkingFooterPages = async function () {
     if (this.chunks.length > 1) {
         // locate footer
-        for (var i=0; i< this.chunks.length; i++) {
+        for (var i = 0; i < this.chunks.length; i++) {
             var lines = this.chunks[i].split('\n');
-            lastLine = lines[lines.length-2];
-            lines[lines.length-2] = lastLine.replace('/xx', '/' + this.chunks.length);
+            lastLine = lines[lines.length - 2];
+            lines[lines.length - 2] = lastLine.replace('/xx', '/' + this.chunks.length);
             this.chunks[i] = lines.join('\n');
+        }
+        try {
+            await this.save();
+        } catch (error) {
+            debug(error);
+            throw error;
         }
     }
 }
 
-var chunkForm = function (mtText, chunkSize, context) {
+var chunkForm = function (mtText) {
     return mtText;
 }
 
@@ -478,24 +608,27 @@ var addChunkingFooter = function (chunk, context) {
 
     var result = chunk;
 
-    if (result[result.length -1] !== '\n') {
+    if (result[result.length - 1] !== '\n') {
         result += '\n';
     }
 
     result +=
-    ".." +
-    (this.chunks.length + 1) +
-    "/xx\n" +
-    "--" +
-    verbs.MORE_VERB.toUpperCase() +
-    "/" +
-    this.footerVerbs(false);
+        ".." +
+        (this.chunks.length + 1) +
+        "/xx\n" +
+        "--" +
+        verbs.MORE_VERB.toUpperCase() +
+        "/" +
+        this.footerVerbs(false);
 
     return result;
 }
 
-var chunkMenu = function (mtText, start, chunkSize) {
+var chunkMenu = async function (mtText, start, chunkSize) {
     debug("chunkSize:" + chunkSize);
+
+    //  debug("inside chunkMenu, this.data.body:");
+    //  debug(this.data.body);
 
     var i, chunk = '';
     var footerLength = 10 + verbs.MORE_VERB.length + 1 + (this.footerVerbs(false)).length;
@@ -550,7 +683,7 @@ var chunkMenu = function (mtText, start, chunkSize) {
 
     if (moreToChunk) {
         var chunkFooter = addChunkingFooter.bind(this);
-        chunk = chunkFooter(chunk); 
+        chunk = chunkFooter(chunk);
     } else {
         chunk += this.makeFooter();
     }
@@ -564,16 +697,25 @@ var chunkMenu = function (mtText, start, chunkSize) {
         var chunkM = chunkMenu.bind(this);
         return chunkM(mtText, i, chunkSize);
     }
-    this.setChunkingFooterPages();
+    await this.setChunkingFooterPages();
+
+    try {
+        await this.save();
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+
     return;
 }
 
-exports.Context.prototype.chunkText = function (mtText, chunkSize) {
+exports.Context.prototype.chunkText = async function (mtText, chunkSize) {
+
     if (this.isMenu()) {
-        var chunk = chunkMenu.bind(this);
+        var chunk = await chunkMenu.bind(this);
         return chunk(mtText, 0, chunkSize);
     } else {
-        var chunk = chunkMenu.bind(this);
-        return chunk(mtText, chunkSize);
+        var chunk = chunkForm.bind(this);
+        return chunk(mtText);
     }
 }
