@@ -71,8 +71,26 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
         // exports.sendSMS(from, to, mtText, api);
         try {
             var ctext = await clients.getContext(from);
-            mtText = await ctext.makeMTResponse();
-            await exports.sendSMS(from, to, mtText, api);
+
+            if (ctext.requestNeeded()) {
+                var requestParams = await ctext.getRequestParams(from, moText);
+                debug("requestParams:");
+                debug(requestParams);
+                var body = await request(requestParams);
+                //ctext = await clients.newContext(from, body);
+                ctext = await clients.setContext(from, body);
+                //clients.setBody(from, body);
+                mtText = await ctext.makeMTResponse();
+            } else if (ctext.hasChunks()) {
+                await clients.sendMessage(from);
+            } else {
+                await ctext.getRequestParams(from, moText);  // this can be improved, should be necessary to call the entire thing!
+                mtText = await ctext.makeMTResponse();
+                await exports.sendSMS(from, to, mtText, api);
+                debug("request not needed");
+                debug(mtText);
+            }
+
         } catch (error) {
             debug(error);
         }

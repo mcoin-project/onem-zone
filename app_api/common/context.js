@@ -78,6 +78,7 @@ exports.Context.prototype.initialize = async function () {
         this.verbs = await this.service.getVerbs();
         var record = await cache.read(this.msisdn);
         if (record.context) {
+            this.request = record.context.request;
             this.optionStart = record.context.optionStart;
             this.optionEnd = record.context.optionEnd;
             if (record.context.chunks && record.context.chunks.length > 0) {
@@ -499,6 +500,7 @@ exports.Context.prototype.prev = async function () {
     } else {
         this.chunkPos = 0;
     }
+    if (this.hasChunks()) this.request = false;
     try {
         await this.save();
     } catch (error) {
