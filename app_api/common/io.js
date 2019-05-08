@@ -109,11 +109,11 @@ exports.initialize = function (server) {
 
             moText = moText.trim().toLowerCase();
 
-            debug('moText: ');
-            debug(moText);
+            // debug('moText: ');
+            // debug(moText);
 
-            debug("socket.id");
-            debug(socket.id);
+            // debug("socket.id");
+            // debug(socket.id);
 
             if (socket.msisdn) {
 
@@ -124,14 +124,14 @@ exports.initialize = function (server) {
                      // Todo implement caching in dbmethods
                     if (await dbMethods.serviceIncludes(await clients.currentService(socket.msisdn))) {
                         if (nautilus.isSystemVerb(moText)) {
-                            debug("executing system verb in nautilus");
+                       //     debug("executing system verb in nautilus");
                             await nautilus.executeSystemVerb(socket.msisdn, common.shortNumber, moText, false);
                         } else {
-                            debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
+                       //     debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
                             await nautilus.processMessage(socket.msisdn, common.shortNumber, moText, false);
                         }
                     } else {
-                        debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
+                     //   debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
                         sms.sendSMS(socket.msisdn, common.shortNumber, moText, false);
                         if (process.env.TEST == 'on') {
     
@@ -145,7 +145,7 @@ exports.initialize = function (server) {
                         }
                     }
                 } catch (error) {
-                    console.log(error);
+                    debug(error);
                 }
             } else {
                 debug("can't locate msisdn for user");

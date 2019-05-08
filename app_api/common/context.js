@@ -6,8 +6,10 @@ const OPTIONS = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm'
 const MIN_CHUNK_PERCENTAGE = 20 // the minimum % size of a chunk that should be left at the end
 const cache = require('./cache.js');
 
-exports.Context = function (msisdn, serviceName, JSONdata) {
-    this.data = Object.assign({}, JSONdata);
+exports.Context = function (msisdn, serviceName) {
+
+    debug("/newContext");
+    this.data = {};
     this.verbs = [];
     this.chunks = [];
     this.formInputParams = {};
@@ -16,6 +18,7 @@ exports.Context = function (msisdn, serviceName, JSONdata) {
     this.chunkPos = 0;
     this.msisdn = msisdn;
     this.serviceName = serviceName;
+    this.mtText = '';
 
     //  debug("this.data");
     //  debug(JSON.stringify(this.data, {}, 4));
@@ -24,13 +27,10 @@ exports.Context = function (msisdn, serviceName, JSONdata) {
 
     this.service = new Service(serviceName);
 
-    if (this.data.header && this.data.header.length > 0) {
-        this.data.header = this.data.header.toUpperCase() + '\n';
-    }
 }
 
 exports.Context.prototype.save = async function () {
-
+    debug("/context.save");
     var thisData = {
         verbs: this.verbs,
         chunks: this.chunks,
@@ -41,13 +41,13 @@ exports.Context.prototype.save = async function () {
         msisdn: this.msisdn,
         serviceName: this.serviceName,
         optionStart: this.optionStart,
-        optionEnd: this.optionEnd
+        optionEnd: this.optionEnd,
+        mtText: this.mtText
     }
     thisData.data = Object.assign({}, this.data);
-    if (this.data.body && this.data.body[0].formatted) {
-        debug("**************SAVING:************");
-        debug(this.data.body[0].formatted);
-    }
+    // debug("saving");
+    // debug(thisData.data);
+
     try {
         await cache.write(this.msisdn, { context: thisData });
     } catch (error) {
@@ -56,6 +56,8 @@ exports.Context.prototype.save = async function () {
 }
 
 exports.Context.prototype.get = function () {
+    debug("/context.get");
+
     return {
         verbs: this.verbs,
         chunks: this.chunks,
@@ -65,39 +67,71 @@ exports.Context.prototype.get = function () {
         chunkPos: this.chunkPos,
         msisdn: this.msisdn,
         serviceName: this.serviceName,
+        mtText: this.mtText,
         data: this.data
     }
 }
 
 exports.Context.prototype.initialize = async function () {
+    debug("/context.initialize");
+
     try {
         var obj = await this.service.get();
-        debug("obj");
-        debug(obj);
+        // debug("obj");
+        // debug(obj);
         this.callbackPath = obj.callbackPath;
         this.verbs = await this.service.getVerbs();
+        //debug(JSON.stringify(this.verbs,{},4));
+
         var record = await cache.read(this.msisdn);
+        debug("record for:" + this.msisdn);
         if (record.context) {
+            debug(JSON.stringify(record.contextStack,{},2));
+
             this.request = record.context.request;
+            this.data = Object.assign({},record.context.data);
+            if (this.data.header && this.data.header.length > 0 && this.data.header[this.data.header.length-1] !== '\n') {
+                this.data.header = this.data.header.toUpperCase() + '\n';
+            }
             this.optionStart = record.context.optionStart;
             this.optionEnd = record.context.optionEnd;
+            this.formIndex = record.context.formIndex;
+            this.formInputParams = record.context.formInputParams;
+            this.mtText = record.context.mtText;
             if (record.context.chunks && record.context.chunks.length > 0) {
                 this.chunks = record.context.chunks;
                 this.chunkPos = record.context.chunkPos;
             }
         } else {
+            debug("NO CONTEXT");
             this.chunkPos = 0;
         }
 
-        debug("this.callbackPath");
-        debug(this.callbackPath);
+        // debug("this.data");
+        //  debug(this.data);
     } catch (error) {
         console.log(error);
         throw error;
     }
 }
 
+exports.Context.prototype.setBody = async function (body) {
+    debug("/setBody");
+    if (!body) return false;
+    this.data = Object.assign({}, body);
+    debug(this.data);
+    try {
+        await this.save();
+        return body;
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
+}
+
 exports.Context.prototype.getHeader = function () {
+    debug("/context.getHeader");
+
     if (this.data.header) {
         return this.data.header;
     } else {
@@ -106,6 +140,8 @@ exports.Context.prototype.getHeader = function () {
 }
 
 exports.Context.prototype.getFooter = function () {
+    debug("/context.getFooter");
+
     if (this.data.footer) {
         return this.data.footer;
     } else {
@@ -114,14 +150,20 @@ exports.Context.prototype.getFooter = function () {
 }
 
 exports.Context.prototype.isForm = function () {
+    debug("/context.isForm");
+   // debug(this.data);
+
     if (!this.data || !this.data.type) {
         debug("no data or type");
         return false;
     }
+    debug(this.data.type.toLowerCase() == 'form');
     return this.data.type.toLowerCase() == 'form';
 }
 
 exports.Context.prototype.isMenu = function () {
+    debug("/context.isMenu");
+
     if (!this.data || !this.data.type) {
         debug("no data or type");
         return false;
@@ -130,6 +172,7 @@ exports.Context.prototype.isMenu = function () {
 }
 
 exports.Context.prototype.hasOptions = function () {
+    debug("/context.hasOptions");
 
     if (!this.data.body || this.data.body.length == 0) {
         return false;
@@ -144,6 +187,8 @@ exports.Context.prototype.hasOptions = function () {
 }
 
 exports.Context.prototype.numMenuOptions = function () {
+    debug("/context.nuumMenuOptions");
+
     var count = 0;
     if (this.isMenu() && this.data.body && this.data.body.length > 0) {
         for (var i = 0; i < this.data.body.length; i++) {
@@ -158,6 +203,8 @@ exports.Context.prototype.numMenuOptions = function () {
 }
 
 exports.Context.prototype.firstOption = function () {
+    debug("/context.firstOption");
+
     if (this.numMenuOptions() > OPTIONS.length) {
         return '1';
     } else {
@@ -166,8 +213,10 @@ exports.Context.prototype.firstOption = function () {
 }
 
 exports.Context.prototype.makeFooter = function () {
+    debug("/context.makeFooter");
+
     if (this.data.footer) {
-        debug("adding custom footer");
+    //    debug("adding custom footer");
         return this.data.footer;
     }
     if (this.isMenu() && typeof this.optionEnd !== 'undefined') {
@@ -183,6 +232,7 @@ exports.Context.prototype.makeFooter = function () {
 }
 
 exports.Context.prototype.makeMTResponse = async function () {
+    debug("/context.makeMtResponse");
 
     var menuOption, result = '';
     var optionIndex = 0;
@@ -210,7 +260,7 @@ exports.Context.prototype.makeMTResponse = async function () {
                     menuOption = OPTIONS[optionIndex].toUpperCase();
                 }
                 this.data.body[i].formatted = menuOption + ' ' + this.data.body[i].description + '\n';
-                debug("formatted: " + this.data.body[i].formatted)
+             //   debug("formatted: " + this.data.body[i].formatted)
                 result += this.data.body[i].formatted;
                 optionIndex++;
             }
@@ -231,39 +281,44 @@ exports.Context.prototype.makeMTResponse = async function () {
     }
     if (this.isMenu()) {
         result += this.makeFooter();
+        this.mtText = result;
         try {
             await this.save();
+            return result;
         } catch (error) {
             debug(error);
             throw error;
         }
-        return result;
     }
 
     if (this.isForm()) {
         result += this.data.body.formItems[this.formIndex].description + '\n';
         result += this.makeFooter();
+        this.mtText = result;
         if (this.formIndex + 1 < this.data.body.formItems.length) {
             this.request = false;
-            debug("REQUEST IS NOT NEEDED");
+       //     debug("REQUEST IS NOT NEEDED");
         } else {
             this.request = true;
         }
     }
     try {
         await this.save();
+        return result;
     } catch (error) {
         debug(error);
         throw error;
     }
-    return result;
 }
 
 exports.Context.prototype.requestNeeded = function () {
+    debug("/context.requestNeeded");
     return this.request;
 }
 
 exports.Context.prototype.getVerb = function (verb) {
+    debug("/context.getVerb");
+
     var i;
     for (i = 0; i < this.verbs.length; i++) {
         if (verb.toLowerCase() == this.verbs[i].name) {
@@ -275,6 +330,8 @@ exports.Context.prototype.getVerb = function (verb) {
 }
 
 exports.Context.prototype.footerVerbs = function (prefix) {
+    debug("/context.footerVerbs");
+
     var result = "";
     var verbs = [];
     for (var i = 0; i < this.verbs.length; i++) {
@@ -290,6 +347,8 @@ exports.Context.prototype.footerVerbs = function (prefix) {
 }
 
 exports.Context.prototype.lastOption = function () {
+    debug("/context.lastOption");
+
     var optionCount = this.numMenuOptions();
 
     if (optionCount > OPTIONS.length) {
@@ -300,12 +359,14 @@ exports.Context.prototype.lastOption = function () {
 }
 
 exports.Context.prototype.getOptionInputIndex = function (moText) {
+    debug("/context.getOptionInputIndex");
+
     var numberOfOptions = this.numMenuOptions();
     var optionInputIndex = OPTIONS.indexOf(moText.toLowerCase());
     var optionNum = parseInt(moText);
 
     if (optionInputIndex !== -1 && numberOfOptions > OPTIONS.length) return false;
-    if (isNaN(optionNum) || optionNum > numberOfOptions || optionNum < 1) return false;
+    if (!isNaN(optionNum) && (optionNum > numberOfOptions || optionNum < 1)) return false;
 
     if (typeof optionNum == "number" && optionNum <= numberOfOptions) {
         return optionNum - 1;
@@ -315,6 +376,8 @@ exports.Context.prototype.getOptionInputIndex = function (moText) {
 }
 
 exports.Context.prototype.getRequestParams = async function (user, moText) {
+    debug("/context.getRequestParams");
+    debug(this.data.body);
 
     var makeQs = function (userInput) {
         var result = {};
@@ -327,9 +390,10 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
     }
 
     var nswymError = function (header) {
+        debug("/nswymError");
         var lastOption = self.lastOption();
         var firstOption = self.firstOption();
-        debug("nswym: " + header);
+     //   debug("nswym: " + header);
         throw {
             invalidOption: header +
                 "Not sure what you meant. Send an option from " + firstOption + " to " +
@@ -352,8 +416,8 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
     if (moText.startsWith('#')) {
         result.url = this.callbackPath + '/' + this.service.name;
         result.qs = makeQs(moText);
-        debug("service switch:");
-        debug(result);
+        // debug("service switch:");
+        // debug(result);
         return result;
     }
 
@@ -361,8 +425,8 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
     // check if it's a verb, can switch immediately if so
     if (v) {
         result.url = this.callbackPath + '/' + v.route;
-        debug("it's a verb");
-        debug(result);
+        // debug("it's a verb");
+        // debug(result);
         return result;
     }
 
@@ -376,7 +440,7 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
         var optionBodyIndex = 0;
         // try to locate a matching option
         for (var i = 0; i < this.data.body.length; i++) {
-            // debug("type:" + context.body[i].type + "optionBodyIndex:" + optionBodyIndex + " optionInputIndex:" + optionBodyIndex );
+             debug("type:" + this.data.body[i].type + "optionBodyIndex:" + optionBodyIndex + " optionInputIndex:" + optionBodyIndex );
             if (this.data.body[i].type == 'option' && optionBodyIndex == optionInputIndex) {
                 break;
             } else if (this.data.body[i].type == 'option') {
@@ -392,15 +456,15 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
     }
 
     if (moText.length > 2 && this.isMenu() && this.hasOptions()) {
-        debug("invalidOption:" + this.isMenu());
+   //     debug("invalidOption:" + this.isMenu());
         nswymError(this.data.header);
     }
 
     if (this.isForm()) {
-        debug("setting formInputParams");
-        debug(this.data.body.formItems[this.formIndex].name);
+   //     debug("setting formInputParams");
+   //     debug(this.data.body.formItems[this.formIndex].name);
         this.formInputParams[this.data.body.formItems[this.formIndex].name] = moText;
-        debug(this.formInputParams);
+   //     debug(this.formInputParams);
         result.url = this.callbackPath + this.data.body.nextRoute;   // todo properly join to handle optional '/'
         result.method = this.data.body.method || 'POST';
         result.body = this.formInputParams;
@@ -411,15 +475,17 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
 
     try {
         await this.save();
+        return result;
+
     } catch (error) {
         debug(error);
         throw error;
     }
 
-    return result;
 }
 
 exports.Context.prototype.goBackInForm = async function () {
+    debug("/context.goBackInForm");
     if (this.formIndex - 1 >= 0) {
         this.formIndex--;
         this.request = false;
@@ -440,43 +506,46 @@ exports.Context.prototype.goBackInForm = async function () {
 }
 
 exports.Context.prototype.go = async function (page) {
-    debug("page:" + page);
-    debug(typeof page);
+    debug("/context.go:" + page);
+  // debug(typeof page);
     if (arguments.length == 0 || isNaN(page) || typeof page !== "number" || page < 1 || page > this.chunks.length) {
         page = 0;
     } else {
         page = page - 1;
     }
     this.chunkPos = page;
-    debug("chunkPos:" + this.chunkPos);
+ //   debug("chunkPos:" + this.chunkPos);
 
     try {
         await this.save();
+        return this.chunkPos;
+
     } catch (error) {
         debug(error);
         throw error;
     }
 
-    return this.chunkPos;
 }
 
 exports.Context.prototype.clearChunks = async function () {
+    debug("/context.clearChunks");
     this.chunks = [];
     this.chunkPos = 0;
 
     try {
         await this.save();
+        return true;
+
     } catch (error) {
         debug(error);
         throw error;
     }
 
-    return true;
 }
 
 exports.Context.prototype.more = async function () {
-    debug("inside /context.more");
-    debug(this.chunkPos);
+    debug("/context.more");
+   // debug(this.chunkPos);
     if (this.chunks.length > 0 && this.chunkPos < this.chunks.length - 1) {
         this.chunkPos++;
     } else {
@@ -484,17 +553,18 @@ exports.Context.prototype.more = async function () {
     }
     try {
         await this.save();
+        return this.chunkPos;
+
     } catch (error) {
         debug(error);
         throw error;
     }
 
-    return this.chunkPos;
 }
 
 exports.Context.prototype.prev = async function () {
-    debug("inside /context.prev");
-    debug(this.chunkPos);
+    debug("/context.prev");
+  //  debug(this.chunkPos);
     if (this.chunkPos > 0) {
         this.chunkPos--;
     } else {
@@ -503,12 +573,13 @@ exports.Context.prototype.prev = async function () {
     if (this.hasChunks()) this.request = false;
     try {
         await this.save();
+        return this.chunkPos;
+
     } catch (error) {
         debug(error);
         throw error;
     }
 
-    return this.chunkPos;
 }
 
 exports.Context.prototype.getChunk = function () {
@@ -523,10 +594,13 @@ exports.Context.prototype.getChunk = function () {
 }
 
 exports.Context.prototype.isMoreChunks = function () {
+    debug("/context.isMoreChunks");
     return this.chunkPos < this.chunks.length && this.chunks.length > 0;
 }
 
 exports.Context.prototype.numChunks = function () {
+    debug("/context.numChunks");
+
     if (this.chunks) {
         return this.chunks.length;
     } else {
@@ -535,16 +609,20 @@ exports.Context.prototype.numChunks = function () {
 }
 
 exports.Context.prototype.isLessChunks = function () {
+    debug("/context.isLessChunks");
+
     return this.chunkPos > 0 && this.chunks.length > 0;
 }
 
 exports.Context.prototype.hasChunks = function () {
-    debug("inside haschunks");
-    debug(this.chunks);
+    debug("/context.haschunks");
+    //debug(this.chunks);
     return this.chunks && this.chunks.length && this.chunks.length > 0;
 }
 
 exports.Context.prototype.setChunkingFooterPages = async function () {
+    debug("/context.setChunkingFooterPages");
+
     if (this.chunks.length > 1) {
         // locate footer
         for (var i = 0; i < this.chunks.length; i++) {
@@ -562,14 +640,28 @@ exports.Context.prototype.setChunkingFooterPages = async function () {
     }
 }
 
-var chunkForm = function (mtText) {
-    return mtText;
+var chunkForm = async function (mtText) {
+    debug("/context.chunkForm");
+
+    this.chunks = [];
+    this.chunkPos = 0;
+    this.mtText = mtText;
+    try {
+        await this.save();
+        return mtText;
+
+    } catch (error) {
+        debug(error);
+        throw error;
+    }
 }
 
 var removeLastLine = function (text) {
+    debug("/context.removeLastLine");
+
     var lines = text.split('\n');
-    debug("lines:");
-    debug(lines);
+    // debug("lines:");
+    // debug(lines);
     if (lines.length > 1) {
         if (lines[lines.length - 1] == '') lines.pop();
         lines.pop();
@@ -578,6 +670,7 @@ var removeLastLine = function (text) {
 }
 
 var removeWordsFromEnd = function (text, target) {
+    debug("/context.removewordsFromEnd");
 
     totalLength = function (arr) {
         return arr.reduce(function (a, b) {
@@ -607,6 +700,7 @@ var removeWordsFromEnd = function (text, target) {
 }
 
 var addChunkingFooter = function (chunk, context) {
+    debug("/context.addChunkingFooter");
 
     var result = chunk;
 
@@ -627,7 +721,7 @@ var addChunkingFooter = function (chunk, context) {
 }
 
 var chunkMenu = async function (mtText, start, chunkSize) {
-    debug("chunkSize:" + chunkSize);
+    debug("/chunkMenu:" + chunkSize);
 
     //  debug("inside chunkMenu, this.data.body:");
     //  debug(this.data.body);
@@ -637,9 +731,9 @@ var chunkMenu = async function (mtText, start, chunkSize) {
     var chunkTargetLength = chunkSize - footerLength;
     var moreToChunk = false;
 
-    debug("chunkTargetLength:" + chunkTargetLength);
-    debug("chunkSize:" + chunkSize);
-    debug("footerLength:" + footerLength);
+    // debug("chunkTargetLength:" + chunkTargetLength);
+    // debug("chunkSize:" + chunkSize);
+    // debug("footerLength:" + footerLength);
 
     // check if chunksize needs to be adjusted to balance the chunks
     if (mtText.length % chunkTargetLength < (chunkSize * MIN_CHUNK_PERCENTAGE / 100)) {
@@ -647,8 +741,8 @@ var chunkMenu = async function (mtText, start, chunkSize) {
         chunkSize = chunkSize * (1 - (MIN_CHUNK_PERCENTAGE / 100));
     }
 
-    debug("chunkTargetLength:" + chunkTargetLength);
-    debug("chunkSize:" + chunkSize);
+    // debug("chunkTargetLength:" + chunkTargetLength);
+    // debug("chunkSize:" + chunkSize);
 
     if (start == 0) {
         this.chunks = [];
@@ -690,11 +784,9 @@ var chunkMenu = async function (mtText, start, chunkSize) {
         chunk += this.makeFooter();
     }
 
-    console.log("chunk length:" + chunk.length);
-
     this.chunks.push(chunk);
-    debug("chunk length:" + chunk.length);
-    debug(chunk);
+    // debug("chunk length:" + chunk.length);
+    // debug(chunk);
     if (i < this.data.body.length - 1) {
         var chunkM = chunkMenu.bind(this);
         return chunkM(mtText, i, chunkSize);
@@ -703,21 +795,22 @@ var chunkMenu = async function (mtText, start, chunkSize) {
 
     try {
         await this.save();
+        return;
+
     } catch (error) {
         debug(error);
         throw error;
     }
 
-    return;
 }
 
 exports.Context.prototype.chunkText = async function (mtText, chunkSize) {
-
+    debug("/context.chunkText");
     if (this.isMenu()) {
         var chunk = await chunkMenu.bind(this);
         return chunk(mtText, 0, chunkSize);
     } else {
-        var chunk = chunkForm.bind(this);
+        var chunk = await chunkForm.bind(this);
         return chunk(mtText);
     }
 }
