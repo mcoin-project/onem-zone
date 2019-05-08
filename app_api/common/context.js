@@ -86,7 +86,7 @@ exports.Context.prototype.initialize = async function () {
         var record = await cache.read(this.msisdn);
         debug("record for:" + this.msisdn);
         if (record.context) {
-            debug(JSON.stringify(record.contextStack,{},2));
+        //    debug(JSON.stringify(record.contextStack,{},2));
 
             this.request = record.context.request;
             this.data = Object.assign({},record.context.data);
@@ -233,6 +233,7 @@ exports.Context.prototype.makeFooter = function () {
 
 exports.Context.prototype.makeMTResponse = async function () {
     debug("/context.makeMtResponse");
+    debug("formIndex:"+this.formIndex);
 
     var menuOption, result = '';
     var optionIndex = 0;
@@ -378,6 +379,7 @@ exports.Context.prototype.getOptionInputIndex = function (moText) {
 exports.Context.prototype.getRequestParams = async function (user, moText) {
     debug("/context.getRequestParams");
     debug(this.data.body);
+    debug("formIndex:"+this.formIndex);
 
     var makeQs = function (userInput) {
         var result = {};
@@ -468,7 +470,7 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
         result.url = this.callbackPath + this.data.body.nextRoute;   // todo properly join to handle optional '/'
         result.method = this.data.body.method || 'POST';
         result.body = this.formInputParams;
-        if (this.formIndex + 1 < this.data.body.formItems.length) {
+        if (moText !== verbs.BACK_VERB && this.formIndex + 1 < this.data.body.formItems.length) {
             this.formIndex++;
         }
     }
@@ -486,12 +488,16 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
 
 exports.Context.prototype.goBackInForm = async function () {
     debug("/context.goBackInForm");
-    if (this.formIndex - 1 >= 0) {
+    if (this.data.body.formItems.length <= 1) {
+        debug("REQUEST IS NEEDED");
+        this.formIndex = 0;
+        this.request = true;
+    } else if (this.formIndex - 1 >= 0) {
         this.formIndex--;
         this.request = false;
         debug("REQUEST IS NOT NEEDED");
     } else {
-        debug("REQUEST IS NEEDED");
+        debug("ELSE REQUEST IS NEEDED");
         this.formIndex = 0;
         this.request = true;
     }
