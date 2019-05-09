@@ -126,11 +126,11 @@ exports.processMessage = async function (from, to, moText, api) {
             await clients.switchService(from, moText);
             ctext = await clients.newContext(from, await clients.getBody(from));
         }
-   //     debug("requestNeeded:" + ctext.requestNeeded());
+        debug("requestNeeded:" + ctext.requestNeeded());
         if (ctext.requestNeeded()) {
             var requestParams = await ctext.getRequestParams(from, moText);
-   //         debug("requestParams:");
-   //         debug(requestParams);
+            debug("requestParams:");
+            debug(requestParams);
             var body = await request(requestParams);
             //ctext = await clients.newContext(from, body);
             ctext = await clients.setContext(from, body);

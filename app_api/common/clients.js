@@ -99,6 +99,8 @@ var sendMessage = async function (msisdn, mtText) {
 	try {
 
 		var context = await getContext(msisdn);
+		await context.resetRequest();
+	//	debug(JSON.stringify(context,{},2));
 		if (context.hasChunks()) {
 			text = context.getChunk();
 		} else {
@@ -299,6 +301,7 @@ var popContext = async function (msisdn) {
 	try {
 		var record = await cache.read(msisdn);
 		if (record.contextStack && record.contextStack.length > 0) {
+			debug(record.contextStack);
 			debug("Popped context");
 			var ctext = record.contextStack.pop();
 			debug(ctext);
@@ -310,8 +313,9 @@ var popContext = async function (msisdn) {
 			debug("isForm:" + context.isForm());
 			debug("context.requestNeeded:"+context.requestNeeded());
 			debug("record.contextStack.length:"+record.contextStack.length);
-			if (context.isForm() && context.requestNeeded() && record.contextStack.length > 0) {
-				debug("popping again");
+			//if (context.isForm() && context.requestNeeded() && record.contextStack.length > 0) {
+			if (context.requestNeeded() && record.contextStack.length > 0) {
+					debug("popping again");
 				var ctext;
 				if (record.contextStack.length > 1) {
 					ctext = record.contextStack.pop();
@@ -396,14 +400,12 @@ var size = async function (msisdn, moText) {
 	debug('/size');
 
 	try {
+		var context = await getContext(msisdn);
 		var record = await cache.read(msisdn);
-		var context = record.context;
-		if (!context) throw "no context";
-
 		var params = moText.split(' ');
 		var size = parseInt(params[1]);
 		var currentSize = record.size || DEFAULT_MSG_SIZE;
-		var header = Context.prototype.getHeader.call(context);
+		var header = context.getHeader();
 	
 		if (params.length == 1) {
 			return header + "Current message size is " + currentSize + " (minimum is 1, maximum is " + MAX_MSG_SIZE + ").";

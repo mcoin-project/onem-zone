@@ -119,7 +119,7 @@ exports.Context.prototype.setBody = async function (body) {
     debug("/setBody");
     if (!body) return false;
     this.data = Object.assign({}, body);
-    debug(this.data);
+   // debug(this.data);
     try {
         await this.save();
         return body;
@@ -228,6 +228,18 @@ exports.Context.prototype.makeFooter = function () {
         return '--Reply with ' + this.data.body.formItems[this.formIndex].name + this.footerVerbs(true);
     } else {
         return '';
+    }
+}
+
+exports.Context.prototype.resetRequest = async function () {
+    this.request = true;
+    try {
+        await this.save();
+        return this.request;
+
+    } catch (error) {
+        debug(error);
+        throw error;
     }
 }
 
@@ -378,8 +390,8 @@ exports.Context.prototype.getOptionInputIndex = function (moText) {
 
 exports.Context.prototype.getRequestParams = async function (user, moText) {
     debug("/context.getRequestParams");
-    debug(this.data.body);
-    debug("formIndex:"+this.formIndex);
+    debug(this);
+//    debug("formIndex:"+this.formIndex);
 
     var makeQs = function (userInput) {
         var result = {};
@@ -442,7 +454,7 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
         var optionBodyIndex = 0;
         // try to locate a matching option
         for (var i = 0; i < this.data.body.length; i++) {
-             debug("type:" + this.data.body[i].type + "optionBodyIndex:" + optionBodyIndex + " optionInputIndex:" + optionBodyIndex );
+             debug("type: " + this.data.body[i].type + " optionBodyIndex: " + optionBodyIndex + " optionInputIndex: " + optionInputIndex );
             if (this.data.body[i].type == 'option' && optionBodyIndex == optionInputIndex) {
                 break;
             } else if (this.data.body[i].type == 'option') {
@@ -455,6 +467,7 @@ exports.Context.prototype.getRequestParams = async function (user, moText) {
         }
         result.url = this.callbackPath + this.data.body[i].nextRoute;  // todo properly join to handle optional '/'
         result.method = this.data.body[i].method || 'GET';
+        this.request = true;
     }
 
     if (moText.length > 2 && this.isMenu() && this.hasOptions()) {
