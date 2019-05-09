@@ -391,18 +391,16 @@ var go = async function (msisdn, moText) {
 	debug('/go');
 
 	try {
-		var record = await cache.read(msisdn);
-		var context = record.context;
-		if (!context) throw "no context";
-		if (Context.prototype.hasChunks.call(context)) {
+		var context = await getContext(msisdn);
+		if (context.hasChunks()) {
 			var params = moText.split(' ');
 			var page = parseInt(params[1]);
 			if (params.length == 1) {
-				await Context.prototype.go.call(context);
-			} else if (isNaN(page) || (typeof page == "number" && page < 1 || page > Context.prototype.numChunks.call(context))) {
-				await Context.prototype.go.call(context);
+				await context.go();
+			} else if (isNaN(page) || (typeof page == "number" && page < 1 || page > context.numChunks())) {
+				await context.go();
 			} else {
-				await Context.prototype.go.call(context, page);
+				await context.go(page);
 			}
 		}
 	} catch (error) {

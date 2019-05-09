@@ -53,7 +53,8 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
 
     var mtText;
     if (moText.split(' ')[0] == verbs.GO_VERB) {
-        if (await clients.getContext(from).hasChunks()) {
+        var context = await clients.getContext(from);
+        if (context.hasChunks()) {
             await clients.go(from, moText);
             await clients.sendMessage(from);
         } else {
