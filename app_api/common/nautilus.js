@@ -9,10 +9,16 @@ exports.sendSMS = async function (from, to, mtText, api) {
     debug("/sendSMS");
     if (typeof await clients.isConnected(from)) {
         try {
+            var context = await clients.getContext(from);
+            debug("context is:");
+            debug(context);
             await clients.newMtMessage(from, mtText, api);
             await clients.sendMessage(from, mtText);
+            if (context.requestNeeded()) {
+                await clients.pushContext(from);
+            }
         } catch (err) {
-        //    debug("oops no session: " + err);
+            debug("oops no session: " + err);
             common.sendEmail(from, mtText);
 
             // don't save api messages
@@ -56,8 +62,8 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
     } else if (moText == verbs.MORE_VERB) {
         try {
             var context = await clients.getContext(from);
-   //         debug("/executeSystemVerb:");
-   //         debug("hadChunks:" + context.hasChunks());
+            //         debug("/executeSystemVerb:");
+            //         debug("hadChunks:" + context.hasChunks());
             if (context.hasChunks()) {
                 await clients.more(from);
                 await clients.sendMessage(from);
@@ -65,7 +71,7 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
                 await exports.sendSMS(from, to, "No chunks available.", api);
             }
         } catch (error) {
-  //          debug("/executeSystemVerb");
+            //          debug("/executeSystemVerb");
             debug(error);
         }
 
@@ -76,26 +82,26 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
         try {
             await clients.goBack(from);
             var ctext = await clients.getContext(from);
-    //        debug("/back")
-            if (ctext.requestNeeded()) {
+            //        debug("/back")
+            if (ctext.hasChunks()) {
+                //         debug("/executeSystemVerb /haschunks")
+                await clients.sendMessage(from);
+            } else if (ctext.requestNeeded()) {
                 debug("/executeSystemVerb /request needed")
 
-              //   var requestParams = await ctext.getRequestParams(from, moText);
+                //   var requestParams = await ctext.getRequestParams(from, moText);
                 // debug("requestParams:");
                 // debug(requestParams);
-             //    var body = await request(requestParams);
+                //    var body = await request(requestParams);
                 // ctext = await clients.newContext(from, body);
                 // ctext = await clients.setContext(from, body);
-             //   clients.setBody(from, body);
-             //   await ctext.initialize(true);
+                //   clients.setBody(from, body);
+                //   await ctext.initialize(true);
                 mtText = await ctext.makeMTResponse();
                 await exports.sendSMS(from, to, mtText, api);
 
-            } else if (ctext.hasChunks()) {
-       //         debug("/executeSystemVerb /haschunks")
-                await clients.sendMessage(from);
             } else {
-       //         debug("/executeSystemVerb else")
+                //         debug("/executeSystemVerb else")
                 await ctext.getRequestParams(from, moText);  // this can be improved, should be necessary to call the entire thing!
                 mtText = await ctext.makeMTResponse();
                 await exports.sendSMS(from, to, mtText, api);
@@ -122,7 +128,7 @@ exports.processMessage = async function (from, to, moText, api) {
     // debug(ctext);
     try {
         if (moText.startsWith('#') || (ctext && ctext.getVerb(moText) !== false)) {
-    //        debug("service switch or service-specific verb");
+            //        debug("service switch or service-specific verb");
             await clients.switchService(from, moText);
             ctext = await clients.newContext(from, await clients.getBody(from));
         }
@@ -140,8 +146,8 @@ exports.processMessage = async function (from, to, moText, api) {
         } else {
             await ctext.getRequestParams(from, moText);  // this can be improved, should be necessary to call the entire thing!
             mtText = await ctext.makeMTResponse();
-   //         debug("request not needed");
-   //         debug(mtText);
+            //         debug("request not needed");
+            //         debug(mtText);
         }
         await clients.setMtText(from, mtText);
 
@@ -156,6 +162,6 @@ exports.processMessage = async function (from, to, moText, api) {
             return;
         }
     }
- //   debug("sending SMS:"+ mtText);
+    //   debug("sending SMS:"+ mtText);
     await exports.sendSMS(from, to, mtText, api);
 }

@@ -326,6 +326,7 @@ exports.Context.prototype.makeMTResponse = async function () {
 
 exports.Context.prototype.requestNeeded = function () {
     debug("/context.requestNeeded");
+    debug("returning:"+this.request);
     return this.request;
 }
 
@@ -589,7 +590,7 @@ exports.Context.prototype.prev = async function () {
     } else {
         this.chunkPos = 0;
     }
-    if (this.hasChunks()) this.request = false;
+   // if (this.hasChunks()) this.request = false;
     try {
         await this.save();
         return this.chunkPos;

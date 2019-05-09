@@ -23,7 +23,7 @@ var newConnection = async function (msisdn, socket) {
 	try {
 		clients[msisdn] = {};
 		clients[msisdn].socket = socket;
-		await cache.write(msisdn, {init: true});
+		await cache.write(msisdn, {init: true, contextStack: []});
 		return true;
 	} catch (error) {
 		console.log(error);
@@ -99,7 +99,7 @@ var sendMessage = async function (msisdn, mtText) {
 	try {
 
 		var context = await getContext(msisdn);
-		await context.resetRequest();
+		//await context.resetRequest();
 	//	debug(JSON.stringify(context,{},2));
 		if (context.hasChunks()) {
 			text = context.getChunk();
@@ -209,25 +209,39 @@ var getBody = async function (msisdn) {
 	}
 }
 
+var pushContext = async function (msisdn) {
+	debug("/pushContext");
+	var record = await cache.read(msisdn);
+	var contextData = await getContext(msisdn);
+	var contextStack = record.contextStack;
+	if (!contextStack) {
+		debug("RESETTING CONTEXTSTACK");
+		contextStack = [];
+	}
+	contextStack.push(contextData);
+	await cache.write(msisdn, {contextStack: contextStack});
+}
+
 var setContext = async function (msisdn, body) {
 	debug("/setContext");
 
 	try {
 		var record = await cache.read(msisdn);
 		var service = record.currentService;
-		var contextStack = record.contextStack;
+		//var contextStack = record.contextStack;
 		var context = new Context(msisdn, service);
 		await context.setBody(body);
 		await context.initialize();
-		if (!contextStack) {
-			debug("RESETTING CONTEXTSTACK");
-			contextStack = [];
-		}
+		// if (!contextStack) {
+		// 	debug("RESETTING CONTEXTSTACK");
+		// 	contextStack = [];
+		// }
 		var contextData = context.get();
 		// debug("pushing contextData");
 		// debug(contextData.data);
-		contextStack.push(contextData);
-		await cache.write(msisdn, {contextStack: contextStack});
+		// contextStack.push(contextData);
+		//await cache.write(msisdn, {contextStack: contextStack});
+		await cache.write(msisdn, {context: contextData});
 		return context;
 	} catch (error) {
 		throw error;
@@ -300,6 +314,7 @@ var popContext = async function (msisdn) {
 	debug("/popContext");
 	try {
 		var record = await cache.read(msisdn);
+		debug(record.contextStack);
 		if (record.contextStack && record.contextStack.length > 0) {
 			debug(record.contextStack);
 			debug("Popped context");
@@ -431,6 +446,7 @@ module.exports = {
 	forceLogout,
 	switchService,
 	currentService,
+	pushContext,
 	getContext,
 	setContext,
 	getBody,
