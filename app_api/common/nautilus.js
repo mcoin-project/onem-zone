@@ -12,6 +12,9 @@ exports.sendSMS = async function (from, to, mtText, api) {
             var context = await clients.getContext(from);
             debug("context is:");
             debug(context);
+            debug('mtText:')
+            debug(mtText);
+            
             await clients.newMtMessage(from, mtText, api);
             await clients.sendMessage(from, mtText);
             if (context.requestNeeded()) {
@@ -19,10 +22,9 @@ exports.sendSMS = async function (from, to, mtText, api) {
             }
         } catch (err) {
             debug("oops no session: " + err);
-            common.sendEmail(from, mtText);
-
-            // don't save api messages
+            throw err;
             if (!api) {
+                common.sendEmail(from, mtText);
                 message.save(from, to, mtText);
             }
         };
@@ -63,8 +65,6 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
     } else if (moText == verbs.MORE_VERB) {
         try {
             var context = await clients.getContext(from);
-            //         debug("/executeSystemVerb:");
-            //         debug("hadChunks:" + context.hasChunks());
             if (context.hasChunks()) {
                 await clients.more(from);
                 await clients.sendMessage(from);
@@ -72,42 +72,25 @@ exports.executeSystemVerb = async function (from, to, moText, api) {
                 await exports.sendSMS(from, to, "No chunks available.", api);
             }
         } catch (error) {
-            //          debug("/executeSystemVerb");
             debug(error);
         }
 
     } else if (moText == verbs.BACK_VERB) {
 
-        // var ctext = clients.getContext(from);
-        // exports.sendSMS(from, to, mtText, api);
         try {
             await clients.goBack(from);
             var ctext = await clients.getContext(from);
-            //        debug("/back")
             if (ctext.hasChunks()) {
-                //         debug("/executeSystemVerb /haschunks")
                 await clients.sendMessage(from);
             } else if (ctext.requestNeeded()) {
                 debug("/executeSystemVerb /request needed")
-
-                //   var requestParams = await ctext.getRequestParams(from, moText);
-                // debug("requestParams:");
-                // debug(requestParams);
-                //    var body = await request(requestParams);
-                // ctext = await clients.newContext(from, body);
-                // ctext = await clients.setContext(from, body);
-                //   clients.setBody(from, body);
-                //   await ctext.initialize(true);
                 mtText = await ctext.makeMTResponse();
                 await exports.sendSMS(from, to, mtText, api);
 
             } else {
-                //         debug("/executeSystemVerb else")
                 await ctext.getRequestParams(from, moText);  // this can be improved, should be necessary to call the entire thing!
                 mtText = await ctext.makeMTResponse();
                 await exports.sendSMS(from, to, mtText, api);
-                // debug("request not needed");
-                // debug(mtText);
             }
 
         } catch (error) {
@@ -125,11 +108,8 @@ exports.processMessage = async function (from, to, moText, api) {
     debug("/processMessage" + moText)
 
     var mtText, ctext = await clients.getContext(from);
-    // debug("ctext:");
-    // debug(ctext);
     try {
-        if (moText.startsWith('#') || (ctext && ctext.getVerb(moText) !== false)) {
-            //        debug("service switch or service-specific verb");
+        if (moText.startsWith('#')) {
             await clients.switchService(from, moText);
             ctext = await clients.newContext(from, await clients.getBody(from));
         }
@@ -139,16 +119,11 @@ exports.processMessage = async function (from, to, moText, api) {
             debug("requestParams:");
             debug(requestParams);
             var body = await request(requestParams);
-            //ctext = await clients.newContext(from, body);
             ctext = await clients.setContext(from, body);
-            //await clients.setBody(from, body);
-
             mtText = await ctext.makeMTResponse();
         } else {
             await ctext.getRequestParams(from, moText);  // this can be improved, should be necessary to call the entire thing!
             mtText = await ctext.makeMTResponse();
-            //         debug("request not needed");
-            //         debug(mtText);
         }
         await clients.setMtText(from, mtText);
 

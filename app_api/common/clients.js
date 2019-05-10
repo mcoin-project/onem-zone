@@ -23,7 +23,7 @@ var newConnection = async function (msisdn, socket) {
 	try {
 		clients[msisdn] = {};
 		clients[msisdn].socket = socket;
-		await cache.write(msisdn, {init: true, contextStack: []});
+		await cache.write(msisdn, { init: true, contextStack: [] });
 		return true;
 	} catch (error) {
 		console.log(error);
@@ -33,7 +33,6 @@ var newConnection = async function (msisdn, socket) {
 
 var disconnected = async function (msisdn) {
 	try {
-	//	await cache.remove(msisdn);
 		clients[msisdn].socket = undefined;
 	} catch (error) {
 		console.log(error);
@@ -51,22 +50,14 @@ var newMtMessage = async function (msisdn, mtText, api) {
 		}
 		var record = await cache.write(msisdn, obj)
 		var size = record.size || DEFAULT_MSG_SIZE;
-	//	debug("size:"+size);
-	//	debug("mtText length:"+mtText.length);
 
 		var context = await getContext(msisdn);
-	//	debug(context.data);
 		if (context) {
 			if (mtText.length > size * MAX_MSG_CHARS) {
 				await context.chunkText(mtText, size * MAX_MSG_CHARS);
 			} else {
 				await context.clearChunks();
 			}
-
-			// var contextData = context.get();
-			// var contextStack = record.contextStack;
-			// contextStack.push(contextData);
-			//await cache.write(msisdn, {contextStack: contextStack});
 		} else {
 			throw "no context"
 		}
@@ -87,7 +78,7 @@ var concatMessage = async function (msisdn, mtText) {
 		} else {
 			concatMtText = record.mtText + mtText;
 		}
-		await cache.write(msisdn, {mtText: concatMtText});
+		await cache.write(msisdn, { mtText: concatMtText });
 	} catch (error) {
 		throw error;
 	}
@@ -95,26 +86,27 @@ var concatMessage = async function (msisdn, mtText) {
 
 var sendMessage = async function (msisdn, mtText) {
 	debug("/sendMessage");
-
+	debug(mtText);
 	try {
 
 		var context = await getContext(msisdn);
-		//await context.resetRequest();
-	//	debug(JSON.stringify(context,{},2));
 		if (context.hasChunks()) {
+			debug("has chunks")
 			text = context.getChunk();
 		} else {
 			text = mtText;
 		}
+		debug(text);
 		channel = context.api ? 'API MT SMS' : 'MT SMS';
 		try {
+			debug("sending on:"+channel+" "+text)
 			clients[msisdn].socket.emit(channel, { mtText: text });
 		} catch (error) {
-			return false;
+			debug(error);
 		}
 		return true;
 	} catch (error) {
-		throw error;	
+		throw error;
 	}
 }
 
@@ -140,7 +132,7 @@ var switchService = async function (msisdn, moText) {
 	var newService = moText.trim().split(' ')[0].toLowerCase();
 	if (!newService || newService == '') return false;
 	try {
-		var result = await cache.write(msisdn, {currentService: newService});
+		var result = await cache.write(msisdn, { currentService: newService });
 		return result;
 	} catch (error) {
 		throw error;
@@ -181,7 +173,7 @@ var setBody = async function (msisdn, body) {
 		if (record.context) {
 			var ctext = record.context;
 			ctext.data = body;
-			var r = await cache.write(msisdn,{context: ctext});
+			var r = await cache.write(msisdn, { context: ctext });
 			debug(r);
 			return r;
 		} else {
@@ -219,7 +211,7 @@ var pushContext = async function (msisdn) {
 		contextStack = [];
 	}
 	contextStack.push(contextData);
-	await cache.write(msisdn, {contextStack: contextStack});
+	await cache.write(msisdn, { contextStack: contextStack });
 }
 
 var setContext = async function (msisdn, body) {
@@ -228,20 +220,11 @@ var setContext = async function (msisdn, body) {
 	try {
 		var record = await cache.read(msisdn);
 		var service = record.currentService;
-		//var contextStack = record.contextStack;
 		var context = new Context(msisdn, service);
 		await context.setBody(body);
 		await context.initialize();
-		// if (!contextStack) {
-		// 	debug("RESETTING CONTEXTSTACK");
-		// 	contextStack = [];
-		// }
 		var contextData = context.get();
-		// debug("pushing contextData");
-		// debug(contextData.data);
-		// contextStack.push(contextData);
-		//await cache.write(msisdn, {contextStack: contextStack});
-		await cache.write(msisdn, {context: contextData});
+		await cache.write(msisdn, { context: contextData });
 		return context;
 	} catch (error) {
 		throw error;
@@ -252,7 +235,7 @@ var setApi = async function (msisdn, api) {
 	debug("/setApi");
 
 	try {
-		await cache.write(msisdn, {api: api});
+		await cache.write(msisdn, { api: api });
 		return api;
 	} catch (error) {
 		throw error;
@@ -286,7 +269,7 @@ var setMtText = async function (msisdn, mtText) {
 	debug("/setMtText:");
 
 	try {
-		var record = await cache.write(msisdn, {mtText: mtText});
+		var record = await cache.write(msisdn, { mtText: mtText });
 		return record.mtText;
 	} catch (error) {
 		throw error;
@@ -303,7 +286,7 @@ var newContext = async function (msisdn, body) {
 		await context.setBody(body);
 		await context.initialize();
 		var contextStack = [];
-		await cache.write(msisdn, {contextStack: contextStack});
+		await cache.write(msisdn, { contextStack: contextStack });
 		return context;
 	} catch (error) {
 		throw error;
@@ -320,17 +303,16 @@ var popContext = async function (msisdn) {
 			debug("Popped context");
 			var ctext = record.contextStack.pop();
 			debug(ctext);
-			var r = await cache.write(msisdn, {context: ctext, contextStack: record.contextStack});
+			var r = await cache.write(msisdn, { context: ctext, contextStack: record.contextStack });
 			debug(r);
 			context = new Context(msisdn, record.currentService);
 			await context.setBody(ctext.data);
-			await context.initialize();	
+			await context.initialize();
 			debug("isForm:" + context.isForm());
-			debug("context.requestNeeded:"+context.requestNeeded());
-			debug("record.contextStack.length:"+record.contextStack.length);
-			//if (context.isForm() && context.requestNeeded() && record.contextStack.length > 0) {
+			debug("context.requestNeeded:" + context.requestNeeded());
+			debug("record.contextStack.length:" + record.contextStack.length);
 			if (context.requestNeeded() && record.contextStack.length > 0) {
-					debug("popping again");
+				debug("popping again");
 				var ctext;
 				if (record.contextStack.length > 1) {
 					ctext = record.contextStack.pop();
@@ -338,14 +320,12 @@ var popContext = async function (msisdn) {
 					ctext = record.contextStack[0];
 				}
 				debug(ctext);
-				await cache.write(msisdn, {context: ctext, contextStack: record.contextStack});
+				await cache.write(msisdn, { context: ctext, contextStack: record.contextStack });
 				context = new Context(msisdn, record.currentService);
 				await context.setBody(ctext.data);
-				await context.initialize();	
+				await context.initialize();
 			}
 		}
-		// debug("ctext:");
-		// debug(context);
 	} catch (error) {
 		throw error;
 	}
@@ -355,16 +335,16 @@ var goBack = async function (msisdn) {
 	debug("/goBack");
 	try {
 		var context = await getContext(msisdn);
-		if (context.isForm()) {
+		if (context.isLessChunks()) {
+			debug("isLessChunks");
+			await context.prev();
+		} else if (context.isForm()) {
 			debug("isForm");
 			await context.goBackInForm();
 			if (context.requestNeeded()) {
 				debug("requestNeeded");
 				await popContext(msisdn);
 			}
-		} else if (context.isLessChunks()) {
-			debug("isLessChunks");
-			await context.prev();
 		} else {
 			debug("else case")
 			await popContext(msisdn);
@@ -419,13 +399,13 @@ var size = async function (msisdn, moText) {
 		var size = parseInt(params[1]);
 		var currentSize = record.size || DEFAULT_MSG_SIZE;
 		var header = context.getHeader();
-	
+
 		if (params.length == 1) {
 			return header + "Current message size is " + currentSize + " (minimum is 1, maximum is " + MAX_MSG_SIZE + ").";
 		} else if (typeof size !== "number" || (typeof size == "number" && size < 1 || size > 5)) {
 			return header + "SMS supports sizes between 1 and 5. Message size is now " + currentSize + ".";
 		} else {
-			await cache.write(msisdn, {size: size});
+			await cache.write(msisdn, { size: size });
 			return header + "Message size is now " + size + ".";
 		}
 	} catch (error) {

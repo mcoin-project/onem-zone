@@ -18,7 +18,7 @@ exports.Service.prototype.get = async function () {
 }
 
 exports.Service.prototype.getVerbs = async function () {
-    //debug("looking up service: " + this.name);
+    debug("looking up service: " + this.name);
     try {
         var s = await Service.findOne({ name: this.name });
         if (!s) throw { code: 200, message: 'no service with name: ' + service }

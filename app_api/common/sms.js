@@ -130,7 +130,8 @@ var smppServer = smpp.createServer(function(session) {
                     };
                     msgText = await clients.getMtText(from).substring(0, endmsgText);
                 } catch (err) {
-                    debug("oops no session: " + err);
+                    debug("oops no session:")
+                    throw err;
                     doneDate = moment().format('YYMMDDHHmm');
                     statMsg = stateMsg.DELETED.Status; //'DELETED'; // If the socket emit fails, we lose this message. It is in deleted state.
                     statMsgValue = stateMsg.DELETED.Value;
