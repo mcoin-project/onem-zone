@@ -70,7 +70,7 @@ exports.sendEmail = function (msisdn, text) {
     exports.getUser(msisdn).then(function (user) {
         // data.HtmlBody = result.html;
         if (!user || !user.email) {
-            debug("can't find email user for: " + user._id);
+            debug("can't find email user for: " + msisdn);
             return;
         }
         
