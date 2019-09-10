@@ -7,7 +7,8 @@ var Message = require('../models/Model').Message;
 exports.save = function (from, to, text) {
     debug("messages.save");
     debug("from: " + from + ' to:' + to);
-    common.getUser(from).then(function (user) {
+    common.getUser(to).then(function (user) {
+        if (!user) throw "no user found for:" + to;
         var message = new Message();
         message._user = user._id;
         message.from = from;
