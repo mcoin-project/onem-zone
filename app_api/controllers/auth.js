@@ -138,6 +138,8 @@ exports.facebookAuth = function (User) {
           return res.status(500).send({ message: profile.error.message });
         }
         if (req.header('Authorization')) {
+          debug("authorization: fb profile");
+          debug(profile);
           User.findOne({ facebook: profile.id }, function (err, existingUser) {
             if (existingUser) {
               return res.status(409).send({ message: 'There is already a Facebook account that belongs to you' });

@@ -20,6 +20,27 @@ ONEmSimModule.controller('phoneController', [
         console.log("phoneController stateParams:");
         console.log($stateParams);
 
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('js/controllers/sw.js')
+                .then(function (registration) {
+                    registration.addEventListener('updatefound', function () {
+                        // If updatefound is fired, it means that there's
+                        // a new service worker being installed.
+                        var installingWorker = registration.installing;
+                        console.log('A new service worker is being installed:',
+                            installingWorker);
+
+                        // You can listen for changes to the installing service worker's
+                        // state via installingWorker.onstatechange
+                    });
+                })
+                .catch(function (error) {
+                    console.log('Service worker registration failed:', error);
+                });
+        } else {
+            console.log('Service workers are not supported.');
+        }
         var isInCall = 0;
 
         $scope.callButtons = [
@@ -51,13 +72,13 @@ ONEmSimModule.controller('phoneController', [
             }
         }
 
-        if ($scope.$parent.touchCheckboxModel.on) {
-            $scope.screenOpen = true;  // 'screen_wrp'
-            $scope.dialerOpen = true;  // 'phone'
-        } else {
+        // if ($scope.$parent.touchCheckboxModel.on) {
+        //     $scope.screenOpen = true;  // 'screen_wrp'
+        //     $scope.dialerOpen = true;  // 'phone'
+        // } else {
             $scope.screenOpen = false;  // 'screen_wrp'
             $scope.dialerOpen = false;  // 'phone'
-        }
+        //}
         $scope.answerOpen = false;  // 'panel answer'
         $scope.showKeypad = false;  // 'ul nums'
         $scope.callNotif = false; // 'call_notif'

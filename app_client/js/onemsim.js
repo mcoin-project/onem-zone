@@ -207,7 +207,7 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
                 controller: 'logoutDeleteController'
             }).
             state('logout', {
-                url: '/',
+                url: '/logout',
                 templateUrl: null,
                 controller: 'logoutController'
             });

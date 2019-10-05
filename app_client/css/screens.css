@@ -15,11 +15,14 @@ body.full {
   font-weight: 300;
   font-family: 'Merriweather', serif;
   font-family: 'Open Sans', sans-serif;
-  position: relative;
+  position: fixed;
+  bottom: 80px;
+  right: 20px;
   display: block;
-  width: 400px;
+  width: 350px;
+  height: 442px;
   margin: 0px auto;
-  margin-top: 20px; }
+  border: 1px solid #e0e0e0; }
 
 .phone .screen_wrp {
   position: absolute;
@@ -477,10 +480,9 @@ body.full {
 .phone .sms-input {
   position: absolute;
   display: block;
-  bottom: 56px;
-  left: 42px;
-  right: 37px;
-  background: #f0f0f0;
+  bottom: 0;
+  width: 100%;
+  background: #F44336;
   z-index: 2; }
 
 .phone .sms-input span {
@@ -518,11 +520,10 @@ body.full {
 .phone .sms-response {
   position: absolute;
   display: block;
-  top: 124px;
-  bottom: 126px;
-  left: 41px;
-  right: 37px;
-  z-index: 9; }
+  top: 60px;
+  bottom: 80px;
+  z-index: 9;
+  width: 100%; }
 
 .phone .sms-response-pos {
   width: 100%;
@@ -539,7 +540,7 @@ body.full {
 
 .phone .sms-response-pos .sms-mt-container {
   position: relative;
-  max-width: 84%;
+  max-width: 74%;
   height: auto;
   display: inline-block;
   border-radius: 15px;
@@ -580,9 +581,16 @@ body.full {
 .sms-length span {
   font-size: 9px; }
 
+.phone .phone-header {
+  position: absolute;
+  top: 0;
+  height: 60px;
+  width: 100%;
+  background-color: #F44336; }
+
 .phone .sms-response-pos .sms-mo-container {
   position: relative;
-  max-width: 84%;
+  max-width: 74%;
   height: auto;
   display: block;
   border-radius: 20px;
@@ -666,9 +674,9 @@ body.full {
   padding: 8px;
   font-size: 14px;
   color: #fff;
-  background: #f0f0f0;
+  background: #F44336;
   z-index: 14;
-  color: #f0f0f0;
+  color: #F44336;
   opacity: 0; }
 
 .phone .call_notif.on {
@@ -843,3 +851,8 @@ body.full div.logo img {
   .phone .onem_msisdn {
     line-height: 1;
     text-align: right; } }
+
+.btn-floating {
+  position: fixed;
+  bottom: 20px;
+  right: 20px; }

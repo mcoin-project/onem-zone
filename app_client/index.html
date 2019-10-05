@@ -41,215 +41,199 @@
 </head>
 
 <body ng-controller="navbarController" name="body">
-    <div class="ng-cloak" ng-show="msisdn">
-        <!-- Dropdown Structure -->
-        <ul id="dropdown1" class="dropdown-content">
-            <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
-            <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li>
-            <li class="divider"></li>
-            <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
-        </ul>
-        <div style="overflow-y: scroll; overflow-x: hidden">
-        <ul id="services" class="services-cols-{{servicesCols}} dropdown-content dropdown-content-services">
-            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load
-                    menu</a></li>
-            <li ng-repeat="service in services track by $index">
-                <a class="dropdown-icon-wrapper"
-                    ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
-                    <span class="onem-icon-{{service.getIcon()}}"></span>
-                    <div>{{service.getName()}}</div>
-                </a>
-            </li>
-        </ul>
-        </div>
-        <div class="navbar-fixed">
-            <nav class="red">
-                <div class="container">
-                    <div class="nav-wrapper">
-                        <ul class="left hide-on-med-and-down">
-                            <li>
-                                <a ui-sref="main" class="logo">
-                                    <img src="./images/onem_zone_logo_thumb_white.png" alt="logo" />
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <!---<a ui-sref="main" class="brand-logo"></a>-->
-                    <div ng-show="touchCheckboxModel.on" class="nav-wrapper">
-                        <a href="#" data-target="services-target" class="sidenav-trigger right"><i
-                                class="material-icons">more_vert</i></a>
-                        <ul style="overflow-y: scroll; overflow-x: hidden" class="right hide-on-med-and-down">
-                            <!-- Dropdown Trigger -->
-                            <li><a class="dropdown-trigger-services" href="#!" data-target="services"><i
-                                        class="material-icons">apps</i> Services<i
-                                        class="material-icons right">arrow_drop_down</i></a>
-                            </li>
-                        </ul>
-                    </div>
+    <div ng-controller="phoneController">
 
-                    <div class="nav-wrapper">
-                        <a href="#" data-target="mobile-demo-left" class="sidenav-trigger"><i
-                                class="material-icons">menu</i></a>
-                        <ul class="right hide-on-med-and-down">
-                            <li ng-class="{active: $state.includes('service')}"><a ui-sref="main"><span><i
-                                            class="material-icons">home</i></span>Home</a></li>
-                            <li ui-sref-active="active" ng-show="touchCheckboxModel.on && ready"><a
-                                    ui-sref="inbox"><span><i class="material-icons">message</i></span><span
-                                        ng-show="inboxCounts.unread > 0"
-                                        class="badge teal new white-text">{{inboxCounts.unread}}</span></a></li>
-                            <!-- Dropdown Trigger -->
-                            <li ng-class="{active: $state.includes('settings')}"><a class="dropdown-trigger" href="#!"
-                                    data-target="dropdown1"><i class="material-icons">person</i>{{dropdown}}<i
-                                        class="material-icons right">arrow_drop_down</i></a></li>
+        <div ng-show="displayPhone" class="phone screen">
 
-                        </ul>
-                    </div>
-                </div>
-            </nav>
-        </div>
-    </div>
+            <div class="phone-header"></div>
 
-    <ul class="sidenav" id="services-target">
-        <h6 class="teal-text">Services</h6>
-        <div style="padding-top:15px" class="row ">
-            <div ng-show="services.length == 0">
-                <li><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load menu</a></li>
-            </div>
-            <div style="text-align:center" class="col s6 center-align">
-                <li ng-repeat="service in services1 track by $index">
-                    <a style="line-height:normal;padding:10px;height:auto"
-                        ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
-                        <span style="font-size:24px"
-                            class="teal-text center-align onem-icon-{{service.getIcon()}}"></span>
-                        <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
-                    </a>
-                </li>
-            </div>
-            <div style="text-align:center" style="text-align:center" class="col s6 center-align">
-                <li ng-repeat="service in services2 track by $index">
-                    <a style="line-height:normal;padding:10px;height:auto"
-                        ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
-                        <span style="font-size:24px"
-                            class="teal-text center-align onem-icon-{{service.getIcon()}}"></span>
-                        <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
-                    </a>
-                </li>
-            </div>
-        </div>
-    </ul>
-    <ul class="sidenav" id="mobile-demo-left">
-        <li ng-class="{active: $state.includes('service')}"><a ui-sref="main">Home<i
-                    class="right small material-icons">home</i></a></li>
-        <li ui-sref-active="active" ng-show="touchCheckboxModel.on && ready"><a ui-sref="inbox">Inbox<span
-                    ng-show="inboxCounts.unread > 0" style="float:none"
-                    class="badge new">{{inboxCounts.unread}}</span><i class="right small material-icons">message</i></a>
-        </li>
-        <li ng-class="{active: $state.includes('settings')}"><a ui-sref="settings">Settings<i
-                    class="right small material-icons">settings</i></a></li>
-        <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li>
-        <li class="divider"></li>
-        <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
-    </ul>
+            <div ng-class="screenOpen ? 'open': ''" class="screen_wrp">
 
-    <div class="container">
-        <div ui-view></div>
-        <div ng-show="spinner" class="spinner-container">
-            <div class="preloader-wrapper" ng-class="{active : spinner}">
-                <div class="spinner-layer spinner-red-only">
-                    <div class="circle-clipper left">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="gap-patch">
-                        <div class="circle"></div>
-                    </div>
-                    <div class="circle-clipper right">
-                        <div class="circle"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                <div ng-class="dialerOpen ? 'open': ''" class="panel dialer">
 
-    <audio loop id="myAudio" src="" hidden=true>
-        <source type="audio/wav" />
-    </audio>
+                    <div class="preview">
+                        <!---<p class="title">Who you gonna call?</p>-->
+                        <p class="inp">
+                            <!-- <input id="typed_no" type="text" value=""> -->
+                            <textarea ng-model="dialerTypedNo" id="typed_no" data-autoresize rows="1"
+                                maxlength="21"></textarea>
+                            <a ng-click="dialerTypedNo=deleteNum(dialerTypedNo)" class="delete" href="#"><img
+                                    class="clicky" src="images/icn_delete.svg" /></a>
+                        </p>
+                        <p class="msg">Type the number you want to call.</p>
+                        <p class="call_no"><a ng-click="callButtonClicked()" class="call" href="#"><img
+                                    src="images/icn_answer.svg" /></a></p>
+                    </div> <!-- /preview -->
 
-    <video loop id="myVideo" width="320" height="240" src="" hidden=true>
-        <source type="video/mp4">
-        <source type="video/ogg">
-        <source type="video/webm">
-        Your browser does not support the video tag.
-    </video>
+                    <ul ng-class="showKeypad ? 'on' : ''" class="keypad dialpad nums squared">
+                        <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value"
+                            class="clicky"><a data-val="b.value" ng-class="b.pressed ? 'pressed' : ''"
+                                class="{{b.class}}" href="#"><span class="no">{{b.value}}</span><span
+                                    class="txt">{{b.label}}</span></a></li>
+                        <!----
+                        <li class="clicky"><a id="num_1" class="num" data-val="1" href="#"><span class="no">1</span><span class="txt">&#x260D;</span></a></li>
+                        <li class="clicky"><a id="num_2" class="num" data-val="2" href="#"><span class="no">2</span><span class="txt">ABC</span></a></li>
+                        <li class="clicky"><a id="num_3" class="num" data-val="3" href="#"><span class="no">3</span><span class="txt">DEF</span></a></li>
+                        <li class="clicky"><a id="num_4" class="num" data-val="4" href="#"><span class="no">4</span><span class="txt">GHI</span></a></li>
+                        <li class="clicky"><a id="num_5" class="num" data-val="5" href="#"><span class="no">5</span><span class="txt">JKL</span></a></li>
+                        <li class="clicky"><a id="num_6" class="num" data-val="6" href="#"><span class="no">6</span><span class="txt">MNO</span></a></li>
+                        <li class="clicky"><a id="num_7" class="num" data-val="7" href="#"><span class="no">7</span><span class="txt">PQRS</span></a></li>
+                        <li class="clicky"><a id="num_8" class="num" data-val="8" href="#"><span class="no">8</span><span class="txt">TUV</span></a></li>
+                        <li class="clicky"><a id="num_9" class="num" data-val="9" href="#"><span class="no">9</span><span class="txt">WXYZ</span></a></li>
+                        <li class="clicky"><a id="num_+" class="num plus" data-val="+" href="#"><span class="no">&#x2719;</span></a></li>
+                        <li class="clicky"><a id="num_0" class="num zero" data-val="0" href="#"><span class="no">0</span></a></li>
+                        <!-- <li class="clicky"><a id="num_m" class="num more" href="#"><span class="no">&#x25CF;&#x25CF;&#x25CF;</span><span class="txt">MORE</span></a></li>
+                        <li class="clicky"><a id="num_*" class="num aste" data-val="*" href="#"><span class="no">&#x2731;</span></a></li>-->
+                    </ul> <!-- /keypad dialpad nums squared-->
+                    <a ng-hide="touchCheckboxModel.on" ng-click="closeDialer()" class="closer" href="#"><img
+                            src="images/icn_close.svg" /></a>
+
+                </div> <!-- /panel dialer -->
+
+                <div ng-class="callerOpen ? 'open': ''" class="panel caller">
+                    <div class="preview">
+                        <p class="title">Somebody is calling you!</p>
+                        <p class="user"><a class="answer" href=""><img src="images/icn_usr.svg" /></a></p>
+                        <p class="inp"><input ng-model="answerTypedNo" id="typed_no" type="text" value="100"
+                                disabled="disabled"></p>
+                        <!-- <p class="msg">Unknown number</p> -->
+                        <p class="msg" id="user_name"></p>
+                        <p class="call_tools">
+                            <a ng-click="cancelCall()" class="clicky cancel" href=""><img
+                                    src="images/icn_reject.svg" /></a>
+                            <a ng-click="closePanel()" class="clicky closer" href=""><img src="images/num_x.svg" /></a>
+                            <a ng-click="answerCall()" class="clicky answer" href=""><img
+                                    src="images/icn_call_ok.svg" /></a>
+                        </p>
+                    </div> <!-- /preview -->
+                    <a class="closer" href="#"><img src="images/icn_close.svg" /></a>
+                </div> <!-- /panel caller -->
+
+                <div ng-class="answerOpen ? 'open': ''" class="panel answer">
+                    <div class="preview">
+                        <p class="title talktime"></p>
+                        <p ng-class="userOff ? 'off' : ''" class="user"><img src="images/icn_usr.svg" /></p>
+                        <p class="video">
+                            <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+                                <source type="video/mp4">
+                                <source type="video/ogg">
+                                <source type="video/webm">
+                                Your browser does not support the video tag.
+                            </video>
+                        </p> <!-- /video -->
+                        <p class="inp"><input ng-model="answerTypedNo" id="typed_no" type="text" value="100"
+                                disabled="disabled"></p>
+                        <!-- <p class="msg">Unknown number</p> -->
+                        <p class="call_tools">
+                            <a ng-click="showNumpad()" class="clicky numpad" href="#"><img
+                                    src="images/icn_numpad.svg" /></a>
+                            <a ng-click="cancelCall()" class="clicky cancel" href=""><img
+                                    src="images/icn_reject.svg" /></a>
+                            <a class="clicky mute" href="#"><img src="images/icn_mute.svg" /></a>
+                        </p> <!-- /call_tools -->
+                    </div> <!-- /preview -->
+                    <!-- <div class="video">
+                        <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+                            <source type="video/mp4">
+                            <source type="video/ogg">
+                            <source type="video/webm">
+                            Your browser does not support the video tag.
+                        </video>
+                    </div> -->
+                    <!-- /video -->
+                    <ul ng-class="showKeypad ? 'on' : ''" class="keypad dialpad nums squared">
+                        <li ng-click="dialButtonClicked(b)" ng-repeat="b in callButtons track by b.value"
+                            class="clicky"><a data-val="b.value" ng-class="b.pressed ? 'pressed' : ''"
+                                class="{{b.class}}" href="#"><span class="no">{{b.value}}</span><span
+                                    class="txt">{{b.label}}</span></a></li>
+                    </ul> <!-- /keypad dialpad nums squared-->
+                    <a ng-click="minimizeClicked() " class="minimize" href="#"><img src="images/icn_mini.svg" /></a>
+                </div> <!-- /panel answer -->
+
+            </div> <!-- /screen_wrp -->
+            <div ui-view></div>
+        </div> <!-- /phone -->
+        <a ng-click="displayPhone=!displayPhone" class="btn-floating btn-large waves-effect waves-light red"><i
+                class="material-icons">add</i></a>
+
+
+        <audio loop id="myAudio" src="" hidden=true>
+            <source type="audio/wav" />
+        </audio>
+
+        <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+            <source type="video/mp4">
+            <source type="video/ogg">
+            <source type="video/webm">
+            Your browser does not support the video tag.
+        </video>
 
 </body>
 <!--build:js js/app.min.js -->
-<script type="text/javascript" src="js/vendor/socket.io.js"></script>
-<script type="text/javascript" src="bower_components/jssip/dist/jssip.min.js"></script>
-<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/vendor/socket.io.js"></script>
+<script src="bower_components/jssip/dist/jssip.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 
-<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-media-queries/match-media.js"></script>
-<script type="text/javascript"
-    src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
-<script type="text/javascript"
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+<script src="bower_components/angular-media-queries/match-media.js"></script>
+<script src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
+<script
     src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput-jquery.js"></script>
-<script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
-<script type="text/javascript" src="bower_components/path/path.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
-<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script type="text/javascript" src="bower_components/satellizer/dist/satellizer.js"></script>
-<script type="text/javascript" src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
-<script type="text/javascript" src="bower_components/angular-elastic/elastic.js"></script>
-<script type="text/javascript" src="bower_components/moment/moment.js"></script>
-<script type="text/javascript" src="bower_components/angular-moment/angular-moment.js"></script>
-<script type="text/javascript" src="bower_components/hammerjs/hammer.js"></script>
-<script type="text/javascript" src="bower_components/angular-hammer/angular-hammer.js"></script>
-<script type="text/javascript" src="bower_components/ng-dialog/js/ngDialog.js"></script>
-<!--<script type="text/javascript" src="bower_components/angular-cached-resource/angular-cached-resource.min.js"></script>-->
-<!--<script type="text/javascript" src="bower_components/angular-materialize/src/angular-materialize.js"></script>-->
+<script src="bower_components/angular-socket-io/socket.js"></script>
+<script src="bower_components/path/path.min.js"></script>
+<script src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/satellizer/dist/satellizer.js"></script>
+<script src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
+<script src="bower_components/angular-elastic/elastic.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/hammerjs/hammer.js"></script>
+<script src="bower_components/angular-hammer/angular-hammer.js"></script>
+<script src="bower_components/ng-dialog/js/ngDialog.js"></script>
 
-<script type="text/javascript" src="js/onemsim.js"></script>
-<script type="text/javascript" src="js/constants/services.js"></script>
-<script type="text/javascript" src="js/services/user.js"></script>
-<script type="text/javascript" src="js/services/socket.js"></script>
-<script type="text/javascript" src="js/services/phone.js"></script>
-<script type="text/javascript" src="js/services/dataModel.js"></script>
-<script type="text/javascript" src="js/services/smsHandler.js"></script>
-<script type="text/javascript" src="js/services/cache.js"></script>
-<script type="text/javascript" src="js/services/mttext.js"></script>
-<script type="text/javascript" src="js/services/services.js"></script>
-<script type="text/javascript" src="js/services/request.js"></script>
-<script type="text/javascript" src="js/services/servicesData.js"></script>
-<script type="text/javascript" src="js/services/wallet.js"></script>
-<script type="text/javascript" src="js/controllers/nav.js"></script>
-<script type="text/javascript" src="js/controllers/main.js"></script>
-<script type="text/javascript" src="js/controllers/login.js"></script>
-<script type="text/javascript" src="js/controllers/captureMsisdn.js"></script>
-<script type="text/javascript" src="js/controllers/captureToken.js"></script>
-<script type="text/javascript" src="js/controllers/logout.js"></script>
-<script type="text/javascript" src="js/controllers/logoutDelete.js"></script>
-<script type="text/javascript" src="js/controllers/service.js"></script>
-<script type="text/javascript" src="js/controllers/settings.js"></script>
-<script type="text/javascript" src="js/controllers/wallet.js"></script>
-<script type="text/javascript" src="js/controllers/console.js"></script>
-<script type="text/javascript" src="js/controllers/order.js"></script>
-<script type="text/javascript" src="js/controllers/phone.js"></script>
-<script type="text/javascript" src="js/controllers/inbox.js"></script>
-<script type="text/javascript" src="js/controllers/modalTopUp.js"></script>
-<script type="text/javascript" src="js/directives/closeKeyboard.js"></script>
-<script type="text/javascript" src="js/directives/myClock.js"></script>
-<script type="text/javascript" src="js/directives/scrollBottom.js"></script>
-<script type="text/javascript" src="js/directives/focusMe.js"></script>
-<script type="text/javascript" src="js/directives/enter.js"></script>
-<script type="text/javascript" src="js/directives/pagination.js"></script>
-<script type="text/javascript" src="js/directives/inputHistory.js"></script>
-<script type="text/javascript" src="js/directives/ngmobileclick.js"></script>
-<script type="text/javascript" src="js/vendor/materialize.js"></script>
-<script type="text/javascript" src="js/materializeInit.js"></script>
+<script src="js/onemsim.js"></script>
+<script src="js/constants/services.js"></script>
+<script src="js/services/user.js"></script>
+<script src="js/services/socket.js"></script>
+<script src="js/services/phone.js"></script>
+<script src="js/services/dataModel.js"></script>
+<script src="js/services/smsHandler.js"></script>
+<script src="js/services/cache.js"></script>
+<script src="js/services/mttext.js"></script>
+<script src="js/services/services.js"></script>
+<script src="js/services/request.js"></script>
+<script src="js/services/servicesData.js"></script>
+<script src="js/services/wallet.js"></script>
+<script src="js/controllers/nav.js"></script>
+<script src="js/controllers/main.js"></script>
+<script src="js/controllers/login.js"></script>
+<script src="js/controllers/captureMsisdn.js"></script>
+<script src="js/controllers/captureToken.js"></script>
+<script src="js/controllers/logout.js"></script>
+<script src="js/controllers/logoutDelete.js"></script>
+<script src="js/controllers/service.js"></script>
+<script src="js/controllers/settings.js"></script>
+<script src="js/controllers/wallet.js"></script>
+<script src="js/controllers/console.js"></script>
+<script src="js/controllers/order.js"></script>
+<script src="js/controllers/phone.js"></script>
+<script src="js/controllers/inbox.js"></script>
+<script src="js/controllers/modalTopUp.js"></script>
+<script src="js/directives/closeKeyboard.js"></script>
+<script src="js/directives/myClock.js"></script>
+<script src="js/directives/scrollBottom.js"></script>
+<script src="js/directives/focusMe.js"></script>
+<script src="js/directives/enter.js"></script>
+<script src="js/directives/pagination.js"></script>
+<script src="js/directives/inputHistory.js"></script>
+<script src="js/directives/ngmobileclick.js"></script>
+<script src="js/vendor/materialize.js"></script>
+<script src="js/materializeInit.js"></script>
 <!-- endbuild -->
 
 </html>
