@@ -504,15 +504,38 @@ position: relative;
 }
 
 .phone .sms-input textarea {
-    display: block;
     float: left;
-    width: 100%;
-    padding: 10px 14px;
+   // width: 100%;
+   width: 220px;
+ //   padding: 10px 14px;
     font-size: 18px;
     font-weight: 400;
     resize: none;
-    margin:10px 0;
+    box-sizing: content-box;
+    margin: 10px 0 0 0;
     font-family: 'Roboto', sans-serif;
+    background-color: white;
+    border:none;
+}
+
+.phone .sms-input textarea:focus {
+    outline: 0;
+    top: 125px;
+    bottom: 90px;
+    left: 41px;
+    right: 40px;
+    z-index: 1;
+    border:none;
+}
+
+textarea.touch-desktop {
+    min-height: 30px;
+    border:none;
+    resize: none;
+    &:focus {
+        outline:0;
+        border:none;
+    }
 }
 
 .phone .sms-response {
@@ -530,7 +553,7 @@ position: relative;
     height: 100%;
     display: block;
     overflow: auto;
-    padding:10px;
+    padding: 10px 15px 10px 10px;
 }
 
 .phone .sms-response-pos .sms-placeholder {
@@ -702,7 +725,7 @@ position: relative;
 
 .phone .form-control {
     padding: 3px 12px;
-    height: 40px;
+    //height: 40px;
 }
 
 

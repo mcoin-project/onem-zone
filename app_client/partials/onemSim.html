@@ -157,8 +157,8 @@
                 <span class="dial"><a ng-click="openDialer()" class="open_dialer" href=""><img
                             src="images/icn_dialer.svg"></a></span>
                 <span class="input">
-                    <input close-keyboard input-history history="history" ng-model="smsText" type="text"
-                        placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
+                    <textarea id="sms-input" auto-size autogrow1="height" rows="1" max-lines="10" ng-enter="smsInput()" close-keyboard input-history history="history" ng-model="smsText" type="text"
+                    placeholder="Message" class="form-control" id="sms" autocomplete="off" autofocus></textarea>
                     <!---<textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea>-->
                 </span> <!-- /input -->
                 <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->

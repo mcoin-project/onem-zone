@@ -229,7 +229,8 @@ ONEmSimModule.config(['$httpProvider',
             '$q',
             '$window',
             '$location',
-            function ($q, $window, $location) {
+            '$state',
+            function ($q, $window, $location, $state) {
 
                 return {
                     request: function (config) {
@@ -241,10 +242,11 @@ ONEmSimModule.config(['$httpProvider',
                     responseError: function (response) {
                         switch (response.status) {
                             case 400:
-                            case 403:
-                            case 404:
-                                console.log("404");
-                                $location.path('/');
+                            case 401:
+                            //case 403:
+                            //case 404:
+                                console.log("40x");
+                                $state.go('logout');
                                 break;
                             default:
                                 break;

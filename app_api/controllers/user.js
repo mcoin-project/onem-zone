@@ -61,7 +61,7 @@ exports.getMsisdn = function (User) {
         User.findById({ _id: req.user }).then(function (user) {
             if (!user || !user.msisdn) {
                 debug("/getMsisdn - user not found");
-                return res.status(401).send({ error: "msisdn not found" });
+                return res.status(403).send({ error: "msisdn not found" });
             }
             var userObj = {};
             userObj.firstName = user.firstName;

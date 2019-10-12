@@ -1,12 +1,13 @@
 ONEmSimModule.constant('ServicesConfig',
     {
-        // services: [
+         services: [
         //     { name: ['onem'], icon: 'home' },
-        //     { name: ['phone'], icon: 'dialer', template: 'partials/onemSim.html', blockRequest: true, always: true, call: true },
+        //      { name: ['phone'], icon: 'dialer', template: 'partials/onemSim.html', blockRequest: true, always: true, call: true },
         //     { name: ['account'], icon: 'account' },
         //     { name: ['call'], icon: 'call' },
         //     { name: ['subscribe'], icon: 'subscribe' },
         //     { name: ['market'], icon: 'cart', default: true },
+               { names: ['anycoop'], icon: 'post', default: true }
         //     { name: ['wallet'], icon: 'wallet', template: 'partials/service-wallet.html'},
         //     { name: ['msg'], icon: 'message' },
         //     { name: ['xgroup'], icon: 'xgroup' },
@@ -33,7 +34,7 @@ ONEmSimModule.constant('ServicesConfig',
         //     { name: ['exchange'], icon: 'exchange' },
         //     { name: ['contacts'], icon: 'contacts' },
         //     { name: ['unsubscribe'], icon: 'unsubscribe' }
-        // ],
+        ],
         goCommand: ['go']
     }
 );

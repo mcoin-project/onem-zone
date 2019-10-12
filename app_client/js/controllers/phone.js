@@ -51,6 +51,13 @@ ONEmSimModule.controller('phoneController', [
             }
         }
 
+        $scope.atBottom = true;
+
+        $scope.scrollBottom = function(element) {
+            console.log("/scrollBottom:"+element)
+            $(element)[0].scrollTop = $(element)[0].clientHeight;
+        }
+
         if ($scope.$parent.touchCheckboxModel.on) {
             $scope.screenOpen = true;  // 'screen_wrp'
             $scope.dialerOpen = true;  // 'phone'

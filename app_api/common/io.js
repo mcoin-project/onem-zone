@@ -104,7 +104,6 @@ exports.initialize = function (server) {
 
         socket.on('MO SMS', async function (moText) {
 
-            moText = moText.trim().toLowerCase();
 
             debug('moText: ');
             debug(moText);
@@ -116,7 +115,7 @@ exports.initialize = function (server) {
 
                 try {
                     if (moText.startsWith('#')) {
-                        clients.switchService(socket.msisdn, moText);
+                        clients.switchService(socket.msisdn, moText.toLowerCase());
                     }
                      // Todo implement caching in dbmethods
                     if (await dbMethods.serviceIncludes(clients.currentService(socket.msisdn))) {

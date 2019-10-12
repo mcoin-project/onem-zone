@@ -31,7 +31,7 @@
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
-            <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li>
+            <!-- <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li> -->
             <li class="divider"></li>
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
@@ -91,7 +91,7 @@
         </div>
     </div>
 
-    <ul class="sidenav" id="services-target">
+    <ul ng-hide="true" class="sidenav" id="services-target">
         <h6 class="teal-text">Services</h6>
         <div style="padding-top:15px" class="row ">
             <div ng-show="services.length == 0">
@@ -128,7 +128,7 @@
         </li>
         <li ng-class="{active: $state.includes('settings')}"><a ui-sref="settings">Settings<i
                     class="right small material-icons">settings</i></a></li>
-        <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li>
+        <!-- <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li> -->
         <li class="divider"></li>
         <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
     </ul>

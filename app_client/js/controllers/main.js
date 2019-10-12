@@ -149,11 +149,11 @@ ONEmSimModule.controller('mainController', [
             console.log(error);
             if (error == null) {
                 resolveState();
-            } else if (!$rootScope.msisdn) {
+            } else if (!$rootScope.msisdn && error.status == 403) {
                 console.log("no msisdn, going to capture");
                 $state.go('captureMsisdn');
-            } else {
-                if (error) toastr.error(error);
+            // } else {
+            //     if (error) toastr.error(error);
             }
         });
 

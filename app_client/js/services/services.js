@@ -44,9 +44,9 @@ ONEmSimModule.factory('Services', [
         Services.prototype.initialize = async function () {
             var self = this;
             try {
-                var response = await $http.get('/api/services');
-                for (var i = 0; i < response.data.services.length; i++) {
-                    var s = new Service(response.data.services[i]);
+                //var response = await $http.get('/api/services');
+                for (var i = 0; i < ServicesConfig.services.length; i++) {
+                    var s = new Service(ServicesConfig.services[i]);
                     self.services.push(s);
                 }
                 console.log("got services:");
@@ -59,6 +59,9 @@ ONEmSimModule.factory('Services', [
 
         Services.prototype.getLandingService = function () {
             var result;
+
+            console.log("/getLandingService");
+            console.log(this.services.length);
             for (var i = 0; i < this.services.length; i++) {
                 if (this.services[i].isDefault()) {
                     result = this.services[i];

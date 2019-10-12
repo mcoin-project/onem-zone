@@ -18,11 +18,11 @@
                                 </div>
                             </div>
                             <div class="ng-cloak" ng-show="result.type == 'input'">
-                                <form name="inputForm">
+                                <form name="inputForm valign-wrapper">
                                     <div class="input-field">
                                         <div class="col s9">
-                                            <input auto-focus autocomplete="off" ng-model="$parent.$parent.moText"
-                                                placeholder="Message" required id="moText" type="text">
+                                            <textarea required id="moText" auto-size rows="1" ng-model="$parent.$parent.moText" type="text"
+                                                placeholder="Message" class="form-control touch-desktop" id="sms" autocomplete="off" autofocus></textarea>
                                             <span class="helper-text">{{result.footer}}</span>
                                         </div>
                                         <div class="col s3">

@@ -8,7 +8,7 @@ ONEmSimModule.factory('ServicesData', ['Services',
             loadServices: async function (data) {
                 try {
                     servicesData = new Services(data);
-                    await servicesData.initialize();
+                    servicesData.initialize();
                     console.log("initialised services");
                     console.log(servicesData);
                     return servicesData;

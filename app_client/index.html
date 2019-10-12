@@ -45,7 +45,7 @@
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
             <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
-            <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li>
+            <!-- <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li> -->
             <li class="divider"></li>
             <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
         </ul>
@@ -75,7 +75,7 @@
                         </ul>
                     </div>
                     <!---<a ui-sref="main" class="brand-logo"></a>-->
-                    <div ng-show="touchCheckboxModel.on" class="nav-wrapper">
+                    <div ng-hide="true"  class="nav-wrapper">
                         <a href="#" data-target="services-target" class="sidenav-trigger right"><i
                                 class="material-icons">more_vert</i></a>
                         <ul style="overflow-y: scroll; overflow-x: hidden" class="right hide-on-med-and-down">
@@ -109,7 +109,7 @@
         </div>
     </div>
 
-    <ul class="sidenav" id="services-target">
+    <ul ng-hide="true" class="sidenav" id="services-target">
         <h6 class="teal-text">Services</h6>
         <div style="padding-top:15px" class="row ">
             <div ng-show="services.length == 0">
@@ -146,7 +146,7 @@
         </li>
         <li ng-class="{active: $state.includes('settings')}"><a ui-sref="settings">Settings<i
                     class="right small material-icons">settings</i></a></li>
-        <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li>
+        <!-- <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li> -->
         <li class="divider"></li>
         <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
     </ul>
@@ -183,73 +183,75 @@
 
 </body>
 <!--build:js js/app.min.js -->
-<script type="text/javascript" src="js/vendor/socket.io.js"></script>
-<script type="text/javascript" src="bower_components/jssip/dist/jssip.min.js"></script>
-<script type="text/javascript" src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="js/vendor/socket.io.js"></script>
+<script src="bower_components/jssip/dist/jssip.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
 
-<script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-resource/angular-resource.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-media-queries/match-media.js"></script>
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+<script src="bower_components/angular-media-queries/match-media.js"></script>
 <script type="text/javascript"
     src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
 <script type="text/javascript"
     src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput-jquery.js"></script>
-<script type="text/javascript" src="bower_components/angular-socket-io/socket.js"></script>
-<script type="text/javascript" src="bower_components/path/path.min.js"></script>
-<script type="text/javascript" src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
-<script type="text/javascript" src="bower_components/angular-sanitize/angular-sanitize.js"></script>
-<script type="text/javascript" src="bower_components/satellizer/dist/satellizer.js"></script>
-<script type="text/javascript" src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
-<script type="text/javascript" src="bower_components/angular-elastic/elastic.js"></script>
-<script type="text/javascript" src="bower_components/moment/moment.js"></script>
-<script type="text/javascript" src="bower_components/angular-moment/angular-moment.js"></script>
-<script type="text/javascript" src="bower_components/hammerjs/hammer.js"></script>
-<script type="text/javascript" src="bower_components/angular-hammer/angular-hammer.js"></script>
-<script type="text/javascript" src="bower_components/ng-dialog/js/ngDialog.js"></script>
-<!--<script type="text/javascript" src="bower_components/angular-cached-resource/angular-cached-resource.min.js"></script>-->
-<!--<script type="text/javascript" src="bower_components/angular-materialize/src/angular-materialize.js"></script>-->
+<script src="bower_components/angular-socket-io/socket.js"></script>
+<script src="bower_components/path/path.min.js"></script>
+<script src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/satellizer/dist/satellizer.js"></script>
+<script src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
+<script src="bower_components/angular-elastic/elastic.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/hammerjs/hammer.js"></script>
+<script src="bower_components/angular-hammer/angular-hammer.js"></script>
+<script src="bower_components/ng-dialog/js/ngDialog.js"></script>
+<!--<script src="bower_components/angular-cached-resource/angular-cached-resource.min.js"></script>-->
+<!--<script src="bower_components/angular-materialize/src/angular-materialize.js"></script>-->
 
-<script type="text/javascript" src="js/onemsim.js"></script>
-<script type="text/javascript" src="js/constants/services.js"></script>
-<script type="text/javascript" src="js/services/user.js"></script>
-<script type="text/javascript" src="js/services/socket.js"></script>
-<script type="text/javascript" src="js/services/phone.js"></script>
-<script type="text/javascript" src="js/services/dataModel.js"></script>
-<script type="text/javascript" src="js/services/smsHandler.js"></script>
-<script type="text/javascript" src="js/services/cache.js"></script>
-<script type="text/javascript" src="js/services/mttext.js"></script>
-<script type="text/javascript" src="js/services/services.js"></script>
-<script type="text/javascript" src="js/services/request.js"></script>
-<script type="text/javascript" src="js/services/servicesData.js"></script>
-<script type="text/javascript" src="js/services/wallet.js"></script>
-<script type="text/javascript" src="js/controllers/nav.js"></script>
-<script type="text/javascript" src="js/controllers/main.js"></script>
-<script type="text/javascript" src="js/controllers/login.js"></script>
-<script type="text/javascript" src="js/controllers/captureMsisdn.js"></script>
-<script type="text/javascript" src="js/controllers/captureToken.js"></script>
-<script type="text/javascript" src="js/controllers/logout.js"></script>
-<script type="text/javascript" src="js/controllers/logoutDelete.js"></script>
-<script type="text/javascript" src="js/controllers/service.js"></script>
-<script type="text/javascript" src="js/controllers/settings.js"></script>
-<script type="text/javascript" src="js/controllers/wallet.js"></script>
-<script type="text/javascript" src="js/controllers/console.js"></script>
-<script type="text/javascript" src="js/controllers/order.js"></script>
-<script type="text/javascript" src="js/controllers/phone.js"></script>
-<script type="text/javascript" src="js/controllers/inbox.js"></script>
-<script type="text/javascript" src="js/controllers/modalTopUp.js"></script>
-<script type="text/javascript" src="js/directives/closeKeyboard.js"></script>
-<script type="text/javascript" src="js/directives/myClock.js"></script>
-<script type="text/javascript" src="js/directives/scrollBottom.js"></script>
-<script type="text/javascript" src="js/directives/focusMe.js"></script>
-<script type="text/javascript" src="js/directives/enter.js"></script>
-<script type="text/javascript" src="js/directives/pagination.js"></script>
-<script type="text/javascript" src="js/directives/inputHistory.js"></script>
-<script type="text/javascript" src="js/directives/ngmobileclick.js"></script>
-<script type="text/javascript" src="js/vendor/materialize.js"></script>
-<script type="text/javascript" src="js/materializeInit.js"></script>
+<script src="js/onemsim.js"></script>
+<script src="js/constants/services.js"></script>
+<script src="js/services/user.js"></script>
+<script src="js/services/socket.js"></script>
+<script src="js/services/phone.js"></script>
+<script src="js/services/dataModel.js"></script>
+<script src="js/services/smsHandler.js"></script>
+<script src="js/services/cache.js"></script>
+<script src="js/services/mttext.js"></script>
+<script src="js/services/services.js"></script>
+<script src="js/services/request.js"></script>
+<script src="js/services/servicesData.js"></script>
+<script src="js/services/wallet.js"></script>
+<script src="js/controllers/nav.js"></script>
+<script src="js/controllers/main.js"></script>
+<script src="js/controllers/login.js"></script>
+<script src="js/controllers/captureMsisdn.js"></script>
+<script src="js/controllers/captureToken.js"></script>
+<script src="js/controllers/logout.js"></script>
+<script src="js/controllers/logoutDelete.js"></script>
+<script src="js/controllers/service.js"></script>
+<script src="js/controllers/settings.js"></script>
+<script src="js/controllers/wallet.js"></script>
+<script src="js/controllers/console.js"></script>
+<script src="js/controllers/order.js"></script>
+<script src="js/controllers/phone.js"></script>
+<script src="js/controllers/inbox.js"></script>
+<script src="js/controllers/modalTopUp.js"></script>
+<script src="js/directives/closeKeyboard.js"></script>
+<script src="js/directives/myClock.js"></script>
+<script src="js/directives/scrollBottom.js"></script>
+<script src="js/directives/focusMe.js"></script>
+<script src="js/directives/enter.js"></script>
+<script src="js/directives/pagination.js"></script>
+<script src="js/directives/inputHistory.js"></script>
+<script src="js/directives/ngmobileclick.js"></script>
+<script src="js/directives/autosize.js"></script>
+<script src="js/directives/onscroll.js"></script>
+<script src="js/vendor/materialize.js"></script>
+<script src="js/materializeInit.js"></script>
 <!-- endbuild -->
 
 </html>

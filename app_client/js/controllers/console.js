@@ -9,6 +9,10 @@ ONEmSimModule.controller('consoleController', [
 
         $scope.results = DataModel.getResults();
 
+        $scope.scrolled = function () {
+            console.log("/scrolled");
+        }
+
         $scope.smsInput = function () {
 
             if (typeof $scope.smsText === 'undefined' || $scope.smsText.length === 0) return;

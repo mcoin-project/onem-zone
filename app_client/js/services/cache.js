@@ -140,14 +140,16 @@ ONEmSimModule.factory('Cache', [
             getServices: async function () {
 
                 try {
-                    var mt = await Request.get('#', { method: 'api', all: true });
-                    console.log("back from api request:");
-                    console.log(mt);
-                    var result = processServicesList(mt);
+                    //var mt = await Request.get('#', { method: 'api', all: true });
+                    //console.log("back from api request:");
+                    //console.log(mt);
+                    //var result = processServicesList(mt);
+                    ServicesData.loadServices([]);
                     serviceState.activeService = ServicesData.services().getLandingService();
                     serviceState.previousService = serviceState.activeService;
-                    return result;
+                    return [];
                 } catch (error) {
+                    console.log(error)
                     throw "Error getting services, try again later";
                 }
             },
