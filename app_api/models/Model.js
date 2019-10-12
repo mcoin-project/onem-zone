@@ -12,7 +12,7 @@ var UserSchema = new Mongoose.Schema({
     google: { type: String, unique: true, index: true, sparse: true },
     lastLogin: { type: Date, default: Date.now },
     invalidLoginCount: { type: Number, default: 0 },
-    touchMode: { type: Boolean, default: false },
+    touchMode: { type: Boolean, default: true },
     dontSendEmails: { type: Boolean, default: false } // made this default false so no need to migrate old users
     //    github: String,
     //    instagram: String,
