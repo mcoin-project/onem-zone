@@ -44,7 +44,7 @@ var concatMessage = function (msisdn, mtText) {
 var sendMessage = function (msisdn) {
 	if (!clients[msisdn] || !clients[msisdn].socket) throw "no session";
 	var text;
-	if (clients[msisdn].context.hasChunks()) {
+	if (clients[msisdn].context && clients[msisdn].context.hasChunks()) {
 		text = clients[msisdn].context.getChunk();
 	} else {
 		text = clients[msisdn].mtText;
