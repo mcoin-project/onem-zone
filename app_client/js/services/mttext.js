@@ -39,14 +39,27 @@ ONEmSimModule.factory('MtText', function () {
 		if (!this.footer) return false;
 
 		if (this.options && this.preBody.length == 0 && this.footer.length <= FOOTER_THRESHOLD) {
-			result = true;
+			return true;
 		};
 		var onlyActions = this.footer.match(/([A-Z //]+)/gm);
 		if (onlyActions && onlyActions.length > 0 && onlyActions[0].length == this.footer.length) {
-			result = true;
+			return true;
 		}
-		return result;
+		var afterReply = this.footer.match(/\b\s(.+)/);
+		var actions = this.footer.match(/\b\s([A-Z-\/]+)/);
+		console.log("afterReply:");
+		console.log(afterReply);
+		console.log("actions:");
+		console.log(actions);
+		if (afterReply && afterReply.length && afterReply.length > 0 &&
+			actions && actions.length && actions.length > 0 && 
+			afterReply[1] == actions[1]) {
+			return true;
+		}
+		return false;
 	}
+
+	
 
 	Text.prototype.getBreadcrumbs = function () {
 
