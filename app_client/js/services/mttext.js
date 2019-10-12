@@ -141,7 +141,7 @@ ONEmSimModule.factory('MtText', function () {
 
 	Text.prototype.isFooter = function (lineNumber) {
 
-		if (!lineNumber || lineNumber > this.lines.length - 1) return false;
+		if (!lineNumber || lineNumber < this.lines.length - 2) return false;
 
 		var text = this.lines[lineNumber];
 
