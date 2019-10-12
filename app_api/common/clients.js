@@ -13,7 +13,7 @@ var isConnected = function (msisdn) {
 }
 
 var newConnection = function (msisdn, socket) {
-	if (!clients[msisdn]) clients[msisdn] = {};
+	if (!clients[msisdn]) clients[msisdn] = {mtText: ''};
 	clients[msisdn].socket = socket;
 }
 
@@ -52,6 +52,7 @@ var sendMessage = function (msisdn) {
 	var channel = clients[msisdn].api ? 'API MT SMS' : 'MT SMS';
 	try {
 		clients[msisdn].socket.emit(channel, { mtText: text });
+		clients[msisdn].mtText = '';
 	} catch (error) {
 		return false;
 	}
