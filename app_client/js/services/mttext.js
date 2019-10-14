@@ -169,8 +169,9 @@ ONEmSimModule.factory('MtText', function () {
 
 		var optionFormats = [
 			/^([A-Z]) ([+@*'A-Z#a-z0-9].+)/gm,  // check for basic option A-Z
+			/^([A-Z]) (\d+)/gm,
 			/^(\d+) (['+@*A-Z#a-z0-9].+)/gm,   // check for basic numbering options 0-9
-			/^(\d+[\.\d]+) ([+@*A-Z#a-z0-9].+)/gm  // check for wiki-style section numbering
+			/^(\d+[\.\d]+) ([+@*A-Z#a-z0-9].+)/gm, // check for wiki-style section numbering
 		];
 
 		var result;
@@ -186,8 +187,10 @@ ONEmSimModule.factory('MtText', function () {
 				if (r && r[2] && r[2].split(' ').length <= WORD_THRESHOLD) {
 					var option = r[1].trim();
 					var desc = r[2].trim();
-					var numeric = i !== 0 ? true : false;
+					var numeric = i > 1 ? true : false;
 					res = { option: option, desc: desc, numeric: numeric };
+					console.log("res:")
+					console.log(res)
 					//return true;
 					break;
 				}
@@ -201,8 +204,8 @@ ONEmSimModule.factory('MtText', function () {
 		var nextFound = false;
 		result = checkifOption(optionFormats, text);
 
-		// if then option is numeric, it can't be on its own, meaning that there should be an option above or below this one that is also numeric
-		// so this is a false positivie in that case
+		// if the option is numeric, it can't be on its own, meaning that there should be an option above or below this one that is also numeric
+		// so this is a false positive in that case
 		if (result && result.numeric) {
 			// check the line above if there is one
 			if (lineNumber > 0) {

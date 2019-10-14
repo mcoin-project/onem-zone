@@ -16,6 +16,7 @@ var io = null;
 
 var index = 0;
 var testMessages = [
+    "#ANYCOOP\nA Confirm\nB Back\nYou selected:\nC ABANTE ALLIG FARME..\nD Age survey\nE We want to know yo..\nF 1\n--Reply A-F",
     "#ANYCOOP JOIN A COOPERATIVE\nThere are 18,065 cooperatives to choose from!\nA I have a Join Code\nB Search for my coop\n--Reply A-B",
     "#ANYCOOP COOPERATIVES\nDisplaying first 50 of 1743 with 'farmer', 0 official and 1743 unofficial.\n 1 About official/unofficial\n 2 Start new search\n--Unofficial (1743)\n 3 Abante Allig Farmers Mult.. (5)\n 4 Abra Farmers and Provinci.. (1)\n 5 Antonio Canao Farmers Mul.. (0)\n 6 Baay Farmers Multipurpose.. (0)\n..1/7\n--MORE/BACK",
     "#ANYCOOP JOIN\nAbante Allig Farmers Multipurpose Cooperative\nA Join UNOFFICIAL group\nB I can make it OFFICIAL\nC Search another\nD Report it as 'Delisted'\nMembers: 5\nMembers: 5\n  -Show\nE +Details\nF +Registration\nG +Stats\nH +Contact\n--Reply A-H/BACK",
