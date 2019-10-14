@@ -38,7 +38,9 @@ var newMtMessage = function (msisdn, mtText, api) {
 
 var concatMessage = function (msisdn, mtText) {
 	if (!clients[msisdn]) clients[msisdn] = { mtText: '' };
-	clients[msisdn].mtText += mtText;
+	if (mtText) {
+		clients[msisdn].mtText += mtText;
+	}
 }
 
 var sendMessage = function (msisdn) {

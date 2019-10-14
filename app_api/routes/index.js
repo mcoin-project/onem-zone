@@ -100,7 +100,8 @@ api.get('/start', ensureAuthenticated, function (req, res) {
     res.json({
         msisdn: req.msisdn,
         sipproxy: sipProxy,
-        wsprotocol: wsProtocol
+        wsprotocol: wsProtocol,
+        voiceEnabled: process.env.VOICE_ENABLED || false
     });
 
 });

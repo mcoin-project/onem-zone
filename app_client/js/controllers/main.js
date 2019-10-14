@@ -59,31 +59,34 @@ ONEmSimModule.controller('mainController', [
             console.log(response);
             $rootScope.sipProxy = response.sipproxy;
             $rootScope.wsProtocol = response.wsprotocol;
+            $rootScope.voiceEnabled = response.voiceEnabled;
 
-            var socket = new JsSIP.WebSocketInterface($rootScope.wsProtocol + '://' + $rootScope.sipProxy);
+            if (response.voiceEnabled) {
+                var socket = new JsSIP.WebSocketInterface($rootScope.wsProtocol + '://' + $rootScope.sipProxy);
 
-            //JsSIP configuration:
-            var configuration = {
-                sockets: [socket],
-                uri: 'sip:' + $rootScope.msisdn + '@' + $rootScope.sipProxy,
-                password: 'ONEmP@$$w0rd2016',
-                useUpdate: false,
-                register: false,
-                use_preloaded_route: false,
-                register_expires: 120
-            };
+                //JsSIP configuration:
+                var configuration = {
+                    sockets: [socket],
+                    uri: 'sip:' + $rootScope.msisdn + '@' + $rootScope.sipProxy,
+                    password: 'ONEmP@$$w0rd2016',
+                    useUpdate: false,
+                    register: false,
+                    use_preloaded_route: false,
+                    register_expires: 120
+                };
+        
+                // For debug run this in the browser's console and reload the page:
+                // JsSIP.debug.enable('JsSIP:*');
+        
+                Phone.phoneData = new JsSIP.UA(configuration);
+        
+                Phone.phoneData.registrator().setExtraHeaders([
+                    'X-WEBRTC-UA: zoiper'
+                ]);
     
-            // For debug run this in the browser's console and reload the page:
-            // JsSIP.debug.enable('JsSIP:*');
-    
-            Phone.phoneData = new JsSIP.UA(configuration);
-    
-            Phone.phoneData.registrator().setExtraHeaders([
-                'X-WEBRTC-UA: zoiper'
-            ]);
-
-            Phone.phoneData.start();
-            Phone.phoneData.register();
+                Phone.phoneData.start();
+                Phone.phoneData.register();                
+            }
 
             return Phone.start(response);
 
@@ -97,21 +100,23 @@ ONEmSimModule.controller('mainController', [
             return Cache.getServices();
         }).then(function (services) {
 
-            Phone.phoneData.on('newRTCSession', function (data) {
-                console.log("main: new RTC session");
-
-                Phone.phoneSession = data.session;
-
-                Phone.phoneSession.on("progress", function (e) {
-                    console.log("[WS]: newRTCSession - progress");
-                    $rootScope.$emit('progress');
+            if ($rootScope.voiceEnabled) {
+                Phone.phoneData.on('newRTCSession', function (data) {
+                    console.log("main: new RTC session");
+    
+                    Phone.phoneSession = data.session;
+    
+                    Phone.phoneSession.on("progress", function (e) {
+                        console.log("[WS]: newRTCSession - progress");
+                        $rootScope.$emit('progress');
+                    });
+    
+                    //$rootScope.$emit('_onemNewRTCSession', data);
+                    var cs = Cache.getCallService();
+                    $state.go('service', { service: cs, initialize: true, template: cs.service.template, rtcData: data });
+    
                 });
-
-                //$rootScope.$emit('_onemNewRTCSession', data);
-                var cs = Cache.getCallService();
-                $state.go('service', { service: cs, initialize: true, template: cs.service.template, rtcData: data });
-
-            });
+            }
 
             DataModel.setSpinner(false);
 
