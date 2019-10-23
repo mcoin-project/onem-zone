@@ -134,6 +134,10 @@ exports.facebookAuth = function (User) {
 
       // Step 2. Retrieve profile information about the current user.
       request.get({ url: graphApiUrl, qs: accessToken, json: true }, function (err, response, profile) {
+
+        debug('/facebookAuth:')
+        debug(profile)
+
         if (response.statusCode !== 200) {
           return res.status(500).send({ message: profile.error.message });
         }
@@ -176,6 +180,7 @@ exports.facebookAuth = function (User) {
             user.firstName = user.firstName || profile.first_name;
             user.lastName = user.lastName || profile.last_name;
             user.email = user.email || profile.email;
+            user.facebook = profile.id;
             user.save(function (err) {
               if (err) debug(err);
               var token = common.createJWT(user);
