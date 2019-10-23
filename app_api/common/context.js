@@ -524,7 +524,9 @@ var chunkMenu = function (mtText, start, chunkSize) {
     }
     if (this.data.body && this.data.body.length > 0) {
         for (i = start; i < this.data.body.length && chunk.length < chunkTargetLength; i++) {
-            chunk += this.data.body[i].formatted;
+            if (this.data.body[i].formatted) {
+                chunk += this.data.body[i].formatted;
+            }
         }
     }
     if (i < this.data.body.length) {
