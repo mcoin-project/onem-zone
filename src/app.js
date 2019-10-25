@@ -1,4 +1,4 @@
-require('dotenv').load();
+//require('dotenv').load();
 
 var debug = require('debug')('onemzone');
 var supportsColor = require('supports-color');
