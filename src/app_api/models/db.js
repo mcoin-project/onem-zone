@@ -12,7 +12,8 @@ debug("dbURI:"+dbURI);
 mongoose.connect(dbURI, { 
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useUnifiedTopology: true
  }, function (err, res) {
   if (err) { 
     debug ('ERROR connecting to: ' + dbURI + '. ' + err);
