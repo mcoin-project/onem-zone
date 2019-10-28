@@ -80,6 +80,7 @@ exports.googleAuth = function (User) {
           });
         });
       } else {
+        debug("else case");
         // Step 3b. Create a new user account or return an existing one.
         User.findOne({ google: googleJWTToken.sub }, function (err, existingUser) {
           if (existingUser && existingUser.email) {
@@ -88,7 +89,9 @@ exports.googleAuth = function (User) {
             return res.send({ token: common.createJWT(existingUser) });
           }
           var user = new User();
+          debug("generating secret")
           user.secret = speakeasy.generateSecret({ length: 20 }).base32;
+          debug("generated secret")
           user.google = googleJWTToken.sub;
           user.firstName = user.firstName || googleJWTToken.given_name;
           user.lastName = user.lastName || googleJWTToken.family_name;
