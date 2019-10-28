@@ -5,7 +5,6 @@ var mongoose = require('mongoose');
 
 var common = require('../common/common.js');
 var user = require('../controllers/user.js');
-var wallet = require('../controllers/wallet.js');
 var auth = require('../controllers/auth');
 var api = express.Router();
 
@@ -15,6 +14,10 @@ var ServicesList = require('../models/Model').ServicesList;
 var wsProtocol = process.env.WS_PROTOCOL || "ws";
 var sipProxy = process.env.SIP_PROXY || "zoiper.dhq.onem";
 var junction = require('../common/junction');
+
+//var wallet = require('../controllers/wallet.js');
+
+
 /*
  |--------------------------------------------------------------------------
  | Login Required Middleware
@@ -106,8 +109,8 @@ api.get('/start', ensureAuthenticated, function (req, res) {
 
 });
 
-api.get('/wallet/getAccounts', ensureAuthenticated, wallet.getAccounts(User));
-api.post('/wallet/topUp', ensureAuthenticated, wallet.topUp(User));
+// api.get('/wallet/getAccounts', ensureAuthenticated, wallet.getAccounts(User));
+// api.post('/wallet/topUp', ensureAuthenticated, wallet.topUp(User));
 
 api.post('/auth/google', auth.googleAuth(User));
 api.post('/auth/facebook', auth.facebookAuth(User));
