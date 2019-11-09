@@ -140,8 +140,8 @@ exports.Context.prototype.makeMTResponse = function () {
     if (this.isMenu() && this.data.body && this.data.body.length > 0) {
         for (var i = 0; i < this.data.body.length; i++) {
             if (this.data.body[i].type == "content") {
-                this.data.body[i].formatted = this.data.body[i].description + '\n';
-                result += this.data.body[i].formatted;
+                this.data.body[i].__formatted = this.data.body[i].description + '\n';
+                result += this.data.body[i].__formatted;
             } else if (this.data.body[i].type == "option") {
                 if (numMenuOptions > OPTIONS.length) {
                     if (optionIndex < 9) {
@@ -153,8 +153,8 @@ exports.Context.prototype.makeMTResponse = function () {
                 } else {
                     menuOption = OPTIONS[optionIndex].toUpperCase();
                 }
-                this.data.body[i].formatted = menuOption + ' ' + this.data.body[i].description + '\n';
-                result += this.data.body[i].formatted;
+                this.data.body[i].__formatted = menuOption + ' ' + this.data.body[i].description + '\n';
+                result += this.data.body[i].__formatted;
                 optionIndex++;
             }
         }
@@ -524,8 +524,8 @@ var chunkMenu = function (mtText, start, chunkSize) {
     }
     if (this.data.body && this.data.body.length > 0) {
         for (i = start; i < this.data.body.length && chunk.length < chunkTargetLength; i++) {
-            if (this.data.body[i].formatted) {
-                chunk += this.data.body[i].formatted;
+            if (this.data.body[i].__formatted) {
+                chunk += this.data.body[i].__formatted;
             }
         }
     }
@@ -540,7 +540,7 @@ var chunkMenu = function (mtText, start, chunkSize) {
         if (this.data.body[i].type == "content") {
             var chunkResult = removeWordsFromEnd(chunk, chunkTargetLength);
             chunk = chunkResult.chunk;
-            this.data.body[i].formatted = chunk.remainder;
+            this.data.body[i].__formatted = chunk.remainder;
             if (chunk.remainder.length > 0) {
                 moreToChunk = true;
             }

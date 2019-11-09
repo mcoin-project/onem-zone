@@ -38,6 +38,7 @@ var newMtMessage = function (msisdn, mtText, api) {
 
 var concatMessage = function (msisdn, mtText) {
 	if (!clients[msisdn]) clients[msisdn] = { mtText: '' };
+	if (!clients[msisdn].mtText) clients[msisdn].mtText = '';
 	if (mtText) {
 		clients[msisdn].mtText += mtText;
 	}
