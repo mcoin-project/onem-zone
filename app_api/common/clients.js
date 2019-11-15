@@ -26,7 +26,7 @@ var newMtMessage = function (msisdn, mtText, api) {
 	if (!clients[msisdn]) clients[msisdn] = {};
 
 	var size = clients[msisdn].size || DEFAULT_MSG_SIZE;
-	clients[msisdn].mtText = mtText;
+	clients[msisdn].mtText = mtText || '';
 	debug("/newMtMessage:"+ clients[msisdn].mtText);
 	clients[msisdn].api = api;
 	if (mtText.length > size * MAX_MSG_CHARS) {
@@ -124,7 +124,7 @@ var getApi = function (msisdn) {
 
 var getMtText = function (msisdn) {
 	if (!clients[msisdn]) return false;
-	return clients[msisdn].mtText;
+	return clients[msisdn].mtText || '';
 }
 
 var newContext = async function (msisdn, body) {

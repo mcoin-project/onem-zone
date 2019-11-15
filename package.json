@@ -7,9 +7,10 @@
     "npm": "^6.4.1"
   },
   "scripts": {
-    "start": "NODE_ENV=production node app",
-    "start-prod": "NODE_ENV=production node app",
-    "start-dev": "DEBUG=onemzone node app"
+    "start": "NODE_ENV=production node ./src/app",
+    "start-prod": "NODE_ENV=production node ./src/app",
+    "start-dev": "DEBUG=onemzone node ./src/app",
+    "start:docker": "nodemon ./src/app"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
