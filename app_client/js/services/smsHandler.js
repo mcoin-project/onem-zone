@@ -1,4 +1,4 @@
-ONEmSimModule.factory('SmsHandler', [
+ONEmSimModule.factory('Session', [
     '$resource',
     function ($resource) {
         return $resource('/api', {}, {

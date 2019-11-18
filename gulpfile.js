@@ -65,7 +65,7 @@ gulp.task('useref', function() {
     .pipe(useref())
     .pipe(gulpIf('*.js', uglify()))
     .on('error', function (err) { gutil.log(gutil.colors.red('[Error]'), err.toString()); })
-    .pipe(gulpIf('*.js', stripDebug()))
+  //  .pipe(gulpIf('*.js', stripDebug()))
     .pipe(gulpIf('*.js', sourcemaps.write('.')))
     .pipe(gulpIf('*.css', cssnano()))
     .pipe(gulp.dest('public'));

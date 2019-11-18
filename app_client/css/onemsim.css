@@ -4,7 +4,7 @@
  *
  *----------------------------------------------------------------------------------------*/
 body {
-  height: 100vh; }
+  background-color: transparent; }
 
 /* Google signin  - check if used*/
 @media only screen and (max-width: 320px) {

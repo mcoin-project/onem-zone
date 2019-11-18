@@ -6,8 +6,9 @@ ONEmSimModule.factory('Socket', [
     function ($window, $auth, socketFactory) {
 
         var mySocket, myIoSocket;
-        //debugger;
+
         return {
+
             disconnect: function () {
                 if (!myIoSocket) {
                     console.log("myIoSocket undefined");
@@ -16,13 +17,9 @@ ONEmSimModule.factory('Socket', [
                 console.log("disconnecting socket");
                 return myIoSocket.disconnect();
             },
-            connect: function () {
-                var token = $auth.getToken();
 
-                if (!token) {
-                    console.log("could not locate jwt token")
-                    return false;
-                }
+            connect: function () {
+                var token = null;
 
                 if (myIoSocket && myIoSocket.connected) {
                     console.log("already connected, returning");
@@ -31,7 +28,9 @@ ONEmSimModule.factory('Socket', [
 
                 var path = $window.location.protocol + "//" + $window.location.host;
                 console.log("making connection")
-                myIoSocket = io.connect(path, { query: { token: token } });
+                //myIoSocket = io.connect(path, { query: { token: token } });
+
+                myIoSocket = io.connect('http://localhost:5000', { query: { token: token } });
 
                 console.log("token:");
                 console.log(token);
@@ -40,17 +39,17 @@ ONEmSimModule.factory('Socket', [
                     ioSocket: myIoSocket
                 });
 
-                //var mySocket = socketFactory();
+                mySocket.forward('connect')
+                mySocket.forward('disconnect')
                 mySocket.forward('error');
-                mySocket.forward('MT SMS');
-                mySocket.forward('API MT SMS');
-                mySocket.forward('INBOX MT SMS');
+                mySocket.forward('MESSAGE RECEIVED');
                 mySocket.forward('LOGOUT');
 
                 return mySocket;
             },
-            emit: function (param1, param2) {
-                return myIoSocket.emit(param1, param2);
+
+            emit: function (...args) {
+                return myIoSocket.emit(...args);
             }
         }
     }

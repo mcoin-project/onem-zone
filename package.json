@@ -9,12 +9,13 @@
   "scripts": {
     "start": "NODE_ENV=production node app",
     "start-prod": "NODE_ENV=production node app",
-    "start-dev": "DEBUG=onemzone node app"
+    "start-dev": "DEBUG=onemzone nodemon app"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
     "body-parser": "^1.18.3",
     "compression": "^1.7.3",
+    "cors": "^2.8.5",
     "debug": "^4.1.1",
     "dotenv": "^4.0.0",
     "errorhandler": "^1.1.1",
@@ -30,6 +31,7 @@
     "postmark": "^2.2.4",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
+    "rmq-wrapper": "0.0.5",
     "smpp": "^0.3.1",
     "socket.io": "^2.2.0",
     "speakeasy": "^2.0.0",

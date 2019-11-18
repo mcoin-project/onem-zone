@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var errorHandler = require('errorhandler');
 var helmet = require('helmet');
 var compression = require('compression');
+var cors = require('cors')
 
 // Bring in the routes for the API (delete the default routes)
 var routesApi = require('./app_api/routes/index.js');
@@ -28,12 +29,20 @@ var public_folder = mode == 'production' ? 'public' : 'app_client';
 
 debug("public_folder:" + public_folder);
 
-app.use(helmet({
-    xssFilter: {
-      setOnOldIE: true
-    }
-}));
-app.use(helmet.noCache());
+// allow CORS:
+app.use(function (req, res, next) {
+    res.setHeader('X-Forwarded-For', 'https://c09dd96a.ngrok.io/');
+    next();
+});
+
+app.use(cors())
+
+// app.use(helmet({
+//     xssFilter: {
+//         setOnOldIE: true
+//     }
+// }));
+// app.use(helmet.noCache());
 
 // compress all responses
 app.use(compression());
@@ -47,7 +56,7 @@ app.use(express.static(path.join(__dirname, public_folder)));
 // Force HTTPS on Heroku
 // if (app.get('env') === 'production') {
 if (process.env.HTTPS === 'ON') {
-    app.use(function(req, res, next) {
+    app.use(function (req, res, next) {
         var protocol = req.get('x-forwarded-proto');
         protocol == 'https' ? next() : res.redirect('https://' + req.hostname + req.url);
     });
@@ -57,21 +66,41 @@ if (process.env.HTTPS === 'ON') {
 // Bring in the data model & connect to db
 require('./app_api/models/db');
 
-io.initialize(server);
+//io.initialize(server);
 
 // Use the API routes when path starts with /api
 app.use('/api', routesApi);
 app.use('/naut', nautilusApi);
 
-app.get('/', function(req, res, next) {
+// app.get('/start/:userId', cors(), function (req, res) {
+
+//     io = sio(server);
+
+//     res.sendFile('/' + public_folder + '/app.min.js', { root: __dirname }, function (err) {
+//         if (err) {
+//             debug("error sending file")
+//             debug(err)
+//         } else {
+//             debug('Sent file')
+//         }
+//     })
+//     // const nsp = io.of(`/${req.params.userId}`);
+//   //  const nsp = io.of('/5ca516e1ab534c06b35fd817');
+//     io.on('connection', function (socket) {
+//         debug('someone connected');
+//     });
+//    // nsp.emit('hi', 'everyone!');
+// });
+
+app.get('/', function (req, res, next) {
     res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
 });
 
-app.get('*', function(req, res) {
+app.get('*', function (req, res) {
     res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
 });
 
-app.get('/*', function(req, res, next) {
+app.get('/*', function (req, res, next) {
     debug("caught default route");
     // Just send the index.html for other files to support HTML5Mode
     res.sendFile('/' + public_folder + '/index.html', { root: __dirname });
@@ -81,6 +110,7 @@ app.get('/*', function(req, res, next) {
 if ('development' == app.get('env')) {
     app.use(errorHandler());
 }
+io.initialize(server);
 server.listen(theport);
 debug("listening on port:" + theport)
 

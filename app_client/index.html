@@ -9,7 +9,7 @@
     <meta name="description" content="ONEm Zone" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>ONEm Zone</title>
-    <link rel="icon" href="./images/favicon.ico?v1.1">
+    <!-- <link rel="icon" href="./images/favicon.ico?v1.1"> -->
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link
@@ -43,7 +43,7 @@
 <body ng-controller="navbarController" name="body">
     <div ng-controller="phoneController">
 
-        <div ng-show="displayPhone" class="phone screen">
+        <div ng-cloak ng-show="displayPhone" class="phone screen">
 
             <div class="phone-header"></div>
 

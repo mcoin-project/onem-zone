@@ -83,28 +83,6 @@ api.get('/user/profile', ensureAuthenticated, user.getProfile(User));
 api.put('/user/msisdn', ensureAuthenticated, user.updateMsisdn(User));
 api.put('/user/profile', ensureAuthenticated, user.setProfile(User));
 
-api.get('/start', ensureAuthenticated, function (req, res) {
-    var httpProtocol = req.get('Referer').split(":")[0];
-    debug(httpProtocol);
-
-    if (httpProtocol == 'https') {
-        // the used protocol is HTTPS
-        debug('The HTTPS protocol has been used; "wss" will be used for WebRTC');
-        wsProtocol = "wss";
-    } else {
-        debug('It appears that HTTP protocol has been used; environment provided protocol or "ws" will be used for WebRTC');
-        wsProtocol = process.env.WS_PROTOCOL || "ws";
-    };
-    debug(wsProtocol);
-
-    res.json({
-        msisdn: req.msisdn,
-        sipproxy: sipProxy,
-        wsprotocol: wsProtocol
-    });
-
-});
-
 api.get('/wallet/getAccounts', ensureAuthenticated, wallet.getAccounts(User));
 api.post('/wallet/topUp', ensureAuthenticated, wallet.topUp(User));
 

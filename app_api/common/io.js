@@ -1,8 +1,10 @@
 const debug = require('debug')('onemzone');
 
 var sio = require('socket.io');
+const { consume, produce, cancel } = require('rmq-wrapper')
 
 var common = require('../common/common.js');
+var config = require('../common/config.js');
 var user = require('../controllers/user.js');
 var message = require('../controllers/message.js');
 
@@ -45,11 +47,47 @@ var testMessages = [
     "@a__190227145528:\ntesting11"
 ]
 
+
+const sendMessage = function (msisdn, to, mtText) {
+
+    debug("/sendMessage")
+    debug(arguments)
+
+    let ns = io.of('/');
+
+    let index;
+
+    for (let id in ns.connected) {
+        index = ns.connected[id]
+        if (index.handshake.query.msisdn == msisdn) {
+            debug("found, sending")
+            io.to(id).emit('MESSAGE RECEIVED', { mtText: mtText });
+        }
+    }
+
+}
+
+const onMessage = function (data) {
+    try {
+        logger.info("got message")
+        consume.ack(data)
+        let jsonData = JSON.parse(data.content.toString())
+        msisdn = jsonData.from
+        mtText = jsonData.mtText
+        to = jsonData.to
+        sendMessage(msisdn, to, mtText)
+    } catch (error) {
+        logger.info(error)
+    }
+}
+
 exports.io = function () {
     return io;
 };
 
-exports.initialize = function (server) {
+exports.initialize = async function (server) {
+
+  //  await consume.connect(config.channelId, onMessage)
 
     io = sio(server);
 
@@ -57,10 +95,17 @@ exports.initialize = function (server) {
     //     express_middleware(socket.handshake, {}, next);
     // });
 
+    debug("io initialized")
+
     io.use(function (socket, next) {
-        if (socket.handshake.query && socket.handshake.query.token) {
+        if (socket.handshake.query) {
             debug("query.token:")
-            debug(socket.handshake.query.token);
+            debug(socket.handshake.query);
+            if (socket.handshake.query.token === 'null') {
+                debug("no token, so assigning random user")
+                socket.handshake.query.msisdn = (new Date).getTime();
+                return next();
+            }
             var payload = common.decodeJWT(socket.handshake.query.token);
             if (!payload) {
                 debug("invalid jwt");
@@ -69,7 +114,7 @@ exports.initialize = function (server) {
             socket.jwtPayload = payload;
             debug("socket: querying user: " + payload.sub);
             user.getUser(payload.sub).then(function (u) {
-                socket.msisdn = u.msisdn;
+                socket.handshake.query.msisdn = u.msisdn;
                 next();
             }).catch(function (error) {
                 debug(error);
@@ -79,7 +124,7 @@ exports.initialize = function (server) {
             //debug("payload");
             //debug(payload);
         } else {
-            debug("missing jwt");
+            debug("missing query param");
             next(new Error('Authentication error'));
         }
     }).on('connection', function (socket) {
@@ -87,24 +132,23 @@ exports.initialize = function (server) {
         debug("Connection received: " + socket.id);
         //sms.clients.push(socket);    
 
-        debug(socket.msisdn);
-
+        debug(socket.handshake.query.msisdn);
 
         // check for existing connection from msisdn already logged in (on another device) and kick them off
-        if (socket.msisdn) {
+        if (socket.handshake.query.msisdn) {
             debug("found existing user");
-            if (process.env.TEST !== 'on' && clients.isConnected(socket.msisdn)) {
-                clients.forceLogout(socket.msisdn);
+            if (process.env.TEST !== 'on' && clients.isConnected(socket.handshake.query.msisdn)) {
+                clients.forceLogout(socket.handshake.query.msisdn);
             }
-            clients.newConnection(socket.msisdn, socket)
-            debug("isConnected:" + clients.isConnected(socket.msisdn));
+            clients.newConnection(socket.handshake.query.msisdn, socket)
+            debug("isConnected:" + clients.isConnected(socket.handshake.query.msisdn));
             // deliver any saved messages for this user
-            message.deliverPending(socket);
+            //message.deliverPending(socket);
         }
 
         socket.on('MO SMS', async function (moText) {
 
-            moText = moText.trim().toLowerCase();
+            //     moText = moText.trim().toLowerCase();
 
             debug('moText: ');
             debug(moText);
@@ -112,35 +156,19 @@ exports.initialize = function (server) {
             debug("socket.id");
             debug(socket.id);
 
-            if (socket.msisdn) {
+            if (socket.handshake.query.msisdn) {
 
                 try {
-                    if (moText.startsWith('#')) {
-                        clients.switchService(socket.msisdn, moText);
+                    // place on rmq
+                    let rmqMessage = {
+                        moText: moText,
+                        from: socket.handshake.query.msisdn,
+                        to: config.channelId,
+                        channelId: config.channelId,
+                        channelType: config.channelType
                     }
-                     // Todo implement caching in dbmethods
-                    if (await dbMethods.serviceIncludes(clients.currentService(socket.msisdn))) {
-                        if (nautilus.isSystemVerb(moText)) {
-                            debug("executing system verb in nautilus");
-                            nautilus.executeSystemVerb(socket.msisdn, common.shortNumber, moText, false);
-                        } else {
-                            debug("sending SMS to nautilus: " + moText + " from: " + socket.msisdn);
-                            nautilus.processMessage(socket.msisdn, common.shortNumber, moText, false);
-                        }
-                    } else {
-                        debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
-                        sms.sendSMS(socket.msisdn, common.shortNumber, moText, false);
-                        if (process.env.TEST == 'on') {
-    
-                            var timer = setTimeout(
-                                function () {
-                                    if (index == testMessages.length) index = 0;
-                                    if (testMessages[index]) socket.emit('MT SMS', { mtText: testMessages[index] });
-                                    index++;
-                                }, 1000
-                            );
-                        }
-                    }
+                    debug(rmqMessage)
+                    await produce('MO', JSON.stringify(rmqMessage))
                 } catch (error) {
                     console.log(error);
                 }
@@ -150,38 +178,10 @@ exports.initialize = function (server) {
 
         });
 
-        socket.on('API MO SMS', function (moText) {
-            debug('moText: ');
-            debug(moText);
-
-            debug("socket.id");
-            debug(socket.id);
-
-            if (socket.msisdn) {
-
-                debug("sending SMS to Short Number " + common.shortNumber + " from: " + socket.msisdn);
-                sms.sendSMS(socket.msisdn, common.shortNumber, moText, true);
-
-                if (process.env.TEST == 'on') {
-
-                    var timer = setTimeout(
-                        function () {
-                            if (index == testMessages.length) index = 0;
-                            if (testMessages[index]) socket.emit('API MT SMS', { mtText: testMessages[index] });
-                            index++;
-                        }, 1000
-                    );
-                }
-
-            } else {
-                debug("can't locate msisdn for user");
-            }
-        });
-
         socket.on('disconnect', function () {
             debug('Client gone (id=' + socket.id + ').');
-            if (socket.msisdn) delete clients.disconnected(socket.msisdn);
-            delete socket.msisdn;
+            if (socket.handshake.query.msisdn) delete clients.disconnected(socket.handshake.query.msisdn);
+            delete socket.handshake.query.msisdn;
         });
     });
 }

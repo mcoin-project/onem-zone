@@ -19,10 +19,10 @@ body.full {
   bottom: 80px;
   right: 20px;
   display: block;
-  width: 350px;
+  width: 330px;
   height: 442px;
-  margin: 0px auto;
-  border: 1px solid #e0e0e0; }
+  border: 1px solid #e0e0e0;
+  background-color: white; }
 
 .phone .screen_wrp {
   position: absolute;
@@ -89,7 +89,6 @@ body.full {
 
 .phone .panel input, .phone .panel textarea {
   display: block;
-  float: left;
   width: 100%;
   padding: 10px;
   font-size: 18px;
@@ -487,7 +486,6 @@ body.full {
 
 .phone .sms-input span {
   display: block;
-  float: left;
   width: 70px; }
 
 .phone .sms-input span img {
@@ -498,7 +496,8 @@ body.full {
   margin: 15px; }
 
 .phone .sms-input span.input {
-  width: calc(100% - 85px); }
+  margin-left: 20px;
+  width: 290px; }
 
 .phone .sms-input span.input input {
   margin: 16px 0;
@@ -766,18 +765,10 @@ body.full div.logo img {
 
 @media (max-width: 768px) {
   .phone .sms-response {
-    top: 75px;
     bottom: 75px; }
   .section {
     display: block;
     padding: 0; }
-  .phone {
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    margin-top: 0; }
   .phone .wireframe {
     display: none; }
   .phone .screen_wrp {
@@ -787,9 +778,6 @@ body.full div.logo img {
     right: 0px;
     border: 0px none; }
   .phone .sms-input {
-    bottom: 0;
-    left: 0;
-    right: 0;
     height: 80px;
     background: #e1e1e1; }
   .phone .sms-input span img {

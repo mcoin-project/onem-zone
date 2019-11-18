@@ -24,17 +24,17 @@
             </div> <!-- /sms-response-pos -->
         </div> <!-- /sms-response -->
 
-        <div ng-controller="consoleController" class="sms-input">
+        <div class="sms-input">
             <form ng-submit="smsInput()">
                 <!-- <label for="sms"></label> -->
-                <span class="dial"><a ng-click="openDialer()" class="open_dialer" href=""><img
-                            src="images/icn_dialer.svg"></a></span>
+                <!-- <span class="dial"><a ng-click="openDialer()" class="open_dialer" href=""><img
+                            src="https://c09dd96a.ngrok.io/images/icn_dialer.svg"></a></span> -->
                 <span class="input">
                     <input close-keyboard input-history history="history" ng-model="smsText" type="text"
                         placeholder="Message" class="form-control" id="sms" autocomplete="off" auto-focus>
                     <!---<textarea ng-model="smsText" placeholder="Message" class="form-control" id="sms" rows="1" msd-elastic="\n" ng-enter="smsInput()" auto-focus></textarea>-->
                 </span> <!-- /input -->
-                <!-- <span class="send"><a class="send_msg" href="#"><img src="images/icn_send.svg"></a></span> -->
+                <!-- <span class="send"><a class="send_msg" href="#"><img src="https://c09dd96a.ngrok.io/images/icn_send.svg"></a></span> -->
             </form> <!-- /smsInput() -->
         </div> <!-- /sms-input -->
 

@@ -115,20 +115,20 @@ ONEmSimModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider
             }).
             state('main', {
                 url: '/',
-                //      templateUrl: 'partials/onemSim_app.html',
-                controller: 'mainController',
-                resolve: {
-                    loginRequired: loginRequired
-                }
-            }).
-            state('console', {
-                url: '/',
                 templateUrl: 'partials/onemSim.html',
-                controller: 'phoneController',
-                resolve: {
-                    loginRequired: loginRequired
-                }
+                controller: 'consoleController',
+                // resolve: {
+                //     loginRequired: loginRequired
+                // }
             }).
+            // state('console', {
+            //     url: '/',
+            //     templateUrl: 'partials/onemSim.html',
+            //     controller: 'phoneController',
+            //     resolve: {
+            //         loginRequired: loginRequired
+            //     }
+            // }).
             state('order_success', {
                 url: '/gcash/order_success/:msgId?=amount&=currency',
                 controller: 'orderController',
