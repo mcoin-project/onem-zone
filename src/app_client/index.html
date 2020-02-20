@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="ONEmSimModule">
+
+<head>
+    <base href="/">
+    <meta charset="utf-8" />
+    <meta name="fragment" content="!" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="ONEm Zone" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>ONEm Zone</title>
+    <link rel="icon" href="./images/favicon.ico?v1.1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:400,400i,600,600i,700,700i,800,800i|Titillium+Web:200,200i,300,300i,400,400i,600,600i,700,700i&subset=cyrillic,cyrillic-ext,greek,greek-ext,latin-ext,vietnamese"
+        rel="stylesheet">
+    <!-- CSS Files -->
+    <!--build:css css/plugins.min.css -->
+    <link rel="stylesheet" href="css/materialize-src/sass/materialize.css">
+    <link rel="stylesheet" href="bower_components/angular-toastr/dist/angular-toastr.min.css" />
+    <link rel="stylesheet"
+        href="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/css/intlTelInput.css">
+    <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog.min.css">
+    <link rel="stylesheet" href="bower_components/ng-dialog/css/ngDialog-theme-default.min.css">
+    <!-- endbuild -->
+    <!--build:css css/app.min.css -->
+    <link rel="stylesheet" href="css/onemfonts.css" />
+    <link rel="stylesheet" href="css/onemsim.css" />
+    <link rel="stylesheet" href="css/screens.css" />
+    <!-- endbuild -->
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries-->
+    <!--if lt IE 9-->
+    <!-- JS Files -->
+    <!--build:js js/plugins.min.js -->
+    <script src="js/vendor/html5shiv.min.js"></script>
+    <script src="js/vendor/respond.min.js"></script>
+    <!-- endbuild -->
+
+</head>
+
+<body ng-controller="navbarController" name="body">
+    <div class="ng-cloak" ng-show="msisdn">
+        <!-- Dropdown Structure -->
+        <ul id="dropdown1" class="dropdown-content">
+            <li><a ui-sref="settings">Settings<i class="right small material-icons">settings</i></a></li>
+            <!-- <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li> -->
+            <li class="divider"></li>
+            <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
+        </ul>
+        <div style="overflow-y: scroll; overflow-x: hidden">
+        <ul id="services" class="services-cols-{{servicesCols}} dropdown-content dropdown-content-services">
+            <li ng-show="services.length == 0"><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load
+                    menu</a></li>
+            <li ng-repeat="service in services track by $index">
+                <a class="dropdown-icon-wrapper"
+                    ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
+                    <span class="onem-icon-{{service.getIcon()}}"></span>
+                    <div>{{service.getName()}}</div>
+                </a>
+            </li>
+        </ul>
+        </div>
+        <div class="navbar-fixed">
+            <nav class="white">
+                <div class="container">
+                    <div class="nav-wrapper">
+                        <ul class="left hide-on-med-and-down">
+                            <li>
+                                <a ui-sref="main" class="logo">
+                                    <img src="./images/anycoop.png" alt="logo" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <!---<a ui-sref="main" class="brand-logo"></a>-->
+                    <div ng-hide="true"  class="nav-wrapper">
+                        <a href="#" data-target="services-target" class="sidenav-trigger right"><i
+                                class="material-icons">more_vert</i></a>
+                        <ul style="overflow-y: scroll; overflow-x: hidden" class="right hide-on-med-and-down">
+                            <!-- Dropdown Trigger -->
+                            <li><a class="dropdown-trigger-services" href="#!" data-target="services"><i
+                                        class="material-icons">apps</i> Services<i
+                                        class="material-icons right">arrow_drop_down</i></a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="nav-wrapper">
+                        <a href="#" data-target="mobile-demo-left" class="sidenav-trigger"><i
+                                class="material-icons">menu</i></a>
+                        <ul class="right hide-on-med-and-down">
+                            <li ng-class="{active: $state.includes('service')}"><a ui-sref="main"><span><i
+                                            class="material-icons">home</i></span>Home</a></li>
+                            <li ui-sref-active="active" ng-show="touchCheckboxModel.on && ready"><a
+                                    ui-sref="inbox"><span><i class="material-icons">message</i></span><span
+                                        ng-show="inboxCounts.unread > 0"
+                                        class="badge teal new white-text">{{inboxCounts.unread}}</span></a></li>
+                            <!-- Dropdown Trigger -->
+                            <li ng-class="{active: $state.includes('settings')}"><a class="dropdown-trigger" href="#!"
+                                    data-target="dropdown1"><i class="material-icons">person</i>{{dropdown}}<i
+                                        class="material-icons right">arrow_drop_down</i></a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <ul ng-hide="true" class="sidenav" id="services-target">
+        <h6 class="teal-text">Services</h6>
+        <div style="padding-top:15px" class="row ">
+            <div ng-show="services.length == 0">
+                <li><a ui-sref="main" ui-sref-opts="{reload: true}">Click here to load menu</a></li>
+            </div>
+            <div style="text-align:center" class="col s6 center-align">
+                <li ng-repeat="service in services1 track by $index">
+                    <a style="line-height:normal;padding:10px;height:auto"
+                        ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
+                        <span style="font-size:24px"
+                            class="teal-text center-align onem-icon-{{service.getIcon()}}"></span>
+                        <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
+                    </a>
+                </li>
+            </div>
+            <div style="text-align:center" style="text-align:center" class="col s6 center-align">
+                <li ng-repeat="service in services2 track by $index">
+                    <a style="line-height:normal;padding:10px;height:auto"
+                        ui-sref="service({initialize: false, service: service, template: service.getTemplate() })">
+                        <span style="font-size:24px"
+                            class="teal-text center-align onem-icon-{{service.getIcon()}}"></span>
+                        <div style="font-size:12px" class="teal-text">{{service.getName()}}</div>
+                    </a>
+                </li>
+            </div>
+        </div>
+    </ul>
+    <ul class="sidenav" id="mobile-demo-left">
+        <li ng-class="{active: $state.includes('service')}"><a ui-sref="main">Home<i
+                    class="right small material-icons">home</i></a></li>
+        <li ui-sref-active="active" ng-show="touchCheckboxModel.on && ready"><a ui-sref="inbox">Inbox<span
+                    ng-show="inboxCounts.unread > 0" style="float:none"
+                    class="badge new">{{inboxCounts.unread}}</span><i class="right small material-icons">message</i></a>
+        </li>
+        <li ng-class="{active: $state.includes('settings')}"><a ui-sref="settings">Settings<i
+                    class="right small material-icons">settings</i></a></li>
+        <!-- <li><a ui-sref="wallet">My Wallet<i class="right small material-icons">attach_money</i></a></li> -->
+        <li class="divider"></li>
+        <li><a ui-sref="logout">Logout<i class="right small material-icons">open_in_browser</i></a></li>
+    </ul>
+
+    <div class="container">
+        <div ui-view></div>
+        <div ng-show="spinner" class="spinner-container">
+            <div class="preloader-wrapper" ng-class="{active : spinner}">
+                <div class="spinner-layer spinner-red-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="gap-patch">
+                        <div class="circle"></div>
+                    </div>
+                    <div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <audio loop id="myAudio" src="" hidden=true>
+        <source type="audio/wav" />
+    </audio>
+
+    <video loop id="myVideo" width="320" height="240" src="" hidden=true>
+        <source type="video/mp4">
+        <source type="video/ogg">
+        <source type="video/webm">
+        Your browser does not support the video tag.
+    </video>
+
+</body>
+<!--build:js js/app.min.js -->
+<script src="js/vendor/socket.io.js"></script>
+<script src="bower_components/jssip/dist/jssip.min.js"></script>
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+
+<script src="bower_components/angular/angular.min.js"></script>
+<script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+<script src="bower_components/angular-ui-router/release/stateEvents.min.js"></script>
+<script src="bower_components/angular-resource/angular-resource.min.js"></script>
+<script src="bower_components/angular-toastr/dist/angular-toastr.tpls.min.js"></script>
+<script src="bower_components/angular-media-queries/match-media.js"></script>
+<script type="text/javascript"
+    src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/utils.js"></script>
+<script type="text/javascript"
+    src="bower_components/ng-intl-tel-input/bower_components/intl-tel-input/build/js/intlTelInput-jquery.js"></script>
+<script src="bower_components/angular-socket-io/socket.js"></script>
+<script src="bower_components/path/path.min.js"></script>
+<script src="bower_components/angular-auto-focus/angular-auto-focus.js"></script>
+<script src="bower_components/angular-sanitize/angular-sanitize.js"></script>
+<script src="bower_components/satellizer/dist/satellizer.js"></script>
+<script src="bower_components/ng-intl-tel-input/dist/ng-intl-tel-input.js"></script>
+<script src="bower_components/angular-elastic/elastic.js"></script>
+<script src="bower_components/moment/moment.js"></script>
+<script src="bower_components/angular-moment/angular-moment.js"></script>
+<script src="bower_components/hammerjs/hammer.js"></script>
+<script src="bower_components/angular-hammer/angular-hammer.js"></script>
+<script src="bower_components/ng-dialog/js/ngDialog.js"></script>
+<!--<script src="bower_components/angular-cached-resource/angular-cached-resource.min.js"></script>-->
+<!--<script src="bower_components/angular-materialize/src/angular-materialize.js"></script>-->
+
+<script src="js/onemsim.js"></script>
+<script src="js/constants/services.js"></script>
+<script src="js/services/user.js"></script>
+<script src="js/services/socket.js"></script>
+<script src="js/services/phone.js"></script>
+<script src="js/services/dataModel.js"></script>
+<script src="js/services/smsHandler.js"></script>
+<script src="js/services/cache.js"></script>
+<script src="js/services/mttext.js"></script>
+<script src="js/services/services.js"></script>
+<script src="js/services/request.js"></script>
+<script src="js/services/servicesData.js"></script>
+<script src="js/services/wallet.js"></script>
+<script src="js/controllers/nav.js"></script>
+<script src="js/controllers/main.js"></script>
+<script src="js/controllers/login.js"></script>
+<script src="js/controllers/captureMsisdn.js"></script>
+<script src="js/controllers/captureToken.js"></script>
+<script src="js/controllers/logout.js"></script>
+<script src="js/controllers/logoutDelete.js"></script>
+<script src="js/controllers/service.js"></script>
+<script src="js/controllers/settings.js"></script>
+<script src="js/controllers/wallet.js"></script>
+<script src="js/controllers/console.js"></script>
+<script src="js/controllers/order.js"></script>
+<script src="js/controllers/phone.js"></script>
+<script src="js/controllers/inbox.js"></script>
+<script src="js/controllers/modalTopUp.js"></script>
+<script src="js/directives/closeKeyboard.js"></script>
+<script src="js/directives/myClock.js"></script>
+<script src="js/directives/scrollBottom.js"></script>
+<script src="js/directives/focusMe.js"></script>
+<script src="js/directives/enter.js"></script>
+<script src="js/directives/pagination.js"></script>
+<script src="js/directives/inputHistory.js"></script>
+<script src="js/directives/ngmobileclick.js"></script>
+<script src="js/directives/autosize.js"></script>
+<script src="js/directives/onscroll.js"></script>
+<script src="js/vendor/materialize.js"></script>
+<script src="js/materializeInit.js"></script>
+<!-- endbuild -->
+
+</html>

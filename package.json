@@ -3,13 +3,14 @@
   "version": "1.0.0",
   "description": "ONEm Zone",
   "engines": {
-    "node": "^9.0.0",
-    "npm": "^6.4.1"
+    "node": ">=10.15.3",
+    "npm": "6.9.0"
   },
   "scripts": {
     "start": "NODE_ENV=production node app",
     "start-prod": "NODE_ENV=production node app",
-    "start-dev": "DEBUG=onemzone node app"
+    "start-dev": "DEBUG=onemzone node app",
+    "start:docker": "nodemon ./src/app"
   },
   "dependencies": {
     "bluebird": "^3.5.3",
@@ -23,7 +24,7 @@
     "jwt-simple": "^0.5.5",
     "method-override": "^2.1.2",
     "moment": "^2.23.0",
-    "mongoose": "^5.4.2",
+    "mongoose": "^5.7.7",
     "morgan": "^1.9.1",
     "nexmo": "^2.4.0",
     "node-rsa": "^1.0.5",

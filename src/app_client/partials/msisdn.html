@@ -1,0 +1,48 @@
+<div class="container">
+  <div style="padding-top:50px" class="row">
+    <div class="col s12">
+      <div class="card hoverable">
+        <div class="card-content">
+          <img src="/images/anycoop.png" class="card-logo responsive-img center-block" />
+          <h5 class="center-align">Register Mobile<span class="pull-right"></h5>
+          <div class="row">
+            <div class="col s8 offset-s2">
+              <div class="progress">
+                <div class="determinate blue" style="width: 50%"></div>
+              </div>
+            </div>
+          </div>
+          <br>
+          <p class="center-align">Provide your mobile number below so we can link it with your account.</p>
+          <div class="row">
+            <form name="msisdnForm">
+              <div class="row">
+                <div class="col l10 offset-l2 m10 offset-m2 s10">
+                  <div class="input-field"
+                    ng-class="{'has-error': msisdnForm.phone.$invalid && msisdnForm.phone.$touched, 'has-success': msisdnForm.phone.$valid}">
+                    <div class="col s1">
+                      <i class="material-icons prefix">phone</i>
+                    </div>
+                    <div class="col s11">
+                      <input required type="tel" id="phone" name="phone" autocomplete="tel" ng-model="msisdn"
+                        ng-intl-tel-input data-initial-country="gb" data-selected-country="selected.country">
+                      <span class="helper-text"
+                        ng-show="msisdnForm.phone.$pristine && msisdnForm.phone.$untouched">Please type a telephone
+                        number</span>
+                      <span class="helper-text" ng-show="msisdnForm.phone.$invalid && msisdnForm.phone.$touched">Invalid
+                        number format</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="card-action">
+          <a style="margin-right:0" ui-sref="logout"><button class="btn red">Logout</button></a>
+          <button ng-click="submit()" class="btn right" ng-disabled="msisdnForm.$invalid">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
