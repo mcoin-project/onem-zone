@@ -8,9 +8,9 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node app",
-    "start-prod": "NODE_ENV=production node app",
-    "start-dev": "DEBUG=onemzone node app",
-    "start:docker": "nodemon ./src/app"
+    "start:prod": "NODE_ENV=production node app",
+    "start:dev": "nodemon ./src/app",
+    "start:docker": "node ./src/app"
   },
   "dependencies": {
     "bluebird": "^3.5.3",

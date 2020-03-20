@@ -98,7 +98,8 @@ nav ul a {
 
 .logo {
   display: inline-block;
-  height: 100%; }
+  width: 100px;
+  height: auto; }
 
 .logo > img {
   vertical-align: middle;
